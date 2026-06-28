@@ -13,7 +13,7 @@ import {
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Link } from 'react-router-dom';
 import { SEO } from '@/components/SEO';
-import { PageHero } from '@/components/PageHero';
+import { LuxSection, SectionHeader, Stat } from '@/components/ui-lux';
 import { trademarks } from '@/data/trademarks';
 
 /* ---------------- Animated Counter ---------------- */
@@ -208,18 +208,9 @@ const inspectionSpots: { face: Face; x: number; y: number; label: string; value:
 ];
 
 
-/* ---------------- Section primitives ---------------- */
+/* ---------------- Section primitives (unified via ui-lux) ---------------- */
 function SectionTitle({ eyebrow, title }: { eyebrow: string; title: string }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-80px' }} transition={{ duration: 0.8 }}
-      className="text-center mb-16"
-    >
-      <p className="eyebrow mb-4">{eyebrow}</p>
-      <h2 className="text-4xl md:text-5xl font-arabic font-bold">{title}</h2>
-    </motion.div>
-  );
+  return <SectionHeader eyebrow={eyebrow} title={title} />;
 }
 
 /* ---------------- 3D Inspection Cube ---------------- */
@@ -719,17 +710,17 @@ export default function Quality() {
           style={{ backgroundImage: 'radial-gradient(circle at 30% 50%, hsl(var(--gold) / 0.6), transparent 50%)' }} />
         <div className="container relative">
           <SectionTitle eyebrow="ثقة العملاء" title="أرقام تتحدث عن نفسها" />
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-8 text-center">
             {counters.map((c, i) => (
               <motion.div key={c.l}
                 initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }} transition={{ delay: i * 0.1 }}
-                className="text-center"
               >
-                <div className="text-5xl md:text-6xl font-display text-gold-hi mb-2">
-                  <Counter to={c.v} suffix={c.s} />
-                </div>
-                <p className="font-arabic text-background/70">{c.l}</p>
+                <Stat
+                  size="lg"
+                  value={<Counter to={c.v} suffix={c.s} />}
+                  label={<span className="text-background/70">{c.l}</span>}
+                />
               </motion.div>
             ))}
           </div>
