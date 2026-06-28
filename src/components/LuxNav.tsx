@@ -47,37 +47,33 @@ export function LuxNav() {
   return (
     <>
       <nav
-        className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 glass-luxe ${
-          scrolled ? 'py-2 shadow-luxe' : 'py-3'
+        className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 ${
+          scrolled ? 'py-2 glass-luxe-solid' : 'py-4 glass-luxe'
         }`}
       >
         <div className="container flex items-center justify-between gap-6">
           {/* Brand mark */}
-          <Link to="/" className="group flex items-center gap-2" aria-label="Palm Charcoal">
-            <img src={logo} alt="فحم النخلة Palm Charcoal" width={56} height={56} className="h-12 w-auto md:h-14 transition-transform duration-700 group-hover:scale-105" />
+          <Link to="/" className="group flex items-center gap-3" aria-label="Palm Charcoal">
+            <span className="relative">
+              <span className="absolute inset-0 rounded-full bg-gold/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+              <img
+                src={logo}
+                alt="فحم النخلة Palm Charcoal"
+                width={56}
+                height={56}
+                className={`relative w-auto transition-all duration-700 group-hover:scale-105 ${scrolled ? 'h-10 md:h-11' : 'h-12 md:h-14'}`}
+              />
+            </span>
           </Link>
 
           {/* Desktop nav */}
-          <ul className="hidden lg:flex items-center gap-7">
+          <ul className="hidden lg:flex items-center gap-1 rounded-full px-2 py-1 border-luxe bg-surface/60 backdrop-blur-sm">
             {navItems.map((item) => (
               <li key={item.to}>
-                <NavLink
-                  to={item.to}
-                  end={item.to === '/'}
-                  className={({ isActive }) =>
-                    `relative text-sm font-arabic font-medium transition-colors duration-300 ${
-                      isActive ? 'text-gold-hi' : 'text-foreground/80 hover:text-gold-hi'
-                    }`
-                  }
-                >
+                <NavLink to={item.to} end={item.to === '/'} className="block">
                   {({ isActive }) => (
-                    <span className="relative inline-block py-2">
+                    <span className="nav-pill font-arabic" data-active={isActive}>
                       {t(item.key)}
-                      <span
-                        className={`absolute -bottom-0.5 inset-x-0 h-0.5 bg-gold rounded-full transition-transform duration-500 origin-center ${
-                          isActive ? 'scale-x-100' : 'scale-x-0'
-                        }`}
-                      />
                     </span>
                   )}
                 </NavLink>
@@ -86,17 +82,17 @@ export function LuxNav() {
           </ul>
 
           {/* Right cluster */}
-          <div className="flex items-center gap-2 md:gap-3">
+          <div className="flex items-center gap-1.5 md:gap-2">
             <AccountButton />
-            <button aria-label="Cart" className="hidden md:inline-flex w-10 h-10 rounded-full items-center justify-center text-foreground/70 hover:text-gold-hi transition-colors">
+            <button aria-label="Cart" className="hidden md:inline-flex w-10 h-10 rounded-full items-center justify-center text-foreground/70 hover:text-dark hover:bg-gold/10 transition-all">
               <ShoppingCart className="w-4 h-4" />
             </button>
             <LanguageToggle compact />
-            <button onClick={() => setOrderOpen(true)} className="hidden md:inline-flex btn-gold !px-5 !py-2.5 text-xs">
+            <button onClick={() => setOrderOpen(true)} className="hidden md:inline-flex btn-gold !px-5 !py-2.5 text-xs !rounded-full">
               {t('nav.order')}
             </button>
             <button
-              className="lg:hidden w-10 h-10 rounded-full border-luxe flex items-center justify-center text-gold"
+              className="lg:hidden w-10 h-10 rounded-full border-luxe flex items-center justify-center text-dark hover:bg-gold/10 transition-colors"
               onClick={() => setOpen(true)}
               aria-label="Open menu"
             >
