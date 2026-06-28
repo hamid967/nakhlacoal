@@ -130,11 +130,32 @@ export default function ProductDetail() {
                   ))}
                 </ul>
 
+                {/* Packaging variants */}
+                {packagingChips.length > 0 && (
+                  <div className="mb-8">
+                    <div className="text-[10px] uppercase tracking-[0.22em] text-foreground/50 mb-2">
+                      {isAr ? 'الأحجام والتغليف' : 'Sizes & packaging'}
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {packagingChips.map((chip) => (
+                        <span key={chip} className="px-3 py-1.5 rounded-full border-luxe text-xs text-foreground/80 bg-surface">
+                          {chip}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 <div className="flex flex-wrap gap-3">
                   <Link to="/contact" className="btn-gold">
                     <ShoppingCart className="w-4 h-4" /> {isAr ? 'اطلب عرض سعر' : 'Request a quote'}
                   </Link>
-                  <a href="https://wa.me/966500000000" target="_blank" rel="noopener noreferrer" className="btn-ghost-gold">
+                  <a
+                    href={`https://wa.me/966540060095?text=${waMsg}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-ghost-gold"
+                  >
                     <MessageCircle className="w-4 h-4" /> {isAr ? 'تواصل واتساب' : 'WhatsApp us'}
                   </a>
                   <CompareToggle slug={product.slug} />
