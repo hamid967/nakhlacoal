@@ -369,6 +369,7 @@ export function SplashScreen() {
         @keyframes splash-float { 0%,100% { transform: translateY(0) rotate(var(--r,0deg)); } 50% { transform: translateY(-12px) rotate(var(--r,0deg)); } }
         @keyframes splash-rotate { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
         @keyframes splash-drift { 0% { transform: translate(0, 0); } 50% { transform: translate(18px, -22px); } 100% { transform: translate(-14px, 14px); } }
+        @keyframes splash-caustic { 0%,100% { background-position: -40% 0; opacity: 0.0; } 50% { background-position: 140% 0; opacity: 1; } }
         .mask-fade { -webkit-mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent); mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent); }
         @media (prefers-reduced-motion: reduce) {
           .fixed[class*="z-[100]"] *,
