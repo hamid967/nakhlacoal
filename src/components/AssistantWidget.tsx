@@ -49,13 +49,17 @@ const buildWa = (o: Record<string, any>) => [
   '🌴 *طلب جديد — فحم النخلة*', '',
   `*المنتج:* ${o.product_type}`,
   `*الكمية:* ${o.quantity} ${o.unit}`,
-  `*المنشأة:* ${o.company_name}`,
+  `*المنشأة:* ${o.company_name || '—'}`,
   `*المسؤول:* ${o.contact_name}`,
   `*الجوال:* ${o.phone}`,
   o.email && `*البريد:* ${o.email}`,
   o.city && `*المدينة:* ${o.city}`,
+  o.address && `*العنوان:* ${o.address}`,
+  o.delivery_method && `*طريقة الاستلام:* ${o.delivery_method}`,
   o.notes && `*ملاحظات:* ${o.notes}`,
 ].filter(Boolean).join('\n');
+
+const PHONE_RE = /^(\+?966|0)?5\d{8}$/;
 
 export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () => void }) {
   const navigate = useNavigate();
@@ -63,6 +67,9 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
   const [input, setInput] = useState('');
   const [streaming, setStreaming] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [pendingOrder, setPendingOrder] = useState<Record<string, any> | null>(null);
+  const [formData, setFormData] = useState({ contact_name: '', phone: '', address: '', delivery_method: 'توصيل' as 'توصيل' | 'استلام من المستودع' });
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -129,8 +136,15 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
       }
       const { order, clean } = extractOrder(acc);
       if (order) {
-        setMessages(prev => prev.map(m => m.id === aId ? { ...m, content: clean } : m));
-        await finalize(order);
+        setMessages(prev => prev.map(m => m.id === aId ? { ...m, content: clean + '\n\n📋 **يرجى تأكيد بياناتك في النموذج أدناه قبل إرسال الطلب.**' } : m));
+        setFormData({
+          contact_name: order.contact_name || '',
+          phone: order.phone || '',
+          address: order.address || '',
+          delivery_method: order.delivery_method || 'توصيل',
+        });
+        setFormErrors({});
+        setPendingOrder(order);
       }
     } catch (e: any) {
       const msg = e?.message ?? 'خطأ';
@@ -141,6 +155,28 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
       inputRef.current?.focus();
     }
   };
+
+  const confirmOrder = async () => {
+    const errs: Record<string, string> = {};
+    if (formData.contact_name.trim().length < 2) errs.contact_name = 'الاسم مطلوب';
+    if (!PHONE_RE.test(formData.phone.trim())) errs.phone = 'رقم جوال سعودي غير صحيح (05xxxxxxxx)';
+    if (formData.address.trim().length < 5) errs.address = 'العنوان مطلوب';
+    if (!formData.delivery_method) errs.delivery_method = 'اختر طريقة الاستلام';
+    setFormErrors(errs);
+    if (Object.keys(errs).length || !pendingOrder) return;
+    const merged = {
+      ...pendingOrder,
+      contact_name: formData.contact_name.trim(),
+      phone: formData.phone.trim(),
+      address: formData.address.trim(),
+      delivery_method: formData.delivery_method,
+      notes: [pendingOrder.notes, `طريقة الاستلام: ${formData.delivery_method}`].filter(Boolean).join(' · '),
+    };
+    setPendingOrder(null);
+    await finalize(merged);
+  };
+
+
 
 
   const lastAssistantMsg = [...messages].reverse().find(m => m.role === 'assistant' && m.content.trim() && m.id !== 'greet');
@@ -280,6 +316,80 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
           </div>
         )}
       </div>
+
+      {/* Order confirmation form */}
+      {pendingOrder && (
+        <div className="border-t border-gold/30 bg-gold/5 p-3 space-y-2 font-arabic max-h-[55%] overflow-y-auto">
+          <div className="flex items-center justify-between">
+            <p className="text-xs font-semibold text-foreground flex items-center gap-1.5">
+              📋 تأكيد بيانات الطلب
+            </p>
+            <button onClick={() => setPendingOrder(null)} className="text-[10px] text-muted-foreground hover:text-foreground">إلغاء</button>
+          </div>
+          <p className="text-[10px] text-muted-foreground">
+            {pendingOrder.product_type} · {pendingOrder.quantity} {pendingOrder.unit}
+          </p>
+          <div className="space-y-1.5">
+            <div>
+              <input
+                value={formData.contact_name}
+                onChange={(e) => setFormData(f => ({ ...f, contact_name: e.target.value }))}
+                placeholder="الاسم الكامل *"
+                className="w-full rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-gold"
+              />
+              {formErrors.contact_name && <p className="text-[10px] text-destructive mt-0.5">{formErrors.contact_name}</p>}
+            </div>
+            <div>
+              <input
+                value={formData.phone}
+                onChange={(e) => setFormData(f => ({ ...f, phone: e.target.value }))}
+                placeholder="رقم الجوال (05xxxxxxxx) *"
+                dir="ltr"
+                className="w-full rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-gold text-right"
+              />
+              {formErrors.phone && <p className="text-[10px] text-destructive mt-0.5">{formErrors.phone}</p>}
+            </div>
+            <div>
+              <textarea
+                value={formData.address}
+                onChange={(e) => setFormData(f => ({ ...f, address: e.target.value }))}
+                placeholder="العنوان (المدينة، الحي، الشارع) *"
+                rows={2}
+                className="w-full rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-gold resize-none"
+              />
+              {formErrors.address && <p className="text-[10px] text-destructive mt-0.5">{formErrors.address}</p>}
+            </div>
+            <div>
+              <label className="text-[10px] text-muted-foreground block mb-1">طريقة الاستلام *</label>
+              <div className="grid grid-cols-2 gap-1.5">
+                {(['توصيل', 'استلام من المستودع'] as const).map(m => (
+                  <button
+                    key={m}
+                    type="button"
+                    onClick={() => setFormData(f => ({ ...f, delivery_method: m }))}
+                    className={`px-2 py-1.5 rounded-lg text-[11px] border transition ${
+                      formData.delivery_method === m
+                        ? 'bg-gold text-dark border-gold font-semibold'
+                        : 'bg-background border-border text-foreground hover:border-gold/50'
+                    }`}
+                  >
+                    {m === 'توصيل' ? '🚚 توصيل' : '🏭 استلام من المستودع'}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+          <button
+            onClick={confirmOrder}
+            disabled={submitting}
+            className="w-full mt-2 py-2 rounded-lg bg-dark text-cream text-xs font-semibold shadow-gold hover:opacity-90 disabled:opacity-50 transition flex items-center justify-center gap-1.5"
+          >
+            {submitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-3.5 h-3.5 text-gold-hi" />}
+            تأكيد وإرسال الطلب
+          </button>
+        </div>
+      )}
+
 
       {/* Composer */}
       <div className="border-t border-border p-2 bg-background">
