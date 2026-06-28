@@ -177,19 +177,22 @@ export function SplashScreen() {
       </div>
 
       {/* Luxury conic halo behind logo */}
-      <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none transition-opacity duration-[1800ms] ease-in-out ${stage >= 1 && stage < 4 ? "opacity-70" : "opacity-0"}`}
-        style={{ width: "min(64vmin, 560px)", height: "min(64vmin, 560px)" }} aria-hidden>
+      <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none transition-opacity duration-[1600ms] ease-out ${stage >= 1 && stage < 4 ? "opacity-70" : "opacity-0"}`}
+        style={{ width: "min(64vmin, 560px)", height: "min(64vmin, 560px)", transitionDelay: stage >= 1 && stage < 4 ? "200ms" : "0ms", transform: "translate3d(-50%, -50%, 0)" }} aria-hidden>
         <div style={{
           width: "100%", height: "100%", borderRadius: "50%",
           background: "conic-gradient(from 0deg, hsl(var(--gold) / 0.0) 0deg, hsl(var(--gold) / 0.32) 70deg, hsl(var(--gold) / 0.0) 140deg, hsl(var(--gold) / 0.26) 220deg, hsl(var(--gold) / 0.0) 290deg, hsl(var(--gold) / 0.32) 360deg)",
           filter: "blur(34px)",
-          willChange: "transform",
-          animation: stage >= 1 ? "splash-halo 48s linear infinite, splash-halo-breathe 7s ease-in-out infinite" : undefined,
+          willChange: "transform, filter, opacity",
+          transform: "translateZ(0)",
+          backfaceVisibility: "hidden",
+          animation: stage >= 1 ? "splash-halo 48s linear 200ms infinite, splash-halo-breathe 7s ease-in-out 600ms infinite" : undefined,
         }} />
       </div>
 
       {/* Caustic sweep — silk-like light passing across the screen */}
-      <div className={`absolute inset-0 pointer-events-none transition-opacity duration-[1200ms] ease-in-out ${stage >= 1 && stage < 4 ? "opacity-100" : "opacity-0"}`} aria-hidden style={{ overflow: "hidden" }}>
+      <div className={`absolute inset-0 pointer-events-none transition-opacity duration-[1100ms] ease-out ${stage >= 1 && stage < 4 ? "opacity-100" : "opacity-0"}`}
+        aria-hidden style={{ overflow: "hidden", transitionDelay: stage >= 1 && stage < 4 ? "700ms" : "0ms" }}>
         <div style={{
           position: "absolute",
           inset: 0,
@@ -198,7 +201,9 @@ export function SplashScreen() {
           width: "220%",
           left: "-60%",
           willChange: "transform",
-          animation: stage >= 1 ? "splash-caustic 14s cubic-bezier(0.65,0,0.35,1) infinite" : undefined,
+          transform: "translate3d(0,0,0)",
+          backfaceVisibility: "hidden",
+          animation: stage >= 1 ? "splash-caustic 14s cubic-bezier(0.65,0,0.35,1) 900ms infinite" : undefined,
         }} />
       </div>
 
