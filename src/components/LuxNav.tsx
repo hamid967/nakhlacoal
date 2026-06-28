@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Menu, X, ShoppingCart, User, LogOut } from 'lucide-react';
 import { LanguageToggle } from './LanguageToggle';
 import { OrderModal } from './OrderModal';
+import { QuoteBuilder } from './QuoteBuilder';
 import { useAuth } from '@/contexts/AuthContext';
 import logo from '@/assets/palm-charcoal-logo.png';
 
@@ -25,6 +26,7 @@ export function LuxNav() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [orderOpen, setOrderOpen] = useState(false);
+  const [quoteOpen, setQuoteOpen] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
@@ -88,6 +90,9 @@ export function LuxNav() {
               <ShoppingCart className="w-4 h-4" />
             </button>
             <LanguageToggle compact />
+            <button onClick={() => setQuoteOpen(true)} className="hidden lg:inline-flex items-center text-xs font-semibold text-dark hover:text-gold border-b border-dashed border-gold/50 hover:border-gold transition px-2 py-1 whitespace-nowrap">
+              عرض سعر
+            </button>
             <button onClick={() => setOrderOpen(true)} className="hidden md:inline-flex btn-gold !px-4 xl:!px-5 !py-2 xl:!py-2.5 text-xs !rounded-full whitespace-nowrap">
               {t('nav.order')}
             </button>
@@ -150,6 +155,7 @@ export function LuxNav() {
         </div>
       </div>
       <OrderModal open={orderOpen} onOpenChange={setOrderOpen} />
+      <QuoteBuilder open={quoteOpen} onOpenChange={setQuoteOpen} />
     </>
   );
 }

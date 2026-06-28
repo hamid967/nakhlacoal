@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Send, Loader2, Sparkles, X, Maximize2, CheckCircle2, MessageCircle } from 'lucide-react';
+import { Send, Loader2, Sparkles, X, Maximize2, CheckCircle2, MessageCircle, FileText } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
+import { QuoteBuilder } from './QuoteBuilder';
+
 
 const mdComponents = {
   a: ({ href, children }: any) => (
@@ -87,6 +89,8 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const [quoteOpen, setQuoteOpen] = useState(false);
+
 
   useEffect(() => { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(messages)); }, [messages]);
   useEffect(() => {
@@ -361,9 +365,17 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
                 {c.label}
               </button>
             ))}
+            <button
+              onClick={() => setQuoteOpen(true)}
+              className="px-3 py-1.5 rounded-full text-xs bg-gold text-dark hover:bg-gold/90 border border-gold font-semibold transition inline-flex items-center gap-1"
+            >
+              <FileText className="w-3 h-3" /> احسب عرض سعر فوري
+            </button>
           </div>
         )}
       </div>
+      <QuoteBuilder open={quoteOpen} onOpenChange={setQuoteOpen} />
+
 
       {/* Order confirmation form */}
       {pendingOrder && (
