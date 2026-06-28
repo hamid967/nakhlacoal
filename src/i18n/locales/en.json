@@ -15,7 +15,8 @@
     "track": "Track Order",
     "portal": "Portal",
     "contact": "Contact",
-    "order": "Order Now"
+    "order": "Order Now",
+    "trademarks": "Trademarks"
   },
   "hero": {
     "eyebrow": "Crafted in the Kingdom",
@@ -37,12 +38,30 @@
   "features": {
     "title": "Six promises in every kilogram",
     "subtitle": "Engineered for hospitality. Trusted by exporters.",
-    "longBurn": { "title": "Long Burn Time", "desc": "Three hours of steady, restaurant-grade heat from a single ignition." },
-    "highHeat": { "title": "High Heat Output", "desc": "Over 7,500 kcal/kg — the calorific signature of true date-palm wood." },
-    "lowAsh": { "title": "Low Ash", "desc": "Under 3% residue. Cleaner grills, faster turnaround, fewer complaints." },
-    "eco": { "title": "Eco-Friendly", "desc": "Made entirely from pruned palm wood. No deforestation, no chemicals." },
-    "odor": { "title": "Odor Free", "desc": "Naturally aromatic with no chemical aftertaste or smoke pollution." },
-    "certified": { "title": "Certified Quality", "desc": "ISO 9001, Saudi Standards (SASO), and full export documentation." }
+    "longBurn": {
+      "title": "Long Burn Time",
+      "desc": "Three hours of steady, restaurant-grade heat from a single ignition."
+    },
+    "highHeat": {
+      "title": "High Heat Output",
+      "desc": "Over 7,500 kcal/kg — the calorific signature of true date-palm wood."
+    },
+    "lowAsh": {
+      "title": "Low Ash",
+      "desc": "Under 3% residue. Cleaner grills, faster turnaround, fewer complaints."
+    },
+    "eco": {
+      "title": "Eco-Friendly",
+      "desc": "Made entirely from pruned palm wood. No deforestation, no chemicals."
+    },
+    "odor": {
+      "title": "Odor Free",
+      "desc": "Naturally aromatic with no chemical aftertaste or smoke pollution."
+    },
+    "certified": {
+      "title": "Certified Quality",
+      "desc": "ISO 9001, Saudi Standards (SASO), and full export documentation."
+    }
   },
   "products": {
     "title": "The Collection",
@@ -58,29 +77,74 @@
     "requestQuote": "Request quote",
     "datasheet": "Download datasheet",
     "items": {
-      "bbq": { "name": "BBQ Charcoal", "desc": "Restaurant-grade briquettes for steakhouses and mandi houses." },
-      "coconut": { "name": "Coconut Charcoal", "desc": "Premium coconut-shell cubes for the cleanest, longest hookah session." },
-      "hookah": { "name": "Hookah Charcoal", "desc": "Pressed palm cubes with quick ignition and zero chemical taste." },
-      "compressed": { "name": "Compressed Charcoal", "desc": "High-density hexagon logs engineered for industrial heat." },
-      "restaurant": { "name": "Restaurant Charcoal", "desc": "Bulk pallets sized for high-volume kitchens and grill houses." },
-      "hotel": { "name": "Hotel Charcoal", "desc": "Private-label luxury cartons for resorts and five-star hospitality." },
-      "wholesale": { "name": "Wholesale Packs", "desc": "Container and pallet quantities with full export documentation." }
+      "bbq": {
+        "name": "BBQ Charcoal",
+        "desc": "Restaurant-grade briquettes for steakhouses and mandi houses."
+      },
+      "coconut": {
+        "name": "Coconut Charcoal",
+        "desc": "Premium coconut-shell cubes for the cleanest, longest hookah session."
+      },
+      "hookah": {
+        "name": "Hookah Charcoal",
+        "desc": "Pressed palm cubes with quick ignition and zero chemical taste."
+      },
+      "compressed": {
+        "name": "Compressed Charcoal",
+        "desc": "High-density hexagon logs engineered for industrial heat."
+      },
+      "restaurant": {
+        "name": "Restaurant Charcoal",
+        "desc": "Bulk pallets sized for high-volume kitchens and grill houses."
+      },
+      "hotel": {
+        "name": "Hotel Charcoal",
+        "desc": "Private-label luxury cartons for resorts and five-star hospitality."
+      },
+      "wholesale": {
+        "name": "Wholesale Packs",
+        "desc": "Container and pallet quantities with full export documentation."
+      }
     }
   },
   "about": {
     "eyebrow": "About Palm Charcoal",
     "title": "A Saudi house of fire",
     "story": "Founded in the heart of Al-Ahsa, فحم النخلة was built on a single conviction: the world's finest charcoal is born from the world's most resilient tree. We work with over 200 Saudi palm farms, transforming pruned date-palm wood into export-grade charcoal trusted by chefs, exporters, and lounges from Riyadh to Tokyo.",
-    "mission": { "title": "Mission", "body": "Set the global benchmark for natural, traceable, premium charcoal." },
-    "vision": { "title": "Vision", "body": "A Saudi brand on every luxury grill, in every continent, by 2030." },
-    "values": { "title": "Values", "body": "Purity, traceability, sustainability, and uncompromising craftsmanship." },
+    "mission": {
+      "title": "Mission",
+      "body": "Set the global benchmark for natural, traceable, premium charcoal."
+    },
+    "vision": {
+      "title": "Vision",
+      "body": "A Saudi brand on every luxury grill, in every continent, by 2030."
+    },
+    "values": {
+      "title": "Values",
+      "body": "Purity, traceability, sustainability, and uncompromising craftsmanship."
+    },
     "timelineTitle": "Our Journey",
     "timeline": [
-      { "year": "2014", "label": "First kiln lit in Al-Ahsa" },
-      { "year": "2017", "label": "ISO 9001 certification" },
-      { "year": "2020", "label": "First container exported to Europe" },
-      { "year": "2023", "label": "Partnerships with 200+ Saudi palm farms" },
-      { "year": "2026", "label": "Shipping to 32 countries worldwide" }
+      {
+        "year": "2014",
+        "label": "First kiln lit in Al-Ahsa"
+      },
+      {
+        "year": "2017",
+        "label": "ISO 9001 certification"
+      },
+      {
+        "year": "2020",
+        "label": "First container exported to Europe"
+      },
+      {
+        "year": "2023",
+        "label": "Partnerships with 200+ Saudi palm farms"
+      },
+      {
+        "year": "2026",
+        "label": "Shipping to 32 countries worldwide"
+      }
     ]
   },
   "quality": {
@@ -102,10 +166,26 @@
     "eyebrow": "Wholesale & Distribution",
     "title": "Built for volume, priced for distributors",
     "subtitle": "Whether you run a restaurant chain, a hookah lounge network, or a national distribution channel — we have a tier engineered for you.",
-    "tierRestaurant": { "name": "Restaurant", "qty": "From 500 kg", "desc": "Recurring delivery for kitchens and grill houses." },
-    "tierLounge": { "name": "Hookah Lounge", "qty": "From 250 kg", "desc": "Premium hookah cubes with private-label packaging." },
-    "tierDistributor": { "name": "Distributor", "qty": "From 5 tons", "desc": "Mixed pallets across all product families." },
-    "tierContainer": { "name": "Container", "qty": "20 / 40 ft", "desc": "Full container loads with FOB Jeddah pricing." },
+    "tierRestaurant": {
+      "name": "Restaurant",
+      "qty": "From 500 kg",
+      "desc": "Recurring delivery for kitchens and grill houses."
+    },
+    "tierLounge": {
+      "name": "Hookah Lounge",
+      "qty": "From 250 kg",
+      "desc": "Premium hookah cubes with private-label packaging."
+    },
+    "tierDistributor": {
+      "name": "Distributor",
+      "qty": "From 5 tons",
+      "desc": "Mixed pallets across all product families."
+    },
+    "tierContainer": {
+      "name": "Container",
+      "qty": "20 / 40 ft",
+      "desc": "Full container loads with FOB Jeddah pricing."
+    },
     "register": "Register as Distributor",
     "uploadDocs": "Upload Company Documents"
   },
@@ -124,12 +204,36 @@
     "title": "Learn the craft of charcoal",
     "subtitle": "Guides, comparisons, and expert tips for chefs, lounge owners, and importers.",
     "articles": [
-      { "title": "How to Identify Premium Charcoal", "tag": "Buying Guide", "read": "8 min read" },
-      { "title": "Palm vs Coconut vs Hardwood — A Complete Comparison", "tag": "Comparison", "read": "12 min read" },
-      { "title": "The Chef's Guide to Charcoal Grilling Temperatures", "tag": "Cooking Tips", "read": "6 min read" },
-      { "title": "Hookah Charcoal: Cube, Flat, or Quick-Light?", "tag": "Hookah Tips", "read": "9 min read" },
-      { "title": "Reading a Charcoal Lab Report (Carbon, Ash, Moisture)", "tag": "Quality", "read": "10 min read" },
-      { "title": "Importing Saudi Charcoal: Customs & Documentation", "tag": "Export", "read": "14 min read" }
+      {
+        "title": "How to Identify Premium Charcoal",
+        "tag": "Buying Guide",
+        "read": "8 min read"
+      },
+      {
+        "title": "Palm vs Coconut vs Hardwood — A Complete Comparison",
+        "tag": "Comparison",
+        "read": "12 min read"
+      },
+      {
+        "title": "The Chef's Guide to Charcoal Grilling Temperatures",
+        "tag": "Cooking Tips",
+        "read": "6 min read"
+      },
+      {
+        "title": "Hookah Charcoal: Cube, Flat, or Quick-Light?",
+        "tag": "Hookah Tips",
+        "read": "9 min read"
+      },
+      {
+        "title": "Reading a Charcoal Lab Report (Carbon, Ash, Moisture)",
+        "tag": "Quality",
+        "read": "10 min read"
+      },
+      {
+        "title": "Importing Saudi Charcoal: Customs & Documentation",
+        "tag": "Export",
+        "read": "14 min read"
+      }
     ]
   },
   "contact": {
