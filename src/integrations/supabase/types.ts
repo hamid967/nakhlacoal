@@ -14,6 +14,72 @@ export type Database = {
   }
   public: {
     Tables: {
+      orders: {
+        Row: {
+          address: string | null
+          ai_summary: string | null
+          business_type: string | null
+          city: string | null
+          commercial_register: string | null
+          company_name: string
+          contact_name: string
+          created_at: string
+          delivery_date: string | null
+          email: string | null
+          id: string
+          notes: string | null
+          phone: string
+          product_type: string
+          quantity: number
+          status: string
+          unit: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          address?: string | null
+          ai_summary?: string | null
+          business_type?: string | null
+          city?: string | null
+          commercial_register?: string | null
+          company_name: string
+          contact_name: string
+          created_at?: string
+          delivery_date?: string | null
+          email?: string | null
+          id?: string
+          notes?: string | null
+          phone: string
+          product_type: string
+          quantity: number
+          status?: string
+          unit?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          address?: string | null
+          ai_summary?: string | null
+          business_type?: string | null
+          city?: string | null
+          commercial_register?: string | null
+          company_name?: string
+          contact_name?: string
+          created_at?: string
+          delivery_date?: string | null
+          email?: string | null
+          id?: string
+          notes?: string | null
+          phone?: string
+          product_type?: string
+          quantity?: number
+          status?: string
+          unit?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
