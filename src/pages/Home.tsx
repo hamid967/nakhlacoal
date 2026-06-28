@@ -4,6 +4,7 @@ import { SEO } from '@/components/SEO';
 import { ScrollReveal } from '@/components/ScrollReveal';
 import { HomeIntro } from '@/components/HomeIntro';
 import { HeroSlideshow } from '@/components/HeroSlideshow';
+import { ProcessSection } from '@/components/ProcessSection';
 import { LocationSection } from '@/components/LocationSection';
 import { FaqSection } from '@/components/FaqSection';
 import {
@@ -184,7 +185,10 @@ export default function Home() {
         </div>
       </LuxSection>
 
+      <ProcessSection />
+
       {/* Testimonials */}
+
       <LuxSection className="py-20 md:py-28">
         <SectionHeader
           eyebrow={isAr ? 'آراء عملائنا' : 'Customer voices'}
