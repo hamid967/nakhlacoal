@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Flame, Clock, Leaf, Wind, ShieldCheck, Award, Star } from 'lucide-react';
+import { Flame, Clock, Leaf, Wind, ShieldCheck, Award } from 'lucide-react';
 import { SEO } from '@/components/SEO';
 import { ScrollReveal } from '@/components/ScrollReveal';
 import { HomeIntro } from '@/components/HomeIntro';
@@ -19,7 +19,7 @@ import {
   TestimonialCard,
   CtaBand,
 } from '@/components/ui-lux';
-import heroCharcoal from '@/assets/hero-charcoal.jpg';
+
 import productBbq from '@/assets/product-bbq.jpg';
 import productHookah from '@/assets/product-hookah.jpg';
 import productCoconut from '@/assets/product-coconut.jpg';
