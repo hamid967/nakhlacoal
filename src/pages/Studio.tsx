@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
+import { SEO } from "@/components/SEO";
 import { toast } from "sonner";
 import {
   Sparkles,
@@ -188,6 +189,8 @@ export default function Studio() {
     ) : null;
 
   return (
+    <>
+      <SEO title={isAr ? 'استوديو الذكاء' : 'AI Studio'} description="" path="/studio" noindex />
     <section className="container max-w-6xl pt-32 pb-24">
       <div className="flex items-center gap-2 mb-4">
         <Sparkles className="w-4 h-4 text-gold" />
@@ -359,5 +362,7 @@ export default function Studio() {
         </div>
       )}
     </section>
+    </>
   );
 }
+

@@ -101,6 +101,7 @@ export default function Auth() {
     <>
       <Helmet>
         <title>{t('تسجيل الدخول | فحم النخلة', 'Sign In | Palm Charcoal')}</title>
+        <meta name="robots" content="noindex, nofollow" />
       </Helmet>
       <section className="min-h-[80vh] flex items-center justify-center px-4 py-16">
         <div className="w-full max-w-md bg-card border border-border rounded-2xl p-8 shadow-sm">

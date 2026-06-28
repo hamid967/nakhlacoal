@@ -31,6 +31,7 @@ export default function Compare() {
         title={isAr ? 'مقارنة المنتجات — فحم النخلة' : 'Compare Products — Palm Charcoal'}
         description={isAr ? 'قارن المواصفات التقنية بين منتجات فحم النخلة جنبًا إلى جنب.' : 'Compare Palm Charcoal product specs side by side.'}
         path="/compare"
+        noindex
       />
       <PageHero
         eyebrow={isAr ? 'مقارنة' : 'Compare'}

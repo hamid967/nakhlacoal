@@ -25,6 +25,7 @@ import Uses from '@/pages/Uses';
 import Articles from '@/pages/Articles';
 import Studio from '@/pages/Studio';
 import Auth from '@/pages/Auth';
+import Profile from '@/pages/Profile';
 import NotFound from '@/pages/NotFound';
 
 const queryClient = new QueryClient();
@@ -55,6 +56,7 @@ export default function App() {
                 <Route path="/uses" element={<Uses />} />
                 <Route path="/articles" element={<Articles />} />
                 <Route path="/studio" element={<ProtectedRoute><Studio /></ProtectedRoute>} />
+                <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                 <Route path="*" element={<NotFound />} />
               </Route>
             </Routes>
