@@ -46,14 +46,14 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
+    const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) {
-      return new Response(JSON.stringify({ error: "Missing LOVABLE_API_KEY" }), {
+    if (!GEMINI_API_KEY && !LOVABLE_API_KEY) {
+      return new Response(JSON.stringify({ error: "Missing API key" }), {
         status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    // Reject obviously oversized payloads up front
     const contentLength = Number(req.headers.get("content-length") ?? 0);
     if (contentLength > 200_000) {
       return new Response(JSON.stringify({ error: "Payload too large" }), {
@@ -78,19 +78,74 @@ Deno.serve(async (req) => {
       });
     }
 
+    const encoder = new TextEncoder();
+
+    // Prefer direct Gemini API (free tier) when GEMINI_API_KEY is set
+    if (GEMINI_API_KEY) {
+      const contents = messages.map((m) => ({
+        role: m.role === "assistant" ? "model" : "user",
+        parts: [{ text: m.content }],
+      }));
+
+      const upstream = await fetch(
+        "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:streamGenerateContent?alt=sse",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "X-goog-api-key": GEMINI_API_KEY },
+          body: JSON.stringify({
+            contents,
+            systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+          }),
+        }
+      );
+
+      if (!upstream.ok) {
+        const t = await upstream.text();
+        console.error("[chat-assistant] gemini error:", upstream.status, t);
+        return new Response(JSON.stringify({ error: "Upstream error" }), {
+          status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      const reader = upstream.body!.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+      const stream = new ReadableStream({
+        async pull(controller) {
+          const { done, value } = await reader.read();
+          if (done) { controller.close(); return; }
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split("\n");
+          buffer = lines.pop() ?? "";
+          for (const line of lines) {
+            const trimmed = line.trim();
+            if (!trimmed.startsWith("data:")) continue;
+            const data = trimmed.slice(5).trim();
+            if (!data) continue;
+            try {
+              const json = JSON.parse(data);
+              const parts = json?.candidates?.[0]?.content?.parts ?? [];
+              for (const p of parts) {
+                if (p?.text) controller.enqueue(encoder.encode(p.text));
+              }
+            } catch { /* skip */ }
+          }
+        },
+      });
+
+      return new Response(stream, {
+        headers: { ...corsHeaders, "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-cache" },
+      });
+    }
+
+    // Fallback: Lovable AI Gateway
     const upstream = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
+      headers: { Authorization: `Bearer ${LOVABLE_API_KEY}`, "Content-Type": "application/json" },
       body: JSON.stringify({
         model: "google/gemini-3-flash-preview",
         stream: true,
-        messages: [
-          { role: "system", content: SYSTEM_PROMPT },
-          ...messages.slice(-30),
-        ],
+        messages: [{ role: "system", content: SYSTEM_PROMPT }, ...messages.slice(-30)],
       }),
     });
 
@@ -104,12 +159,9 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Transform SSE chunks → simple text stream of delta tokens
     const reader = upstream.body!.getReader();
     const decoder = new TextDecoder();
-    const encoder = new TextEncoder();
     let buffer = "";
-
     const stream = new ReadableStream({
       async pull(controller) {
         const { done, value } = await reader.read();
@@ -126,17 +178,13 @@ Deno.serve(async (req) => {
             const json = JSON.parse(data);
             const token = json?.choices?.[0]?.delta?.content;
             if (token) controller.enqueue(encoder.encode(token));
-          } catch { /* skip non-JSON keepalives */ }
+          } catch { /* skip */ }
         }
       },
     });
 
     return new Response(stream, {
-      headers: {
-        ...corsHeaders,
-        "Content-Type": "text/plain; charset=utf-8",
-        "Cache-Control": "no-cache",
-      },
+      headers: { ...corsHeaders, "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-cache" },
     });
   } catch (e) {
     console.error("[chat-assistant] unhandled error:", e);
