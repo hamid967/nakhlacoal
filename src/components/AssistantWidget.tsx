@@ -124,12 +124,16 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
     }
   };
 
-  if (!open) return null;
+  const waText = encodeURIComponent('مرحباً فحم النخلة 👋، أرغب بطلب فحم.');
+  const waHref = `https://wa.me/${WHATSAPP_NUMBER}?text=${waText}`;
 
   return (
     <div
-      className="fixed bottom-24 end-6 z-50 w-[92vw] max-w-[380px] h-[78vh] max-h-[560px] rounded-2xl border border-gold/30 bg-background shadow-gold flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-200"
+      className={`fixed bottom-24 end-6 z-50 w-[92vw] max-w-[380px] h-[78vh] max-h-[560px] rounded-2xl border border-gold/30 bg-background shadow-gold flex flex-col overflow-hidden origin-bottom-right transition-all duration-300 ease-out ${
+        open ? 'opacity-100 scale-100 translate-y-0 pointer-events-auto' : 'opacity-0 scale-90 translate-y-4 pointer-events-none'
+      }`}
       role="dialog"
+      aria-hidden={!open}
       aria-label="مساعد فحم النخلة"
     >
       {/* Header */}
@@ -145,6 +149,16 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> متصل · مجاني
           </p>
         </div>
+        <a
+          href={waHref}
+          target="_blank"
+          rel="noreferrer noopener"
+          className="p-1.5 rounded-lg hover:bg-white/10 transition text-[#25D366]"
+          aria-label="واتساب مباشر"
+          title="واتساب مباشر"
+        >
+          <MessageCircle className="w-4 h-4" />
+        </a>
         <button
           onClick={() => { onClose(); navigate('/assistant'); }}
           className="p-1.5 rounded-lg hover:bg-white/10 transition"
@@ -153,10 +167,11 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
         >
           <Maximize2 className="w-4 h-4" />
         </button>
-        <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-white/10 transition" aria-label="إغلاق">
+        <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-white/10 transition" aria-label="إغلاق" title="إغلاق">
           <X className="w-4 h-4" />
         </button>
       </header>
+
 
       {/* Messages */}
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-3 py-3 space-y-3 bg-muted/20">
