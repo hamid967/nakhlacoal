@@ -12,4 +12,7 @@ Disallow: /signup
 Disallow: /api/
 Disallow: /functions/
 
-Sitemap: https://starlight-echoes.lovable.app/sitemap.xml
+# Explicitly allow trademarks page for fast discovery
+Allow: /trademarks
+
+Sitemap: https://alnakhlacoal.com/sitemap.xml
