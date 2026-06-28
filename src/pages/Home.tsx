@@ -45,9 +45,9 @@ export default function Home() {
   ];
 
   const reviews = [
-    { name: isAr ? 'أحمد العتيبي' : 'Ahmed Al-Otaibi', role: isAr ? 'صاحب مطعم' : 'Restaurant Owner', body: isAr ? 'فحم النخلة الأفضل للمعسل والشواء — يدوم طويلاً والرماد قليل. جودة عالية.' : 'Best for hookah and grilling — long burn, low ash, premium quality.' },
-    { name: isAr ? 'سعد القحطاني' : 'Saad Al-Qahtani', role: isAr ? 'مستخدم منزلي' : 'Home User', body: isAr ? 'أستخدمه للبخور والعود بدون أي روائح. التعبئة فاخرة والتسليم سريع.' : 'I use it for incense and oud — no smell, premium packaging, fast delivery.' },
-    { name: isAr ? 'منى الزهراني' : 'Mona Al-Zahrani', role: isAr ? 'شيف' : 'Chef', body: isAr ? 'حرارة ثابتة ومثالية للشواء البطيء. أصبح خياري الأول في المطبخ.' : 'Stable heat, perfect for slow grilling. My first choice.' },
+    { name: isAr ? 'علي الزهراني' : 'Ali Al-Zahrani', role: isAr ? 'جدة' : 'Jeddah', meta: isAr ? 'معسل وشيشة 💨' : 'Hookah 💨', body: isAr ? 'جربت كثير وما تركت الفحم الصيني — أداء الفحم الطبيعي أحسن بكثير. أنصح الجميع.' : 'Tried many — natural beats imported by far. Highly recommend.' },
+    { name: isAr ? 'سعد القحطاني' : 'Saad Al-Qahtani', role: isAr ? 'الرياض' : 'Riyadh', meta: isAr ? 'بخور وعود 🪔' : 'Incense 🪔', body: isAr ? 'استخدمته للبخور في عرس أخوي — الرائحة طلعت رائعة وما حس أحد برائحة الفحم.' : 'Used it for incense at a wedding — pure aroma, zero smoke smell.' },
+    { name: isAr ? 'أحمد العتيبي' : 'Ahmed Al-Otaibi', role: isAr ? 'مكة المكرمة' : 'Makkah', meta: isAr ? 'شواء 🔥' : 'BBQ 🔥', body: isAr ? 'اللحم يطلع طعمه مختلف. الحرارة ثابتة من أول الشوية لآخرها بدون إعادة إشعال.' : 'Different flavor entirely. Stable heat from start to finish.' },
   ];
 
   return (
