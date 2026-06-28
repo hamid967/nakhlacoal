@@ -148,7 +148,7 @@ export function SplashScreen() {
         aria-hidden
         loading="eager"
         decoding="async"
-        fetchPriority="high"
+        {...({ fetchpriority: "high" } as any)}
         width={640}
         height={640}
         className={`absolute pointer-events-none transition-opacity duration-[1400ms] ${stage >= 1 && stage < 4 ? "opacity-[0.06] md:opacity-[0.08]" : "opacity-0"}`}

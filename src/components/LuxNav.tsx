@@ -67,7 +67,7 @@ export function LuxNav() {
           </Link>
 
           {/* Desktop nav */}
-          <ul className="hidden lg:flex items-center gap-1 rounded-full px-2 py-1 border-luxe bg-surface/60 backdrop-blur-sm">
+          <ul className="hidden lg:flex flex-nowrap items-center gap-0.5 xl:gap-1 rounded-full px-2 py-1 border-luxe bg-surface/60 backdrop-blur-sm">
             {navItems.map((item) => (
               <li key={item.to}>
                 <NavLink to={item.to} end={item.to === '/'} className="block">
@@ -84,11 +84,11 @@ export function LuxNav() {
           {/* Right cluster */}
           <div className="flex items-center gap-1.5 md:gap-2">
             <AccountButton />
-            <button aria-label="Cart" className="hidden md:inline-flex w-10 h-10 rounded-full items-center justify-center text-foreground/70 hover:text-dark hover:bg-gold/10 transition-all">
+            <button aria-label="Cart" className="hidden xl:inline-flex w-10 h-10 rounded-full items-center justify-center text-foreground/70 hover:text-dark hover:bg-gold/10 transition-all">
               <ShoppingCart className="w-4 h-4" />
             </button>
             <LanguageToggle compact />
-            <button onClick={() => setOrderOpen(true)} className="hidden md:inline-flex btn-gold !px-5 !py-2.5 text-xs !rounded-full">
+            <button onClick={() => setOrderOpen(true)} className="hidden md:inline-flex btn-gold !px-4 xl:!px-5 !py-2 xl:!py-2.5 text-xs !rounded-full whitespace-nowrap">
               {t('nav.order')}
             </button>
             <button
