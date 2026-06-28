@@ -19,7 +19,7 @@ export default {
     extend: {
       fontFamily: {
         display: ['"Cormorant Garamond"', 'serif'],
-        body: ['"Inter Tight"', 'sans-serif'],
+        body: ['Karla', 'sans-serif'],
         arabic: ['Tajawal', 'serif'],
       },
       colors: {
@@ -38,6 +38,7 @@ export default {
           hi: "hsl(var(--gold-hi))",
           lo: "hsl(var(--gold-lo))",
         },
+        jade: "hsl(var(--jade))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
