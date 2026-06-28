@@ -42,7 +42,7 @@ export function WhatsAppFab() {
       {/* Premium Palm Charcoal AI FAB — perfectly circular */}
       <button
         type="button"
-        onClick={() => navigate('/assistant')}
+        onClick={() => setOpen(true)}
         aria-label={isAr ? 'مساعد فحم النخلة — اضغط هنا للطلب' : 'Palm Charcoal AI — tap to order'}
         className="fixed bottom-6 end-6 z-50 w-20 h-20 rounded-full flex items-center justify-center group transition-transform duration-500 ease-out hover:scale-110 motion-safe:animate-fab-float"
       >
