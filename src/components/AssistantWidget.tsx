@@ -61,6 +61,21 @@ const buildWa = (o: Record<string, any>) => [
 
 const PHONE_RE = /^(\+?966|0)?5\d{8}$/;
 
+function parseOrderIntent(text: string): { product_type: string; quantity: number; unit: 'kg' | 'carton' | 'ton' } {
+  const t = text.toLowerCase();
+  let product_type = 'فحم شواء';
+  if (/جوز\s*هند|coconut/i.test(t)) product_type = 'فحم جوز الهند';
+  else if (/شيشة|hookah|معسل/i.test(t)) product_type = 'فحم شيشة (جوز هند طبيعي)';
+  else if (/بخور|incense/i.test(t)) product_type = 'فحم بخور سريع الاشتعال';
+  else if (/خشب|lump/i.test(t)) product_type = 'فحم خشب';
+  else if (/هدايا|gift|box/i.test(t)) product_type = 'صندوق هدايا';
+  const qMatch = text.match(/(\d{1,5})\s*(كيلو|كجم|kg|كرتون|carton|طن|ton)?/i);
+  const quantity = qMatch ? parseInt(qMatch[1], 10) : 50;
+  const unitWord = qMatch?.[2]?.toLowerCase() ?? '';
+  const unit: 'kg' | 'carton' | 'ton' = /كرتون|carton/.test(unitWord) ? 'carton' : /طن|ton/.test(unitWord) ? 'ton' : 'kg';
+  return { product_type, quantity, unit };
+}
+
 export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () => void }) {
   const navigate = useNavigate();
   const [messages, setMessages] = useState<Msg[]>(() => loadMsgs());
@@ -110,6 +125,28 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
     const next = [...messages, userMsg, { id: aId, role: 'assistant' as const, content: '' }];
     setMessages(next);
     setStreaming(true);
+
+
+    const triggerOfflineOrder = (note: string) => {
+      const intent = parseOrderIntent(text);
+      const order = {
+        product_type: intent.product_type,
+        quantity: intent.quantity,
+        unit: intent.unit,
+        company_name: 'عميل',
+        contact_name: '',
+        phone: '',
+        address: '',
+        notes: text.slice(0, 200),
+        ai_summary: `طلب مباشر: ${intent.product_type} — ${intent.quantity} ${intent.unit}`,
+      };
+      const summary = `📦 **ملخص الطلب**\n\n- المنتج: **${order.product_type}**\n- الكمية: **${order.quantity} ${order.unit === 'kg' ? 'كجم' : order.unit === 'carton' ? 'كرتون' : 'طن'}**\n\n${note}\n\n👇 أكمل بياناتك في النموذج أدناه لإرسال الطلب فوراً عبر واتساب.`;
+      setMessages(prev => prev.map(m => m.id === aId ? { ...m, content: summary } : m));
+      setFormData({ contact_name: '', phone: '', address: '', delivery_method: 'توصيل' });
+      setFormErrors({});
+      setPendingOrder(order);
+    };
+
     try {
       const baseUrl = (supabase as any).supabaseUrl ?? import.meta.env.VITE_SUPABASE_URL;
       const anon = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
@@ -119,13 +156,16 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
         body: JSON.stringify({ messages: [...messages, userMsg].map(m => ({ role: m.role, content: m.content })) }),
       });
       if (!resp.ok) {
-        if (resp.status === 429) throw new Error('ضغط مرتفع على المساعد، حاول بعد قليل 🙏');
-        if (resp.status === 402) {
-          const fallback = `عذراً، المساعد الذكي غير متاح مؤقتاً. يسعدنا خدمتك مباشرة:\n\n📱 واتساب: [اضغط هنا للتواصل](${waHref})\n📧 بريد الطلبات: mab355@gmail.com\n📞 جوال: 0540060095`;
-          setMessages(prev => prev.map(m => m.id === aId ? { ...m, content: fallback } : m));
+        if (resp.status === 429) {
+          triggerOfflineOrder('⚡ المساعد مشغول حالياً، لكن يمكنك إكمال طلبك الآن مباشرة.');
           return;
         }
-        throw new Error('فشل الاتصال بالمساعد، جرّب واتساب للتواصل الفوري');
+        if (resp.status === 402) {
+          triggerOfflineOrder('💬 المساعد الذكي غير متاح مؤقتاً — لكن طلبك جاهز للإرسال الآن.');
+          return;
+        }
+        triggerOfflineOrder('تعذّر الاتصال بالمساعد، إليك ملخص طلبك السريع.');
+        return;
       }
       if (!resp.body) throw new Error('استجابة فارغة');
       const reader = resp.body.getReader();
@@ -149,6 +189,8 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
         });
         setFormErrors({});
         setPendingOrder(order);
+      } else if (!acc.trim()) {
+        triggerOfflineOrder('لم يصل رد من المساعد، يمكنك إتمام الطلب مباشرة.');
       }
     } catch (e: any) {
       const msg = e?.message ?? 'خطأ';
