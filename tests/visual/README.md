@@ -9,7 +9,7 @@ emerald→neutral fix).
 
 ```bash
 # dev server must be running on :8080
-node tests/visual/intro.spec.mjs
+python tests/visual/intro_visual_test.py
 ```
 
 Screenshots and a `report.json` land in `tests/visual/__screenshots__/`.
@@ -27,5 +27,5 @@ green background or gradient regression.
 Add to your pipeline after `npm run build && npm run preview &`:
 
 ```yaml
-- run: node tests/visual/intro.spec.mjs
+- run: python tests/visual/intro_visual_test.py
 ```
