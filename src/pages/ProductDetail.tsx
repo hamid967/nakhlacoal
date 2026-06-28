@@ -3,7 +3,6 @@ import { Link, useParams, Navigate } from 'react-router-dom';
 import { ArrowRight, ArrowLeft, ShoppingCart, MessageCircle, Check, Package, Flame, Clock, Wind, Droplets, Thermometer } from 'lucide-react';
 import { SEO } from '@/components/SEO';
 import { ScrollReveal } from '@/components/ScrollReveal';
-import { WhatsAppFab } from '@/components/WhatsAppFab';
 import { CompareToggle } from '@/components/CompareToggle';
 import { products, getProduct } from '@/data/products';
 
@@ -190,7 +189,6 @@ export default function ProductDetail() {
         </div>
       </section>
 
-      <WhatsAppFab />
     </>
   );
 }
