@@ -3,8 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ArrowLeft, Search, X } from 'lucide-react';
 import { SEO } from '@/components/SEO';
-import { ScrollReveal } from '@/components/ScrollReveal';
-import { PageHero } from '@/components/PageHero';
+import { PageIntro, LuxSection } from '@/components/ui-lux';
 import { products, type ProductCategory, type ProductUseCase } from '@/data/products';
 import { CompareToggle } from '@/components/CompareToggle';
 
