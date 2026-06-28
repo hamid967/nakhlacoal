@@ -12,11 +12,12 @@ i18n
       en: { translation: en },
       ar: { translation: ar },
     },
+    lng: typeof window !== 'undefined' ? (localStorage.getItem('palm-lang') || 'ar') : 'ar',
     fallbackLng: 'ar',
     supportedLngs: ['en', 'ar'],
     interpolation: { escapeValue: false },
     detection: {
-      order: ['localStorage', 'navigator'],
+      order: ['localStorage'],
       caches: ['localStorage'],
       lookupLocalStorage: 'palm-lang',
     },
