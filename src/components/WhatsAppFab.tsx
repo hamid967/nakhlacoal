@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Sparkles, MessageCircle, X } from 'lucide-react';
 import { OrderModal } from './OrderModal';
@@ -8,6 +9,7 @@ const WHATSAPP_NUMBER = '966540060095';
 
 export function WhatsAppFab() {
   const { i18n } = useTranslation();
+  const navigate = useNavigate();
   const isAr = i18n.language?.startsWith('ar');
   const [open, setOpen] = useState(false);
   const [order, setOrder] = useState(false);
@@ -38,11 +40,18 @@ export function WhatsAppFab() {
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
         </div>
         <button
-          onClick={() => { setOrder(true); setOpen(false); }}
+          onClick={() => { navigate('/assistant'); setOpen(false); }}
           className="mt-2 w-full text-start text-sm px-3 py-2 rounded-lg hover:bg-gold/10 transition flex items-center gap-2 font-arabic"
         >
           <Sparkles className="w-4 h-4 text-gold-hi" />
-          {isAr ? 'اطلب الآن (نموذج ذكي)' : 'Place a smart order'}
+          {isAr ? 'مساعد الطلبات الذكي' : 'AI Order Assistant'}
+        </button>
+        <button
+          onClick={() => { setOrder(true); setOpen(false); }}
+          className="w-full text-start text-sm px-3 py-2 rounded-lg hover:bg-gold/10 transition flex items-center gap-2 font-arabic"
+        >
+          <Sparkles className="w-4 h-4 text-gold-hi" />
+          {isAr ? 'طلب سريع (نموذج)' : 'Quick order form'}
         </button>
         <a
           href={waHref}

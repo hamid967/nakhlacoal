@@ -26,6 +26,8 @@ import Articles from '@/pages/Articles';
 import Studio from '@/pages/Studio';
 import Auth from '@/pages/Auth';
 import Profile from '@/pages/Profile';
+import Assistant from '@/pages/Assistant';
+import AdminOrders from '@/pages/AdminOrders';
 import NotFound from '@/pages/NotFound';
 
 const queryClient = new QueryClient();
@@ -57,6 +59,9 @@ export default function App() {
                 <Route path="/articles" element={<Articles />} />
                 <Route path="/studio" element={<ProtectedRoute><Studio /></ProtectedRoute>} />
                 <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                <Route path="/assistant" element={<Assistant />} />
+                <Route path="/assistant/:threadId" element={<Assistant />} />
+                <Route path="/admin/orders" element={<ProtectedRoute requireRole="admin"><AdminOrders /></ProtectedRoute>} />
                 <Route path="*" element={<NotFound />} />
               </Route>
             </Routes>
