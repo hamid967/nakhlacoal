@@ -217,6 +217,7 @@ export function SplashScreen() {
         @keyframes splash-marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
         @keyframes splash-ember { 0% { transform: translateY(0) translateX(0); opacity: 0; } 15% { opacity: 0.8; } 100% { transform: translateY(-115vh) translateX(20px); opacity: 0; } }
         @keyframes brand-reveal { 0% { opacity: 0; transform: translateY(20px) scale(0.92); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+        @keyframes splash-scan { 0%,100% { transform: translateY(0); } 50% { transform: translateY(100vh); } }
         .mask-fade { -webkit-mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent); mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent); }
       `}</style>
     </div>
