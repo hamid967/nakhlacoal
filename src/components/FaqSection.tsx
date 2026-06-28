@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Plus } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Helmet } from 'react-helmet-async';
 import { ScrollReveal } from '@/components/ScrollReveal';
 import { LuxSection, SectionHeader } from '@/components/ui-lux';
 
@@ -24,22 +23,8 @@ export function FaqSection() {
         { q: 'How can I place an order or request a quote?', a: 'Reach us via WhatsApp or the order form — our team responds within business hours.' },
       ];
 
-  const faqJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    inLanguage: isAr ? 'ar' : 'en',
-    mainEntity: items.map((it) => ({
-      '@type': 'Question',
-      name: it.q,
-      acceptedAnswer: { '@type': 'Answer', text: it.a },
-    })),
-  };
-
   return (
     <LuxSection id="faq" className="py-20 md:py-28">
-      <Helmet>
-        <script type="application/ld+json">{JSON.stringify(faqJsonLd)}</script>
-      </Helmet>
       <SectionHeader
         eyebrow={isAr ? 'الأسئلة الشائعة' : 'FAQ'}
         title={isAr ? 'إجابات لأكثر ما يسألنا عنه عملاؤنا' : 'Answers to what customers ask most'}

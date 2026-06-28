@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
-  <!-- Public, indexable routes only. Excluded by design: /auth /studio /compare /profile /admin (protected or app-internal). -->
+  <!-- Public, indexable routes only. Excluded: /auth /studio /compare /profile /admin (internal or protected) -->
   <url>
     <loc>https://alnakhlacoal.com/</loc>
     <xhtml:link rel="alternate" hreflang="ar" href="https://alnakhlacoal.com/?lang=ar"/>
@@ -32,6 +32,5 @@
   <url><loc>https://alnakhlacoal.com/articles/shisha-charcoal-guide</loc><lastmod>2025-02-04</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://alnakhlacoal.com/articles/incense-charcoal-guide</loc><lastmod>2025-03-12</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://alnakhlacoal.com/articles/natural-vs-pressed</loc><lastmod>2025-04-20</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://alnakhlacoal.com/wholesale</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://alnakhlacoal.com/contact</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
 </urlset>

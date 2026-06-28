@@ -1,61 +1,52 @@
-# تطوير مساعد فحم النخلة — أسلوب 2025
+# مساعد فحم النخلة AI — نظام طلبات داخلي
 
-## الهدف
-استبدال الـ Widget الحالي بتجربة محادثة حديثة على مستوى ChatGPT/Claude:
-- محادثات متعددة (Threads) محفوظة في المتصفح
-- صفحة كاملة بقاعدة زجاجية عائمة (Glass Dock)
-- مبنية على AI Elements الرسمية + AI SDK streaming
+## نظرة عامة
+مساعد محادثة ذكي يجمع بيانات الطلب تدريجياً (نوع الفحم، الكمية، بيانات المنشأة)، ثم يرسل الطلب إلى ثلاث وجهات: واتساب + بريد + لوحة إدارة داخل الموقع.
 
-## التغييرات
+## بنية المحادثة والتخزين
+- **محادثات متعددة (Threads)** بقائمة جانبية، كل طلب في محادثة مستقلة.
+- **بدون حفظ للمحادثات** — تبقى في الذاكرة فقط (sessionStorage) وتُمسح عند إغلاق المتصفح.
+- **الطلبات المكتملة فقط تُحفظ** في قاعدة البيانات للوحة الإدارة.
 
-### 1. AI Elements (تثبيت)
-- `conversation` — transcript + sticky scroll
-- `message` + `MessageResponse` — markdown مع streaming
-- `prompt-input` — composer زجاجي
-- `shimmer` — مؤشر "يفكر..."
+## التدفق
+1. المستخدم يضغط أيقونة "مساعد فحم النخلة AI" → ينتقل إلى `/assistant`.
+2. صفحة فيها قائمة جانبية للمحادثات + نافذة دردشة.
+3. المساعد يسأل بالعربية بشكل تدريجي:
+   - نوع الفحم (يعرض المنتجات المتاحة كاقتراحات).
+   - الكمية (طن/كرتون).
+   - بيانات المنشأة: اسم الشركة، اسم المسؤول، الجوال، الإيميل، المدينة، العنوان، السجل التجاري (اختياري)، نوع النشاط (مطعم/تصدير/جملة).
+   - تاريخ التسليم المطلوب.
+4. عند اكتمال البيانات، المساعد يعرض ملخص الطلب ويطلب التأكيد.
+5. عند التأكيد:
+   - يُحفظ الطلب في جدول `orders` (مرئي في `/admin/orders`).
+   - تُستدعى وظيفة `submit-order` التي ترسل بريداً إلى `mab355@gmail.com`.
+   - يُفتح واتساب على `+966 54 006 0095` برسالة منسقة.
 
-### 2. مسارات جديدة
-```
-/assistant              → إنشاء thread جديد ثم redirect
-/assistant/:threadId    → صفحة المحادثة الكاملة
-```
+## الصفحات والمكونات الجديدة
+- `src/pages/Assistant.tsx` — صفحة المحادثة الرئيسية بـ AI Elements.
+- `src/pages/admin/Orders.tsx` — لوحة إدارة الطلبات (محمية، للأدمن فقط).
+- `src/components/assistant/ThreadList.tsx` — قائمة المحادثات الجانبية.
+- `src/components/assistant/OrderSummaryCard.tsx` — بطاقة ملخص الطلب داخل المحادثة.
+- تحديث `WhatsAppFab` ليوجه "اطلب الآن (نموذج ذكي)" إلى `/assistant` بدلاً من المودال.
 
-### 3. تخزين الـ Threads (localStorage)
-```text
-nakhla.assistant.threads → [{ id, title, updatedAt, messages: UIMessage[] }]
-```
-- مسار bootstrap واحد محمي بـ `typeof window !== 'undefined'` (تجنّب StrictMode duplicates)
-- العنوان يُولَّد تلقائياً من أول رسالة المستخدم
-- زر "محادثة جديدة" + قائمة جانبية بكل المحادثات + حذف فردي
+## الواجهة الخلفية (Lovable Cloud)
+- **جدول `orders`** بأعمدة: `id, user_id, status, product_type, quantity, unit, company_name, contact_name, phone, email, city, address, commercial_register, business_type, delivery_date, notes, ai_summary, created_at`.
+- **RLS**: المستخدم يرى/ينشئ طلباته فقط، الأدمن يرى الكل.
+- **GRANT** للأدوار `authenticated` و `service_role`.
+- **Edge Function `chat-assistant`** — يستخدم Lovable AI Gateway (`google/gemini-3-flash-preview`) مع `streamText` + tool واحد `finalize_order` يستقبل الـ schema المهيكل للطلب.
+- **Edge Function `submit-order`** — يستقبل الطلب المؤكد، يحفظه في DB، ويرسل بريداً عبر Resend (سأطلب مفتاح `RESEND_API_KEY` لاحقاً عند التنفيذ، أو نكتفي مبدئياً بفتح `mailto:` من المتصفح إذا فضّل المستخدم تجنب طلب مفتاح إضافي).
 
-### 4. مكوّنات جديدة
-- `src/pages/Assistant.tsx` — الصفحة الجديدة (تستبدل القديمة)
-- `src/components/assistant/ThreadList.tsx` — شريط جانبي بقائمة المحادثات
-- `src/components/assistant/GlassDock.tsx` — composer زجاجي عائم في الأسفل
-- `src/hooks/useAssistantThreads.ts` — إدارة الـ threads في localStorage
-- `src/components/assistant/QuickActions.tsx` — اقتراحات سريعة (طلب فحم معسل، استفسار، تواصل)
+## التحقق والأمان
+- Zod على المدخلات في الـ Edge Functions.
+- التحقق من الجوال السعودي والإيميل قبل الإرسال.
+- صفحة `/admin/orders` محمية بـ `<ProtectedRoute requireRole="admin">`.
 
-### 5. الباك-إند
-- إعادة استخدام Edge Function `chat-assistant` الموجودة
-- التحويل إلى صيغة AI SDK المعيارية: `streamText` + `toUIMessageStreamResponse({ originalMessages })`
-- الحفاظ على system prompt الحالي (هوية فحم النخلة)
-- معالجة 402/429 برسائل واضحة + رابط واتساب احتياطي
+## التفاصيل التقنية
+- AI Elements: `Conversation`, `Message`, `MessageResponse`, `PromptInput`, `Tool`, `Shimmer`.
+- نموذج: `google/gemini-3-flash-preview`.
+- Tool calling: `finalize_order` مع Zod schema للبيانات المهيكلة.
+- شعار المساعد: شعار النخلة الذهبي (موجود مسبقاً).
+- اللغة الافتراضية: عربي، مع دعم RTL كامل.
 
-### 6. FAB
-- `WhatsAppFab` يفتح `/assistant` بدل الـ widget المنبثق
-- الإبقاء على نمط الجمرة الحيّة + الشارة
-
-### 7. الأسلوب البصري — Glass Dock
-- خلفية محادثة شفافة فوق mesh ذهبي/فحمي خفيف
-- رسائل المستخدم: فقاعة `bg-primary/95` + `text-primary-foreground`
-- رسائل المساعد: بدون خلفية، نص مباشر بخط body + markdown
-- composer: `backdrop-blur-xl` + حدّ ذهبي 1px + ظل دافئ + زر إرسال icon-sm
-- Shimmer "يفكر..." بدل dots التقليدية
-- متجاوب: على الموبايل تختفي القائمة الجانبية خلف Sheet
-
-## ملاحظات تقنية
-- استخدام `useChat` من `@ai-sdk/react` مع `id={threadId}` و key للـ remount عند تبديل المحادثة
-- حفظ الرسائل عبر `useEffect` مع dependencies كاملة (messages, status, threadId)
-- focus تلقائي على textarea عند فتح/تبديل المحادثة
-- RTL/LTR كامل (الموقع عربي افتراضياً)
-- التحقق بعد البناء: إنشاء محادثتين، إرسال رسالة في كل، إعادة تحميل، التأكد من فصل السجل
+## ملاحظة حول البريد
+لإرسال البريد تلقائياً نحتاج مفتاح `RESEND_API_KEY`. سأطلبه عند بدء التنفيذ. كبديل سريع: يمكن أن تفتح صفحة التأكيد رابط `mailto:` بمحتوى الطلب — أخبرني إن كنت تفضّل ذلك بدلاً من Resend.

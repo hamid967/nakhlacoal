@@ -23,7 +23,7 @@ export const brand = {
     description:
       'فحم النخلة — Premium Saudi charcoal crafted from sustainable date palm wood. Pure, long-burning, and naturally aromatic for grilling, hookah, and luxury hospitality worldwide.',
     copyrightYear: 2025,
-    address: 'Charcoal Souq, Al-Balad, Jeddah, Kingdom of Saudi Arabia',
+    address: 'King Fahd Road, Riyadh 12241, Kingdom of Saudi Arabia',
   },
 
   // Small stamps / labels used across the site

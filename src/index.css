@@ -375,57 +375,6 @@
     -webkit-text-fill-color: transparent;
     animation: lux-shine 6s linear infinite;
   }
-
-  /* ============= Framer-Marketplace polish ============= */
-  /* Soft mesh gradient backdrop — drop into any section as an absolute layer */
-  .fm-mesh {
-    background:
-      radial-gradient(60% 50% at 20% 0%, hsl(var(--gold) / 0.12) 0%, transparent 60%),
-      radial-gradient(45% 40% at 80% 10%, hsl(var(--jade) / 0.10) 0%, transparent 65%),
-      radial-gradient(55% 45% at 50% 100%, hsl(var(--gold-hi) / 0.10) 0%, transparent 60%);
-    filter: blur(0.5px);
-  }
-  /* Pill badge (uppercase micro-label) */
-  .fm-pill {
-    @apply inline-flex items-center gap-2 px-3 py-1 rounded-full border border-foreground/10 bg-background/70 backdrop-blur-sm text-[11px] font-semibold tracking-[0.18em] uppercase text-foreground/70;
-  }
-  .fm-pill::before {
-    content: '';
-    width: 6px; height: 6px; border-radius: 9999px;
-    background: hsl(var(--gold));
-    box-shadow: 0 0 0 3px hsl(var(--gold) / 0.18);
-  }
-  /* Editorial card — soft border, lift on hover */
-  .fm-card {
-    @apply rounded-2xl border border-foreground/10 bg-card transition-all duration-300;
-    box-shadow: 0 1px 0 hsl(var(--foreground) / 0.04), 0 12px 28px -18px hsl(var(--foreground) / 0.18);
-  }
-  .fm-card:hover {
-    border-color: hsl(var(--foreground) / 0.18);
-    transform: translateY(-3px);
-    box-shadow: 0 1px 0 hsl(var(--foreground) / 0.06), 0 28px 52px -22px hsl(var(--foreground) / 0.28);
-  }
-  /* Hairline grid divider (like Framer logo wall) */
-  .fm-grid {
-    @apply grid gap-px bg-foreground/10 rounded-2xl overflow-hidden border border-foreground/10;
-  }
-  .fm-grid > * { @apply bg-background; }
-  /* Pill nav segment */
-  .fm-segment {
-    @apply inline-flex items-center gap-1 p-1 rounded-full border border-foreground/10 bg-background/60 backdrop-blur;
-  }
-  .fm-segment > * {
-    @apply px-3 py-1.5 rounded-full text-xs font-medium text-foreground/70 transition-colors;
-  }
-  .fm-segment > .is-active {
-    @apply bg-foreground text-background;
-  }
-  /* Display headline tightening (Framer-style display type) */
-  .fm-display {
-    font-feature-settings: "ss01","cv11","kern";
-    letter-spacing: -0.03em;
-    line-height: 0.95;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
