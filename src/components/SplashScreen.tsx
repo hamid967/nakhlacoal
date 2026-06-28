@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import logo from "@/assets/palm-charcoal-logo.png";
 import heroCharcoal from "@/assets/hero-charcoal.jpg";
 import productBbq from "@/assets/product-bbq.jpg";
@@ -29,6 +30,7 @@ const preloadImages = (srcs: string[]) =>
   );
 
 export function SplashScreen() {
+  const navigate = useNavigate();
   const [hidden, setHidden] = useState(() => {
     if (typeof window === "undefined") return false;
     try { return sessionStorage.getItem(SESSION_KEY) === "1"; } catch { return false; }
@@ -63,6 +65,7 @@ export function SplashScreen() {
     timers.push(window.setTimeout(() => {
       setHidden(true);
       try { sessionStorage.setItem(SESSION_KEY, "1"); } catch {}
+      navigate("/");
     }, paradeEnd + 2000));
     return () => timers.forEach(clearTimeout);
   }, [ready]);
@@ -77,6 +80,7 @@ export function SplashScreen() {
     setTimeout(() => {
       setHidden(true);
       try { sessionStorage.setItem(SESSION_KEY, "1"); } catch {}
+      navigate("/");
     }, 600);
   };
 
