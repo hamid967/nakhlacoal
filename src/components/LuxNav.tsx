@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Menu, X, Flame } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { LanguageToggle } from './LanguageToggle';
+import logo from '@/assets/palm-charcoal-logo.png';
 
 const navItems = [
   { to: '/', key: 'nav.home' },
@@ -47,19 +48,8 @@ export function LuxNav() {
       >
         <div className="container flex items-center justify-between gap-6">
           {/* Brand mark */}
-          <Link to="/" className="group flex items-center gap-3">
-            <span className="relative flex items-center justify-center w-10 h-10 rounded-full border-luxe-strong">
-              <Flame className="w-4 h-4 text-gold transition-transform duration-700 group-hover:scale-110" />
-              <span className="absolute inset-0 rounded-full bg-gold/10 blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-            </span>
-            <span className="flex flex-col leading-none">
-              <span className={`text-base tracking-[0.15em] text-gold-hi ${isAr ? 'font-arabic' : 'font-display italic'}`}>
-                {isAr ? 'فحم النخلة' : 'PALM CHARCOAL'}
-              </span>
-              <span className="text-[10px] uppercase tracking-[0.35em] text-foreground/50 mt-1">
-                {isAr ? 'Premium Saudi' : 'فحم النخلة'}
-              </span>
-            </span>
+          <Link to="/" className="group flex items-center gap-2" aria-label="Palm Charcoal">
+            <img src={logo} alt="فحم النخلة Palm Charcoal" width={56} height={56} className="h-12 w-auto md:h-14 transition-transform duration-700 group-hover:scale-105" />
           </Link>
 
           {/* Desktop nav */}
@@ -122,9 +112,7 @@ export function LuxNav() {
           }`}
         >
           <div className="flex items-center justify-between mb-12">
-            <span className={`text-lg text-gold-hi ${isAr ? 'font-arabic' : 'font-display italic'}`}>
-              {isAr ? 'فحم النخلة' : 'Palm Charcoal'}
-            </span>
+            <img src={logo} alt="Palm Charcoal" width={48} height={48} className="h-12 w-auto" />
             <button
               className="w-10 h-10 rounded-full border-luxe flex items-center justify-center text-gold"
               onClick={() => setOpen(false)}

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Flame, Instagram, Linkedin, Mail } from 'lucide-react';
+import { Instagram, Linkedin, Mail } from 'lucide-react';
+import logo from '@/assets/palm-charcoal-logo.png';
 
 export function LuxFooter() {
   const { t, i18n } = useTranslation();
@@ -15,13 +16,8 @@ export function LuxFooter() {
       <div className="container relative grid grid-cols-1 lg:grid-cols-12 gap-12">
         {/* Brand block */}
         <div className="lg:col-span-5">
-          <Link to="/" className="inline-flex items-center gap-3 mb-6">
-            <span className="w-11 h-11 rounded-full border-luxe-strong flex items-center justify-center">
-              <Flame className="w-4 h-4 text-gold" />
-            </span>
-            <span className={`text-lg text-gold-hi ${isAr ? 'font-arabic' : 'font-display italic'}`}>
-              {isAr ? 'فحم النخلة' : 'Palm Charcoal'}
-            </span>
+          <Link to="/" className="inline-flex items-center gap-3 mb-6" aria-label="Palm Charcoal">
+            <img src={logo} alt="فحم النخلة Palm Charcoal" width={80} height={80} className="h-20 w-auto" />
           </Link>
           <p className="text-foreground/60 max-w-md leading-relaxed text-sm">{t('footer.tagline')}</p>
 
