@@ -5,6 +5,7 @@ import { Toaster as Sonner } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
 
 import { Layout } from '@/components/Layout';
+import { SplashScreen } from '@/components/SplashScreen';
 import Home from '@/pages/Home';
 import Products from '@/pages/Products';
 import About from '@/pages/About';
@@ -22,6 +23,7 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
+        <SplashScreen />
         <Toaster />
         <Sonner />
         <Routes>
