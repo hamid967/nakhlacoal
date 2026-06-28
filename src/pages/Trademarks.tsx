@@ -1,10 +1,19 @@
 import { useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ZoomIn, ZoomOut, RotateCcw, FileText, Shield, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ZoomIn, ZoomOut, RotateCcw, FileText, Shield, X, ChevronLeft, ChevronRight, Package, FlaskConical, Info, Globe2, MessageCircle } from 'lucide-react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { SEO } from '@/components/SEO';
 import { PageHero } from '@/components/PageHero';
 import { trademarks } from '@/data/trademarks';
+
+const RELATED = [
+  { to: '/products', icon: Package, title: 'المنتجات', desc: 'تصفّح فحم المعسل وفحم البخور بكل العلامات' },
+  { to: '/quality', icon: FlaskConical, title: 'الجودة والاعتمادات', desc: 'تقارير المختبر ومعايير الإنتاج' },
+  { to: '/about', icon: Info, title: 'من نحن', desc: 'قصة مؤسسة محمد عبدالله باعشن منذ 1434هـ' },
+  { to: '/export', icon: Globe2, title: 'التصدير B2B', desc: 'شروط دولية وطلب عرض سعر للمصدّرين' },
+  { to: '/contact', icon: MessageCircle, title: 'تواصل معنا', desc: 'واتساب 0540060095 أو البريد الإلكتروني' },
+];
 
 export default function Trademarks() {
   const [active, setActive] = useState<number | null>(null);
@@ -100,6 +109,31 @@ export default function Trademarks() {
                   </div>
                 </div>
               </motion.article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Quick Links */}
+      <section className="container mx-auto px-6 pb-20">
+        <div className="rounded-2xl border border-gold/20 bg-emerald/5 p-8">
+          <h3 className="font-serif text-2xl text-emerald mb-2">روابط سريعة</h3>
+          <p className="text-sm text-muted-foreground mb-6">انتقل إلى الصفحات ذات الصلة بسجل علاماتنا التجارية ومنتجاتنا.</p>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {RELATED.map(({ to, icon: Icon, title, desc }) => (
+              <Link
+                key={to}
+                to={to}
+                className="group flex items-start gap-3 p-4 rounded-xl border border-gold/20 bg-white/60 backdrop-blur-md hover:border-gold/60 hover:bg-white/80 hover:shadow-gold transition"
+              >
+                <span className="shrink-0 w-10 h-10 rounded-lg bg-emerald/10 text-emerald flex items-center justify-center group-hover:bg-emerald group-hover:text-cream transition">
+                  <Icon className="w-5 h-5" />
+                </span>
+                <div className="text-right">
+                  <p className="font-serif text-lg text-emerald">{title}</p>
+                  <p className="text-xs text-muted-foreground leading-relaxed">{desc}</p>
+                </div>
+              </Link>
             ))}
           </div>
         </div>
