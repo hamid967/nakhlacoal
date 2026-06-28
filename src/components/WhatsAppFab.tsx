@@ -46,34 +46,56 @@ export function WhatsAppFab() {
         </div>
       )}
 
-      {/* Branded AI FAB — Palm Charcoal logo */}
+      {/* Branded AI FAB — "Living Ember" (جمرة حيّة) */}
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-label={isAr ? 'مساعد فحم النخلة — اضغط هنا للطلب' : 'Palm Charcoal AI — tap to order'}
         aria-expanded={open}
-        className={`fixed bottom-6 end-6 z-50 w-[72px] h-[72px] rounded-full flex items-center justify-center shadow-gold group transition-all duration-500 ease-out ${
+        className={`fixed bottom-6 end-6 z-50 w-[72px] h-[72px] rounded-full flex items-center justify-center group transition-all duration-500 ease-out ${
           open ? 'scale-90 rotate-90' : 'scale-100 rotate-0 hover:scale-110'
         }`}
-        style={{
-          background:
-            'radial-gradient(circle at 30% 25%, hsl(var(--gold-hi)) 0%, hsl(var(--gold)) 50%, hsl(var(--dark)) 100%)',
-          boxShadow: '0 0 0 2px hsl(var(--gold) / 0.4), 0 8px 32px hsl(var(--gold) / 0.45)',
-        }}
       >
-        {!open && <span className="absolute inset-0 rounded-full bg-gold/40 motion-safe:animate-ping" />}
-        <span className="relative w-[58px] h-[58px] rounded-full bg-dark flex items-center justify-center overflow-hidden ring-1 ring-gold/50">
+        {/* Outer ember halo — soft red glow */}
+        {!open && (
+          <span
+            className="absolute inset-0 rounded-full motion-safe:animate-ping"
+            style={{ background: 'radial-gradient(circle, hsl(15 90% 55% / 0.55) 0%, transparent 70%)' }}
+            aria-hidden
+          />
+        )}
+        {/* Ember core — charcoal black with red-hot center */}
+        <span
+          className="relative w-[68px] h-[68px] rounded-full flex items-center justify-center overflow-hidden"
+          style={{
+            background:
+              'radial-gradient(circle at 50% 60%, hsl(18 100% 58%) 0%, hsl(8 85% 38%) 22%, hsl(0 60% 16%) 50%, hsl(0 0% 6%) 82%)',
+            boxShadow:
+              'inset 0 0 18px hsl(15 100% 50% / 0.55), inset 0 -6px 14px hsl(0 0% 0% / 0.7), 0 0 0 1.5px hsl(var(--gold) / 0.55), 0 10px 32px hsl(15 90% 45% / 0.5)',
+          }}
+        >
+          {/* Inner pulsing red-hot glow */}
+          <span
+            className="absolute inset-0 rounded-full motion-safe:animate-ember-pulse pointer-events-none"
+            style={{
+              background:
+                'radial-gradient(circle at 50% 65%, hsl(22 100% 62% / 0.9) 0%, hsl(10 90% 45% / 0.4) 30%, transparent 60%)',
+              mixBlendMode: 'screen',
+            }}
+            aria-hidden
+          />
           <span className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ${open ? 'opacity-0 scale-50 rotate-90' : 'opacity-100 scale-100 rotate-0'}`}>
             <img
               src={logo}
               alt=""
-              width={52}
-              height={52}
-              className="w-[52px] h-[52px] object-contain drop-shadow-[0_0_8px_hsl(var(--gold-hi)/0.6)]"
+              width={50}
+              height={50}
+              className="relative w-[50px] h-[50px] object-contain"
+              style={{ filter: 'drop-shadow(0 0 8px hsl(45 90% 70% / 0.85)) drop-shadow(0 0 4px hsl(20 100% 55% / 0.6))' }}
             />
           </span>
           <span className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ${open ? 'opacity-100 scale-100 rotate-0' : 'opacity-0 scale-50 -rotate-90'}`}>
-            <X className="w-6 h-6 text-gold-hi" />
+            <X className="w-6 h-6 text-gold-hi relative" />
           </span>
         </span>
         {!open && (
