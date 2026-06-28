@@ -90,7 +90,6 @@ export function LuxNav() {
               <ShoppingCart className="w-4 h-4" />
             </button>
             <LanguageToggle compact />
-            <button onClick={() => setOrderOpen(true)} className="hidden md:inline-flex btn-gold !px-4 xl:!px-5 !py-2 xl:!py-2.5 text-xs !rounded-full whitespace-nowrap">
             <button onClick={() => setQuoteOpen(true)} className="hidden lg:inline-flex items-center text-xs font-semibold text-dark hover:text-gold border-b border-dashed border-gold/50 hover:border-gold transition px-2 py-1 whitespace-nowrap">
               عرض سعر
             </button>
