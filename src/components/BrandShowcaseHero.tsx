@@ -322,14 +322,18 @@ export function BrandShowcaseHero() {
             {isAr ? 'عرض المنتجات' : 'View Products'}
           </Link>
           <a
-            href="/catalog.pdf"
+            href={`https://wa.me/966540060095?text=${encodeURIComponent(
+              isAr ? 'مرحباً، أرغب باستلام كتالوج فحم النخلة الرسمي PDF.' : 'Hello, please share the official Palm Charcoal PDF catalog.'
+            )}`}
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-transparent text-[#0D2818] border border-[#0D2818]/15 font-arabic text-sm font-semibold hover:bg-[#0D2818]/5 hover:-translate-y-0.5 transition-all"
           >
             <Download className="w-4 h-4" />
             {isAr ? 'تحميل الكتالوج' : 'Download Catalog'}
           </a>
         </motion.div>
-      </div>
+      </motion.div>
     </section>
   );
 }
