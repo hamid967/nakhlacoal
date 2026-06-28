@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, ShoppingCart, User } from 'lucide-react';
 import { LanguageToggle } from './LanguageToggle';
 import logo from '@/assets/palm-charcoal-logo.png';
+
 
 const navItems = [
   { to: '/', key: 'nav.home' },
