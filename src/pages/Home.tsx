@@ -24,10 +24,10 @@ const features = [
 ];
 
 const products = [
-  { img: productBbq, name: 'فحم الشواء', desc: 'مثالي للشواء والرحلات\nاحتراق طويل وحرارة عالية' },
-  { img: productCoconut, name: 'فحم جوز الهند', desc: 'صديق للبيئة - احتراق أطول\nرماد أقل - حرارة ثابتة' },
-  { img: productHookah, name: 'فحم المعسل', desc: 'لا يغير طعم المعسل\nاحتراق نظيف بدون رائحة' },
-  { img: productLump, name: 'الفحم المضغوط', desc: 'كثافة عالية - حرارة قوية\nمناسب للمطاعم والفنادق' },
+  { slug: 'bbq', img: productBbq, name: 'فحم الشواء', desc: 'مثالي للشواء والرحلات\nاحتراق طويل وحرارة عالية' },
+  { slug: 'coconut', img: productCoconut, name: 'فحم جوز الهند', desc: 'صديق للبيئة - احتراق أطول\nرماد أقل - حرارة ثابتة' },
+  { slug: 'hookah', img: productHookah, name: 'فحم المعسل', desc: 'لا يغير طعم المعسل\nاحتراق نظيف بدون رائحة' },
+  { slug: 'compressed', img: productLump, name: 'الفحم المضغوط', desc: 'كثافة عالية - حرارة قوية\nمناسب للمطاعم والفنادق' },
 ];
 
 const qualityBars = [
@@ -193,7 +193,7 @@ export default function Home() {
                   <div className="p-5 text-center flex-1 flex flex-col">
                     <h3 className="text-xl mb-2 font-arabic font-bold text-gold-hi">{p.name}</h3>
                     <p className="text-xs text-foreground/60 leading-relaxed whitespace-pre-line flex-1">{p.desc}</p>
-                    <Link to="/products" className="mt-4 inline-block w-full py-2.5 rounded-full border-luxe text-xs uppercase tracking-[0.2em] text-gold-hi hover:bg-gold/10 transition-colors duration-500">
+                    <Link to={`/products/${p.slug}`} className="mt-4 inline-block w-full py-2.5 rounded-full border-luxe text-xs uppercase tracking-[0.2em] text-gold-hi hover:bg-gold/10 transition-colors duration-500">
                       عرض المنتج
                     </Link>
                   </div>
