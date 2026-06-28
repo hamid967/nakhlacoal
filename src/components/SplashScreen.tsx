@@ -260,7 +260,8 @@ export function SplashScreen() {
             {isAr ? "جمر الفخامة" : "The Ember of Luxury"}
           </p>
           {/* Heritage badge — gilded seal */}
-          <div className="mt-5 inline-flex items-center gap-3 px-5 py-1.5 rounded-full border border-[hsl(var(--gold))]/40 bg-gradient-to-r from-[hsl(var(--gold))]/[0.06] via-[hsl(var(--gold))]/[0.12] to-[hsl(var(--gold))]/[0.06] backdrop-blur-sm shadow-[0_0_24px_hsl(var(--gold)/0.18)]">
+          <div className="mt-5 inline-flex items-center gap-3 px-5 py-1.5 rounded-full border border-[hsl(var(--gold))]/40 bg-gradient-to-r from-[hsl(var(--gold))]/[0.06] via-[hsl(var(--gold))]/[0.12] to-[hsl(var(--gold))]/[0.06] backdrop-blur-sm"
+            style={{ animation: "splash-seal-glow 5.5s ease-in-out infinite" }}>
             <span className="text-[hsl(var(--gold))] text-base leading-none">✦</span>
             <span className={`text-[10px] md:text-[11px] tracking-[0.32em] uppercase text-[hsl(var(--gold-hi))] ${isAr ? "font-arabic" : ""}`}>
               {isAr ? "من جدة · صناعة سعودية" : "From Jeddah · Made in Saudi Arabia"}
