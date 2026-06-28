@@ -51,16 +51,27 @@ export function SplashScreen() {
 
   useEffect(() => {
     if (!ready) return;
+    const reduce = typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
     const timers: number[] = [];
-    timers.push(window.setTimeout(() => setStage(1), 200));     // logo in
-    timers.push(window.setTimeout(() => setStage(2), 1400));    // start brand parade
 
-    // brand parade: ~750ms per brand
+    if (reduce) {
+      // Honor reduced motion: skip parade, show final stage briefly, then exit.
+      setStage(3);
+      timers.push(window.setTimeout(() => setStage(4), 600));
+      timers.push(window.setTimeout(() => {
+        setHidden(true);
+        try { sessionStorage.setItem(SESSION_KEY, "1"); } catch {}
+        navigate("/");
+      }, 1100));
+      return () => timers.forEach(clearTimeout);
+    }
+
+    timers.push(window.setTimeout(() => setStage(1), 200));
+    timers.push(window.setTimeout(() => setStage(2), 1400));
     trademarks.forEach((_, i) => {
       timers.push(window.setTimeout(() => setBrandIdx(i), 1400 + i * 750));
     });
-
-    const paradeEnd = 1400 + trademarks.length * 750; // ~5150
+    const paradeEnd = 1400 + trademarks.length * 750;
     timers.push(window.setTimeout(() => setStage(3), paradeEnd));
     timers.push(window.setTimeout(() => setStage(4), paradeEnd + 1200));
     timers.push(window.setTimeout(() => {
