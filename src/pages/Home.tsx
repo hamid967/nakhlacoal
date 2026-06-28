@@ -66,10 +66,12 @@ export default function Home() {
       />
 
       {/* ============= HERO ============= */}
-      <section className="relative pt-28 md:pt-32 pb-16 overflow-hidden">
-        <div className="absolute inset-0 ember-glow opacity-30 animate-ember pointer-events-none" />
-        <div className="container relative">
-          <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+      <section className="relative pt-24 md:pt-28 pb-16">
+        <div className="container">
+          <div className="relative rounded-3xl section-dark overflow-hidden p-6 md:p-12 lg:p-16">
+            <div className="absolute inset-0 ember-glow opacity-40 animate-ember pointer-events-none" />
+            <div className="relative grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+
             {/* Image */}
             <ScrollReveal>
               <div className="relative aspect-square rounded-2xl overflow-hidden border-luxe-strong shimmer-card">
