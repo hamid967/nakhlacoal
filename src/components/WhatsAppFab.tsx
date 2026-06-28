@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import { X } from 'lucide-react';
@@ -14,6 +14,26 @@ export function WhatsAppFab() {
   const onAssistantPage = location.pathname.startsWith('/assistant');
 
   if (onAssistantPage) return null;
+
+  // Esc key closes the panel even when focus is inside the iframe
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false);
+    };
+    const onBlur = () => {
+      // When iframe steals focus, listen there too
+      if (document.activeElement?.tagName === 'IFRAME') setTimeout(() => window.focus(), 0);
+    };
+    window.addEventListener('keydown', onKey);
+    window.addEventListener('blur', onBlur);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      window.removeEventListener('blur', onBlur);
+    };
+  }, [open]);
+
+
 
 
   return (
@@ -162,6 +182,9 @@ export function WhatsAppFab() {
         <SheetContent
           side={isAr ? 'left' : 'right'}
           className="w-full sm:max-w-md p-0 border-gold/30 bg-dark"
+          onEscapeKeyDown={() => setOpen(false)}
+          onPointerDownOutside={() => setOpen(false)}
+          onInteractOutside={() => setOpen(false)}
         >
           <div className="flex items-center justify-between px-4 py-3 border-b border-gold/20 bg-dark">
             <div className="flex items-center gap-2">
