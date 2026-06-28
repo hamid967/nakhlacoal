@@ -2,6 +2,19 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Send, Loader2, Sparkles, X, Maximize2, CheckCircle2, MessageCircle } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
+
+const mdComponents = {
+  a: ({ href, children }: any) => (
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer noopener"
+      className="text-gold underline decoration-gold/40 underline-offset-2 hover:decoration-gold transition font-medium break-all"
+    >
+      {children}
+    </a>
+  ),
+};
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import logo from '@/assets/palm-charcoal-logo.png';
