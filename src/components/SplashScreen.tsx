@@ -258,16 +258,55 @@ export function SplashScreen() {
           </div>
         </div>
 
-        {/* Trademark parade */}
+        {/* Trademark 3D coverflow — "علاماتنا" */}
         <div className={`absolute inset-x-0 top-1/2 -translate-y-1/2 flex flex-col items-center transition-opacity duration-500 ${
           stage === 2 ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}>
-          <div key={current.id} className="flex flex-col items-center animate-[brand-reveal_0.5s_ease-out]">
-            <div className="relative w-40 h-40 md:w-56 md:h-56 rounded-2xl bg-white/5 backdrop-blur-sm border border-[hsl(var(--gold))]/30 p-4 flex items-center justify-center"
-              style={{ boxShadow: "0 0 60px hsl(var(--gold) / 0.25)" }}>
-              <img src={current.image} alt={current.nameAr} className="max-w-full max-h-full object-contain"  />
-            </div>
-            <h3 className="mt-5 font-serif text-2xl md:text-3xl text-[hsl(var(--gold))]">{current.nameAr}</h3>
+          <div className="text-[10px] md:text-xs uppercase tracking-[0.5em] text-[hsl(var(--gold))]/85 mb-6">
+            {isAr ? "علاماتنا" : "Our Brands"}
+          </div>
+
+          <div
+            className="relative w-full h-52 md:h-72 flex items-center justify-center"
+            style={{ perspective: "1400px" }}
+          >
+            {trademarks.map((t, i) => {
+              const offset = i - brandIdx;
+              const abs = Math.abs(offset);
+              if (abs > 3) return null;
+              const isActive = offset === 0;
+              const translateX = offset * 130;
+              const rotateY = offset * -32;
+              const scale = isActive ? 1 : 0.78 - Math.min(abs - 1, 2) * 0.08;
+              const opacity = isActive ? 1 : Math.max(0.25, 0.7 - (abs - 1) * 0.2);
+              return (
+                <div
+                  key={t.id}
+                  className="absolute transition-all duration-700 ease-out"
+                  style={{
+                    transform: `translateX(${translateX}px) rotateY(${rotateY}deg) scale(${scale})`,
+                    opacity,
+                    zIndex: 50 - abs,
+                    transformStyle: "preserve-3d",
+                  }}
+                >
+                  <div
+                    className="w-36 h-36 md:w-52 md:h-52 rounded-2xl bg-white/5 backdrop-blur-sm border border-[hsl(var(--gold))]/30 p-4 flex items-center justify-center"
+                    style={{
+                      boxShadow: isActive
+                        ? "0 0 80px hsl(var(--gold) / 0.35), 0 20px 60px rgba(0,0,0,0.5)"
+                        : "0 10px 40px rgba(0,0,0,0.4)",
+                    }}
+                  >
+                    <img src={t.image} alt={t.nameAr} className="max-w-full max-h-full object-contain" />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          <div key={current.id} className="flex flex-col items-center mt-6 animate-[brand-reveal_0.5s_ease-out]">
+            <h3 className="font-serif text-2xl md:text-3xl text-[hsl(var(--gold))]">{current.nameAr}</h3>
             <p className="text-xs md:text-sm text-foreground/60 mt-1">{current.nameEn}</p>
             <p className="text-[10px] md:text-xs uppercase tracking-[0.3em] text-foreground/40 mt-3">
               {isAr ? "علامة تجارية مسجلة — المملكة العربية السعودية" : "Registered Trademark — Saudi Arabia"}
