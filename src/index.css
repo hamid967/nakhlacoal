@@ -133,10 +133,43 @@
 
   /* Glass surface (light, sits on dark hero panels) */
   .glass-luxe {
-    background: hsl(0 0% 100% / 0.85);
-    backdrop-filter: blur(20px) saturate(1.2);
-    -webkit-backdrop-filter: blur(20px) saturate(1.2);
-    border-bottom: 1px solid hsl(30 12% 14% / 0.06);
+    background: hsl(46 47% 95% / 0.72);
+    backdrop-filter: blur(22px) saturate(1.4);
+    -webkit-backdrop-filter: blur(22px) saturate(1.4);
+    border-bottom: 1px solid hsl(158 78% 16% / 0.06);
+  }
+  .glass-luxe-solid {
+    background: linear-gradient(180deg, hsl(46 50% 96% / 0.96), hsl(46 40% 92% / 0.92));
+    backdrop-filter: blur(28px) saturate(1.5);
+    -webkit-backdrop-filter: blur(28px) saturate(1.5);
+    border-bottom: 1px solid hsl(158 78% 16% / 0.10);
+    box-shadow: 0 12px 40px -18px hsl(158 78% 10% / 0.18);
+  }
+
+  /* Nav link pill */
+  .nav-pill {
+    @apply relative inline-flex items-center px-4 py-2 rounded-full text-sm font-medium transition-all duration-500;
+    color: hsl(var(--foreground) / 0.72);
+  }
+  .nav-pill:hover {
+    color: hsl(var(--dark));
+    background: hsl(var(--gold) / 0.10);
+  }
+  .nav-pill[data-active="true"] {
+    color: hsl(var(--background));
+    background: hsl(var(--dark));
+    box-shadow: 0 8px 22px -10px hsl(158 78% 16% / 0.55);
+  }
+  .nav-pill[data-active="true"]::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: -6px;
+    width: 4px; height: 4px;
+    border-radius: 999px;
+    background: hsl(var(--gold-hi));
+    transform: translateX(-50%);
+    box-shadow: 0 0 10px hsl(var(--gold-hi));
   }
 
   /* Dark accent section (why-us, hero panel, about, footer) */
