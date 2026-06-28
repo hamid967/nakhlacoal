@@ -582,6 +582,34 @@ export default function Quality() {
         </div>
       </section>
 
+      {/* Registered Trademarks Showcase */}
+      <section className="py-28 bg-gradient-to-b from-background to-surface-2/30 border-y border-gold/10">
+        <div className="container">
+          <SectionTitle eyebrow="ملكية فكرية موثقة" title="علامات تجارية مسجلة رسمياً" />
+          <div className="grid sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+            {trademarks.map((t, i) => (
+              <motion.div key={t.id}
+                initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }} transition={{ delay: i * 0.08 }}
+                className="group rounded-2xl border border-gold/20 bg-white/60 backdrop-blur p-4 hover:border-gold/60 hover:shadow-gold transition"
+              >
+                <div className="aspect-square bg-cream rounded-lg overflow-hidden mb-3">
+                  <img src={t.image} alt={t.nameAr} className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform" loading="lazy" />
+                </div>
+                <h4 className="font-arabic font-bold text-sm text-foreground">{t.nameAr}</h4>
+                <p className="text-[10px] text-muted-foreground font-mono mt-1">رقم {t.registrationNo}</p>
+              </motion.div>
+            ))}
+          </div>
+          <div className="text-center">
+            <Link to="/trademarks" className="inline-block px-6 py-3 rounded-lg bg-emerald text-cream hover:bg-jade transition font-arabic text-sm">
+              عرض التقرير التفاعلي الكامل
+            </Link>
+          </div>
+        </div>
+      </section>
+
+
 
       {/* Timeline */}
       <section className="py-28">
