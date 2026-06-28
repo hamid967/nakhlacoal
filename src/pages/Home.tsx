@@ -5,6 +5,7 @@ import { ScrollReveal } from '@/components/ScrollReveal';
 import { WhatsAppFab } from '@/components/WhatsAppFab';
 import { HomeIntro } from '@/components/HomeIntro';
 import { LocationSection } from '@/components/LocationSection';
+import { FaqSection } from '@/components/FaqSection';
 import {
   useDir,
   LuxSection,
