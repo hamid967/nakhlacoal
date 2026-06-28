@@ -23,6 +23,7 @@ import Contact from '@/pages/Contact';
 import Trademarks from '@/pages/Trademarks';
 import Uses from '@/pages/Uses';
 import Articles from '@/pages/Articles';
+import ArticleDetail from '@/pages/ArticleDetail';
 import Studio from '@/pages/Studio';
 import Auth from '@/pages/Auth';
 import Profile from '@/pages/Profile';
