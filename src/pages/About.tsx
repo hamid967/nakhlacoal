@@ -1,8 +1,10 @@
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import { SEO } from '@/components/SEO';
 import { ScrollReveal } from '@/components/ScrollReveal';
 import { PageIntro, LuxSection, SectionHeader, FeatureCard } from '@/components/ui-lux';
-import { Target, Eye, Gem } from 'lucide-react';
+import { Target, Eye, Gem, Award } from 'lucide-react';
+import { trademarks } from '@/data/trademarks';
 
 const ICONS = [Target, Eye, Gem] as const;
 
