@@ -325,6 +325,8 @@ export function SplashScreen() {
         @keyframes brand-reveal { 0% { opacity: 0; transform: translateY(20px) scale(0.92); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
         @keyframes splash-scan { 0%,100% { transform: translateY(0); } 50% { transform: translateY(100vh); } }
         @keyframes splash-float { 0%,100% { transform: translateY(0) rotate(var(--r,0deg)); } 50% { transform: translateY(-12px) rotate(var(--r,0deg)); } }
+        @keyframes splash-rotate { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
+        @keyframes splash-drift { 0% { transform: translate(0, 0); } 50% { transform: translate(18px, -22px); } 100% { transform: translate(-14px, 14px); } }
         .mask-fade { -webkit-mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent); mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent); }
         @media (prefers-reduced-motion: reduce) {
           .fixed[class*="z-[100]"] *,
