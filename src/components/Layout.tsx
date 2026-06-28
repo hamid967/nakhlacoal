@@ -2,6 +2,8 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import { LuxNav } from './LuxNav';
 import { LuxFooter } from './LuxFooter';
+import { PromoBanner } from './PromoBanner';
+import { WhatsAppFab } from './WhatsAppFab';
 
 export function Layout() {
   const { pathname } = useLocation();
@@ -11,11 +13,13 @@ export function Layout() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <PromoBanner />
       <LuxNav />
       <main>
         <Outlet />
       </main>
       <LuxFooter />
+      <WhatsAppFab />
     </div>
   );
 }
