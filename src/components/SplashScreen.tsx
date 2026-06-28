@@ -113,8 +113,44 @@ export function SplashScreen() {
       </button>
 
       <div className="absolute inset-0" style={{
-        background: "radial-gradient(ellipse at center, hsl(var(--gold) / 0.22) 0%, transparent 55%), radial-gradient(circle at 50% 110%, hsl(var(--gold) / 0.14), transparent 60%), linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--background)) 100%)",
+        background: "radial-gradient(ellipse at center, hsl(var(--gold) / 0.22) 0%, transparent 55%), radial-gradient(circle at 50% 110%, hsl(var(--gold) / 0.14), transparent 60%), radial-gradient(circle at 50% -10%, hsl(150 60% 8% / 0.55), transparent 55%), linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--background)) 100%)",
       }} />
+
+      {/* Cinematic vignette */}
+      <div className="absolute inset-0 pointer-events-none" style={{
+        background: "radial-gradient(ellipse at center, transparent 35%, hsl(0 0% 0% / 0.55) 100%)",
+      }} />
+
+      {/* Film grain */}
+      <div className="absolute inset-0 pointer-events-none opacity-[0.06] mix-blend-overlay" aria-hidden style={{
+        backgroundImage: "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.85'/></svg>\")",
+      }} />
+
+      {/* Slow rotating gilded ring behind logo */}
+      <div className={`absolute top-1/2 left-1/2 pointer-events-none transition-opacity duration-[1400ms] ${stage >= 1 && stage < 4 ? "opacity-60" : "opacity-0"}`}
+        style={{ width: "min(72vmin, 640px)", height: "min(72vmin, 640px)", transform: "translate(-50%, -50%)", animation: stage >= 1 ? "splash-rotate 60s linear infinite" : undefined }} aria-hidden>
+        <div className="w-full h-full rounded-full border border-[hsl(var(--gold))]/20"
+          style={{ boxShadow: "inset 0 0 80px hsl(var(--gold) / 0.08), 0 0 60px hsl(var(--gold) / 0.06)" }} />
+        <div className="absolute inset-[8%] rounded-full border border-dashed border-[hsl(var(--gold))]/15" />
+      </div>
+
+      {/* Gold dust suspended particles */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden>
+        {Array.from({ length: 28 }).map((_, i) => {
+          const size = 1 + (i % 4) * 0.5;
+          return (
+            <span key={`dust-${i}`} className="absolute rounded-full bg-[hsl(var(--gold))]"
+              style={{
+                width: `${size}px`, height: `${size}px`,
+                top: `${(i * 37) % 100}%`, left: `${(i * 53) % 100}%`,
+                opacity: 0.25 + (i % 5) * 0.1,
+                boxShadow: "0 0 6px hsl(var(--gold) / 0.7)",
+                animation: `splash-drift ${14 + (i % 7)}s ease-in-out ${i * 0.3}s infinite alternate`,
+              }} />
+          );
+        })}
+      </div>
+
 
       {/* Trademark constellation background — clamped to corners, never overlaps logo */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden>
@@ -289,6 +325,8 @@ export function SplashScreen() {
         @keyframes brand-reveal { 0% { opacity: 0; transform: translateY(20px) scale(0.92); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
         @keyframes splash-scan { 0%,100% { transform: translateY(0); } 50% { transform: translateY(100vh); } }
         @keyframes splash-float { 0%,100% { transform: translateY(0) rotate(var(--r,0deg)); } 50% { transform: translateY(-12px) rotate(var(--r,0deg)); } }
+        @keyframes splash-rotate { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
+        @keyframes splash-drift { 0% { transform: translate(0, 0); } 50% { transform: translate(18px, -22px); } 100% { transform: translate(-14px, 14px); } }
         .mask-fade { -webkit-mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent); mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent); }
         @media (prefers-reduced-motion: reduce) {
           .fixed[class*="z-[100]"] *,
