@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import { Volume2, VolumeX, Menu, X } from 'lucide-react'
 import { useState, useRef, useEffect } from 'react'
+import { brand } from '@/lib/brand'
 
 export function Hero() {
   const [isMuted, setIsMuted] = useState(true)
