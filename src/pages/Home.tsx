@@ -65,53 +65,9 @@ export default function Home() {
         path="/"
       />
 
-      {/* Trust strip */}
-      <section className="pt-24 md:pt-28">
-        <div className="container grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
-          {topStrip.map((f, i) => <TrustItem key={i} icon={f.icon} text={f.text} index={i} />)}
-        </div>
-      </section>
+      {/* HERO — Brand Showcase */}
+      <BrandShowcaseHero />
 
-      {/* HERO */}
-      <section className="py-14 md:py-24">
-        <div className="container grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
-          <ScrollReveal className="lg:col-span-6 order-2 lg:order-1">
-            <Eyebrow>{isAr ? 'فحم النخلة' : 'Palm Charcoal'}</Eyebrow>
-            <h1 className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[1.05] my-6 ${isAr ? 'font-arabic font-bold' : 'font-display font-bold'}`}>
-              {isAr ? (<>جودة طبيعية..<br /><span className="text-jade italic font-light">احتراق يدوم</span></>) : (<>Natural Quality.<br /><span className="text-jade italic font-light">Lasting Burn.</span></>)}
-            </h1>
-            <p className="text-base md:text-lg leading-relaxed text-foreground/75 mb-10 max-w-xl font-arabic">
-              {isAr ? 'فحم طبيعي ١٠٠٪ مصنوع من أجود أنواع الخشب الطبيعي بدون مواد كيميائية. يمنحك احتراقاً أطول، حرارة عالية، ورماد أقل.' : '100% natural charcoal crafted from the finest wood — no chemicals. Longer burn, higher heat, less ash.'}
-            </p>
-            <div className="flex flex-wrap items-center gap-5">
-              <LuxButton to="/products" withArrow>{isAr ? 'تسوق المنتجات' : 'Shop Products'}</LuxButton>
-              <Link to="/about" className="text-dark/80 hover:text-gold-lo border-b border-gold/40 hover:border-gold pb-1 font-medium text-sm font-arabic transition-colors">
-                {isAr ? 'تعرف علينا أكثر' : 'About us'}
-              </Link>
-            </div>
-            <div className="mt-12 grid grid-cols-3 gap-6 max-w-md">
-              <Stat value="+5" label={isAr ? 'سنوات خبرة' : 'Years'} />
-              <Stat value="100%" label={isAr ? 'طبيعي' : 'Natural'} />
-              <Stat value="12+" label={isAr ? 'دولة تصدير' : 'Countries'} />
-            </div>
-          </ScrollReveal>
-
-          <ScrollReveal delay={150} className="lg:col-span-6 order-1 lg:order-2 relative">
-            <HeroSlideshow />
-
-            <div className="hidden md:flex absolute -bottom-6 -start-6 bg-surface rounded-2xl border-luxe shadow-luxe p-4 items-center gap-3 max-w-[240px] animate-pulse-soft">
-              <span className="relative w-12 h-12 rounded-full bg-jade/10 text-jade flex items-center justify-center">
-                <ShieldCheck className="w-6 h-6" />
-                <span className="absolute inset-0 rounded-full ring-2 ring-jade/40 animate-ping" />
-              </span>
-              <div>
-                <div className="text-sm font-bold text-jade font-arabic">{isAr ? 'جودة معتمدة' : 'Certified Quality'}</div>
-                <div className="text-[11px] text-foreground/60 font-arabic">{isAr ? 'علامة مسجلة · 143313025' : 'Trademark · 143313025'}</div>
-              </div>
-            </div>
-          </ScrollReveal>
-        </div>
-      </section>
 
       {/* Features */}
       <LuxSection tone="surface">
