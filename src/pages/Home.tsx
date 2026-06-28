@@ -3,6 +3,7 @@ import { Flame, Clock, Leaf, Wind, ShieldCheck, Award, Star } from 'lucide-react
 import { SEO } from '@/components/SEO';
 import { ScrollReveal } from '@/components/ScrollReveal';
 import { HomeIntro } from '@/components/HomeIntro';
+import { HeroSlideshow } from '@/components/HeroSlideshow';
 import { LocationSection } from '@/components/LocationSection';
 import { FaqSection } from '@/components/FaqSection';
 import {
