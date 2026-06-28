@@ -118,9 +118,24 @@ export function ProcessSection() {
 
           {/* Frames */}
           <div className="relative px-6 md:px-12 py-8 md:py-10">
-            <div className="flex gap-3 md:gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-none pb-2"
-              style={{ scrollbarWidth: 'none' }}
+            <div
+              ref={stripRef}
+              onPointerDown={onPointerDown}
+              onPointerMove={onPointerMove}
+              onPointerUp={onPointerUp}
+              onPointerCancel={onPointerUp}
+              onMouseEnter={() => setPlaying(false)}
+              onMouseLeave={() => setPlaying(true)}
+              className={`flex gap-3 md:gap-4 overflow-x-auto snap-x scrollbar-none pb-2 select-none ${dragging ? 'cursor-grabbing' : 'cursor-grab'}`}
+              style={{
+                scrollbarWidth: 'none',
+                scrollBehavior: dragging ? 'auto' : 'smooth',
+                willChange: 'scroll-position',
+                transform: 'translate3d(0,0,0)',
+                touchAction: 'pan-y',
+              }}
             >
+
               {steps.map((step, i) => {
                 const txt = isAr ? step.ar : step.en;
                 return (
