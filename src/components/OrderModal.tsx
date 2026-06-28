@@ -3,142 +3,259 @@ import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { products } from '@/data/products';
-import { MessageCircle } from 'lucide-react';
+import { MessageCircle, ArrowRight, ArrowLeft, Check, User, Building2, Store, Globe2 } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 
 const WHATSAPP_NUMBER = '966540060095';
-const ORDER_EMAIL = 'mab355@gmail.com';
 
-const orderSchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(2, { message: 'name_min' })
-    .max(60, { message: 'name_max' })
-    .regex(/^[\p{L}\s'-]+$/u, { message: 'name_invalid' }),
-  phone: z
-    .string()
-    .trim()
-    .regex(/^\+?[0-9\s-]{8,16}$/, { message: 'phone_invalid' }),
-  qty: z.coerce
-    .number({ invalid_type_error: 'qty_invalid' })
-    .int({ message: 'qty_invalid' })
-    .min(1, { message: 'qty_min' })
-    .max(100000, { message: 'qty_max' }),
+type CustomerType = 'individual' | 'restaurant' | 'distributor' | 'exporter';
+type LineItem = { slug: string; qty: number };
+
+const customerTypes: { id: CustomerType; ar: string; en: string; icon: typeof User }[] = [
+  { id: 'individual', ar: 'عميل فردي', en: 'Individual', icon: User },
+  { id: 'restaurant', ar: 'مطعم / مقهى', en: 'Restaurant / Café', icon: Store },
+  { id: 'distributor', ar: 'موزّع جملة', en: 'Distributor', icon: Building2 },
+  { id: 'exporter', ar: 'مستورد دولي', en: 'International importer', icon: Globe2 },
+];
+
+const contactSchema = z.object({
+  name: z.string().trim().min(2).max(60).regex(/^[\p{L}\s'-]+$/u),
+  phone: z.string().trim().regex(/^\+?[0-9\s-]{8,16}$/),
+  city: z.string().trim().min(2).max(60),
+  notes: z.string().trim().max(500).optional(),
 });
-
-type FieldErrors = Partial<Record<'name' | 'phone' | 'qty', string>>;
-
-const messages: Record<string, { ar: string; en: string }> = {
-  name_min: { ar: 'الاسم قصير جداً (حرفين على الأقل)', en: 'Name is too short (min 2 characters)' },
-  name_max: { ar: 'الاسم طويل جداً (60 حرفاً كحد أقصى)', en: 'Name is too long (max 60 characters)' },
-  name_invalid: { ar: 'يرجى إدخال اسم صحيح بدون أرقام أو رموز', en: 'Please enter a valid name (letters only)' },
-  phone_invalid: { ar: 'رقم جوال غير صحيح. مثال: +9665XXXXXXXX', en: 'Invalid phone number. e.g. +9665XXXXXXXX' },
-  qty_invalid: { ar: 'الكمية يجب أن تكون رقماً صحيحاً', en: 'Quantity must be a whole number' },
-  qty_min: { ar: 'الحد الأدنى للكمية هو 1 كجم', en: 'Minimum quantity is 1 kg' },
-  qty_max: { ar: 'الكمية كبيرة جداً (الحد الأقصى 100,000 كجم)', en: 'Quantity is too large (max 100,000 kg)' },
-};
 
 export function OrderModal({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
   const { i18n } = useTranslation();
   const isAr = i18n.language?.startsWith('ar');
-  const [product, setProduct] = useState(products[0]?.slug ?? '');
-  const [qty, setQty] = useState('10');
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [notes, setNotes] = useState('');
-  const [errors, setErrors] = useState<FieldErrors>({});
+  const [step, setStep] = useState(1);
+  const [customer, setCustomer] = useState<CustomerType>('individual');
+  const [items, setItems] = useState<LineItem[]>([{ slug: products[0]?.slug ?? '', qty: 10 }]);
+  const [contact, setContact] = useState({ name: '', phone: '', city: '', notes: '' });
+  const [errors, setErrors] = useState<Record<string, boolean>>({});
+  const [submitting, setSubmitting] = useState(false);
 
-  const msg = (key?: string) => (key ? (isAr ? messages[key]?.ar : messages[key]?.en) : undefined);
-
-  const submit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const result = orderSchema.safeParse({ name, phone, qty });
-    if (!result.success) {
-      const fieldErrors: FieldErrors = {};
-      for (const issue of result.error.issues) {
-        const key = issue.path[0] as keyof FieldErrors;
-        if (key && !fieldErrors[key]) fieldErrors[key] = issue.message;
-      }
-      setErrors(fieldErrors);
-      return;
-    }
+  const reset = () => {
+    setStep(1); setCustomer('individual');
+    setItems([{ slug: products[0]?.slug ?? '', qty: 10 }]);
+    setContact({ name: '', phone: '', city: '', notes: '' });
     setErrors({});
-    const { name: vName, phone: vPhone, qty: vQty } = result.data;
-    const p = products.find((x) => x.slug === product);
-    const safeNotes = notes.trim().slice(0, 500);
-    const text = isAr
-      ? `مرحباً، أود تقديم طلب:\n• المنتج: ${p?.nameAr ?? product}\n• الكمية: ${vQty} كجم\n• الاسم: ${vName}\n• الجوال: ${vPhone}\n• ملاحظات: ${safeNotes}`
-      : `Hello, I'd like to place an order:\n• Product: ${p?.nameEn ?? product}\n• Quantity: ${vQty} kg\n• Name: ${vName}\n• Phone: ${vPhone}\n• Notes: ${safeNotes}`;
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`, '_blank');
-    onOpenChange(false);
   };
 
-  const inputCls = (hasError?: boolean) =>
-    `w-full px-3 py-2 rounded-lg border bg-background ${hasError ? 'border-destructive focus:outline-destructive' : 'border-input'}`;
+  const handleOpenChange = (v: boolean) => {
+    if (!v) setTimeout(reset, 300);
+    onOpenChange(v);
+  };
+
+  const addItem = () => setItems([...items, { slug: products[0]?.slug ?? '', qty: 5 }]);
+  const removeItem = (i: number) => setItems(items.filter((_, idx) => idx !== i));
+  const updateItem = (i: number, patch: Partial<LineItem>) => {
+    setItems(items.map((it, idx) => (idx === i ? { ...it, ...patch } : it)));
+  };
+
+  const totalKg = items.reduce((sum, it) => sum + (Number(it.qty) || 0), 0);
+
+  const canNext1 = !!customer;
+  const canNext2 = items.length > 0 && items.every((it) => it.slug && it.qty > 0);
+
+  const validateContact = () => {
+    const r = contactSchema.safeParse(contact);
+    if (!r.success) {
+      const e: Record<string, boolean> = {};
+      r.error.issues.forEach((i) => { e[i.path[0] as string] = true; });
+      setErrors(e);
+      return false;
+    }
+    setErrors({});
+    return true;
+  };
+
+  const buildSummary = () => {
+    const lines = items
+      .map((it, idx) => {
+        const p = products.find((x) => x.slug === it.slug);
+        return `${idx + 1}. ${isAr ? p?.nameAr : p?.nameEn} — ${it.qty} ${isAr ? 'كجم' : 'kg'}`;
+      })
+      .join('\n');
+    const cust = customerTypes.find((c) => c.id === customer);
+    return isAr
+      ? `🌴 *طلب جديد — فحم النخلة*\n\n👤 نوع العميل: ${cust?.ar}\n\n📦 المنتجات:\n${lines}\n\n📊 الإجمالي: ${totalKg} كجم\n\n☎️ بيانات التواصل:\n• الاسم: ${contact.name}\n• الجوال: ${contact.phone}\n• المدينة: ${contact.city}\n${contact.notes ? `\n📝 ملاحظات: ${contact.notes}` : ''}`
+      : `🌴 *New Order — Palm Charcoal*\n\n👤 Customer: ${cust?.en}\n\n📦 Items:\n${lines}\n\n📊 Total: ${totalKg} kg\n\n☎️ Contact:\n• Name: ${contact.name}\n• Phone: ${contact.phone}\n• City: ${contact.city}\n${contact.notes ? `\nNotes: ${contact.notes}` : ''}`;
+  };
+
+  const submit = async () => {
+    if (!validateContact()) return;
+    setSubmitting(true);
+    const summary = buildSummary();
+    // Best-effort save to backend (does not block WhatsApp)
+    try {
+      await supabase.functions.invoke('submit-order', {
+        body: {
+          customer_type: customer,
+          items,
+          total_kg: totalKg,
+          name: contact.name,
+          phone: contact.phone,
+          city: contact.city,
+          notes: contact.notes || null,
+          source: 'wizard',
+        },
+      });
+    } catch { /* ignore — still send via WhatsApp */ }
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(summary)}`, '_blank');
+    setSubmitting(false);
+    handleOpenChange(false);
+  };
+
+  const inputCls = (err?: boolean) =>
+    `w-full px-3 py-2 rounded-lg border bg-background text-sm ${err ? 'border-destructive' : 'border-input'}`;
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg">
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      <DialogContent className="max-w-xl">
         <DialogHeader>
           <DialogTitle className="font-serif text-2xl">{isAr ? 'اطلب الآن' : 'Place an Order'}</DialogTitle>
         </DialogHeader>
-        <form onSubmit={submit} noValidate className="space-y-4 text-sm">
-          <div>
-            <label className="block mb-1 text-muted-foreground">{isAr ? 'المنتج' : 'Product'}</label>
-            <select value={product} onChange={(e) => setProduct(e.target.value)} className={inputCls()}>
-              {products.map((p) => (
-                <option key={p.slug} value={p.slug}>{isAr ? p.nameAr : p.nameEn}</option>
-              ))}
-            </select>
+
+        {/* Stepper */}
+        <div className="flex items-center gap-2 mb-4">
+          {[1, 2, 3, 4].map((s) => (
+            <div key={s} className="flex-1 flex items-center gap-2">
+              <div className={`w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-semibold transition ${
+                step === s ? 'bg-[hsl(var(--gold))] text-white' : step > s ? 'bg-emerald text-white' : 'bg-muted text-muted-foreground'
+              }`}>{step > s ? <Check className="w-3.5 h-3.5" /> : s}</div>
+              {s < 4 && <div className={`flex-1 h-px ${step > s ? 'bg-emerald' : 'bg-muted'}`} />}
+            </div>
+          ))}
+        </div>
+
+        {/* Step 1 — customer type */}
+        {step === 1 && (
+          <div className="space-y-3">
+            <p className="text-sm text-muted-foreground">{isAr ? 'اختر نوع العميل لتخصيص العرض:' : 'Pick customer type so we tailor the offer:'}</p>
+            <div className="grid grid-cols-2 gap-3">
+              {customerTypes.map((c) => {
+                const Icon = c.icon;
+                const active = customer === c.id;
+                return (
+                  <button
+                    key={c.id}
+                    type="button"
+                    onClick={() => setCustomer(c.id)}
+                    className={`p-4 rounded-xl border text-start transition ${
+                      active ? 'border-[hsl(var(--gold))] bg-[hsl(var(--gold))]/10' : 'border-input hover:border-gold/40'
+                    }`}
+                  >
+                    <Icon className="w-5 h-5 text-[hsl(var(--gold))] mb-2" />
+                    <div className="font-medium text-sm">{isAr ? c.ar : c.en}</div>
+                  </button>
+                );
+              })}
+            </div>
           </div>
-          <div className="grid grid-cols-2 gap-3">
+        )}
+
+        {/* Step 2 — products & quantities */}
+        {step === 2 && (
+          <div className="space-y-3">
+            <p className="text-sm text-muted-foreground">{isAr ? 'أضف المنتجات والكميات (كجم):' : 'Add products and quantities (kg):'}</p>
+            {items.map((it, idx) => (
+              <div key={idx} className="flex gap-2 items-end">
+                <div className="flex-1">
+                  <label className="block text-xs text-muted-foreground mb-1">{isAr ? 'المنتج' : 'Product'}</label>
+                  <select value={it.slug} onChange={(e) => updateItem(idx, { slug: e.target.value })} className={inputCls()}>
+                    {products.map((p) => <option key={p.slug} value={p.slug}>{isAr ? p.nameAr : p.nameEn}</option>)}
+                  </select>
+                </div>
+                <div className="w-28">
+                  <label className="block text-xs text-muted-foreground mb-1">{isAr ? 'كجم' : 'kg'}</label>
+                  <input type="number" min={1} max={100000} value={it.qty} onChange={(e) => updateItem(idx, { qty: Number(e.target.value) })} className={inputCls()} />
+                </div>
+                {items.length > 1 && (
+                  <button type="button" onClick={() => removeItem(idx)} className="px-2 h-9 text-xs text-destructive hover:underline">✕</button>
+                )}
+              </div>
+            ))}
+            <button type="button" onClick={addItem} className="text-xs text-[hsl(var(--gold))] hover:underline">
+              + {isAr ? 'إضافة منتج آخر' : 'Add another product'}
+            </button>
+            <div className="text-end text-sm font-medium text-emerald pt-2 border-t border-gold/10">
+              {isAr ? 'الإجمالي:' : 'Total:'} {totalKg} {isAr ? 'كجم' : 'kg'}
+            </div>
+          </div>
+        )}
+
+        {/* Step 3 — contact */}
+        {step === 3 && (
+          <div className="space-y-3 text-sm">
             <div>
-              <label className="block mb-1 text-muted-foreground">{isAr ? 'الكمية (كجم)' : 'Quantity (kg)'}</label>
-              <input
-                type="number"
-                min="1"
-                max="100000"
-                value={qty}
-                onChange={(e) => setQty(e.target.value)}
-                aria-invalid={!!errors.qty}
-                className={inputCls(!!errors.qty)}
-              />
-              {errors.qty && <p className="mt-1 text-xs text-destructive">{msg(errors.qty)}</p>}
+              <label className="block mb-1 text-muted-foreground">{isAr ? 'الاسم الكامل' : 'Full name'}</label>
+              <input value={contact.name} onChange={(e) => setContact({ ...contact, name: e.target.value })} maxLength={60} className={inputCls(errors.name)} />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block mb-1 text-muted-foreground">{isAr ? 'الجوال' : 'Phone'}</label>
+                <input value={contact.phone} onChange={(e) => setContact({ ...contact, phone: e.target.value })} placeholder="+9665XXXXXXXX" maxLength={16} className={inputCls(errors.phone)} />
+              </div>
+              <div>
+                <label className="block mb-1 text-muted-foreground">{isAr ? 'المدينة' : 'City'}</label>
+                <input value={contact.city} onChange={(e) => setContact({ ...contact, city: e.target.value })} maxLength={60} className={inputCls(errors.city)} />
+              </div>
             </div>
             <div>
-              <label className="block mb-1 text-muted-foreground">{isAr ? 'الاسم' : 'Name'}</label>
-              <input
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                maxLength={60}
-                aria-invalid={!!errors.name}
-                className={inputCls(!!errors.name)}
-              />
-              {errors.name && <p className="mt-1 text-xs text-destructive">{msg(errors.name)}</p>}
+              <label className="block mb-1 text-muted-foreground">{isAr ? 'ملاحظات (اختياري)' : 'Notes (optional)'}</label>
+              <textarea value={contact.notes} onChange={(e) => setContact({ ...contact, notes: e.target.value })} rows={3} maxLength={500} className={inputCls()} />
             </div>
+            {Object.keys(errors).length > 0 && (
+              <p className="text-xs text-destructive">{isAr ? 'يرجى تعبئة الحقول المطلوبة بشكل صحيح.' : 'Please fill required fields correctly.'}</p>
+            )}
           </div>
-          <div>
-            <label className="block mb-1 text-muted-foreground">{isAr ? 'الجوال' : 'Phone'}</label>
-            <input
-              type="tel"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder="+9665XXXXXXXX"
-              maxLength={16}
-              aria-invalid={!!errors.phone}
-              className={inputCls(!!errors.phone)}
-            />
-            {errors.phone && <p className="mt-1 text-xs text-destructive">{msg(errors.phone)}</p>}
+        )}
+
+        {/* Step 4 — confirm */}
+        {step === 4 && (
+          <div className="space-y-3 text-sm">
+            <div className="rounded-xl border border-gold/20 bg-[hsl(var(--gold))]/5 p-4 whitespace-pre-line text-[13px] leading-relaxed">
+              {buildSummary()}
+            </div>
+            <p className="text-xs text-muted-foreground">{isAr ? 'سيتم فتح واتساب لإرسال الطلب مباشرة لفريقنا.' : 'WhatsApp will open to send the order directly to our team.'}</p>
           </div>
-          <div>
-            <label className="block mb-1 text-muted-foreground">{isAr ? 'ملاحظات' : 'Notes'}</label>
-            <textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={3} maxLength={500} className={inputCls()} />
-          </div>
-          <button type="submit" className="w-full py-3 rounded-lg bg-[#25D366] text-white font-medium flex items-center justify-center gap-2 hover:opacity-90 transition">
-            <MessageCircle className="w-4 h-4" />
-            {isAr ? 'إرسال عبر واتساب' : 'Send via WhatsApp'}
+        )}
+
+        {/* Footer nav */}
+        <div className="flex items-center justify-between gap-3 pt-4 border-t border-gold/10">
+          <button
+            type="button"
+            disabled={step === 1}
+            onClick={() => setStep(step - 1)}
+            className="text-sm text-muted-foreground disabled:opacity-30 hover:text-foreground inline-flex items-center gap-1"
+          >
+            {isAr ? <>السابق <ArrowLeft className="w-3.5 h-3.5" /></> : <><ArrowLeft className="w-3.5 h-3.5" /> Back</>}
           </button>
-        </form>
+          {step < 4 ? (
+            <button
+              type="button"
+              disabled={(step === 1 && !canNext1) || (step === 2 && !canNext2)}
+              onClick={() => {
+                if (step === 3 && !validateContact()) return;
+                setStep(step + 1);
+              }}
+              className="btn-gold !px-5 !py-2 text-sm inline-flex items-center gap-2 disabled:opacity-40"
+            >
+              {isAr ? <>التالي <ArrowRight className="w-4 h-4" /></> : <>Next <ArrowRight className="w-4 h-4" /></>}
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={submit}
+              disabled={submitting}
+              className="py-2.5 px-5 rounded-full bg-[#25D366] text-white font-medium inline-flex items-center gap-2 hover:opacity-90 transition disabled:opacity-50"
+            >
+              <MessageCircle className="w-4 h-4" />
+              {submitting ? (isAr ? 'جارٍ الإرسال…' : 'Sending…') : (isAr ? 'إرسال عبر واتساب' : 'Send via WhatsApp')}
+            </button>
+          )}
+        </div>
       </DialogContent>
     </Dialog>
   );
