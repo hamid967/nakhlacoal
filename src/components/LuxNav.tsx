@@ -23,6 +23,7 @@ export function LuxNav() {
   const { t, i18n } = useTranslation();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [orderOpen, setOrderOpen] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
