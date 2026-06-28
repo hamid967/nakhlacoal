@@ -4,11 +4,12 @@ import { Play, Pause } from 'lucide-react';
 import { ScrollReveal } from './ScrollReveal';
 import { LuxSection, SectionHeader } from './ui-lux';
 import { ImageWatermark } from './ImageWatermark';
-import s1 from '@/assets/step-harvest.jpg';
-import s2 from '@/assets/step-carbonize.jpg';
-import s3 from '@/assets/step-grind.jpg';
-import s4 from '@/assets/step-press.jpg';
-import s5 from '@/assets/step-pack.jpg';
+import { Picture } from './Picture';
+import s1 from '@/assets/step-harvest.jpg?picture';
+import s2 from '@/assets/step-carbonize.jpg?picture';
+import s3 from '@/assets/step-grind.jpg?picture';
+import s4 from '@/assets/step-press.jpg?picture';
+import s5 from '@/assets/step-pack.jpg?picture';
 
 export function ProcessSection() {
   const { i18n } = useTranslation();
@@ -159,15 +160,13 @@ export function ProcessSection() {
                     </div>
 
                     <div className="relative aspect-[4/5] overflow-hidden">
-                      <img
-                        src={step.img}
+                      <Picture
+                        source={step.img}
                         alt={txt.t}
-                        width={1280}
-                        height={1280}
-                        loading="lazy"
-                        decoding="async"
-                        className="w-full h-full object-cover transition-transform duration-[1600ms] ease-out group-hover:scale-110"
-                        style={{ filter: 'contrast(1.05) saturate(1.05)' }}
+                        sizes="(min-width: 1024px) 22vw, (min-width: 768px) 32vw, (min-width: 640px) 44vw, 78vw"
+                        className="block w-full h-full"
+                        imgClassName="w-full h-full object-cover transition-transform duration-[1600ms] ease-out group-hover:scale-110"
+                        imgStyle={{ filter: 'contrast(1.05) saturate(1.05)' }}
                       />
                       {/* Film grain + vignette */}
                       <div

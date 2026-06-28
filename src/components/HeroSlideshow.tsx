@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ImageWatermark } from './ImageWatermark';
-import slide1 from '@/assets/slide-coconut-trees.jpg';
-import slide2 from '@/assets/slide-coconut-factory.jpg';
-import slide3 from '@/assets/slide-coconut-charcoal.jpg';
+import { Picture } from './Picture';
+import slide1 from '@/assets/slide-coconut-trees.jpg?picture';
+import slide2 from '@/assets/slide-coconut-factory.jpg?picture';
+import slide3 from '@/assets/slide-coconut-charcoal.jpg?picture';
 
 export function HeroSlideshow() {
   const { i18n } = useTranslation();
@@ -34,15 +35,14 @@ export function HeroSlideshow() {
             transitionProperty: 'opacity, transform',
           }}
         >
-          <img
-            src={s.img}
+          <Picture
+            source={s.img}
             alt={isAr ? s.ar : s.en}
-            width={1280}
-            height={1600}
-            loading={idx === 0 ? 'eager' : 'lazy'}
-            decoding="async"
-            {...(idx === 0 ? ({ fetchpriority: 'high' } as any) : {})}
-            className="w-full h-full object-cover"
+            eager={idx === 0}
+            priority={idx === 0}
+            sizes="(min-width: 1024px) 50vw, 100vw"
+            className="block w-full h-full"
+            imgClassName="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-dark/70 via-dark/10 to-transparent" />
         </div>
