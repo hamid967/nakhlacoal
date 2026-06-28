@@ -11,8 +11,10 @@ import {
   PolarRadiusAxis, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend,
 } from 'recharts';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Link } from 'react-router-dom';
 import { SEO } from '@/components/SEO';
 import { PageHero } from '@/components/PageHero';
+import { trademarks } from '@/data/trademarks';
 
 /* ---------------- Animated Counter ---------------- */
 function Counter({ to, suffix = '', duration = 2 }: { to: number; suffix?: string; duration?: number }) {
