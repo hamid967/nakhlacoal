@@ -9,7 +9,7 @@ export function LuxFooter() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="relative bg-surface border-t border-gold/15 pt-20 pb-10 overflow-hidden">
+    <footer className="relative section-dark pt-20 pb-10 overflow-hidden">
       {/* Ember glow */}
       <div className="absolute inset-x-0 -top-32 h-64 ember-glow pointer-events-none animate-ember" />
 
