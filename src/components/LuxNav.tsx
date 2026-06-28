@@ -11,6 +11,7 @@ const navItems = [
   { to: '/products', key: 'nav.products' },
   { to: '/about', key: 'nav.about' },
   { to: '/quality', key: 'nav.quality' },
+  { to: '/trademarks', key: 'nav.trademarks' },
   { to: '/wholesale', key: 'nav.wholesale' },
   { to: '/export', key: 'nav.export' },
   { to: '/knowledge', key: 'nav.knowledge' },
