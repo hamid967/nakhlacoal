@@ -179,9 +179,13 @@ export function BrandShowcaseHero() {
                     <div className="absolute inset-0 flex items-center justify-center p-6">
                       <img
                         src={t.image}
-                        alt={t.nameAr}
-                        loading="lazy"
-                        className="max-w-full max-h-full object-contain"
+                        alt={`${t.nameAr} — ${t.nameEn} | ${t.registrationNo}`}
+                        loading={isActive ? 'eager' : 'lazy'}
+                        decoding="async"
+                        fetchPriority={isActive ? 'high' : 'low'}
+                        width={400}
+                        height={400}
+                        className="max-w-full max-h-full object-contain select-none"
                         draggable={false}
                       />
                     </div>
