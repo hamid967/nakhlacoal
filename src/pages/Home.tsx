@@ -147,9 +147,12 @@ export default function Home() {
 
         <div className="container">
           <ScrollReveal>
-            <h2 className={`text-3xl md:text-5xl text-center mb-16 ${isAr ? 'font-arabic font-bold' : 'font-display'}`}>
-              لماذا فحم النخلة هو الخيار <span className="text-gold-metal">الأفضل؟</span>
-            </h2>
+            <div className="text-center mb-16">
+              <span className="eyebrow mb-5">مميزاتنا</span>
+              <h2 className={`text-3xl md:text-5xl mt-5 ${isAr ? 'font-arabic font-bold' : 'font-display'}`}>
+                لماذا فحم النخلة هو الخيار <span className="text-gold-metal">الأفضل؟</span>
+              </h2>
+            </div>
           </ScrollReveal>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {features.map((f, i) => (
