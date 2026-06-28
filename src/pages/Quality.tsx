@@ -1,107 +1,587 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Award, ShieldCheck, Globe } from 'lucide-react';
+import { motion, useInView, useMotionValue, useTransform, animate } from 'framer-motion';
+import {
+  Award, ShieldCheck, Globe, FileText, Download, Cpu, FlaskConical,
+  Trees, Flame, Snowflake, Filter, Package, ClipboardCheck, Ship,
+  Sparkles, Thermometer, Droplets, Wind, Mountain, Zap,
+} from 'lucide-react';
+import {
+  LineChart, Line, BarChart, Bar, RadarChart, Radar, PolarGrid, PolarAngleAxis,
+  PolarRadiusAxis, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend,
+} from 'recharts';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { SEO } from '@/components/SEO';
 import { PageHero } from '@/components/PageHero';
-import { ScrollReveal } from '@/components/ScrollReveal';
 
-function Dial({ label, value, suffix, max = 100, delay = 0 }: { label: string; value: number; suffix: string; max?: number; delay?: number }) {
+/* ---------------- Animated Counter ---------------- */
+function Counter({ to, suffix = '', duration = 2 }: { to: number; suffix?: string; duration?: number }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, margin: '-80px' });
+  const mv = useMotionValue(0);
+  const rounded = useTransform(mv, (v) => Math.round(v).toLocaleString('ar-EG'));
+  useEffect(() => {
+    if (inView) animate(mv, to, { duration, ease: [0.16, 1, 0.3, 1] });
+  }, [inView, to, duration, mv]);
+  return (
+    <span ref={ref} className="inline-flex items-baseline">
+      <motion.span>{rounded}</motion.span>
+      {suffix && <span className="ms-1 text-gold-hi">{suffix}</span>}
+    </span>
+  );
+}
+
+/* ---------------- Radial Gauge ---------------- */
+function Gauge({
+  label, value, suffix, max = 100, tip, icon: Icon,
+}: { label: string; value: number; suffix: string; max?: number; tip: string; icon: any }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: '-80px' });
   const [progress, setProgress] = useState(0);
   useEffect(() => {
-    const id = setTimeout(() => setProgress(value), delay);
-    return () => clearTimeout(id);
-  }, [value, delay]);
+    if (!inView) return;
+    const controls = animate(0, value, {
+      duration: 1.8, ease: [0.16, 1, 0.3, 1],
+      onUpdate: (v) => setProgress(v),
+    });
+    return controls.stop;
+  }, [inView, value]);
+
   const pct = (progress / max) * 100;
-  const circ = 2 * Math.PI * 56;
+  const circ = 2 * Math.PI * 64;
   const offset = circ - (pct / 100) * circ;
+
   return (
-    <div className="flex flex-col items-center text-center">
-      <div className="relative w-40 h-40">
+    <motion.div
+      ref={ref}
+      whileHover={{ y: -6 }}
+      transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+      className="group relative flex flex-col items-center text-center p-6 rounded-2xl bg-gradient-to-b from-white/70 to-white/30 backdrop-blur-md border border-gold/20 hover:border-gold/60 hover:shadow-gold transition-all"
+    >
+      <div className="relative w-44 h-44">
         <svg className="w-full h-full -rotate-90">
-          <circle cx="80" cy="80" r="56" stroke="hsl(var(--gold) / 0.12)" strokeWidth="2" fill="none" />
+          <circle cx="88" cy="88" r="64" stroke="hsl(var(--gold) / 0.10)" strokeWidth="3" fill="none" />
           <circle
-            cx="80"
-            cy="80"
-            r="56"
-            stroke="url(#goldGrad)"
-            strokeWidth="2"
-            fill="none"
-            strokeDasharray={circ}
-            strokeDashoffset={offset}
-            strokeLinecap="round"
-            style={{ transition: 'stroke-dashoffset 1.6s cubic-bezier(0.16,1,0.3,1)' }}
+            cx="88" cy="88" r="64" stroke="url(#gaugeGrad)" strokeWidth="3" fill="none"
+            strokeDasharray={circ} strokeDashoffset={offset} strokeLinecap="round"
+            style={{ filter: 'drop-shadow(0 0 8px hsl(var(--gold) / 0.5))' }}
           />
           <defs>
-            <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="hsl(44 80% 62%)" />
-              <stop offset="100%" stopColor="hsl(44 60% 32%)" />
+            <linearGradient id="gaugeGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="hsl(var(--gold-hi))" />
+              <stop offset="100%" stopColor="hsl(var(--jade))" />
             </linearGradient>
           </defs>
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-3xl font-display text-gold-hi">
-            {progress}
-            <span className="text-base text-foreground/50 ms-0.5">{suffix}</span>
+          <Icon className="w-5 h-5 text-gold-hi/70 mb-1" />
+          <span className="text-3xl font-display text-foreground">
+            {progress.toFixed(progress < 10 ? 1 : 0)}
+            <span className="text-base text-foreground/60 ms-0.5">{suffix}</span>
           </span>
         </div>
       </div>
-      <p className="mt-4 text-xs uppercase tracking-[0.25em] text-foreground/60">{label}</p>
+      <p className="mt-4 text-sm font-arabic font-bold">{label}</p>
+      <div className="absolute inset-x-4 -bottom-2 translate-y-full opacity-0 group-hover:opacity-100 group-hover:translate-y-2 transition-all duration-300 pointer-events-none z-10">
+        <div className="rounded-xl bg-foreground text-background text-xs leading-relaxed p-3 shadow-luxe font-arabic">
+          {tip}
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+/* ---------------- Ember Particles ---------------- */
+function Embers() {
+  const particles = Array.from({ length: 24 });
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {particles.map((_, i) => {
+        const left = Math.random() * 100;
+        const delay = Math.random() * 6;
+        const dur = 6 + Math.random() * 8;
+        const size = 2 + Math.random() * 4;
+        return (
+          <motion.span
+            key={i}
+            initial={{ y: '110%', opacity: 0 }}
+            animate={{ y: '-20%', opacity: [0, 1, 1, 0] }}
+            transition={{ duration: dur, delay, repeat: Infinity, ease: 'easeOut' }}
+            className="absolute rounded-full"
+            style={{
+              left: `${left}%`, width: size, height: size,
+              background: 'radial-gradient(circle, hsl(var(--gold-hi)) 0%, transparent 70%)',
+              boxShadow: '0 0 8px hsl(var(--gold-hi))',
+            }}
+          />
+        );
+      })}
     </div>
   );
 }
 
-export default function Quality() {
-  const { t, i18n } = useTranslation();
-  const isAr = i18n.language?.startsWith('ar');
+/* ---------------- Data ---------------- */
+const gauges = [
+  { label: 'نسبة الكربون', value: 85, suffix: '%', tip: 'كلما ارتفعت نسبة الكربون الثابت، زادت كفاءة الاحتراق ومدته.', icon: Flame },
+  { label: 'نسبة الرماد', value: 3, suffix: '%', max: 10, tip: 'رماد منخفض = نظافة أعلى وقيمة حرارية أكبر لكل كيلوغرام.', icon: Mountain },
+  { label: 'الرطوبة', value: 6, suffix: '%', max: 20, tip: 'الرطوبة المنخفضة تضمن إشعالاً سريعاً ودخاناً أقل.', icon: Droplets },
+  { label: 'زمن الاحتراق', value: 185, suffix: 'د', max: 240, tip: 'متوسط زمن احتراق قطعة واحدة في ظروف مشواة قياسية.', icon: Thermometer },
+  { label: 'الأداء الحراري', value: 750, suffix: '°C', max: 900, tip: 'أقصى درجة حرارة سطحية مقاسة في غرفة الاحتراق.', icon: Zap },
+  { label: 'المواد المتطايرة', value: 6, suffix: '%', max: 15, tip: 'مواد متطايرة منخفضة تعني دخاناً أقل ورائحة محايدة.', icon: Wind },
+];
 
-  const certs = [
-    { icon: Award, name: t('quality.iso'), code: 'CERT-ISO-9001-2015' },
-    { icon: ShieldCheck, name: t('quality.saso'), code: 'SASO-SA-2026-001' },
-    { icon: Globe, name: t('quality.export'), code: 'EU-GCC-EXP-2026' },
-  ];
+const trend = [
+  { batch: '١', q: 92 }, { batch: '٢', q: 94 }, { batch: '٣', q: 93 },
+  { batch: '٤', q: 96 }, { batch: '٥', q: 97 }, { batch: '٦', q: 98 },
+  { batch: '٧', q: 97 }, { batch: '٨', q: 99 },
+];
+
+const comparison = [
+  { metric: 'الكربون', palm: 85, market: 68 },
+  { metric: 'الاحتراق', palm: 185, market: 110 },
+  { metric: 'الحرارة', palm: 95, market: 70 },
+  { metric: 'الرماد', palm: 97, market: 78 },
+  { metric: 'النقاء', palm: 99, market: 75 },
+];
+
+const radar = [
+  { k: 'الاحتراق', palm: 95, market: 65 },
+  { k: 'الحرارة', palm: 92, market: 70 },
+  { k: 'الرماد', palm: 97, market: 60 },
+  { k: 'الدخان', palm: 96, market: 55 },
+  { k: 'الرائحة', palm: 98, market: 62 },
+  { k: 'الكربون', palm: 94, market: 68 },
+];
+
+const timeline = [
+  { icon: Trees, t: 'اختيار الخشب', d: 'انتقاء سعف وجذوع النخيل من مزارع مستدامة معتمدة.' },
+  { icon: Flame, t: 'الكربنة', d: 'فرن مغلق بدرجات حرارة مضبوطة للحصول على كربون نقي.' },
+  { icon: Snowflake, t: 'التبريد', d: 'تبريد بطيء لتثبيت البنية الكربونية ومنع التشقق.' },
+  { icon: Filter, t: 'الفرز', d: 'فرز يدوي وآلي حسب الكثافة والمقاس.' },
+  { icon: FlaskConical, t: 'الاختبار المخبري', d: 'تحليل كامل: كربون، رماد، رطوبة، احتراق.' },
+  { icon: Package, t: 'التغليف', d: 'تغليف فاخر مقاوم للرطوبة بمعايير التصدير.' },
+  { icon: ClipboardCheck, t: 'الفحص النهائي', d: 'مراجعة جودة شاملة قبل الشحن.' },
+  { icon: Ship, t: 'الموافقة على التصدير', d: 'إصدار شهادات المنشأ والفحص الجمركي.' },
+];
+
+const certificates = [
+  { name: 'ISO 9001', code: 'CERT-ISO-9001-2015', desc: 'نظام إدارة الجودة العالمي يضمن تكرار الأداء وضبط العمليات في كل دفعة إنتاج.', icon: Award },
+  { name: 'SASO', code: 'SASO-SA-2026-001', desc: 'مطابقة المواصفات السعودية للوقود الصلب والفحم الطبيعي.', icon: ShieldCheck },
+  { name: 'شهادة التصدير', code: 'EU-GCC-EXP-2026', desc: 'اعتماد التصدير إلى دول الخليج والاتحاد الأوروبي ودول مجلس التعاون.', icon: Globe },
+  { name: 'تقرير فحص الجودة', code: 'QC-RPT-2026-Q2', desc: 'تقرير مخبري دوري لكل دفعة إنتاج موقع من المختبر المعتمد.', icon: FileText },
+  { name: 'سلامة التلامس الغذائي', code: 'FOOD-SAFE-EU-10', desc: 'مطابقة معايير التلامس الغذائي الأوروبية EU 10/2011.', icon: ShieldCheck },
+];
+
+const counters = [
+  { v: 10, s: '+', l: 'دولة تصدير' },
+  { v: 5000, s: '+', l: 'عميل حول العالم' },
+  { v: 99, s: '٫٨٪', l: 'رضا العملاء' },
+  { v: 100, s: '٪', l: 'فحص جودة' },
+  { v: 50, s: '+', l: 'اختبار جودة' },
+];
+
+const downloads = [
+  { t: 'تقرير الجودة', d: 'تقرير PDF شامل لنتائج آخر دفعة إنتاج.', icon: FileText },
+  { t: 'البطاقة الفنية', d: 'مواصفات تقنية كاملة للمنتج.', icon: ClipboardCheck },
+  { t: 'التحليل المخبري', d: 'تحاليل مفصلة للكربون والرطوبة والرماد.', icon: FlaskConical },
+  { t: 'مواصفات التصدير', d: 'دليل التغليف والشحن الدولي.', icon: Ship },
+  { t: 'دليل التغليف', d: 'تعليمات التخزين وحفظ الجودة.', icon: Package },
+];
+
+const aiSteps = [
+  { t: 'بيانات الإنتاج', i: Cpu },
+  { t: 'تحليل الذكاء الاصطناعي', i: Sparkles },
+  { t: 'تحقق المختبر', i: FlaskConical },
+  { t: 'اعتماد الجودة', i: ShieldCheck },
+];
+
+const inspectionSpots = [
+  { x: '22%', y: '30%', label: 'كربون ٨٥٪' },
+  { x: '70%', y: '28%', label: 'كثافة عالية' },
+  { x: '78%', y: '65%', label: 'سطح مصقول' },
+  { x: '30%', y: '72%', label: 'مقاومة الضغط' },
+  { x: '50%', y: '50%', label: 'مقاومة حرارية ٧٥٠°' },
+];
+
+/* ---------------- Section primitives ---------------- */
+function SectionTitle({ eyebrow, title }: { eyebrow: string; title: string }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-80px' }} transition={{ duration: 0.8 }}
+      className="text-center mb-16"
+    >
+      <p className="eyebrow mb-4">{eyebrow}</p>
+      <h2 className="text-4xl md:text-5xl font-arabic font-bold">{title}</h2>
+    </motion.div>
+  );
+}
+
+/* ---------------- Page ---------------- */
+export default function Quality() {
+  const { i18n } = useTranslation();
+  const isAr = i18n.language?.startsWith('ar');
+  const [openCert, setOpenCert] = useState<number | null>(null);
+  const [rot, setRot] = useState({ x: -15, y: 25 });
+  const dragRef = useRef<{ x: number; y: number } | null>(null);
 
   return (
     <>
       <SEO
         title={isAr ? 'الجودة — فحم النخلة' : 'Quality — Palm Charcoal'}
-        description={t('quality.subtitle')}
+        description="كل دفعة من فحم النخلة مقيسة ومعتمدة. مختبر متكامل، تحليلات حية، وشهادات دولية."
         path="/quality"
       />
-      <PageHero eyebrow={t('quality.eyebrow')} title={t('quality.title')} subtitle={t('quality.subtitle')} />
 
-      <section className="py-32">
-        <div className="container">
-          <ScrollReveal>
-            <div className="rounded-3xl border-luxe glass-luxe p-12 md:p-16">
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-10">
-                <Dial label={t('quality.carbon')} value={85} suffix="%" delay={100} />
-                <Dial label={t('quality.ash')} value={3} suffix="%" max={10} delay={200} />
-                <Dial label={t('quality.moisture')} value={6} suffix="%" max={20} delay={300} />
-                <Dial label={t('quality.burn')} value={185} suffix="m" max={240} delay={400} />
-                <Dial label={t('quality.heat')} value={75} suffix="" max={100} delay={500} />
-                <Dial label={t('quality.volatile')} value={6} suffix="%" max={15} delay={600} />
-              </div>
-            </div>
-          </ScrollReveal>
+      {/* Cinematic Hero */}
+      <section className="relative pt-40 pb-32 overflow-hidden bg-gradient-to-b from-[#0c1410] via-[#0f1a14] to-background">
+        <div className="absolute inset-0 opacity-40"
+          style={{ backgroundImage: 'radial-gradient(circle at 20% 30%, hsl(var(--gold) / 0.18), transparent 40%), radial-gradient(circle at 80% 70%, hsl(var(--jade) / 0.25), transparent 50%)' }}
+        />
+        <Embers />
+        <div className="container relative">
+          <motion.p
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="eyebrow mb-8 text-gold-hi"
+          >
+            مختبر الجودة
+          </motion.p>
+          <motion.h1
+            initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            className="text-5xl md:text-7xl lg:text-8xl font-arabic font-bold leading-[1.1] text-background max-w-5xl"
+          >
+            كل دفعة... <span className="text-gold-hi">مقيسة</span> ومعتمدة.
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9, delay: 0.3 }}
+            className="text-lg md:text-xl text-background/70 max-w-2xl mt-8 font-arabic leading-loose"
+          >
+            كل شحنة من فحم النخلة تمر عبر سلسلة من اختبارات الجودة الدقيقة لضمان أعلى مستويات الأداء والاحتراق والثبات.
+          </motion.p>
         </div>
       </section>
 
-      <section className="py-32 bg-surface border-y border-gold/10">
+      {/* Lab Dashboard */}
+      <section className="py-28">
         <div className="container">
-          <ScrollReveal>
-            <h2 className={`text-4xl md:text-5xl mb-16 text-center ${isAr ? 'font-arabic font-bold' : 'font-display'}`}>
-              {t('quality.certs')}
-            </h2>
-          </ScrollReveal>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {certs.map((c, i) => (
-              <ScrollReveal key={c.code} delay={i * 100}>
-                <div className="p-10 rounded-2xl bg-background border-luxe text-center hover:border-luxe-strong transition-all duration-700">
-                  <c.icon className="w-10 h-10 text-gold-hi mx-auto mb-6" />
-                  <h3 className={`text-xl mb-2 ${isAr ? 'font-arabic font-bold' : 'font-display'}`}>{c.name}</h3>
-                  <p className="text-xs uppercase tracking-[0.25em] text-foreground/40 font-mono">{c.code}</p>
+          <SectionTitle eyebrow="لوحة المختبر الحية" title="مؤشرات الجودة في الزمن الحقيقي" />
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-6 lg:gap-8">
+            {gauges.map((g) => <Gauge key={g.label} {...g} />)}
+          </div>
+        </div>
+      </section>
+
+      {/* Live Analytics */}
+      <section className="py-28 bg-surface-2/40 border-y border-gold/10">
+        <div className="container">
+          <SectionTitle eyebrow="تحليلات حية" title="بيانات الجودة عبر دفعات الإنتاج" />
+          <div className="grid lg:grid-cols-2 gap-6">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }} transition={{ duration: 0.8 }}
+              className="rounded-2xl bg-white/70 backdrop-blur p-6 border border-gold/20 shadow-luxe"
+            >
+              <h3 className="font-arabic font-bold mb-4">اتجاه الجودة عبر الدفعات</h3>
+              <ResponsiveContainer width="100%" height={260}>
+                <LineChart data={trend}>
+                  <CartesianGrid stroke="hsl(var(--gold) / 0.1)" strokeDasharray="3 3" />
+                  <XAxis dataKey="batch" stroke="hsl(var(--foreground))" />
+                  <YAxis domain={[80, 100]} stroke="hsl(var(--foreground))" />
+                  <Tooltip contentStyle={{ background: 'hsl(var(--dark))', border: 'none', color: 'hsl(var(--background))' }} />
+                  <Line type="monotone" dataKey="q" stroke="hsl(var(--gold-hi))" strokeWidth={3} dot={{ r: 5, fill: 'hsl(var(--jade))' }} animationDuration={1800} />
+                </LineChart>
+              </ResponsiveContainer>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.1 }}
+              className="rounded-2xl bg-white/70 backdrop-blur p-6 border border-gold/20 shadow-luxe"
+            >
+              <h3 className="font-arabic font-bold mb-4">فحم النخلة مقابل متوسط السوق</h3>
+              <ResponsiveContainer width="100%" height={260}>
+                <BarChart data={comparison}>
+                  <CartesianGrid stroke="hsl(var(--gold) / 0.1)" strokeDasharray="3 3" />
+                  <XAxis dataKey="metric" stroke="hsl(var(--foreground))" />
+                  <YAxis stroke="hsl(var(--foreground))" />
+                  <Tooltip contentStyle={{ background: 'hsl(var(--dark))', border: 'none', color: 'hsl(var(--background))' }} />
+                  <Legend />
+                  <Bar dataKey="palm" name="فحم النخلة" fill="hsl(var(--gold-hi))" radius={[6, 6, 0, 0]} animationDuration={1500} />
+                  <Bar dataKey="market" name="السوق" fill="hsl(var(--jade))" radius={[6, 6, 0, 0]} animationDuration={1500} />
+                </BarChart>
+              </ResponsiveContainer>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.2 }}
+              className="lg:col-span-2 rounded-2xl bg-white/70 backdrop-blur p-6 border border-gold/20 shadow-luxe"
+            >
+              <h3 className="font-arabic font-bold mb-4">مقارنة الأداء متعدد المحاور</h3>
+              <ResponsiveContainer width="100%" height={360}>
+                <RadarChart data={radar}>
+                  <PolarGrid stroke="hsl(var(--gold) / 0.2)" />
+                  <PolarAngleAxis dataKey="k" stroke="hsl(var(--foreground))" />
+                  <PolarRadiusAxis angle={30} domain={[0, 100]} stroke="hsl(var(--foreground) / 0.4)" />
+                  <Radar name="فحم النخلة" dataKey="palm" stroke="hsl(var(--gold-hi))" fill="hsl(var(--gold-hi))" fillOpacity={0.5} animationDuration={1800} />
+                  <Radar name="السوق" dataKey="market" stroke="hsl(var(--jade))" fill="hsl(var(--jade))" fillOpacity={0.3} animationDuration={1800} />
+                  <Legend />
+                </RadarChart>
+              </ResponsiveContainer>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Digital Laboratory */}
+      <section className="py-28">
+        <div className="container">
+          <SectionTitle eyebrow="المختبر الرقمي" title="تحت العدسة — لحظات من داخل المعمل" />
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            {[
+              'مختبر حديث',
+              'اختبار حرارة الفحم',
+              'تحليل الكربون',
+              'اختبار الرطوبة',
+              'الفحص الصناعي',
+              'مراقبة الجودة',
+            ].map((label, i) => (
+              <motion.div
+                key={label}
+                initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }} transition={{ duration: 0.7, delay: i * 0.08 }}
+                whileHover={{ y: -6 }}
+                className="group relative aspect-[4/5] rounded-2xl overflow-hidden bg-gradient-to-br from-[#1a2520] via-[#0f1814] to-black border border-gold/20"
+              >
+                <div className="absolute inset-0 opacity-30 group-hover:opacity-50 transition-opacity"
+                  style={{ backgroundImage: `radial-gradient(circle at ${30 + i * 8}% ${40 + i * 5}%, hsl(var(--gold-hi) / 0.5), transparent 60%)` }} />
+                <div className="absolute inset-0 flex flex-col items-end justify-end p-5 text-background">
+                  <FlaskConical className="w-8 h-8 text-gold-hi mb-3 opacity-70" />
+                  <span className="font-arabic font-bold text-lg">{label}</span>
                 </div>
-              </ScrollReveal>
+                <div className="absolute top-3 right-3 text-[10px] font-mono uppercase tracking-widest text-gold-hi/60">
+                  LAB · 0{i + 1}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 3D Inspection */}
+      <section className="py-28 bg-gradient-to-b from-background via-surface-2/50 to-background">
+        <div className="container">
+          <SectionTitle eyebrow="فحص المنتج ثلاثي الأبعاد" title="اسحب لتدوير المكعب وفحص النقاط" />
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div
+              className="relative h-[420px] flex items-center justify-center cursor-grab active:cursor-grabbing select-none"
+              style={{ perspective: '1200px' }}
+              onPointerDown={(e) => { dragRef.current = { x: e.clientX, y: e.clientY }; (e.target as HTMLElement).setPointerCapture(e.pointerId); }}
+              onPointerMove={(e) => {
+                if (!dragRef.current) return;
+                const dx = e.clientX - dragRef.current.x;
+                const dy = e.clientY - dragRef.current.y;
+                setRot((r) => ({ x: r.x - dy * 0.5, y: r.y + dx * 0.5 }));
+                dragRef.current = { x: e.clientX, y: e.clientY };
+              }}
+              onPointerUp={() => { dragRef.current = null; }}
+            >
+              <motion.div
+                animate={{ rotateY: dragRef.current ? rot.y : [rot.y, rot.y + 360] }}
+                transition={{ duration: 24, repeat: Infinity, ease: 'linear' }}
+                style={{ transformStyle: 'preserve-3d', transform: `rotateX(${rot.x}deg)`, width: 220, height: 220, position: 'relative' }}
+              >
+                {['front', 'back', 'right', 'left', 'top', 'bottom'].map((face, i) => {
+                  const transforms: Record<string, string> = {
+                    front: 'translateZ(110px)', back: 'rotateY(180deg) translateZ(110px)',
+                    right: 'rotateY(90deg) translateZ(110px)', left: 'rotateY(-90deg) translateZ(110px)',
+                    top: 'rotateX(90deg) translateZ(110px)', bottom: 'rotateX(-90deg) translateZ(110px)',
+                  };
+                  return (
+                    <div key={face}
+                      className="absolute inset-0 border border-gold/40"
+                      style={{
+                        transform: transforms[face],
+                        background: `linear-gradient(135deg, #1a1410 0%, #0a0806 100%)`,
+                        boxShadow: 'inset 0 0 40px hsl(var(--gold) / 0.15), 0 0 30px hsl(var(--gold) / 0.2)',
+                      }}
+                    >
+                      <div className="absolute inset-2 opacity-40"
+                        style={{ backgroundImage: 'radial-gradient(circle at 30% 30%, hsl(var(--gold-hi) / 0.4), transparent 50%), radial-gradient(circle at 70% 70%, hsl(var(--jade) / 0.3), transparent 50%)' }} />
+                    </div>
+                  );
+                })}
+              </motion.div>
+            </div>
+
+            <ul className="space-y-4 font-arabic">
+              {inspectionSpots.map((s, i) => (
+                <motion.li key={i}
+                  initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }} transition={{ delay: i * 0.1 }}
+                  className="flex items-center gap-4 p-4 rounded-xl bg-white/60 backdrop-blur border border-gold/20"
+                >
+                  <span className="w-10 h-10 rounded-full bg-gold/15 text-gold-hi flex items-center justify-center font-bold">
+                    {i + 1}
+                  </span>
+                  <span className="font-bold">{s.label}</span>
+                </motion.li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* Timeline */}
+      <section className="py-28">
+        <div className="container">
+          <SectionTitle eyebrow="رحلة الجودة" title="من النخلة إلى منصة التصدير" />
+          <div className="relative max-w-4xl mx-auto">
+            <div className="absolute right-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-gold/40 to-transparent" />
+            <div className="space-y-12">
+              {timeline.map((step, i) => (
+                <motion.div key={step.t}
+                  initial={{ opacity: 0, x: i % 2 === 0 ? 40 : -40 }} whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, margin: '-60px' }} transition={{ duration: 0.7 }}
+                  className={`flex items-center gap-6 ${i % 2 === 0 ? 'flex-row' : 'flex-row-reverse'}`}
+                >
+                  <div className="flex-1 text-end font-arabic">
+                    {i % 2 === 0 && (<><h4 className="font-bold text-xl mb-2">{step.t}</h4><p className="text-foreground/70 leading-relaxed">{step.d}</p></>)}
+                  </div>
+                  <div className="relative z-10 w-14 h-14 rounded-full bg-gradient-to-br from-gold-hi to-jade text-background flex items-center justify-center shadow-gold">
+                    <step.icon className="w-6 h-6" />
+                  </div>
+                  <div className="flex-1 font-arabic">
+                    {i % 2 !== 0 && (<><h4 className="font-bold text-xl mb-2">{step.t}</h4><p className="text-foreground/70 leading-relaxed">{step.d}</p></>)}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Certificates */}
+      <section className="py-28 bg-surface-2/40 border-y border-gold/10">
+        <div className="container">
+          <SectionTitle eyebrow="الشهادات والاعتمادات" title="جودة موثقة عالمياً" />
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {certificates.map((c, i) => (
+              <motion.button
+                key={c.code} onClick={() => setOpenCert(i)}
+                initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }} transition={{ delay: i * 0.08 }}
+                whileHover={{ y: -8 }}
+                className="text-start p-8 rounded-2xl bg-white/70 backdrop-blur border border-gold/20 hover:border-gold/60 hover:shadow-gold transition-all"
+              >
+                <c.icon className="w-10 h-10 text-gold-hi mb-5" />
+                <h3 className="font-arabic font-bold text-xl mb-2">{c.name}</h3>
+                <p className="text-xs uppercase tracking-[0.25em] text-foreground/40 font-mono mb-4">{c.code}</p>
+                <p className="text-sm text-foreground/70 font-arabic leading-relaxed line-clamp-3">{c.desc}</p>
+                <span className="inline-block mt-5 text-xs font-arabic text-jade">اضغط للعرض ←</span>
+              </motion.button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <Dialog open={openCert !== null} onOpenChange={() => setOpenCert(null)}>
+        <DialogContent className="max-w-2xl">
+          {openCert !== null && (
+            <>
+              <DialogHeader>
+                <DialogTitle className="font-arabic text-2xl">{certificates[openCert].name}</DialogTitle>
+              </DialogHeader>
+              <div className="aspect-[4/3] rounded-xl bg-gradient-to-br from-[#1a1410] to-black flex flex-col items-center justify-center text-background border border-gold/30">
+                {(() => { const I = certificates[openCert].icon; return <I className="w-20 h-20 text-gold-hi mb-4" />; })()}
+                <p className="font-arabic text-lg">{certificates[openCert].name}</p>
+                <p className="text-xs font-mono text-gold-hi/70 mt-2">{certificates[openCert].code}</p>
+              </div>
+              <p className="font-arabic text-foreground/70 leading-loose mt-4">{certificates[openCert].desc}</p>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* AI Verification */}
+      <section className="py-28">
+        <div className="container">
+          <SectionTitle eyebrow="الذكاء الاصطناعي" title="ذكاء اصطناعي لضمان الجودة" />
+          <p className="text-center text-foreground/70 font-arabic max-w-2xl mx-auto leading-loose -mt-8 mb-16">
+            يقوم النظام بتحليل بيانات الإنتاج ومقارنة نتائج المختبر تلقائياً لاكتشاف أي اختلافات قبل خروج المنتج من المصنع.
+          </p>
+          <div className="flex flex-wrap justify-center items-center gap-4">
+            {aiSteps.map((s, i) => (
+              <div key={s.t} className="flex items-center gap-4">
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }} whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }} transition={{ delay: i * 0.15 }}
+                  className="w-32 h-32 rounded-2xl bg-gradient-to-br from-foreground to-jade text-background flex flex-col items-center justify-center p-3 text-center shadow-luxe"
+                >
+                  <s.i className="w-7 h-7 text-gold-hi mb-2" />
+                  <span className="font-arabic text-sm font-bold leading-tight">{s.t}</span>
+                </motion.div>
+                {i < aiSteps.length - 1 && (
+                  <motion.div
+                    initial={{ width: 0 }} whileInView={{ width: 40 }}
+                    viewport={{ once: true }} transition={{ delay: i * 0.15 + 0.2 }}
+                    className="h-px bg-gradient-to-r from-gold-hi to-jade"
+                  />
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Confidence Counters */}
+      <section className="py-28 bg-foreground text-background relative overflow-hidden">
+        <div className="absolute inset-0 opacity-20"
+          style={{ backgroundImage: 'radial-gradient(circle at 30% 50%, hsl(var(--gold) / 0.6), transparent 50%)' }} />
+        <div className="container relative">
+          <SectionTitle eyebrow="ثقة العملاء" title="أرقام تتحدث عن نفسها" />
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
+            {counters.map((c, i) => (
+              <motion.div key={c.l}
+                initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }} transition={{ delay: i * 0.1 }}
+                className="text-center"
+              >
+                <div className="text-5xl md:text-6xl font-display text-gold-hi mb-2">
+                  <Counter to={c.v} suffix={c.s} />
+                </div>
+                <p className="font-arabic text-background/70">{c.l}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Download Center */}
+      <section className="py-28">
+        <div className="container">
+          <SectionTitle eyebrow="مركز التنزيل" title="ملفات الجودة والمواصفات" />
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {downloads.map((f, i) => (
+              <motion.a
+                key={f.t} href="#"
+                initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }} transition={{ delay: i * 0.08 }}
+                whileHover={{ y: -6 }}
+                className="group p-7 rounded-2xl bg-white/60 backdrop-blur-lg border border-gold/20 hover:border-gold/60 hover:shadow-gold transition-all flex items-start gap-4"
+              >
+                <div className="w-12 h-12 rounded-xl bg-gold/15 text-gold-hi flex items-center justify-center shrink-0">
+                  <f.icon className="w-6 h-6" />
+                </div>
+                <div className="flex-1 font-arabic">
+                  <h4 className="font-bold mb-1">{f.t}</h4>
+                  <p className="text-sm text-foreground/60 leading-relaxed">{f.d}</p>
+                </div>
+                <Download className="w-5 h-5 text-foreground/40 group-hover:text-gold-hi transition-colors" />
+              </motion.a>
             ))}
           </div>
         </div>
