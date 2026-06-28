@@ -260,6 +260,25 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
             <CheckCircle2 className="w-3.5 h-3.5 animate-pulse" /> جارٍ حفظ وإرسال الطلب...
           </div>
         )}
+        {messages.length === 1 && !streaming && (
+          <div className="flex flex-wrap gap-1.5 pt-1 font-arabic">
+            <span className="w-full text-[10px] text-muted-foreground mb-0.5">طلب سريع — اختر المنتج:</span>
+            {[
+              { label: '🔥 فحم شواء', q: 'أريد طلب فحم شواء، الكمية المطلوبة 100 كجم' },
+              { label: '🥥 جوز الهند', q: 'أريد طلب فحم جوز الهند الطبيعي للمعسل' },
+              { label: '💨 شيشة', q: 'أريد طلب فحم شيشة جوز هند' },
+              { label: '🪔 بخور', q: 'أريد طلب فحم بخور صيني سريع الاشتعال' },
+            ].map((c) => (
+              <button
+                key={c.label}
+                onClick={() => { setInput(c.q); setTimeout(() => send(), 50); }}
+                className="px-3 py-1.5 rounded-full text-xs bg-gold/10 hover:bg-gold/20 border border-gold/40 text-foreground transition"
+              >
+                {c.label}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Composer */}
