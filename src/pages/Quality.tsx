@@ -13,7 +13,7 @@ import {
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Link } from 'react-router-dom';
 import { SEO } from '@/components/SEO';
-import { LuxSection, SectionHeader, Stat } from '@/components/ui-lux';
+import { SectionHeader, Stat } from '@/components/ui-lux';
 import { trademarks } from '@/data/trademarks';
 
 /* ---------------- Animated Counter ---------------- */
