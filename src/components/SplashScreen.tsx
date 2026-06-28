@@ -112,6 +112,22 @@ export function SplashScreen() {
       <div className={`absolute inset-x-0 bottom-0 h-[12vh] bg-background z-10 transition-transform duration-[1100ms] ease-[cubic-bezier(.22,.61,.36,1)] ${stage >= 1 ? "translate-y-full" : "translate-y-0"}`} />
 
       <div className="relative h-full w-full flex flex-col items-center justify-center px-6">
+        {/* Gold scanning line */}
+        <div className={`absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-[hsl(var(--gold))] to-transparent transition-opacity duration-700 ${
+          stage >= 1 && stage < 4 ? "opacity-60" : "opacity-0"
+        }`} style={{ animation: stage >= 1 ? "splash-scan 4s ease-in-out infinite" : undefined }} />
+
+        {/* Arabic ornament above logo */}
+        <div className={`absolute top-[18vh] flex items-center gap-3 transition-all duration-[1200ms] ${
+          stage >= 1 && stage < 2 ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"
+        }`}>
+          <span className="h-px w-10 bg-[hsl(var(--gold))]/50" />
+          <span className="text-[10px] md:text-xs uppercase tracking-[0.5em] text-[hsl(var(--gold))]/80">
+            {isAr ? "منذ ٢٠١٠ · صناعة سعودية" : "Since 2010 · Made in Saudi Arabia"}
+          </span>
+          <span className="h-px w-10 bg-[hsl(var(--gold))]/50" />
+        </div>
+
         {/* Logo (shrinks/moves up during brand parade) */}
         <div className={`relative transition-all duration-[1000ms] ease-out ${
           stage >= 1 ? "opacity-100 scale-100 blur-0" : "opacity-0 scale-[1.12] blur-md"
@@ -122,6 +138,18 @@ export function SplashScreen() {
           <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ mixBlendMode: "overlay" }}>
             <div className="absolute inset-y-0 -left-1/2 w-1/2 bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-12 animate-[splash-sweep_2.4s_ease-in-out_infinite]" />
           </div>
+        </div>
+
+        {/* Tagline under logo */}
+        <div className={`mt-6 text-center transition-all duration-[1000ms] ${
+          (stage === 1 || stage >= 3) ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
+        }`}>
+          <h1 className={`font-serif text-2xl md:text-4xl text-foreground ${isAr ? "font-arabic" : ""}`}>
+            {isAr ? "فحم النخلة" : "Palm Charcoal"}
+          </h1>
+          <p className="mt-2 text-[11px] md:text-sm tracking-[0.35em] uppercase text-[hsl(var(--gold))]/80">
+            {isAr ? "جمر الفخامة" : "The Ember of Luxury"}
+          </p>
         </div>
 
         {/* Trademark parade */}
@@ -141,7 +169,6 @@ export function SplashScreen() {
             <p className="text-[10px] text-[hsl(var(--gold))]/70 mt-1 tabular-nums font-mono">
               {isAr ? "رقم التسجيل" : "Reg. No"} · {current.registrationNo}
             </p>
-            {/* progress dots */}
             <div className="flex gap-1.5 mt-5">
               {trademarks.map((_, i) => (
                 <span key={i} className={`h-1 rounded-full transition-all duration-300 ${
@@ -154,13 +181,13 @@ export function SplashScreen() {
 
         {/* loading bar (hidden during parade) */}
         <div className={`mt-8 h-[2px] w-48 overflow-hidden rounded-full bg-white/10 transition-opacity duration-700 ${
-          stage === 1 || stage === 3 ? "opacity-100" : "opacity-0"
+          stage === 1 ? "opacity-100" : "opacity-0"
         }`}>
           <div className="h-full w-1/3 animate-[splash-slide_1.4s_ease-in-out_infinite] bg-gradient-to-r from-transparent via-[hsl(var(--gold))] to-transparent" />
         </div>
 
         {/* Clients reveal — final stage */}
-        <div className={`absolute bottom-[14vh] left-0 right-0 flex flex-col items-center transition-all duration-[1000ms] ${
+        <div className={`absolute bottom-[10vh] left-0 right-0 flex flex-col items-center transition-all duration-[1000ms] ${
           stage >= 3 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
         }`}>
           <div className="text-[10px] md:text-xs uppercase tracking-[0.45em] text-[hsl(var(--gold))]/80 mb-4">
@@ -173,6 +200,13 @@ export function SplashScreen() {
               ))}
             </div>
           </div>
+          <button
+            type="button"
+            onClick={handleSkip}
+            className="mt-6 px-6 py-2.5 text-[11px] uppercase tracking-[0.35em] text-background bg-[hsl(var(--gold))] hover:bg-[hsl(var(--gold))]/90 rounded-full transition-all hover:scale-105 shadow-[0_0_30px_hsl(var(--gold)/0.5)]"
+          >
+            {isAr ? "ادخل التجربة" : "Enter Experience"}
+          </button>
         </div>
       </div>
 
