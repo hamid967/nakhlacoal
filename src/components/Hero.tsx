@@ -136,7 +136,7 @@ export function Hero() {
                 href="#portfolio" 
                 className="text-white hover:text-white/80 font-medium gentle-animation hover:scale-105"
               >
-                Work
+                Products
               </a>
               <a 
                 href="#about" 
@@ -148,13 +148,13 @@ export function Hero() {
                 href="#services" 
                 className="text-white hover:text-white/80 font-medium gentle-animation hover:scale-105"
               >
-                Capabilities
+                Collection
               </a>
               <a 
                 href="#team" 
                 className="text-white hover:text-white/80 font-medium gentle-animation hover:scale-105"
               >
-                Team
+                Masters
               </a>
               <a 
                 href="#contact" 
@@ -194,7 +194,7 @@ export function Hero() {
                 }}
                 className="hidden sm:block bg-red-600 backdrop-blur-sm text-white font-semibold px-6 py-3 rounded-md hover:bg-red-700 gentle-animation ml-4 cursor-pointer"
               >
-                Book a Call
+                Request a Quote
               </motion.button>
 
               {/* Mobile Hamburger Menu Button */}
@@ -248,7 +248,7 @@ export function Hero() {
                 className="mobile-menu-link px-4 py-3 hover:text-white/80 hover:bg-white/10 rounded-lg gentle-animation font-medium text-lg active:bg-white/20"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                Work
+                Products
               </a>
               <a 
                 href="#about" 
@@ -262,14 +262,14 @@ export function Hero() {
                 className="mobile-menu-link px-4 py-3 hover:text-white/80 hover:bg-white/10 rounded-lg gentle-animation font-medium text-lg active:bg-white/20"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                Capabilities
+                Collection
               </a>
               <a 
                 href="#team" 
                 className="mobile-menu-link px-4 py-3 hover:text-white/80 hover:bg-white/10 rounded-lg gentle-animation font-medium text-lg active:bg-white/20"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                Team
+                Masters
               </a>
               <a 
                 href="#contact" 
@@ -291,7 +291,7 @@ export function Hero() {
               }}
               className="bg-red-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-red-700 active:bg-red-800 gentle-animation mt-8 cursor-pointer"
             >
-              Book a Call
+              Request a Quote
             </motion.button>
           </div>
         </div>
@@ -308,9 +308,9 @@ export function Hero() {
       >
         <div className="max-w-2xl">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black leading-tight text-white">
-            <span className="block">AI FILM</span>
-            <span className="block">PRODUCTION</span>
-            <span className="block">WITHOUT LIMITS</span>
+            <span className="block">PREMIUM SAUDI</span>
+            <span className="block">PALM CHARCOAL</span>
+            <span className="block">CRAFTED TO PERFECTION</span>
           </h1>
         </div>
       </motion.div>
