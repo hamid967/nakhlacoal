@@ -7,6 +7,7 @@ import { HeroSlideshow } from '@/components/HeroSlideshow';
 import { ProcessSection } from '@/components/ProcessSection';
 import { LocationSection } from '@/components/LocationSection';
 import { FaqSection } from '@/components/FaqSection';
+import { Certifications } from '@/components/Certifications';
 import {
   useDir,
   LuxSection,
