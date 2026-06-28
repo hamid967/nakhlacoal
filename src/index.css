@@ -148,7 +148,7 @@
 
   /* Nav link pill */
   .nav-pill {
-    @apply relative inline-flex items-center px-4 py-2 rounded-full text-sm font-medium transition-all duration-500;
+    @apply relative inline-flex items-center px-2.5 xl:px-4 py-2 rounded-full text-[13px] xl:text-sm font-medium transition-all duration-500 whitespace-nowrap;
     color: hsl(var(--foreground) / 0.72);
   }
   .nav-pill:hover {
