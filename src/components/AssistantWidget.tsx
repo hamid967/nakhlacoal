@@ -125,14 +125,8 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
     const next = [...messages, userMsg, { id: aId, role: 'assistant' as const, content: '' }];
     setMessages(next);
     setStreaming(true);
-    try {
-      const baseUrl = (supabase as any).supabaseUrl ?? import.meta.env.VITE_SUPABASE_URL;
-      const anon = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
-      const resp = await fetch(`${baseUrl}/functions/v1/chat-assistant`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', apikey: anon, Authorization: `Bearer ${anon}` },
-        body: JSON.stringify({ messages: [...messages, userMsg].map(m => ({ role: m.role, content: m.content })) }),
-      });
+
+
     const triggerOfflineOrder = (note: string) => {
       const intent = parseOrderIntent(text);
       const order = {
