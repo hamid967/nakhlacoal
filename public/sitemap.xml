@@ -3,24 +3,31 @@
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <!-- Public, indexable routes only. Excluded: /auth /studio /compare /profile /admin (internal or protected) -->
   <url>
-    <loc>https://starlight-echoes.lovable.app/</loc>
-    <xhtml:link rel="alternate" hreflang="ar" href="https://starlight-echoes.lovable.app/?lang=ar"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://starlight-echoes.lovable.app/?lang=en"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://starlight-echoes.lovable.app/"/>
+    <loc>https://alnakhlacoal.com/</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://alnakhlacoal.com/?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://alnakhlacoal.com/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://alnakhlacoal.com/"/>
     <changefreq>weekly</changefreq><priority>1.0</priority>
   </url>
-  <url><loc>https://starlight-echoes.lovable.app/products</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://starlight-echoes.lovable.app/products/bbq</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://starlight-echoes.lovable.app/products/coconut</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://starlight-echoes.lovable.app/products/hookah</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://starlight-echoes.lovable.app/products/compressed</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://starlight-echoes.lovable.app/products/export</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://starlight-echoes.lovable.app/about</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://starlight-echoes.lovable.app/quality</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://starlight-echoes.lovable.app/export</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://starlight-echoes.lovable.app/knowledge</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://starlight-echoes.lovable.app/trademarks</loc><changefreq>yearly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://starlight-echoes.lovable.app/uses</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://starlight-echoes.lovable.app/articles</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://starlight-echoes.lovable.app/contact</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://alnakhlacoal.com/products</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://alnakhlacoal.com/products/bbq</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://alnakhlacoal.com/products/coconut</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://alnakhlacoal.com/products/hookah</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://alnakhlacoal.com/products/compressed</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://alnakhlacoal.com/products/export</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://alnakhlacoal.com/about</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://alnakhlacoal.com/quality</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://alnakhlacoal.com/export</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://alnakhlacoal.com/knowledge</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url>
+    <loc>https://alnakhlacoal.com/trademarks</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://alnakhlacoal.com/trademarks?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://alnakhlacoal.com/trademarks?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://alnakhlacoal.com/trademarks"/>
+    <lastmod>2026-06-28</lastmod>
+    <changefreq>monthly</changefreq><priority>0.9</priority>
+  </url>
+  <url><loc>https://alnakhlacoal.com/uses</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://alnakhlacoal.com/articles</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://alnakhlacoal.com/contact</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
 </urlset>
