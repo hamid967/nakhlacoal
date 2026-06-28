@@ -1,0 +1,44 @@
+[
+  {
+    "theme": "dark",
+    "viewport": "desktop",
+    "file": "tests/visual/__screenshots__/intro-dark-desktop.png",
+    "green_ratio": 0.00032,
+    "pass": true
+  },
+  {
+    "theme": "light",
+    "viewport": "desktop",
+    "file": "tests/visual/__screenshots__/intro-light-desktop.png",
+    "green_ratio": 0.00032,
+    "pass": true
+  },
+  {
+    "theme": "dark",
+    "viewport": "tablet",
+    "file": "tests/visual/__screenshots__/intro-dark-tablet.png",
+    "green_ratio": 0.00032,
+    "pass": true
+  },
+  {
+    "theme": "light",
+    "viewport": "tablet",
+    "file": "tests/visual/__screenshots__/intro-light-tablet.png",
+    "green_ratio": 0.00032,
+    "pass": true
+  },
+  {
+    "theme": "dark",
+    "viewport": "mobile",
+    "file": "tests/visual/__screenshots__/intro-dark-mobile.png",
+    "green_ratio": 0.00029,
+    "pass": true
+  },
+  {
+    "theme": "light",
+    "viewport": "mobile",
+    "file": "tests/visual/__screenshots__/intro-light-mobile.png",
+    "green_ratio": 0.00029,
+    "pass": true
+  }
+]
