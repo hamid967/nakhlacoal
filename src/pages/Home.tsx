@@ -175,7 +175,8 @@ export default function Home() {
         <div className="container">
           <ScrollReveal>
             <div className="text-center mb-4">
-              <h2 className="text-3xl md:text-5xl font-arabic font-bold">منتجاتنا</h2>
+              <span className="eyebrow mb-5">تشكيلتنا</span>
+              <h2 className="text-3xl md:text-5xl mt-5 font-arabic font-bold">منتجاتنا</h2>
               <div className="mt-3 mx-auto w-24 h-px bg-gradient-to-r from-transparent via-gold to-transparent" />
             </div>
           </ScrollReveal>
