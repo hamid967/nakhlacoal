@@ -2,8 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import {
   ArrowRight, ArrowLeft, Flame, Clock, Leaf, ShieldCheck, Wind, Sparkles,
-  ShoppingCart, Package, Calculator, Truck, Users, Star,
-  MapPin, Mail, Phone, Instagram, Twitter, Facebook, Youtube,
+  ShoppingCart, Package, Calculator, Truck, Users, Star, Quote,
 } from 'lucide-react';
 import { SEO } from '@/components/SEO';
 import { ScrollReveal } from '@/components/ScrollReveal';
