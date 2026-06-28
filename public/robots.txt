@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-# Sitemap will be added once a project domain is set
+Sitemap: https://starlight-echoes.lovable.app/sitemap.xml
