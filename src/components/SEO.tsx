@@ -1,25 +1,34 @@
 import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
 
+const SITE = 'https://starlight-echoes.lovable.app';
+
 type Props = {
   title: string;
   description: string;
   path: string;
   jsonLd?: object;
+  noindex?: boolean;
 };
 
-export function SEO({ title, description, path, jsonLd }: Props) {
+export function SEO({ title, description, path, jsonLd, noindex = false }: Props) {
   const { i18n } = useTranslation();
   const lang = i18n.language?.startsWith('ar') ? 'ar' : 'en';
+  const cleanPath = path.startsWith('http') ? path : `${SITE}${path}`;
+  const base = cleanPath.split('?')[0];
   return (
     <Helmet>
       <html lang={lang} dir={lang === 'ar' ? 'rtl' : 'ltr'} />
       <title>{title}</title>
       <meta name="description" content={description} />
-      <link rel="canonical" href={path} />
+      <link rel="canonical" href={cleanPath} />
+      <link rel="alternate" hrefLang="ar" href={`${base}?lang=ar`} />
+      <link rel="alternate" hrefLang="en" href={`${base}?lang=en`} />
+      <link rel="alternate" hrefLang="x-default" href={base} />
+      {noindex && <meta name="robots" content="noindex, nofollow" />}
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
-      <meta property="og:url" content={path} />
+      <meta property="og:url" content={cleanPath} />
       <meta property="og:type" content="website" />
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={title} />
