@@ -2,8 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import {
   ArrowRight, ArrowLeft, Flame, Clock, Leaf, ShieldCheck, Wind, Sparkles,
-  ShoppingCart, Package, Calculator, Truck, Users, Star,
-  MapPin, Mail, Phone, Instagram, Twitter, Facebook, Youtube,
+  ShoppingCart, Package, Calculator, Truck, Users, Star, Quote,
 } from 'lucide-react';
 import { SEO } from '@/components/SEO';
 import { ScrollReveal } from '@/components/ScrollReveal';
@@ -148,9 +147,12 @@ export default function Home() {
 
         <div className="container">
           <ScrollReveal>
-            <h2 className={`text-3xl md:text-5xl text-center mb-16 ${isAr ? 'font-arabic font-bold' : 'font-display'}`}>
-              لماذا فحم النخلة هو الخيار <span className="text-gold-metal">الأفضل؟</span>
-            </h2>
+            <div className="text-center mb-16">
+              <span className="eyebrow mb-5">مميزاتنا</span>
+              <h2 className={`text-3xl md:text-5xl mt-5 ${isAr ? 'font-arabic font-bold' : 'font-display'}`}>
+                لماذا فحم النخلة هو الخيار <span className="text-gold-metal">الأفضل؟</span>
+              </h2>
+            </div>
           </ScrollReveal>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {features.map((f, i) => (
@@ -173,7 +175,8 @@ export default function Home() {
         <div className="container">
           <ScrollReveal>
             <div className="text-center mb-4">
-              <h2 className="text-3xl md:text-5xl font-arabic font-bold">منتجاتنا</h2>
+              <span className="eyebrow mb-5">تشكيلتنا</span>
+              <h2 className="text-3xl md:text-5xl mt-5 font-arabic font-bold">منتجاتنا</h2>
               <div className="mt-3 mx-auto w-24 h-px bg-gradient-to-r from-transparent via-gold to-transparent" />
             </div>
           </ScrollReveal>
@@ -300,7 +303,8 @@ export default function Home() {
         <div className="container">
           <ScrollReveal>
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-5xl font-arabic font-bold">ماذا يقول عملاؤنا؟</h2>
+              <span className="eyebrow mb-5">آراء عملائنا</span>
+              <h2 className="text-3xl md:text-5xl mt-5 font-arabic font-bold">ماذا يقول عملاؤنا؟</h2>
               <div className="mt-3 mx-auto w-24 h-px bg-gradient-to-r from-transparent via-gold to-transparent" />
             </div>
           </ScrollReveal>
@@ -308,7 +312,8 @@ export default function Home() {
           <div className="grid md:grid-cols-3 gap-5">
             {testimonials.map((t, i) => (
               <ScrollReveal key={i} delay={i * 100}>
-                <div className="p-7 rounded-2xl bg-surface border-luxe hover:border-luxe-strong transition-all duration-500 h-full flex flex-col">
+                <div className="relative p-7 pt-10 rounded-2xl bg-surface border-luxe hover:border-luxe-strong transition-all duration-500 h-full flex flex-col">
+                  <Quote className="absolute top-5 start-5 w-7 h-7 text-gold/30" />
                   <p className="text-sm text-foreground/80 leading-loose mb-5 flex-1">{t.text}</p>
                   <div className="flex gap-0.5 mb-4 justify-center">
                     {[...Array(5)].map((_, k) => (
@@ -326,6 +331,34 @@ export default function Home() {
               </ScrollReveal>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ============= CTA BAND ============= */}
+      <section className="pb-24">
+        <div className="container">
+          <ScrollReveal>
+            <div className="relative rounded-3xl section-dark overflow-hidden p-10 md:p-16 text-center">
+              <div className="absolute inset-0 ember-glow opacity-30 animate-ember pointer-events-none" />
+              <div className="relative">
+                <span className="eyebrow mb-5">جاهز للطلب؟</span>
+                <h2 className="text-3xl md:text-5xl font-arabic font-bold mt-5 mb-4">
+                  جرب <span className="text-gold-metal">فحم النخلة</span> اليوم
+                </h2>
+                <p className="text-sm md:text-base text-foreground/70 max-w-xl mx-auto mb-8 leading-loose">
+                  انضم لآلاف العملاء الذين اختاروا الجودة الفاخرة. توصيل سريع لجميع مناطق المملكة.
+                </p>
+                <div className="flex flex-wrap gap-3 justify-center">
+                  <Link to="/products" className="btn-gold">
+                    <ShoppingCart className="w-4 h-4" /> اطلب الآن
+                  </Link>
+                  <Link to="/contact" className="btn-ghost-gold">
+                    تواصل معنا
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </ScrollReveal>
         </div>
       </section>
 
