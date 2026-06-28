@@ -112,7 +112,7 @@ export function SplashScreen() {
       </button>
 
       <div className="absolute inset-0" style={{
-        background: "radial-gradient(ellipse at center, hsl(var(--gold) / 0.22) 0%, transparent 55%), radial-gradient(circle at 50% 110%, hsl(var(--gold) / 0.14), transparent 60%), radial-gradient(circle at 50% -10%, hsl(150 60% 8% / 0.55), transparent 55%), linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--background)) 100%)",
+        background: "radial-gradient(ellipse at center, hsl(var(--gold) / 0.22) 0%, transparent 55%), radial-gradient(circle at 50% 110%, hsl(var(--gold) / 0.16), transparent 60%), radial-gradient(circle at 50% -10%, hsl(0 0% 4% / 0.85), transparent 60%), linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--background)) 100%)",
       }} />
 
       {/* Cinematic vignette */}
