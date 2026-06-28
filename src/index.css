@@ -328,6 +328,17 @@
     height: 1px;
     background: linear-gradient(90deg, transparent, hsl(var(--gold) / 0.4), transparent);
   }
+
+  /* Luxe form input */
+  .lux-input {
+    @apply w-full px-4 py-2.5 rounded-xl text-sm bg-background border transition-all duration-300 outline-none;
+    border-color: hsl(var(--border));
+    color: hsl(var(--foreground));
+  }
+  .lux-input:focus {
+    border-color: hsl(var(--gold));
+    box-shadow: 0 0 0 3px hsl(var(--gold) / 0.15);
+  }
 }
 
 @layer utilities {

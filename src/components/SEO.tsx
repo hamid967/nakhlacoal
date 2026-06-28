@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
 
-const SITE = 'https://starlight-echoes.lovable.app';
+const SITE = 'https://alnakhlacoal.com';
 
 type Props = {
   title: string;
