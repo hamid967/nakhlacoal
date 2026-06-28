@@ -13,9 +13,14 @@ export type ProductSpec = {
   packaging: string;
 };
 
+export type ProductCategory = 'bbq' | 'shisha' | 'commercial' | 'export';
+export type ProductUseCase = 'home' | 'restaurant' | 'lounge' | 'outdoor' | 'export';
+
 export type Product = {
   slug: string;
   image: string;
+  category: ProductCategory;
+  useCases: ProductUseCase[];
   nameAr: string;
   nameEn: string;
   taglineAr: string;
