@@ -112,7 +112,7 @@ export function HomeIntro() {
         </div>
 
         {/* Registration strip */}
-        <div className="mt-10 md:mt-12 bg-white/70 backdrop-blur-sm border border-white/70 rounded-2xl px-5 md:px-8 py-4 md:py-5 shadow-[0_8px_30px_-12px_rgba(0,0,0,0.15)] grid grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-3 text-[11px] md:text-xs opacity-0 animate-[introUp_0.9s_ease-out_1s_forwards]">
+        <div className="bg-white/70 backdrop-blur-sm border border-white/70 rounded-2xl px-4 sm:px-6 md:px-8 py-3 md:py-5 shadow-[0_8px_30px_-12px_rgba(0,0,0,0.15)] grid grid-cols-2 sm:grid-cols-3 gap-x-4 sm:gap-x-8 gap-y-2 sm:gap-y-3 text-[10px] sm:text-[11px] md:text-xs opacity-0 animate-[introUp_0.9s_ease-out_1s_forwards] max-w-2xl w-full">
           <Meta label={isAr ? 'رقم التسجيل' : 'Reg No.'} value={center.registrationNo} />
           <Meta label={isAr ? 'فئة العلامة' : 'Class'} value={center.niceClass.replace('الفئة ', '')} />
           <Meta label={isAr ? 'تاريخ التسجيل' : 'Filed'} value={center.filedHijri} />
