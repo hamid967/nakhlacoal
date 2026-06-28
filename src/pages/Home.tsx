@@ -134,9 +134,13 @@ export default function Home() {
                 </div>
               </ScrollReveal>
             </div>
+            </div>
           </div>
         </div>
       </section>
+
+      {/* ============= WHY US (dark band) ============= */}
+
 
       {/* ============= WHY US ============= */}
       <section className="py-24 border-t border-gold/10">
