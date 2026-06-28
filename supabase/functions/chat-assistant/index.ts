@@ -139,7 +139,8 @@ Deno.serve(async (req) => {
       },
     });
   } catch (e) {
-    return new Response(JSON.stringify({ error: String(e) }), {
+    console.error("[chat-assistant] unhandled error:", e);
+    return new Response(JSON.stringify({ error: "Internal server error" }), {
       status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
