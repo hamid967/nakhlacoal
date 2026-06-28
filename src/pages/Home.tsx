@@ -4,6 +4,7 @@ import { SEO } from '@/components/SEO';
 import { ScrollReveal } from '@/components/ScrollReveal';
 import { WhatsAppFab } from '@/components/WhatsAppFab';
 import { HomeIntro } from '@/components/HomeIntro';
+import { LocationSection } from '@/components/LocationSection';
 import {
   useDir,
   LuxSection,
@@ -198,6 +199,8 @@ export default function Home() {
           {reviews.map((r, i) => <TestimonialCard key={i} {...r} index={i} />)}
         </div>
       </LuxSection>
+
+      <LocationSection />
 
       <CtaBand
         title={isAr ? 'جاهز لتجربة الفحم الفاخر؟' : 'Ready to taste the premium difference?'}
