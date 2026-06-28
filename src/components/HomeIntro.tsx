@@ -26,9 +26,10 @@ export function HomeIntro() {
 
   return (
     <div
-      className={`fixed inset-0 z-[100] flex items-center justify-center section-dark transition-opacity duration-700 ease-out ${
+      className={`fixed inset-0 z-[100] flex items-center justify-center transition-opacity duration-700 ease-out ${
         phase === 'out' ? 'opacity-0 pointer-events-none' : 'opacity-100'
       }`}
+      style={{ background: 'radial-gradient(ellipse at center, hsl(var(--background)) 0%, hsl(var(--background)) 50%, hsl(0 0% 6%) 100%)' }}
       aria-hidden
     >
       {/* Letterbox bars */}
