@@ -102,11 +102,50 @@ export function SplashScreen() {
       </button>
 
       <div className="absolute inset-0" style={{
-        background: "radial-gradient(ellipse at center, hsl(var(--gold) / 0.18) 0%, transparent 55%), radial-gradient(circle at 50% 110%, hsl(var(--gold) / 0.12), transparent 60%)",
+        background: "radial-gradient(ellipse at center, hsl(var(--gold) / 0.22) 0%, transparent 55%), radial-gradient(circle at 50% 110%, hsl(var(--gold) / 0.14), transparent 60%), linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--background)) 100%)",
       }} />
 
+      {/* Trademark constellation background */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden>
+        {trademarks.map((t, i) => {
+          const positions = [
+            { top: "8%", left: "6%", size: 110, rot: -8, delay: 0 },
+            { top: "14%", right: "8%", size: 130, rot: 6, delay: 0.4 },
+            { bottom: "18%", left: "4%", size: 120, rot: 5, delay: 0.8 },
+            { bottom: "10%", right: "6%", size: 140, rot: -7, delay: 1.2 },
+            { top: "44%", left: "2%", size: 90, rot: 10, delay: 1.6 },
+          ];
+          const p: any = positions[i % positions.length];
+          return (
+            <img
+              key={t.id}
+              src={t.image}
+              alt=""
+              className="absolute opacity-[0.08] grayscale animate-[splash-float_9s_ease-in-out_infinite]"
+              style={{ ...p, width: p.size, height: p.size, transform: `rotate(${p.rot}deg)`, animationDelay: `${p.delay}s`, filter: "sepia(1) hue-rotate(8deg) saturate(2)" }}
+            />
+          );
+        })}
+      </div>
+
+      {/* Jeddah / Bab Makkah heritage watermark */}
+      <img
+        src={jeddahStamp}
+        alt=""
+        aria-hidden
+        className={`absolute pointer-events-none transition-opacity duration-[1400ms] ${stage >= 1 && stage < 4 ? "opacity-[0.07]" : "opacity-0"}`}
+        style={{ width: "min(78vmin, 720px)", height: "auto", top: "50%", left: "50%", transform: "translate(-50%,-50%)", filter: "drop-shadow(0 0 30px hsl(var(--gold) / 0.4))" }}
+      />
+
+      {/* Ornate frame corners */}
+      <div className={`absolute inset-6 md:inset-10 pointer-events-none transition-opacity duration-1000 ${stage >= 1 && stage < 4 ? "opacity-60" : "opacity-0"}`}>
+        {["top-0 left-0","top-0 right-0 rotate-90","bottom-0 right-0 rotate-180","bottom-0 left-0 -rotate-90"].map((c,i)=>(
+          <span key={i} className={`absolute ${c} w-14 h-14 border-t border-l border-[hsl(var(--gold))]/50`} />
+        ))}
+      </div>
+
       <div className="absolute inset-0 pointer-events-none">
-        {Array.from({ length: 14 }).map((_, i) => (
+        {Array.from({ length: 18 }).map((_, i) => (
           <span key={i} className="absolute block w-1 h-1 rounded-full bg-[hsl(var(--gold))]/60 blur-[1px]"
             style={{ left: `${(i * 73) % 100}%`, bottom: `-10%`,
               animation: `splash-ember ${8 + (i % 5)}s linear ${i * 0.4}s infinite`, opacity: 0.5 }} />
