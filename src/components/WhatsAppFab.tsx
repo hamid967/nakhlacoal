@@ -1,15 +1,20 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import { X } from 'lucide-react';
+import { Sheet, SheetContent } from '@/components/ui/sheet';
 import logo from '@/assets/palm-charcoal-logo.png';
+
 
 export function WhatsAppFab() {
   const { i18n } = useTranslation();
-  const navigate = useNavigate();
   const location = useLocation();
+  const [open, setOpen] = useState(false);
   const isAr = i18n.language?.startsWith('ar');
   const onAssistantPage = location.pathname.startsWith('/assistant');
 
   if (onAssistantPage) return null;
+
 
   return (
     <div>
@@ -37,7 +42,7 @@ export function WhatsAppFab() {
       {/* Premium Palm Charcoal AI FAB — perfectly circular */}
       <button
         type="button"
-        onClick={() => navigate('/assistant')}
+        onClick={() => setOpen(true)}
         aria-label={isAr ? 'مساعد فحم النخلة — اضغط هنا للطلب' : 'Palm Charcoal AI — tap to order'}
         className="fixed bottom-6 end-6 z-50 w-20 h-20 rounded-full flex items-center justify-center group transition-transform duration-500 ease-out hover:scale-110 motion-safe:animate-fab-float"
       >
@@ -151,6 +156,37 @@ export function WhatsAppFab() {
           aria-hidden
         />
       </button>
+
+      {/* Inline assistant panel — opens on same page */}
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetContent
+          side={isAr ? 'left' : 'right'}
+          className="w-full sm:max-w-md p-0 border-gold/30 bg-dark"
+        >
+          <div className="flex items-center justify-between px-4 py-3 border-b border-gold/20 bg-dark">
+            <div className="flex items-center gap-2">
+              <img src={logo} alt="" className="w-7 h-7 object-contain" />
+              <span className="text-cream font-arabic text-sm font-semibold">
+                {isAr ? 'مساعد فحم النخلة' : 'Palm Charcoal AI'}
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setOpen(false)}
+              aria-label={isAr ? 'إغلاق' : 'Close'}
+              className="text-cream/80 hover:text-gold-hi transition"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+          <iframe
+            src="/assistant?embed=1"
+            title="Palm Charcoal AI"
+            className="w-full h-[calc(100dvh-52px)] border-0 bg-dark"
+          />
+        </SheetContent>
+      </Sheet>
     </div>
   );
+
 }
