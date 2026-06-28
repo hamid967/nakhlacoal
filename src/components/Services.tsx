@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { ImageWithFallback } from './figma/ImageWithFallback'
+import { brand } from '@/lib/brand'
 
 export function Services() {
   const [isVisible, setIsVisible] = useState(false)
