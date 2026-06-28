@@ -13,6 +13,7 @@ import Wholesale from '@/pages/Wholesale';
 import ExportPage from '@/pages/Export';
 import Knowledge from '@/pages/Knowledge';
 import Contact from '@/pages/Contact';
+import Studio from '@/pages/Studio';
 import NotFound from '@/pages/NotFound';
 
 const queryClient = new QueryClient();
@@ -33,6 +34,7 @@ export default function App() {
             <Route path="/export" element={<ExportPage />} />
             <Route path="/knowledge" element={<Knowledge />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/studio" element={<Studio />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
