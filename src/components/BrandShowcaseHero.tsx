@@ -67,6 +67,9 @@ export function BrandShowcaseHero() {
       className="relative overflow-hidden pt-32 md:pt-36 pb-20 md:pb-28"
       style={{ background: '#F8F5EE' }}
     >
+      {/* Framer-Marketplace mesh layer */}
+      <div aria-hidden className="absolute inset-0 fm-mesh pointer-events-none" />
+
       {/* Floating palm leaves + glow (parallax + lazy mount) */}
       <motion.div
         aria-hidden
