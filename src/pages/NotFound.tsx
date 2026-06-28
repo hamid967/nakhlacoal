@@ -1,24 +1,21 @@
-import { useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
-const NotFound = () => {
-  const location = useLocation();
-
-  useEffect(() => {
-    console.error("404 Error: User attempted to access non-existent route:", location.pathname);
-  }, [location.pathname]);
-
+export default function NotFound() {
+  const { t, i18n } = useTranslation();
+  const isAr = i18n.language?.startsWith('ar');
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">404</h1>
-        <p className="mb-4 text-xl text-gray-600">Oops! Page not found</p>
-        <a href="/" className="text-blue-500 underline hover:text-blue-700">
-          Return to Home
-        </a>
+    <section className="min-h-screen flex items-center justify-center px-6">
+      <div className="text-center max-w-md">
+        <p className="eyebrow justify-center mb-6">404</p>
+        <h1 className={`text-5xl md:text-7xl mb-6 ${isAr ? 'font-arabic font-bold' : 'font-display'}`}>
+          {isAr ? 'صفحة غير موجودة' : 'Page not found'}
+        </h1>
+        <p className="text-foreground/60 mb-10">
+          {isAr ? 'الصفحة التي تبحث عنها قد نُقلت أو لم تعد متوفرة.' : 'The page you are looking for has moved or no longer exists.'}
+        </p>
+        <Link to="/" className="btn-gold">{t('nav.home')}</Link>
       </div>
-    </div>
+    </section>
   );
-};
-
-export default NotFound;
+}
