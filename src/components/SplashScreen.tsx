@@ -368,17 +368,20 @@ export function SplashScreen() {
       </div>
 
       <style>{`
-        @keyframes splash-pulse { 0%,100% { transform: scale(1); opacity: 0.85; } 50% { transform: scale(1.06); opacity: 1; } }
+        @keyframes splash-pulse { 0%,100% { transform: scale(1); opacity: 0.82; } 50% { transform: scale(1.05); opacity: 1; } }
         @keyframes splash-slide { 0% { transform: translateX(-100%); } 100% { transform: translateX(400%); } }
-        @keyframes splash-sweep { 0% { transform: translateX(0) skewX(12deg); } 60%,100% { transform: translateX(400%) skewX(12deg); } }
+        @keyframes splash-sweep { 0% { transform: translateX(-20%) skewX(12deg); opacity: 0; } 15% { opacity: 1; } 65% { opacity: 1; } 80%,100% { transform: translateX(420%) skewX(12deg); opacity: 0; } }
         @keyframes splash-marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
         @keyframes splash-ember { 0% { transform: translateY(0) translateX(0); opacity: 0; } 15% { opacity: 0.8; } 100% { transform: translateY(-115vh) translateX(20px); opacity: 0; } }
         @keyframes brand-reveal { 0% { opacity: 0; transform: translateY(20px) scale(0.92); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
-        @keyframes splash-scan { 0%,100% { transform: translateY(0); } 50% { transform: translateY(100vh); } }
+        @keyframes splash-scan { 0%,100% { transform: translateY(0); opacity: 0; } 10%,90% { opacity: 0.6; } 50% { transform: translateY(100vh); opacity: 0.6; } }
         @keyframes splash-float { 0%,100% { transform: translateY(0) rotate(var(--r,0deg)); } 50% { transform: translateY(-12px) rotate(var(--r,0deg)); } }
         @keyframes splash-rotate { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
+        @keyframes splash-halo { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes splash-halo-breathe { 0%,100% { filter: blur(34px) brightness(0.92); opacity: 0.85; } 50% { filter: blur(40px) brightness(1.08); opacity: 1; } }
         @keyframes splash-drift { 0% { transform: translate(0, 0); } 50% { transform: translate(18px, -22px); } 100% { transform: translate(-14px, 14px); } }
-        @keyframes splash-caustic { 0%,100% { background-position: -40% 0; opacity: 0.0; } 50% { background-position: 140% 0; opacity: 1; } }
+        @keyframes splash-caustic { 0% { transform: translateX(-30%); } 100% { transform: translateX(30%); } }
+        @keyframes splash-seal-glow { 0%,100% { box-shadow: 0 0 18px hsl(var(--gold) / 0.15), inset 0 0 12px hsl(var(--gold) / 0.05); } 50% { box-shadow: 0 0 38px hsl(var(--gold) / 0.32), inset 0 0 20px hsl(var(--gold) / 0.12); } }
         .mask-fade { -webkit-mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent); mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent); }
         @media (prefers-reduced-motion: reduce) {
           .fixed[class*="z-[100]"] *,
