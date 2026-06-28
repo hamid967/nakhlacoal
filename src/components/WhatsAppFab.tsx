@@ -8,12 +8,13 @@ import logo from '@/assets/palm-charcoal-logo.png';
 
 export function WhatsAppFab() {
   const { i18n } = useTranslation();
-  const navigate = useNavigate();
   const location = useLocation();
+  const [open, setOpen] = useState(false);
   const isAr = i18n.language?.startsWith('ar');
   const onAssistantPage = location.pathname.startsWith('/assistant');
 
   if (onAssistantPage) return null;
+
 
   return (
     <div>
