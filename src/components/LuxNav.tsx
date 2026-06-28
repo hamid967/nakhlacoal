@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Menu, X, ShoppingCart, User } from 'lucide-react';
+import { Menu, X, ShoppingCart, User, LogOut } from 'lucide-react';
 import { LanguageToggle } from './LanguageToggle';
 import { OrderModal } from './OrderModal';
+import { useAuth } from '@/contexts/AuthContext';
 import logo from '@/assets/palm-charcoal-logo.png';
 
 
@@ -86,9 +87,7 @@ export function LuxNav() {
 
           {/* Right cluster */}
           <div className="flex items-center gap-2 md:gap-3">
-            <button aria-label="Account" className="hidden md:inline-flex w-10 h-10 rounded-full items-center justify-center text-foreground/70 hover:text-gold-hi transition-colors">
-              <User className="w-4 h-4" />
-            </button>
+            <AccountButton />
             <button aria-label="Cart" className="hidden md:inline-flex w-10 h-10 rounded-full items-center justify-center text-foreground/70 hover:text-gold-hi transition-colors">
               <ShoppingCart className="w-4 h-4" />
             </button>
@@ -156,5 +155,32 @@ export function LuxNav() {
       </div>
       <OrderModal open={orderOpen} onOpenChange={setOrderOpen} />
     </>
+  );
+}
+
+function AccountButton() {
+  const { user, signOut } = useAuth();
+  const { i18n } = useTranslation();
+  const isAr = i18n.language?.startsWith('ar');
+  if (!user) {
+    return (
+      <Link
+        to="/auth"
+        aria-label={isAr ? 'تسجيل الدخول' : 'Sign in'}
+        className="hidden md:inline-flex w-10 h-10 rounded-full items-center justify-center text-foreground/70 hover:text-gold-hi transition-colors"
+      >
+        <User className="w-4 h-4" />
+      </Link>
+    );
+  }
+  return (
+    <button
+      onClick={signOut}
+      aria-label={isAr ? 'تسجيل الخروج' : 'Sign out'}
+      title={user.email ?? ''}
+      className="hidden md:inline-flex w-10 h-10 rounded-full items-center justify-center text-foreground/70 hover:text-gold-hi transition-colors"
+    >
+      <LogOut className="w-4 h-4" />
+    </button>
   );
 }

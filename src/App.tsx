@@ -8,6 +8,8 @@ import { Layout } from '@/components/Layout';
 import { SplashScreen } from '@/components/SplashScreen';
 import { CompareBar } from '@/components/CompareBar';
 import { CompareProvider } from '@/contexts/CompareContext';
+import { AuthProvider } from '@/contexts/AuthContext';
+import { ProtectedRoute } from '@/components/ProtectedRoute';
 import Home from '@/pages/Home';
 import Products from '@/pages/Products';
 import ProductDetail from '@/pages/ProductDetail';
@@ -22,6 +24,7 @@ import Trademarks from '@/pages/Trademarks';
 import Uses from '@/pages/Uses';
 import Articles from '@/pages/Articles';
 import Studio from '@/pages/Studio';
+import Auth from '@/pages/Auth';
 import NotFound from '@/pages/NotFound';
 
 const queryClient = new QueryClient();
@@ -30,31 +33,34 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <CompareProvider>
-          <SplashScreen />
-          <Toaster />
-          <Sonner />
-          <Routes>
-            <Route element={<Layout />}>
-              <Route path="/" element={<Home />} />
-              <Route path="/products" element={<Products />} />
-              <Route path="/products/:slug" element={<ProductDetail />} />
-              <Route path="/compare" element={<Compare />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/quality" element={<Quality />} />
-              <Route path="/wholesale" element={<Wholesale />} />
-              <Route path="/export" element={<ExportPage />} />
-              <Route path="/knowledge" element={<Knowledge />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/trademarks" element={<Trademarks />} />
-              <Route path="/uses" element={<Uses />} />
-              <Route path="/articles" element={<Articles />} />
-              <Route path="/studio" element={<Studio />} />
-              <Route path="*" element={<NotFound />} />
-            </Route>
-          </Routes>
-          <CompareBar />
-        </CompareProvider>
+        <AuthProvider>
+          <CompareProvider>
+            <SplashScreen />
+            <Toaster />
+            <Sonner />
+            <Routes>
+              <Route element={<Layout />}>
+                <Route path="/" element={<Home />} />
+                <Route path="/auth" element={<Auth />} />
+                <Route path="/products" element={<Products />} />
+                <Route path="/products/:slug" element={<ProductDetail />} />
+                <Route path="/compare" element={<ProtectedRoute><Compare /></ProtectedRoute>} />
+                <Route path="/about" element={<About />} />
+                <Route path="/quality" element={<Quality />} />
+                <Route path="/wholesale" element={<ProtectedRoute requireRole="wholesale"><Wholesale /></ProtectedRoute>} />
+                <Route path="/export" element={<ExportPage />} />
+                <Route path="/knowledge" element={<Knowledge />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/trademarks" element={<Trademarks />} />
+                <Route path="/uses" element={<Uses />} />
+                <Route path="/articles" element={<Articles />} />
+                <Route path="/studio" element={<ProtectedRoute><Studio /></ProtectedRoute>} />
+                <Route path="*" element={<NotFound />} />
+              </Route>
+            </Routes>
+            <CompareBar />
+          </CompareProvider>
+        </AuthProvider>
       </TooltipProvider>
     </QueryClientProvider>
   );
