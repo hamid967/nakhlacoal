@@ -361,5 +361,7 @@ export default function Studio() {
         </div>
       )}
     </section>
+    </>
   );
 }
+
