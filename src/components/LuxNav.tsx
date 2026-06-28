@@ -70,19 +70,16 @@ export function LuxNav() {
           </Link>
 
           {/* Desktop nav */}
-          <ul className="hidden lg:flex flex-nowrap items-center gap-0.5 xl:gap-1 rounded-full px-2 py-1 border-luxe bg-surface/60 backdrop-blur-sm">
+          <ul className="hidden lg:flex fm-segment font-arabic">
             {navItems.map((item) => (
-              <li key={item.to}>
-                <NavLink to={item.to} end={item.to === '/'} className="block">
-                  {({ isActive }) => (
-                    <span className="nav-pill font-arabic" data-active={isActive}>
-                      {t(item.key)}
-                    </span>
-                  )}
+              <li key={item.to} className="contents">
+                <NavLink to={item.to} end={item.to === '/'} className={({ isActive }) => (isActive ? 'is-active' : '')}>
+                  {t(item.key)}
                 </NavLink>
               </li>
             ))}
           </ul>
+
 
           {/* Right cluster */}
           <div className="flex items-center gap-1.5 md:gap-2">
