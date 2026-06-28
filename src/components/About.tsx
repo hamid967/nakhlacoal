@@ -11,32 +11,32 @@ export function About() {
   const processSteps = [
     {
       number: "01",
-      title: "Concept & Script",
-      description: "Scene‑by‑scene draft with dialogues and time‑codes",
+      title: "Sustainable Harvest",
+      description: "Pruned date palm wood, ethically sourced from Saudi farms",
       color: "accent-blue"
     },
     {
       number: "02", 
-      title: "Look & Storyboard",
-      description: "AI engine selection and visual testing",
+      title: "Curing & Drying",
+      description: "Slow sun-curing to reduce moisture and preserve density",
       color: "accent-emerald"
     },
     {
       number: "03",
-      title: "AI Production",
-      description: "Motion tests and multi-variant generation",
+      title: "Clean Carbonization",
+      description: "Low-emission kilns convert wood into pure, ashless charcoal",
       color: "accent-purple"
     },
     {
       number: "04",
-      title: "Post‑production",
-      description: "VFX, color grading, and audio mixing",
+      title: "Quality Control",
+      description: "Lab-tested for heat output, burn time, and zero additives",
       color: "accent-blue"
     },
     {
       number: "05",
-      title: "Master Delivery",
-      description: "Multi-format export and secure transfer",
+      title: "Packaging & Export",
+      description: "Vacuum-sealed cartons shipped to the GCC, EU, and Asia",
       color: "accent-purple"
     }
   ]
@@ -76,17 +76,17 @@ export function About() {
           <div className="inline-flex items-center gap-3 mb-6">
             <div className="w-3 h-3 bg-accent-emerald rounded-full animate-pulse" />
             <span className="text-sm font-semibold text-muted-foreground">
-              Behind the Scenes
+              Inside the Kiln
             </span>
             <div className="w-3 h-3 bg-accent-blue rounded-full animate-pulse" />
           </div>
           
           <h2 className="text-5xl sm:text-6xl lg:text-7xl font-black leading-tight mb-6 text-foreground">
-            How We Create Magic
+            From Palm to Premium Ember
           </h2>
           
           <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto">
-            Watch our process unfold frame by frame
+            Five careful stages turn date palm wood into the finest Saudi charcoal
           </p>
         </div>
 
@@ -143,7 +143,7 @@ export function About() {
                 {/* Start frame */}
                 <div className="flex-shrink-0 w-80 h-52 bg-gray-800 rounded-lg border-2 border-gray-700 opacity-60 flex items-center justify-center" 
                      style={{ boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.4)' }}>
-                  <div className="text-gray-400 font-mono tracking-wider">● START</div>
+                  <div className="text-gray-400 font-mono tracking-wider">● HARVEST</div>
                 </div>
                 
                 {/* Process Step Frames */}
@@ -195,14 +195,14 @@ export function About() {
                 {/* End frame */}
                 <div className="flex-shrink-0 w-80 h-52 bg-gray-800 rounded-lg border-2 border-gray-700 opacity-60 flex items-center justify-center"
                      style={{ boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.4)' }}>
-                  <div className="text-gray-400 font-mono tracking-wider">● END</div>
+                  <div className="text-gray-400 font-mono tracking-wider">● EXPORT</div>
                 </div>
                 
                 {/* Duplicate set for seamless loop */}
                 {/* Start frame duplicate */}
                 <div className="flex-shrink-0 w-80 h-52 bg-gray-800 rounded-lg border-2 border-gray-700 opacity-60 flex items-center justify-center" 
                      style={{ boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.4)' }}>
-                  <div className="text-gray-400 font-mono tracking-wider">● START</div>
+                  <div className="text-gray-400 font-mono tracking-wider">● HARVEST</div>
                 </div>
                 
                 {/* Process Step Frames duplicate */}
@@ -275,7 +275,7 @@ export function About() {
             {/* Film Speed Indicator */}
             <div className="flex items-center gap-3">
               <div className="w-2 h-2 bg-accent-emerald rounded-full animate-pulse" />
-              <span className="text-sm font-semibold text-foreground">24 FPS</span>
+              <span className="text-sm font-semibold text-foreground">+7,500 kcal/kg</span>
             </div>
             
             <div className="w-px h-6 bg-border" />
@@ -283,7 +283,7 @@ export function About() {
             {/* Duration */}
             <div className="flex items-center gap-3">
               <div className="w-2 h-2 bg-accent-blue rounded-full animate-pulse" style={{animationDelay: '0.5s'}} />
-              <span className="text-sm font-semibold text-foreground">5-7 Days</span>
+              <span className="text-sm font-semibold text-foreground">3+ Hour Burn</span>
             </div>
             
             <div className="w-px h-6 bg-border" />
@@ -291,7 +291,7 @@ export function About() {
             {/* Quality */}
             <div className="flex items-center gap-3">
               <div className="w-2 h-2 bg-accent-purple rounded-full animate-pulse" style={{animationDelay: '1s'}} />
-              <span className="text-sm font-semibold text-foreground">Cinema Quality</span>
+              <span className="text-sm font-semibold text-foreground">Export Grade</span>
             </div>
           </div>
         </div>
@@ -300,7 +300,7 @@ export function About() {
         <div className="mt-20">
           <div className="text-center mb-8">
             <p className="text-muted-foreground">
-              A glimpse into our storyboard development process
+              A glimpse inside our kilns, warehouses, and grading lines
             </p>
           </div>
           
@@ -318,7 +318,7 @@ export function About() {
               {/* Main gallery image */}
               <img 
                 src={storyboardImage}
-                alt={`Collection of AI-generated video content thumbnails showcasing ${brand.name}'s diverse output`}
+                alt={`A gallery of premium ${brand.name} products, kilns, and quality control stages`}
                 className="w-full h-auto rounded-xl"
                 style={{
                   filter: 'contrast(1.05) saturate(1.1) brightness(0.95)'
@@ -335,7 +335,7 @@ export function About() {
             {/* Caption */}
             <div className="mt-6 text-center">
               <p className="text-sm text-muted-foreground italic">
-                "Diverse scenarios, characters, and styles — all generated through our AI pipeline"
+                "From palm grove to glowing ember — every kilogram crafted under Saudi quality standards"
               </p>
             </div>
           </div>

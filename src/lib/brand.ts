@@ -1,8 +1,8 @@
 export const brand = {
   // Core identity — change these to rebrand the entire site
-  name: 'MOJJU',
-  logo: 'MOJJU',
-  tagline: ['AI FILM', 'PRODUCTION', 'WITHOUT LIMITS'],
+  name: 'Palm Charcoal',
+  logo: 'فحم النخلة',
+  tagline: ['PREMIUM SAUDI', 'PALM CHARCOAL', 'CRAFTED TO PERFECTION'],
 
   // Hero background video
   heroVideo: {
@@ -12,20 +12,20 @@ export const brand = {
 
   // Social links (footer)
   social: {
-    x: 'https://x.com/Mojjuai',
-    tiktok: 'https://www.tiktok.com/@mojju.ai',
-    instagram: 'https://www.instagram.com/mojju.ai',
-    linkedin: 'https://linkedin.com/company/mojju',
+    x: 'https://x.com/palmcharcoal',
+    tiktok: 'https://www.tiktok.com/@palmcharcoal',
+    instagram: 'https://www.instagram.com/palmcharcoal',
+    linkedin: 'https://linkedin.com/company/palmcharcoal',
   },
 
   // Footer details
   footer: {
     description:
-      'Revolutionizing video production with intelligent AI that understands creativity, storytelling, and human emotion.',
+      'فحم النخلة — Premium Saudi charcoal crafted from sustainable date palm wood. Pure, long-burning, and naturally aromatic for grilling, hookah, and luxury hospitality worldwide.',
     copyrightYear: 2025,
-    address: '2847 HIGHLAND AVE. SUITE 310 BIRMINGHAM 35205, AL, USA',
+    address: 'King Fahd Road, Riyadh 12241, Kingdom of Saudi Arabia',
   },
 
   // Small stamps / labels used across the site
-  lab: 'MOJJU LAB',
+  lab: 'PALM CHARCOAL CO.',
 } as const

@@ -12,64 +12,64 @@ import leoPhoto from '../assets/team-member-7.png'
 export function Team() {
   const wantedCriminals = [
     {
-      name: "Marcus 'The Pixel Bandit'",
-      crime: "ARMED CREATIVE ROBBERY",
-      bounty: "$8,500",
-      description: "Notorious for stealing ordinary footage and transforming it into extraordinary visual experiences. Approach with caution - carries dangerous levels of creative vision and technical expertise.",
+      name: "Abu Khaled 'The Kiln Master'",
+      crime: "MASTER OF THE SLOW BURN",
+      bounty: "30 YRS",
+      description: "Head firekeeper of our Al-Ahsa kilns. Notorious for refusing to release any batch under 7,500 kcal/kg. Approach with caution — carries dangerous standards and an unmatched nose for perfect carbonization.",
       image: marcusPhoto,
       rotation: 'rotate-3',
       mustacheStyle: "artistic"
     },
     {
-      name: "Sofia 'The Frame Thief'",
-      crime: "GRAND THEFT OF IMAGINATION",
-      bounty: "$6,200",
-      description: "Wanted for stealing impossible creative briefs and turning them into award-winning masterpieces. Armed with strategic thinking and dangerous levels of project management skills.",
+      name: "Salma 'The Quality Hawk'",
+      crime: "OBSESSIVE QUALITY CONTROL",
+      bounty: "QA LEAD",
+      description: "Heads our laboratory and grading line. Wanted for rejecting entire pallets over 0.5% ash deviation. Armed with calorimeters, moisture meters, and zero tolerance for compromise.",
       image: sofiaPhoto,
       rotation: 'rotate-2',
       mustacheStyle: "handlebar"
     },
     {
-      name: "Jake 'The Render Rogue'",
-      crime: "MASTERMINDING TECHNICAL HEISTS",
-      bounty: "$11,800",
-      description: "Ringleader of rendering crimes, orchestrating elaborate computational operations. Wanted for leading sophisticated processing schemes that push hardware beyond its limits.",
+      name: "Yousef 'The Grove Keeper'",
+      crime: "SUSTAINABLE HARVEST CONSPIRACY",
+      bounty: "FARM DIR.",
+      description: "Mastermind behind our partnerships with 200+ Saudi palm farms. Wanted for orchestrating the only fully traceable, regenerative palm-pruning network in the Kingdom.",
       image: jakePhoto,
       rotation: 'rotate-2',
       mustacheStyle: "thick"
     },
     {
-      name: "Maya 'The Code Crusher'",
-      crime: "DIGITAL WIZARDRY & ALGORITHM SORCERY",
-      bounty: "$9,300",
-      description: "Wanted for conjuring flawless code from chaotic requirements using forbidden programming magic. Known to transform complex problems into elegant solutions with mysterious technical powers.",
+      name: "Noura 'The Export Architect'",
+      crime: "GLOBAL DISTRIBUTION SCHEMES",
+      bounty: "LOGISTICS",
+      description: "Routes containers from Jeddah to Hamburg, Tokyo, and London weekly. Known to make customs paperwork, FOB pricing, and lead times disappear into a single elegant invoice.",
       image: mayaPhoto,
       rotation: '-rotate-2',
       mustacheStyle: "curly"
     },
     {
-      name: "Connor 'The Digital Desperado'",
-      crime: "PRODUCTION WITH INTENT TO AMAZE",
-      bounty: "$13,700",
-      description: "Mastermind behind revolutionary content creation operations. Wanted for disrupting traditional production methods and making competitors question their entire approach.",
+      name: "Faisal 'The Briquette Engineer'",
+      crime: "PRESSING WITH INTENT TO PERFECT",
+      bounty: "R&D LEAD",
+      description: "Designer of our signature cube and hexagon coals. Wanted for perfecting ignition time, burn duration, and an ash so fine it barely whispers when it falls.",
       image: connorPhoto,
       rotation: 'rotate-1',
       mustacheStyle: "villainous"
     },
     {
-      name: "Zara 'The Motion Maverick'",
-      crime: "ANIMATION MANIPULATION & EFFECT FORGERY",
-      bounty: "$7,900",
-      description: "Notorious for crafting motion graphics so smooth they defy the laws of physics. Armed with After Effects mastery and a dangerous eye for kinetic perfection.",
+      name: "Layla 'The Hospitality Whisperer'",
+      crime: "LUXURY ACCOUNT INFILTRATION",
+      bounty: "KEY ACCT",
+      description: "Quietly supplies the Kingdom's top hotels, mandi houses, and shisha lounges. Armed with private-label expertise and a black book of every executive chef from Riyadh to Dubai.",
       image: zaraPhoto,
       rotation: '-rotate-1',
       mustacheStyle: "artistic"
     },
     {
-      name: "Leo 'The Effect Enforcer'",
-      crime: "WANDERING VFX SYNTHESIS SCHEMES",
-      bounty: "$10,400",
-      description: "A nomadic visual effects outlaw who drifts from project to project, leaving behind a trail of jaw-dropping composites and impossible cinematic magic. Master of the digital realm.",
+      name: "Omar 'The Sustainability Rebel'",
+      crime: "CARBON-NEUTRAL CONSPIRACY",
+      bounty: "ESG LEAD",
+      description: "A roaming auditor who hunts emissions, water usage, and waste across our supply chain. Master of turning palm pruning waste into the cleanest charcoal on earth.",
       image: leoPhoto,
       rotation: 'rotate-3',
       mustacheStyle: "handlebar"
@@ -122,18 +122,18 @@ export function Team() {
           <div className="inline-flex items-center gap-3 mb-6">
             <div className="w-3 h-3 bg-accent-emerald rounded-full animate-pulse" />
             <span className="text-sm font-semibold text-muted-foreground">
-              Meet the Outlaws
+              Meet the Masters
             </span>
             <div className="w-3 h-3 bg-accent-blue rounded-full animate-pulse" />
           </div>
           
           <h2 className="text-5xl sm:text-6xl lg:text-7xl font-black leading-tight mb-8 text-foreground">
-            <span className="block mb-2">These people are</span>
-            <span className="block text-foreground">WANTED</span>
+            <span className="block mb-2">The keepers of</span>
+            <span className="block text-foreground">THE EMBER</span>
           </h2>
           
           <p className="text-2xl lg:text-3xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-            Highly skilled and creatively dangerous
+            Saudi craftsmen, engineers, and quality experts behind every kilogram
           </p>
         </div>
 
@@ -242,7 +242,7 @@ export function Team() {
                                     fontFamily: 'serif',
                                     letterSpacing: '0.1em'
                                   }}>
-                                WANTED
+                                MASTER
                               </h3>
                               <div className="w-full h-0.5 bg-black mb-2" />
                             </div>
@@ -273,7 +273,7 @@ export function Team() {
                             {/* Details */}
                             <div className="text-left space-y-2" style={{ fontFamily: 'serif' }}>
                               <div className="font-black text-lg text-black">{criminal.name}</div>
-                              <div className="font-bold text-red-600 text-base">BOUNTY: {criminal.bounty}</div>
+                              <div className="font-bold text-red-600 text-base">TENURE: {criminal.bounty}</div>
                               <div className="text-sm text-gray-800 leading-relaxed bg-gray-50/50 p-3 border-l-2 border-black">
                                 {criminal.description}
                               </div>
@@ -330,7 +330,7 @@ export function Team() {
                                     fontFamily: 'serif',
                                     letterSpacing: '0.1em'
                                   }}>
-                                WANTED
+                                MASTER
                               </h3>
                               <div className="w-full h-0.5 bg-black mb-2" />
                             </div>
@@ -361,7 +361,7 @@ export function Team() {
                             {/* Details */}
                             <div className="text-left space-y-2" style={{ fontFamily: 'serif' }}>
                               <div className="font-black text-lg text-black">{criminal.name}</div>
-                              <div className="font-bold text-red-600 text-base">BOUNTY: {criminal.bounty}</div>
+                              <div className="font-bold text-red-600 text-base">TENURE: {criminal.bounty}</div>
                               <div className="text-sm text-gray-800 leading-relaxed bg-gray-50/50 p-3 border-l-2 border-black">
                                 {criminal.description}
                               </div>
