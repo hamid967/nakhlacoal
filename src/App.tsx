@@ -1,8 +1,11 @@
-import { Routes, Route } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
 import { Toaster as Sonner } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { initAnalytics, trackPageView } from '@/lib/analytics';
+
 
 import { Layout } from '@/components/Layout';
 import { SplashScreen } from '@/components/SplashScreen';
@@ -33,13 +36,23 @@ import NotFound from '@/pages/NotFound';
 
 const queryClient = new QueryClient();
 
+function AnalyticsTracker() {
+  const location = useLocation();
+  useEffect(() => { initAnalytics(); }, []);
+  useEffect(() => { trackPageView(location.pathname + location.search); }, [location]);
+  return null;
+}
+
 export default function App() {
+
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <AuthProvider>
           <CompareProvider>
             <SplashScreen />
+            <AnalyticsTracker />
+
             <Toaster />
             <Sonner />
             <Routes>
