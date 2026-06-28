@@ -143,8 +143,12 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
   };
 
 
-  const waText = encodeURIComponent('مرحباً فحم النخلة 👋، أرغب بطلب فحم.');
-  const waHref = `https://wa.me/${WHATSAPP_NUMBER}?text=${waText}`;
+  const lastAssistantMsg = [...messages].reverse().find(m => m.role === 'assistant' && m.content.trim() && m.id !== 'greet');
+  const lastUserMsg = [...messages].reverse().find(m => m.role === 'user' && m.content.trim());
+  const contextSummary = lastAssistantMsg
+    ? `مرحباً فحم النخلة 👋\n\nأكمل معكم من مساعد فحم النخلة:\n${lastUserMsg ? `\n• استفساري: ${lastUserMsg.content.slice(0, 200)}\n` : ''}• آخر رد المساعد:\n"${lastAssistantMsg.content.replace(/[#*`_>]/g, '').replace(/\[([^\]]+)\]\([^)]+\)/g, '$1').trim().slice(0, 400)}"\n\nأرجو المتابعة 🙏`
+    : 'مرحباً فحم النخلة 👋، أرغب بطلب فحم.';
+  const waHref = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(contextSummary)}`;
 
   const lastAssistant = [...messages].reverse().find(m => m.role === 'assistant' && m.content.trim());
   const preview = lastAssistant?.content.replace(/[#*`_>\-]/g, '').replace(/\s+/g, ' ').trim().slice(0, 90);
