@@ -22,11 +22,12 @@ export default function Trademarks() {
       <SEO
         title="العلامات التجارية المسجلة | فحم النخلة"
         description="سجل العلامات التجارية المسجلة لمؤسسة محمد عبدالله باعشن التجارية في المملكة العربية السعودية."
+        path="/trademarks"
       />
       <PageHero
-        eyebrowKey="quality.eyebrow"
-        titleKey="quality.title"
-        subtitleKey="quality.subtitle"
+        eyebrow="ملكية فكرية موثقة"
+        title="العلامات التجارية المسجلة"
+        subtitle="خمس علامات تجارية مسجلة رسمياً لدى الهيئة السعودية للملكية الفكرية — تشمل فحم النخلة، نخلان، المركاز، النخلتين، وباعشن."
       />
 
       <section className="container mx-auto px-6 py-16">
