@@ -188,6 +188,8 @@ export default function Studio() {
     ) : null;
 
   return (
+    <>
+      <SEO title={isAr ? 'استوديو الذكاء' : 'AI Studio'} description="" path="/studio" noindex />
     <section className="container max-w-6xl pt-32 pb-24">
       <div className="flex items-center gap-2 mb-4">
         <Sparkles className="w-4 h-4 text-gold" />
