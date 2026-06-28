@@ -4,17 +4,17 @@ import { brand } from '@/lib/brand'
 
 export function Footer() {
   const aiTools = [
-    'Runway Gen-4',
-    'Kling 2', 
-    'Veo 3',
-    'Higgsfield AI',
-    'Hailuo Minimax 2',
-    'Midjourney',
-    'Leonardo AI',
-    'Krea AI',
-    'Runway',
-    'Suno AI',
-    'ElevenLabs'
+    'Restaurant Briquettes',
+    'Hookah Cube Coals',
+    'Natural Lump Charcoal',
+    'Private Label Boxes',
+    'Wholesale Pallets',
+    'Container Export',
+    'Hospitality Supply',
+    'Retail Cartons',
+    'Sample Kits',
+    'Custom Blends',
+    'GCC Distribution'
   ]
 
   return (
@@ -93,12 +93,12 @@ export function Footer() {
           {/* Tools We Use Section */}
           <div className="col-span-12 md:col-span-8">
             <div>
-              <h4 className="font-black text-2xl text-background mb-4">TOOLS WE USE</h4>
+              <h4 className="font-black text-2xl text-background mb-4">OUR PRODUCTS</h4>
               
-              {/* AI Tools Description */}
+              {/* Products Description */}
               <p className="text-background/70 text-base mb-8 leading-relaxed">
-                We leverage the latest AI technology to deliver cutting-edge video production. 
-                Our toolkit combines the best generative AI models for video, audio, and visual content creation.
+                A complete range of premium Saudi palm charcoal — from restaurant-grade briquettes to luxury hookah cubes and export pallets. 
+                Every product carries the same promise of purity, longevity, and natural aroma.
               </p>
               
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">

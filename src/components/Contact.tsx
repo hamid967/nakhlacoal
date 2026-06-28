@@ -29,17 +29,17 @@ export function Contact() {
           <div className="inline-flex items-center gap-3 mb-6">
             <div className="w-3 h-3 bg-accent-emerald rounded-full animate-pulse" />
             <span className="text-sm font-semibold text-muted-foreground">
-              Let's Create Together
+              Order, Wholesale & Export
             </span>
             <div className="w-3 h-3 bg-accent-blue rounded-full animate-pulse" />
           </div>
           
           <h2 className="text-5xl sm:text-6xl lg:text-7xl font-black leading-tight mb-8">
-            <span className="block mb-2">Ready to Light Up the Screen?</span>
+            <span className="block mb-2">Ready to Light the Perfect Ember?</span>
           </h2>
           
           <p className="text-2xl lg:text-3xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-            Tell us about your project and we'll get back to you with a plan to bring your vision to cinematic reality
+            Tell us about your volume, market, or hospitality project — we'll respond with samples, pricing, and shipping options
           </p>
         </div>
 
@@ -50,15 +50,15 @@ export function Contact() {
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-xl font-black text-foreground mb-1">
-                    Get In Touch
+                    Request a Quote
                   </h3>
                   <p className="text-muted-foreground">
-                    Fill out the form and we'll respond within 24 hours
+                    Share your details and our export team will reply within 24 hours
                   </p>
                 </div>
                 <div className="hidden sm:flex items-center space-x-2">
                   <div className="w-3 h-3 bg-accent-emerald rounded-full" />
-                  <span className="text-sm text-muted-foreground font-medium">Available now</span>
+                  <span className="text-sm text-muted-foreground font-medium">Shipping worldwide</span>
                 </div>
               </div>
             </div>
@@ -99,7 +99,7 @@ export function Contact() {
                   value={formData.message}
                   onChange={(e) => setFormData(prev => ({ ...prev, message: e.target.value }))}
                   className="w-full px-4 py-3 rounded-xl bg-card border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent-blue/50 transition-all resize-none"
-                  placeholder="Tell us about your project..."
+                  placeholder="Volume, destination, intended use (grilling, hookah, hospitality)..."
                 />
               </div>
               <button
@@ -107,7 +107,7 @@ export function Contact() {
                 disabled={isSubmitting}
                 className="w-full py-4 rounded-xl bg-foreground text-background font-black text-lg hover:opacity-90 transition-opacity disabled:opacity-50"
               >
-                {isSubmitting ? 'Sending...' : 'Send Message'}
+                {isSubmitting ? 'Sending...' : 'Request a Quote'}
               </button>
             </form>
           </div>
@@ -120,9 +120,9 @@ export function Contact() {
               <div className="w-12 h-12 bg-accent-blue/10 rounded-full flex items-center justify-center mx-auto mb-4">
                 <div className="w-6 h-6 bg-accent-blue rounded-full" />
               </div>
-              <h4 className="font-black text-foreground mb-2">Project Discussion</h4>
+              <h4 className="font-black text-foreground mb-2">Sample Request</h4>
               <p className="text-muted-foreground text-sm">
-                Share your vision and requirements with our team
+                Receive a free sample box to evaluate density, burn time, and aroma
               </p>
             </div>
             
@@ -130,9 +130,9 @@ export function Contact() {
               <div className="w-12 h-12 bg-accent-emerald/10 rounded-full flex items-center justify-center mx-auto mb-4">
                 <div className="w-6 h-6 bg-accent-emerald rounded-full" />
               </div>
-              <h4 className="font-black text-foreground mb-2">Custom Strategy</h4>
+              <h4 className="font-black text-foreground mb-2">Wholesale Pricing</h4>
               <p className="text-muted-foreground text-sm">
-                Get a tailored approach for your unique project
+                Pallet, container, and private-label rates with full traceability docs
               </p>
             </div>
             
@@ -140,9 +140,9 @@ export function Contact() {
               <div className="w-12 h-12 bg-accent-purple/10 rounded-full flex items-center justify-center mx-auto mb-4">
                 <div className="w-6 h-6 bg-accent-purple rounded-full" />
               </div>
-              <h4 className="font-black text-foreground mb-2">Next Steps</h4>
+              <h4 className="font-black text-foreground mb-2">Global Shipping</h4>
               <p className="text-muted-foreground text-sm">
-                Clear timeline and roadmap to bring your idea to life
+                FOB Jeddah, with weekly departures to the GCC, EU, UK, and Asia
               </p>
             </div>
           </div>
