@@ -1,31 +1,37 @@
 # Intro Visual Tests
 
 Automated Playwright snapshots of the Splash/Intro screen across
-`dark` + `light` themes and 3 viewports. Fails the run when the
-gradient introduces unwanted green tones (regression guard for the
-emerald→neutral fix).
+`dark` + `light` themes and 3 viewports. Catches two classes of
+regression:
 
-## Run
+1. **Color regression** — fails if >0.5% of pixels turn green
+   (guards the emerald → neutral fix).
+2. **Layout regression** — diffs each snapshot against a stored
+   baseline; fails if >2% of pixels changed.
+
+## Commands
 
 ```bash
-# dev server must be running on :8080
-python tests/visual/intro_visual_test.py
+# Run the suite (dev server must be on :8080)
+npm run test:intro
+
+# Update baselines after an intentional visual change
+npm run test:intro:update
 ```
 
-Screenshots and a `report.json` land in `tests/visual/__screenshots__/`.
+## Artifacts
 
-## Threshold
-
-A pixel counts as "unwanted green" when the green channel exceeds
-red **and** blue by ≥12 on a saturated color (not a neutral gray).
-The suite fails if more than **0.5%** of sampled pixels are green —
-generous enough for any small accent, strict enough to catch a
-green background or gradient regression.
+```
+tests/visual/__baseline__/      # committed baseline PNGs
+tests/visual/__screenshots__/   # latest run output + report.json
+tests/visual/__screenshots__/__diff__/   # red-highlighted diffs on failure
+```
 
 ## CI hook
 
-Add to your pipeline after `npm run build && npm run preview &`:
-
 ```yaml
-- run: python tests/visual/intro_visual_test.py
+- run: npm run test:intro
 ```
+
+First run on a fresh checkout auto-creates baselines and passes;
+subsequent runs gate on pixel diff + green-tint thresholds.

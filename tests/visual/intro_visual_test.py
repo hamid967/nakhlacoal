@@ -27,8 +27,14 @@ from PIL import Image
 from playwright.async_api import async_playwright
 
 BASE = os.environ.get("BASE_URL", "http://localhost:8080")
-OUT = Path(__file__).parent / "__screenshots__"
+ROOT = Path(__file__).parent
+OUT = ROOT / "__screenshots__"
+BASELINE = ROOT / "__baseline__"
+DIFFS = OUT / "__diff__"
 OUT.mkdir(parents=True, exist_ok=True)
+BASELINE.mkdir(parents=True, exist_ok=True)
+
+UPDATE = os.environ.get("UPDATE_SNAPSHOTS") in {"1", "true", "yes"}
 
 VIEWPORTS = [
     ("desktop", 1440, 900),
@@ -39,6 +45,35 @@ THEMES = ("dark", "light")
 
 # Fail if more than this fraction of sampled pixels are saturated-green.
 GREEN_THRESHOLD = 0.005  # 0.5%
+# Fail if more than this fraction of pixels differ from the baseline.
+DIFF_THRESHOLD = 0.02   # 2%
+
+
+def diff_ratio(a: Path, b: Path, out: Path) -> float:
+    """Per-pixel diff ratio between two PNGs; writes a red-highlighted diff."""
+    ia = Image.open(a).convert("RGB")
+    ib = Image.open(b).convert("RGB")
+    if ia.size != ib.size:
+        return 1.0
+    pa, pb = ia.load(), ib.load()
+    w, h = ia.size
+    diff = Image.new("RGB", (w, h), (0, 0, 0))
+    pd = diff.load()
+    total = w * h
+    bad = 0
+    for y in range(h):
+        for x in range(w):
+            r1, g1, b1 = pa[x, y]
+            r2, g2, b2 = pb[x, y]
+            if abs(r1 - r2) + abs(g1 - g2) + abs(b1 - b2) > 30:
+                bad += 1
+                pd[x, y] = (255, 0, 0)
+            else:
+                pd[x, y] = (r1 // 4, g1 // 4, b1 // 4)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    diff.save(out)
+    return bad / total
+
 
 
 def green_ratio(path: Path) -> float:
@@ -83,13 +118,26 @@ async def capture(browser, name: str, width: int, height: int, theme: str):
     await page.screenshot(path=str(out))
     await ctx.close()
     ratio = green_ratio(out)
-    return {
+    baseline = BASELINE / out.name
+    info = {
         "theme": theme,
         "viewport": name,
-        "file": str(out.relative_to(Path.cwd())) if out.is_relative_to(Path.cwd()) else str(out),
+        "file": str(out),
         "green_ratio": round(ratio, 5),
-        "pass": ratio < GREEN_THRESHOLD,
+        "green_pass": ratio < GREEN_THRESHOLD,
+        "diff_ratio": None,
+        "diff_pass": True,
+        "baseline": str(baseline),
     }
+    if UPDATE or not baseline.exists():
+        baseline.write_bytes(out.read_bytes())
+        info["updated_baseline"] = True
+    else:
+        d = diff_ratio(out, baseline, DIFFS / out.name)
+        info["diff_ratio"] = round(d, 5)
+        info["diff_pass"] = d < DIFF_THRESHOLD
+    info["pass"] = info["green_pass"] and info["diff_pass"]
+    return info
 
 
 async def main() -> int:
@@ -104,17 +152,24 @@ async def main() -> int:
                 tag = "PASS" if r["pass"] else "FAIL"
                 if not r["pass"]:
                     failed = True
+                d = "—" if r["diff_ratio"] is None else f"{r['diff_ratio'] * 100:.2f}%"
                 print(
                     f"{tag}  {theme:<5} {name:<7} "
-                    f"green={r['green_ratio'] * 100:.3f}%  → {r['file']}"
+                    f"green={r['green_ratio'] * 100:.3f}%  diff={d}"
                 )
         await browser.close()
     (OUT / "report.json").write_text(json.dumps(results, indent=2))
+    if UPDATE:
+        print("\nBaselines updated in tests/visual/__baseline__/")
+        return 0
     if failed:
-        print("\nFAIL: Unwanted green tint detected in intro snapshots.")
+        print("\nFAIL: Visual regression detected. Review diffs in")
+        print("      tests/visual/__screenshots__/__diff__/")
+        print("      Run `npm run test:intro:update` if the change is intentional.")
         return 1
-    print("\nOK: All intro snapshots clean (no unwanted green).")
+    print("\nOK: Intro snapshots match baseline and contain no unwanted green.")
     return 0
+
 
 
 if __name__ == "__main__":

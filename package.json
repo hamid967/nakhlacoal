@@ -9,7 +9,9 @@
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test:visual": "node tests/visual/intro.spec.mjs"
+    "test:visual": "node tests/visual/intro.spec.mjs",
+    "test:intro": "python tests/visual/intro_visual_test.py",
+    "test:intro:update": "UPDATE_SNAPSHOTS=1 python tests/visual/intro_visual_test.py"
   },
   "dependencies": {
     "@fontsource/cormorant-garamond": "^5.2.11",
