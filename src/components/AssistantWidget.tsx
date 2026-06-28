@@ -136,8 +136,15 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
       }
       const { order, clean } = extractOrder(acc);
       if (order) {
-        setMessages(prev => prev.map(m => m.id === aId ? { ...m, content: clean } : m));
-        await finalize(order);
+        setMessages(prev => prev.map(m => m.id === aId ? { ...m, content: clean + '\n\n📋 **يرجى تأكيد بياناتك في النموذج أدناه قبل إرسال الطلب.**' } : m));
+        setFormData({
+          contact_name: order.contact_name || '',
+          phone: order.phone || '',
+          address: order.address || '',
+          delivery_method: order.delivery_method || 'توصيل',
+        });
+        setFormErrors({});
+        setPendingOrder(order);
       }
     } catch (e: any) {
       const msg = e?.message ?? 'خطأ';
