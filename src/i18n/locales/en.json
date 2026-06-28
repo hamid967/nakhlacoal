@@ -16,7 +16,9 @@
     "portal": "Portal",
     "contact": "Contact",
     "order": "Order Now",
-    "trademarks": "Trademarks"
+    "trademarks": "Trademarks",
+    "uses": "Uses",
+    "articles": "Articles"
   },
   "hero": {
     "eyebrow": "Crafted in the Kingdom",
