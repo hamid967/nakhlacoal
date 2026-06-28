@@ -177,22 +177,30 @@ export function SplashScreen() {
       </div>
 
       {/* Luxury conic halo behind logo */}
-      <div className={`absolute top-1/2 left-1/2 pointer-events-none transition-opacity duration-[1400ms] ${stage >= 1 && stage < 4 ? "opacity-70" : "opacity-0"}`}
-        style={{
-          width: "min(64vmin, 560px)", height: "min(64vmin, 560px)",
-          transform: "translate(-50%, -50%)",
-          background: "conic-gradient(from 0deg, hsl(var(--gold) / 0.0) 0deg, hsl(var(--gold) / 0.35) 70deg, hsl(var(--gold) / 0.0) 140deg, hsl(var(--gold) / 0.28) 220deg, hsl(var(--gold) / 0.0) 290deg, hsl(var(--gold) / 0.35) 360deg)",
-          filter: "blur(28px)",
-          borderRadius: "50%",
-          animation: stage >= 1 ? "splash-rotate 28s linear infinite" : undefined,
-        }} aria-hidden />
+      <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none transition-opacity duration-[1800ms] ease-in-out ${stage >= 1 && stage < 4 ? "opacity-70" : "opacity-0"}`}
+        style={{ width: "min(64vmin, 560px)", height: "min(64vmin, 560px)" }} aria-hidden>
+        <div style={{
+          width: "100%", height: "100%", borderRadius: "50%",
+          background: "conic-gradient(from 0deg, hsl(var(--gold) / 0.0) 0deg, hsl(var(--gold) / 0.32) 70deg, hsl(var(--gold) / 0.0) 140deg, hsl(var(--gold) / 0.26) 220deg, hsl(var(--gold) / 0.0) 290deg, hsl(var(--gold) / 0.32) 360deg)",
+          filter: "blur(34px)",
+          willChange: "transform",
+          animation: stage >= 1 ? "splash-halo 48s linear infinite, splash-halo-breathe 7s ease-in-out infinite" : undefined,
+        }} />
+      </div>
 
       {/* Caustic sweep — silk-like light passing across the screen */}
-      <div className={`absolute inset-0 pointer-events-none transition-opacity duration-700 ${stage >= 1 && stage < 4 ? "opacity-100" : "opacity-0"}`} aria-hidden style={{
-        background: "linear-gradient(115deg, transparent 30%, hsl(var(--gold) / 0.14) 50%, transparent 70%)",
-        mixBlendMode: "screen",
-        animation: stage >= 1 ? "splash-caustic 9s ease-in-out infinite" : undefined,
-      }} />
+      <div className={`absolute inset-0 pointer-events-none transition-opacity duration-[1200ms] ease-in-out ${stage >= 1 && stage < 4 ? "opacity-100" : "opacity-0"}`} aria-hidden style={{ overflow: "hidden" }}>
+        <div style={{
+          position: "absolute",
+          inset: 0,
+          background: "linear-gradient(115deg, transparent 38%, hsl(var(--gold) / 0.10) 48%, hsl(var(--gold) / 0.18) 50%, hsl(var(--gold) / 0.10) 52%, transparent 62%)",
+          mixBlendMode: "screen",
+          width: "220%",
+          left: "-60%",
+          willChange: "transform",
+          animation: stage >= 1 ? "splash-caustic 14s cubic-bezier(0.65,0,0.35,1) infinite" : undefined,
+        }} />
+      </div>
 
       {/* Ornate frame corners */}
       <div className={`absolute inset-6 md:inset-10 pointer-events-none transition-opacity duration-1000 ${stage >= 1 && stage < 4 ? "opacity-60" : "opacity-0"}`}>
@@ -233,11 +241,11 @@ export function SplashScreen() {
         <div className={`relative transition-all duration-[1000ms] ease-out ${
           stage >= 1 ? "opacity-100 scale-100 blur-0" : "opacity-0 scale-[1.12] blur-md"
         } ${stage === 2 ? "scale-50 -translate-y-[18vh]" : ""} ${stage >= 3 ? "scale-100 translate-y-0" : ""}`}>
-          <div className="absolute inset-0 -m-16 rounded-full opacity-70 animate-[splash-pulse_3.2s_ease-in-out_infinite]"
+          <div className="absolute inset-0 -m-16 rounded-full opacity-70 animate-[splash-pulse_4.5s_ease-in-out_infinite]"
             style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.35), transparent 65%)" }} />
           <img src={logo} alt="Palm Charcoal" className="relative w-44 md:w-64 h-auto drop-shadow-[0_0_40px_hsl(var(--gold)/0.45)]"  />
           <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ mixBlendMode: "overlay" }}>
-            <div className="absolute inset-y-0 -left-1/2 w-1/2 bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-12 animate-[splash-sweep_2.4s_ease-in-out_infinite]" />
+            <div className="absolute inset-y-0 -left-1/2 w-1/2 bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-12 animate-[splash-sweep_5s_cubic-bezier(0.4,0,0.2,1)_infinite]" />
           </div>
         </div>
 
@@ -252,7 +260,8 @@ export function SplashScreen() {
             {isAr ? "جمر الفخامة" : "The Ember of Luxury"}
           </p>
           {/* Heritage badge — gilded seal */}
-          <div className="mt-5 inline-flex items-center gap-3 px-5 py-1.5 rounded-full border border-[hsl(var(--gold))]/40 bg-gradient-to-r from-[hsl(var(--gold))]/[0.06] via-[hsl(var(--gold))]/[0.12] to-[hsl(var(--gold))]/[0.06] backdrop-blur-sm shadow-[0_0_24px_hsl(var(--gold)/0.18)]">
+          <div className="mt-5 inline-flex items-center gap-3 px-5 py-1.5 rounded-full border border-[hsl(var(--gold))]/40 bg-gradient-to-r from-[hsl(var(--gold))]/[0.06] via-[hsl(var(--gold))]/[0.12] to-[hsl(var(--gold))]/[0.06] backdrop-blur-sm"
+            style={{ animation: "splash-seal-glow 5.5s ease-in-out infinite" }}>
             <span className="text-[hsl(var(--gold))] text-base leading-none">✦</span>
             <span className={`text-[10px] md:text-[11px] tracking-[0.32em] uppercase text-[hsl(var(--gold-hi))] ${isAr ? "font-arabic" : ""}`}>
               {isAr ? "من جدة · صناعة سعودية" : "From Jeddah · Made in Saudi Arabia"}
@@ -359,17 +368,20 @@ export function SplashScreen() {
       </div>
 
       <style>{`
-        @keyframes splash-pulse { 0%,100% { transform: scale(1); opacity: 0.85; } 50% { transform: scale(1.06); opacity: 1; } }
+        @keyframes splash-pulse { 0%,100% { transform: scale(1); opacity: 0.82; } 50% { transform: scale(1.05); opacity: 1; } }
         @keyframes splash-slide { 0% { transform: translateX(-100%); } 100% { transform: translateX(400%); } }
-        @keyframes splash-sweep { 0% { transform: translateX(0) skewX(12deg); } 60%,100% { transform: translateX(400%) skewX(12deg); } }
+        @keyframes splash-sweep { 0% { transform: translateX(-20%) skewX(12deg); opacity: 0; } 15% { opacity: 1; } 65% { opacity: 1; } 80%,100% { transform: translateX(420%) skewX(12deg); opacity: 0; } }
         @keyframes splash-marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
         @keyframes splash-ember { 0% { transform: translateY(0) translateX(0); opacity: 0; } 15% { opacity: 0.8; } 100% { transform: translateY(-115vh) translateX(20px); opacity: 0; } }
         @keyframes brand-reveal { 0% { opacity: 0; transform: translateY(20px) scale(0.92); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
-        @keyframes splash-scan { 0%,100% { transform: translateY(0); } 50% { transform: translateY(100vh); } }
+        @keyframes splash-scan { 0%,100% { transform: translateY(0); opacity: 0; } 10%,90% { opacity: 0.6; } 50% { transform: translateY(100vh); opacity: 0.6; } }
         @keyframes splash-float { 0%,100% { transform: translateY(0) rotate(var(--r,0deg)); } 50% { transform: translateY(-12px) rotate(var(--r,0deg)); } }
         @keyframes splash-rotate { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
+        @keyframes splash-halo { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes splash-halo-breathe { 0%,100% { filter: blur(34px) brightness(0.92); opacity: 0.85; } 50% { filter: blur(40px) brightness(1.08); opacity: 1; } }
         @keyframes splash-drift { 0% { transform: translate(0, 0); } 50% { transform: translate(18px, -22px); } 100% { transform: translate(-14px, 14px); } }
-        @keyframes splash-caustic { 0%,100% { background-position: -40% 0; opacity: 0.0; } 50% { background-position: 140% 0; opacity: 1; } }
+        @keyframes splash-caustic { 0% { transform: translateX(-30%); } 100% { transform: translateX(30%); } }
+        @keyframes splash-seal-glow { 0%,100% { box-shadow: 0 0 18px hsl(var(--gold) / 0.15), inset 0 0 12px hsl(var(--gold) / 0.05); } 50% { box-shadow: 0 0 38px hsl(var(--gold) / 0.32), inset 0 0 20px hsl(var(--gold) / 0.12); } }
         .mask-fade { -webkit-mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent); mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent); }
         @media (prefers-reduced-motion: reduce) {
           .fixed[class*="z-[100]"] *,
