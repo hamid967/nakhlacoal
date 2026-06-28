@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { ScrollReveal } from './ScrollReveal';
 import { LuxSection, SectionHeader } from './ui-lux';
+import { ImageWatermark } from './ImageWatermark';
 import s1 from '@/assets/step-harvest.jpg';
 import s2 from '@/assets/step-carbonize.jpg';
 import s3 from '@/assets/step-grind.jpg';
@@ -12,77 +13,155 @@ export function ProcessSection() {
   const isAr = i18n.language?.startsWith('ar');
 
   const steps = [
-    {
-      img: s1,
-      ar: { t: 'الحصاد والاختيار', d: 'نختار قشور جوز الهند الناضجة من مزارع إندونيسيا المعتمدة، ونفرز يدويًا أعلى جودة فقط.' },
-      en: { t: 'Harvest & Selection', d: 'Mature coconut shells are harvested from certified Indonesian plantations and hand-sorted for top grade only.' },
-    },
-    {
-      img: s2,
-      ar: { t: 'الكربنة في الأفران', d: 'تحرق القشور في أفران مغلقة بدرجات حرارة مدروسة لإنتاج كربون نقي بدون شوائب.' },
-      en: { t: 'Carbonization', d: 'Shells are slow-burned in sealed kilns at controlled temperatures to yield pure, smoke-free carbon.' },
-    },
-    {
-      img: s3,
-      ar: { t: 'الطحن والخلط', d: 'يُطحن الفحم إلى مسحوق ناعم ويُخلط مع رابط طبيعي ١٠٠٪ بدون كيماويات.' },
-      en: { t: 'Grinding & Mixing', d: 'Carbon is milled into fine powder and bound with 100% natural binder — zero chemicals.' },
-    },
-    {
-      img: s4,
-      ar: { t: 'الكبس والتجفيف', d: 'يُكبس الخليط في مكعبات بحجم ٢٥مم وتُجفّف ٤٨ ساعة للحصول على كثافة وحرارة مثالية.' },
-      en: { t: 'Pressing & Drying', d: 'Pressed into 25mm cubes and slow-dried for 48 hours to lock in density and heat.' },
-    },
-    {
-      img: s5,
-      ar: { t: 'التغليف والشحن', d: 'يُغلف في عبوات معتمدة محكمة الإغلاق ويُشحن جاهزًا للجلسات الفاخرة.' },
-      en: { t: 'Packaging & Shipping', d: 'Sealed in premium pouches, ready for the finest sessions worldwide.' },
-    },
+    { img: s1, ar: { t: 'الحصاد والاختيار', d: 'قشور جوز الهند الناضجة من إندونيسيا، فرز يدوي للأجود فقط.' }, en: { t: 'Harvest & Selection', d: 'Mature coconut shells, hand-sorted for top grade only.' } },
+    { img: s2, ar: { t: 'الكربنة في الأفران', d: 'حرق بطيء في أفران مغلقة بدرجة حرارة مدروسة لكربون نقي.' }, en: { t: 'Carbonization', d: 'Slow-burned in sealed kilns for pure, smoke-free carbon.' } },
+    { img: s3, ar: { t: 'الطحن والخلط', d: 'مسحوق ناعم مع رابط طبيعي ١٠٠٪ بدون كيماويات.' }, en: { t: 'Grinding & Mixing', d: 'Fine powder bound with 100% natural binder.' } },
+    { img: s4, ar: { t: 'الكبس والتجفيف', d: 'مكعبات ٢٥مم تُجفّف ٤٨ ساعة لكثافة وحرارة مثالية.' }, en: { t: 'Pressing & Drying', d: '25mm cubes slow-dried for 48 hours.' } },
+    { img: s5, ar: { t: 'التغليف والشحن', d: 'عبوات محكمة جاهزة للجلسات الفاخرة حول العالم.' }, en: { t: 'Packaging & Shipping', d: 'Sealed pouches, ready for premium sessions worldwide.' } },
   ];
 
+  // 8 evenly distributed sprocket holes
+  const sprockets = Array.from({ length: 8 });
+
   return (
-    <LuxSection tone="surface" className="py-20 md:py-28">
+    <LuxSection tone="surface" className="py-20 md:py-28 overflow-hidden">
       <SectionHeader
         eyebrow={isAr ? 'طريقة الصنع' : 'How it’s made'}
-        title={isAr ? 'رحلة فحم معسل جوز الهند — خطوة بخطوة' : 'The coconut hookah charcoal journey — step by step'}
+        title={isAr ? 'رحلة فحم النخلة — مشهد بمشهد' : 'The Palm Charcoal journey — frame by frame'}
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-5 md:gap-6">
-        {steps.map((step, i) => {
-          const txt = isAr ? step.ar : step.en;
-          return (
-            <ScrollReveal key={i} delay={i * 100}>
-              <div className="group relative h-full overflow-hidden rounded-2xl border-luxe bg-background shadow-luxe">
-                <div className="relative aspect-[4/5] overflow-hidden">
-                  <img
-                    src={step.img}
-                    alt={txt.t}
-                    width={1280}
-                    height={1280}
-                    loading="lazy"
-                    decoding="async"
-                    className="w-full h-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-dark/85 via-dark/30 to-transparent" />
-                  <div className="absolute top-3 start-3 w-10 h-10 rounded-full flex items-center justify-center bg-gold-hi/95 text-dark font-display font-bold text-lg shadow-luxe">
-                    {String(i + 1).padStart(2, '0')}
+      <ScrollReveal>
+        {/* FILMSTRIP */}
+        <div
+          className="relative mx-[-1rem] md:mx-[-2rem] py-6 md:py-8"
+          style={{
+            background:
+              'linear-gradient(180deg, #0a0a0a 0%, #141414 50%, #0a0a0a 100%)',
+            boxShadow: 'inset 0 0 80px rgba(0,0,0,0.7), 0 30px 60px -20px rgba(0,0,0,0.5)',
+          }}
+        >
+          {/* Top sprocket row */}
+          <div className="absolute inset-x-0 top-0 h-6 md:h-8 flex items-center justify-around px-4">
+            {sprockets.map((_, k) => (
+              <span
+                key={`t${k}`}
+                className="block w-6 h-3 md:w-9 md:h-4 rounded-[3px] bg-background/95"
+                style={{ boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.4)' }}
+              />
+            ))}
+          </div>
+          {/* Bottom sprocket row */}
+          <div className="absolute inset-x-0 bottom-0 h-6 md:h-8 flex items-center justify-around px-4">
+            {sprockets.map((_, k) => (
+              <span
+                key={`b${k}`}
+                className="block w-6 h-3 md:w-9 md:h-4 rounded-[3px] bg-background/95"
+                style={{ boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.4)' }}
+              />
+            ))}
+          </div>
+
+          {/* Frames */}
+          <div className="relative px-6 md:px-12 py-8 md:py-10">
+            <div className="flex gap-3 md:gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-none pb-2"
+              style={{ scrollbarWidth: 'none' }}
+            >
+              {steps.map((step, i) => {
+                const txt = isAr ? step.ar : step.en;
+                return (
+                  <div
+                    key={i}
+                    className="group snap-center shrink-0 w-[78vw] sm:w-[44vw] md:w-[32vw] lg:w-[22vw] relative"
+                    style={{
+                      border: '1px solid rgba(212,175,55,0.25)',
+                      background: '#000',
+                      boxShadow: '0 10px 30px -10px rgba(0,0,0,0.7)',
+                    }}
+                  >
+                    {/* Frame number — film slate style */}
+                    <div className="absolute top-2 start-2 z-20 flex items-center gap-1.5 px-2 py-1 bg-dark/80 backdrop-blur-sm"
+                      style={{ border: '1px solid rgba(212,175,55,0.4)' }}
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+                      <span className="text-[9px] tracking-[0.2em] font-mono text-gold-hi">
+                        SCN {String(i + 1).padStart(2, '0')}
+                      </span>
+                    </div>
+
+                    <div className="relative aspect-[4/5] overflow-hidden">
+                      <img
+                        src={step.img}
+                        alt={txt.t}
+                        width={1280}
+                        height={1280}
+                        loading="lazy"
+                        decoding="async"
+                        className="w-full h-full object-cover transition-transform duration-[1600ms] ease-out group-hover:scale-110"
+                        style={{ filter: 'contrast(1.05) saturate(1.05)' }}
+                      />
+                      {/* Film grain + vignette */}
+                      <div
+                        className="pointer-events-none absolute inset-0 mix-blend-overlay opacity-30"
+                        style={{
+                          backgroundImage:
+                            'url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'120\' height=\'120\'><filter id=\'n\'><feTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'2\' stitchTiles=\'stitch\'/></filter><rect width=\'100%\' height=\'100%\' filter=\'url(%23n)\' opacity=\'0.6\'/></svg>")',
+                        }}
+                      />
+                      <div
+                        className="pointer-events-none absolute inset-0"
+                        style={{
+                          background:
+                            'radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.55) 100%)',
+                        }}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/30 to-transparent" />
+
+                      <ImageWatermark variant="light" position="br" />
+
+                      {/* Caption — bottom */}
+                      <div className="absolute bottom-3 inset-x-3 text-background">
+                        <div className="text-[10px] tracking-[0.25em] uppercase text-gold-hi/90 mb-1 font-mono">
+                          {isAr ? `مشهد ${i + 1} / ${steps.length}` : `Scene ${i + 1} / ${steps.length}`}
+                        </div>
+                        <h3 className={`text-base md:text-lg leading-tight mb-1 ${isAr ? 'font-arabic font-bold' : 'font-display font-bold'}`}>
+                          {txt.t}
+                        </h3>
+                        <p className={`text-[11px] md:text-xs leading-relaxed text-background/80 ${isAr ? 'font-arabic' : ''}`}>
+                          {txt.d}
+                        </p>
+                      </div>
+
+                      {/* Cinematic gold sweep */}
+                      <div
+                        className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+                        style={{
+                          background:
+                            'linear-gradient(115deg, transparent 40%, rgba(212,175,55,0.18) 50%, transparent 60%)',
+                        }}
+                      />
+                    </div>
                   </div>
-                  <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
-                    style={{ background: 'linear-gradient(115deg, transparent 40%, rgba(212,175,55,0.18) 50%, transparent 60%)' }}
-                  />
-                </div>
-                <div className="p-5">
-                  <h3 className={`text-lg mb-2 ${isAr ? 'font-arabic font-bold' : 'font-display font-bold'}`}>
-                    {txt.t}
-                  </h3>
-                  <p className={`text-sm leading-relaxed text-foreground/70 ${isAr ? 'font-arabic' : ''}`}>
-                    {txt.d}
-                  </p>
-                </div>
-              </div>
-            </ScrollReveal>
-          );
-        })}
-      </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Edge fades */}
+          <div className="pointer-events-none absolute inset-y-0 start-0 w-12 md:w-20"
+            style={{ background: 'linear-gradient(90deg, #0a0a0a, transparent)' }}
+          />
+          <div className="pointer-events-none absolute inset-y-0 end-0 w-12 md:w-20"
+            style={{ background: 'linear-gradient(270deg, #0a0a0a, transparent)' }}
+          />
+        </div>
+
+        {/* Slate footer */}
+        <div className="mt-6 flex items-center justify-between text-[10px] md:text-xs font-mono tracking-[0.2em] uppercase text-foreground/50">
+          <span>● REC · 24fps · ProRes</span>
+          <span className="text-gold-lo">www.nakhlacoal.com</span>
+          <span>PALM CHARCOAL — KSA</span>
+        </div>
+      </ScrollReveal>
     </LuxSection>
   );
 }
