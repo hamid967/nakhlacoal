@@ -1,4 +1,16 @@
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /studio
+Disallow: /studio/
+Disallow: /compare
+Disallow: /auth
+Disallow: /login
+Disallow: /signup
+Disallow: /profile
+Disallow: /account
+Disallow: /api/
+Disallow: /functions/
 
 Sitemap: https://starlight-echoes.lovable.app/sitemap.xml
