@@ -79,6 +79,7 @@ export function SplashScreen() {
     setTimeout(() => {
       setHidden(true);
       try { sessionStorage.setItem(SESSION_KEY, "1"); } catch {}
+      navigate("/");
     }, 600);
   };
 
