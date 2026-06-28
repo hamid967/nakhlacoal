@@ -156,6 +156,28 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
     }
   };
 
+  const confirmOrder = async () => {
+    const errs: Record<string, string> = {};
+    if (formData.contact_name.trim().length < 2) errs.contact_name = 'الاسم مطلوب';
+    if (!PHONE_RE.test(formData.phone.trim())) errs.phone = 'رقم جوال سعودي غير صحيح (05xxxxxxxx)';
+    if (formData.address.trim().length < 5) errs.address = 'العنوان مطلوب';
+    if (!formData.delivery_method) errs.delivery_method = 'اختر طريقة الاستلام';
+    setFormErrors(errs);
+    if (Object.keys(errs).length || !pendingOrder) return;
+    const merged = {
+      ...pendingOrder,
+      contact_name: formData.contact_name.trim(),
+      phone: formData.phone.trim(),
+      address: formData.address.trim(),
+      delivery_method: formData.delivery_method,
+      notes: [pendingOrder.notes, `طريقة الاستلام: ${formData.delivery_method}`].filter(Boolean).join(' · '),
+    };
+    setPendingOrder(null);
+    await finalize(merged);
+  };
+
+
+
 
   const lastAssistantMsg = [...messages].reverse().find(m => m.role === 'assistant' && m.content.trim() && m.id !== 'greet');
   const lastUserMsg = [...messages].reverse().find(m => m.role === 'user' && m.content.trim());
