@@ -242,7 +242,7 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
                 </div>
               ) : (
                 <div className="prose prose-sm max-w-none text-foreground text-sm leading-relaxed prose-strong:text-foreground prose-p:my-1">
-                  {m.content && <ReactMarkdown>{m.content}</ReactMarkdown>}
+                  {m.content && <ReactMarkdown components={mdComponents}>{m.content}</ReactMarkdown>}
                   {isLastAssistant && streaming && m.content && (
                     <span className="inline-block w-1.5 h-3.5 align-middle bg-gold/80 ms-0.5 animate-pulse" aria-hidden />
                   )}
