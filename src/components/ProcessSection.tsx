@@ -1,4 +1,6 @@
 import { useTranslation } from 'react-i18next';
+import { useEffect, useRef, useState, useCallback } from 'react';
+import { Play, Pause } from 'lucide-react';
 import { ScrollReveal } from './ScrollReveal';
 import { LuxSection, SectionHeader } from './ui-lux';
 import { ImageWatermark } from './ImageWatermark';
