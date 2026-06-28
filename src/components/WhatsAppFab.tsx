@@ -32,7 +32,7 @@ export function WhatsAppFab() {
       {/* Branded AI FAB — "Living Ember" (جمرة حيّة) */}
       <button
         type="button"
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => navigate('/assistant')}
         aria-label={isAr ? 'مساعد فحم النخلة — اضغط هنا للطلب' : 'Palm Charcoal AI — tap to order'}
         aria-expanded={open}
         className={`fixed bottom-6 end-6 z-50 w-[72px] h-[72px] rounded-full flex items-center justify-center group transition-all duration-500 ease-out ${
