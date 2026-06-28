@@ -24,10 +24,16 @@ export default function Wholesale() {
         <div className="container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {tiers.map((tier, i) => {
             const item: any = t(`wholesale.${tier}`, { returnObjects: true });
+            const featured = i === 1;
             return (
               <ScrollReveal key={tier} delay={i * 80}>
-                <div className="shimmer-card relative h-full p-8 rounded-2xl bg-surface border-luxe hover:border-luxe-strong transition-all duration-700 flex flex-col">
-                  <div className="text-xs uppercase tracking-[0.3em] text-gold mb-6">0{i + 1}</div>
+                <div className={`fm-card relative h-full p-8 flex flex-col ${featured ? 'ring-1 ring-gold/60 shadow-[0_24px_60px_-24px_hsl(var(--gold)/0.45)]' : ''}`}>
+                  {featured && (
+                    <span className="absolute -top-3 ltr:left-6 rtl:right-6 fm-pill !bg-gold !text-dark !border-gold/60">
+                      {isAr ? 'الأكثر طلباً' : 'Most Popular'}
+                    </span>
+                  )}
+                  <span className="fm-pill mb-6 self-start">0{i + 1}</span>
                   <h3 className={`text-2xl mb-2 ${isAr ? 'font-arabic font-bold' : 'font-display'}`}>{item.name}</h3>
                   <p className={`text-3xl text-gold-hi mb-4 ${isAr ? 'font-arabic font-bold' : 'font-display'}`}>{item.qty}</p>
                   <p className="text-sm text-foreground/60 leading-relaxed mb-8">{item.desc}</p>
@@ -38,6 +44,7 @@ export default function Wholesale() {
               </ScrollReveal>
             );
           })}
+
         </div>
       </section>
 
