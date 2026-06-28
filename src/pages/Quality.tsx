@@ -364,6 +364,23 @@ function InspectionCube() {
         <p className="mt-3 text-center text-xs text-foreground/50 font-arabic">
           اسحب لتدوير المكعب • إصبعان للتدوير المحوري • انقر النقاط للتركيز
         </p>
+
+        {/* Debug Panel */}
+        <details className="mt-4 mx-auto max-w-md rounded-xl border border-gold/30 bg-rich-black/90 text-cream font-mono text-[11px] overflow-hidden">
+          <summary className="cursor-pointer select-none px-3 py-2 bg-gold/10 text-gold-hi flex justify-between items-center">
+            <span>🛠 Debug · InspectionCube</span>
+            <span className="text-cream/50">state monitor</span>
+          </summary>
+          <div className="p-3 space-y-1 leading-relaxed">
+            <div className="flex justify-between"><span className="text-cream/50">rot.x</span><span className="text-gold-hi tabular-nums">{rot.x.toFixed(2)}°</span></div>
+            <div className="flex justify-between"><span className="text-cream/50">rot.y</span><span className="text-gold-hi tabular-nums">{rot.y.toFixed(2)}°</span></div>
+            <div className="flex justify-between"><span className="text-cream/50">rot.z</span><span className="text-gold-hi tabular-nums">{rot.z.toFixed(2)}°</span></div>
+            <div className="flex justify-between"><span className="text-cream/50">auto-rotate</span><span className={auto ? 'text-jade' : 'text-ember-orange'}>{String(auto)}</span></div>
+            <div className="flex justify-between"><span className="text-cream/50">active hotspot</span><span className="text-gold-hi">{active === null ? 'null' : `#${active + 1} · ${inspectionSpots[active]?.label}`}</span></div>
+            <div className="flex justify-between"><span className="text-cream/50">dragRef pointers</span><span className="text-gold-hi tabular-nums">{pointers.current.size}</span></div>
+            <div className="flex justify-between"><span className="text-cream/50">pinch active</span><span className={pinch.current ? 'text-jade' : 'text-cream/40'}>{pinch.current ? `${pinch.current.angle.toFixed(1)}°` : 'idle'}</span></div>
+          </div>
+        </details>
       </div>
 
       {/* Hotspots panel */}
