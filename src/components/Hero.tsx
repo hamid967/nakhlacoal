@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import { Volume2, VolumeX, Menu, X } from 'lucide-react'
 import { useState, useRef, useEffect } from 'react'
+import { brand } from '@/lib/brand'
 
 export function Hero() {
   const [isMuted, setIsMuted] = useState(true)
@@ -24,33 +25,25 @@ export function Hero() {
   // Ensure video is muted immediately on load to prevent any audio
   useEffect(() => {
     if (videoRef.current) {
-      console.log('Video element found, setting up...')
       videoRef.current.volume = 0
       videoRef.current.muted = true
       videoRef.current.defaultMuted = true
-      
-      // Add event listeners for debugging
-      videoRef.current.addEventListener('loadstart', () => console.log('Video: loadstart'))
-      videoRef.current.addEventListener('loadedmetadata', () => console.log('Video: loadedmetadata'))
-      videoRef.current.addEventListener('canplay', () => console.log('Video: canplay'))
-      videoRef.current.addEventListener('playing', () => console.log('Video: playing'))
-      videoRef.current.addEventListener('error', (e) => console.error('Video error:', e))
-      
+
       // Force mute on play
       videoRef.current.addEventListener('play', () => {
         if (videoRef.current) {
-          console.log('Video play event fired')
           videoRef.current.muted = isMuted
           videoRef.current.volume = isMuted ? 0 : 0.7
         }
       })
-      
+
       // Try to play the video
       const playPromise = videoRef.current.play()
       if (playPromise !== undefined) {
-        playPromise
-          .then(() => console.log('Video autoplay successful'))
-          .catch(error => console.error('Video autoplay failed:', error))
+        playPromise.catch((error) => {
+          // Autoplay may be blocked by the browser; fallback is a static poster
+          console.warn('Video autoplay blocked:', error)
+        })
       }
     }
   }, [])
@@ -107,7 +100,7 @@ export function Hero() {
         loop
         playsInline
       >
-        <source src="https://mojli.s3.us-east-2.amazonaws.com/Mojli+Website+upscaled+(12mb).webm" type="video/webm" />
+        <source src={brand.heroVideo.src} type={brand.heroVideo.type} />
         Your browser does not support the video tag.
       </video>
 
@@ -134,7 +127,7 @@ export function Hero() {
                 window.scrollTo({ top: 0, behavior: 'smooth' })
               }}
             >
-              <span className="font-bagel text-white text-xl tracking-wider">MOJJU</span>
+              <span className="font-bagel text-white text-xl tracking-wider">{brand.logo}</span>
             </motion.div>
 
             {/* Navigation Menu */}

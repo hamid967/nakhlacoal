@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import storyboardImage from '@/assets/storyboard-image.avif'
+import { brand } from '@/lib/brand'
 
 export function About() {
   const [activeFrame, setActiveFrame] = useState(-1)
@@ -317,7 +318,7 @@ export function About() {
               {/* Main gallery image */}
               <img 
                 src={storyboardImage}
-                alt="Collection of AI-generated video content thumbnails showcasing MOJJU's diverse output"
+                alt={`Collection of AI-generated video content thumbnails showcasing ${brand.name}'s diverse output`}
                 className="w-full h-auto rounded-xl"
                 style={{
                   filter: 'contrast(1.05) saturate(1.1) brightness(0.95)'

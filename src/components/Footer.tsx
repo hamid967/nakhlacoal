@@ -1,5 +1,7 @@
 'use client'
 
+import { brand } from '@/lib/brand'
+
 export function Footer() {
   const aiTools = [
     'Runway Gen-4',
@@ -23,17 +25,16 @@ export function Footer() {
           <div className="col-span-12 md:col-span-4">
             <div>
               <div className="font-bagel text-background text-3xl tracking-wider mb-4">
-                MOJJU
+                {brand.logo}
               </div>
               <p className="text-background/70 leading-relaxed mb-6">
-                Revolutionizing video production with intelligent AI that understands 
-                creativity, storytelling, and human emotion.
+                {brand.footer.description}
               </p>
               {/* Social Media Icons */}
               <div className="flex items-center space-x-6">
                 {/* X (Twitter) */}
                 <a
-                  href="https://x.com/Mojjuai"
+                  href={brand.social.x}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:scale-110 gentle-animation cursor-pointer"
@@ -45,7 +46,7 @@ export function Footer() {
 
                 {/* TikTok */}
                 <a
-                  href="https://www.tiktok.com/@mojju.ai"
+                  href={brand.social.tiktok}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:scale-110 gentle-animation cursor-pointer"
@@ -57,7 +58,7 @@ export function Footer() {
 
                 {/* Instagram */}
                 <a
-                  href="https://www.instagram.com/mojju.ai"
+                  href={brand.social.instagram}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:scale-110 gentle-animation cursor-pointer"
@@ -76,7 +77,7 @@ export function Footer() {
 
                 {/* LinkedIn */}
                 <a
-                  href="https://linkedin.com/company/mojju"
+                  href={brand.social.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:scale-110 gentle-animation cursor-pointer"
@@ -118,10 +119,10 @@ export function Footer() {
         <div className="border-t border-background/20 pt-8 mt-16">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="text-sm text-background/70 mb-4 md:mb-0">
-              © 2025 MOJJU. All rights reserved.
+              © {brand.footer.copyrightYear} {brand.name}. All rights reserved.
             </div>
             <div className="text-sm text-background/70">
-              2847 HIGHLAND AVE. SUITE 310 BIRMINGHAM 35205, AL, USA
+              {brand.footer.address}
             </div>
           </div>
         </div>
