@@ -3,6 +3,7 @@ import { Flame, Clock, Leaf, Wind, ShieldCheck, Award, Star } from 'lucide-react
 import { SEO } from '@/components/SEO';
 import { ScrollReveal } from '@/components/ScrollReveal';
 import { WhatsAppFab } from '@/components/WhatsAppFab';
+import { HomeIntro } from '@/components/HomeIntro';
 import {
   useDir,
   LuxSection,
@@ -52,6 +53,7 @@ export default function Home() {
 
   return (
     <>
+      <HomeIntro />
       <SEO
         title={isAr ? 'فحم النخلة | الفحم السعودي الفاخر' : 'Palm Charcoal | Premium Saudi Charcoal'}
         description={isAr ? 'فحم طبيعي ١٠٠٪ — احتراق أطول، حرارة أعلى، ورماد أقل.' : '100% natural charcoal — longer burn, higher heat, less ash.'}
