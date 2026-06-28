@@ -61,6 +61,87 @@
     --ease-luxe: cubic-bezier(0.16, 1, 0.3, 1);
   }
 
+  /* ============= Theme variants (toggleable) ============= */
+  html[data-theme="noir"] {
+    --background: 0 0% 7%;
+    --foreground: 43 50% 88%;
+    --surface: 0 0% 10%;
+    --surface-2: 0 0% 13%;
+    --surface-3: 0 0% 16%;
+    --dark: 0 0% 4%;
+    --dark-2: 0 0% 0%;
+    --dark-foreground: 43 50% 88%;
+    --card: 0 0% 10%;
+    --card-foreground: 43 50% 88%;
+    --popover: 0 0% 10%;
+    --popover-foreground: 43 50% 88%;
+    --primary: 43 53% 54%;
+    --primary-foreground: 0 0% 7%;
+    --secondary: 0 0% 14%;
+    --secondary-foreground: 43 50% 88%;
+    --muted: 0 0% 14%;
+    --muted-foreground: 43 20% 70%;
+    --accent: 43 65% 64%;
+    --accent-foreground: 0 0% 7%;
+    --border: 43 30% 28%;
+    --input: 0 0% 18%;
+  }
+
+  html[data-theme="sand"] {
+    --background: 38 60% 95%;
+    --foreground: 24 50% 18%;
+    --surface: 38 60% 98%;
+    --surface-2: 36 45% 90%;
+    --surface-3: 34 38% 85%;
+    --dark: 24 50% 22%;
+    --dark-2: 24 55% 16%;
+    --dark-foreground: 38 60% 95%;
+    --gold: 24 70% 50%;
+    --gold-hi: 28 78% 60%;
+    --gold-lo: 24 60% 38%;
+    --jade: 24 50% 30%;
+    --card: 38 60% 98%;
+    --card-foreground: 24 50% 18%;
+    --popover: 38 60% 98%;
+    --popover-foreground: 24 50% 18%;
+    --primary: 24 50% 22%;
+    --primary-foreground: 38 60% 95%;
+    --secondary: 36 45% 90%;
+    --secondary-foreground: 24 50% 18%;
+    --muted: 36 45% 90%;
+    --muted-foreground: 24 25% 35%;
+    --accent: 24 70% 50%;
+    --accent-foreground: 38 60% 95%;
+    --border: 24 25% 75%;
+    --input: 36 35% 86%;
+    --ring: 24 70% 50%;
+  }
+
+  /* Font variants */
+  html[data-font="modern"] body,
+  html[data-font="modern"][dir="rtl"] body {
+    font-family: 'IBM Plex Sans Arabic', 'IBM Plex Sans', system-ui, sans-serif;
+  }
+  html[data-font="modern"] h1,
+  html[data-font="modern"] h2,
+  html[data-font="modern"] h3,
+  html[data-font="modern"] h4,
+  html[data-font="modern"] h5 {
+    font-family: 'IBM Plex Sans Arabic', 'IBM Plex Sans', sans-serif;
+    font-weight: 600;
+  }
+  html[data-font="editorial"] body {
+    font-family: 'Amiri', 'Karla', serif;
+  }
+  html[data-font="editorial"] h1,
+  html[data-font="editorial"] h2,
+  html[data-font="editorial"] h3,
+  html[data-font="editorial"] h4,
+  html[data-font="editorial"] h5 {
+    font-family: 'Amiri', 'Playfair Display', serif;
+    font-weight: 700;
+  }
+
 
   * {
     @apply border-border;
