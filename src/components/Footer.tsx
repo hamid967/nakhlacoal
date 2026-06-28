@@ -1,5 +1,7 @@
 'use client'
 
+import { brand } from '@/lib/brand'
+
 export function Footer() {
   const aiTools = [
     'Runway Gen-4',
