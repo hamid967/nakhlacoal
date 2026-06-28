@@ -17,7 +17,7 @@ export function LuxFooter() {
         {/* Brand block */}
         <div className="lg:col-span-5">
           <Link to="/" className="inline-flex items-center gap-3 mb-6" aria-label="Palm Charcoal">
-            <img src={logo} alt="فحم النخلة Palm Charcoal" width={80} height={80} className="h-20 w-auto" />
+            <img src={logo} alt="فحم النخلة Palm Charcoal" width={80} height={80} className="h-20 w-auto"  loading="lazy" decoding="async" />
           </Link>
           <p className="text-foreground/60 max-w-md leading-relaxed text-sm">{t('footer.tagline')}</p>
 

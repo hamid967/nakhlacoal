@@ -323,7 +323,7 @@ export function About() {
                 style={{
                   filter: 'contrast(1.05) saturate(1.1) brightness(0.95)'
                 }}
-              />
+               loading="lazy" decoding="async" />
               
               {/* Subtle overlay gradient for depth */}
               <div className="absolute inset-4 rounded-xl pointer-events-none"

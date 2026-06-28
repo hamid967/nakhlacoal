@@ -305,7 +305,7 @@ export default function Studio() {
 
       {image && (
         <figure className="mt-6 relative group border-luxe rounded-md overflow-hidden">
-          <img src={image} alt="Generated marketing visual" className="w-full block" />
+          <img src={image} alt="Generated marketing visual" className="w-full block"  loading="lazy" decoding="async" />
           <button
             onClick={() => downloadImage(image)}
             className="absolute top-3 right-3 px-3 py-2 rounded-md bg-background/70 backdrop-blur border-luxe text-xs text-gold-hi opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-2"
@@ -336,7 +336,7 @@ export default function Studio() {
                 className="p-5 bg-surface border-luxe rounded-md flex flex-col gap-3 hover:border-gold/30 transition-colors"
               >
                 {e.image && (
-                  <img src={e.image} alt="" className="w-full h-32 object-cover rounded" />
+                  <img src={e.image} alt="" className="w-full h-32 object-cover rounded"  loading="lazy" decoding="async" />
                 )}
                 <p className="text-sm text-foreground/80 line-clamp-2">{e.prompt}</p>
                 <p className="text-[10px] uppercase tracking-[0.2em] text-foreground/40">

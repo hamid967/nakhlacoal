@@ -96,7 +96,7 @@ export function Awards() {
                       style={{
                         filter: 'contrast(1.02) saturate(1.1)',
                       }}
-                    />
+                     loading="lazy" decoding="async" />
                     
 
                   </div>

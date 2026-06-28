@@ -32,7 +32,7 @@ export function CompareBar() {
                 className="relative shrink-0 w-12 h-12 rounded-lg overflow-hidden border-luxe group"
                 title={isAr ? p.nameAr : p.nameEn}
               >
-                <img src={p.image} alt={isAr ? p.nameAr : p.nameEn} className="w-full h-full object-cover" />
+                <img src={p.image} alt={isAr ? p.nameAr : p.nameEn} className="w-full h-full object-cover"  loading="lazy" decoding="async" />
                 <button
                   onClick={() => remove(slug)}
                   className="absolute inset-0 bg-background/70 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"

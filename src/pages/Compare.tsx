@@ -80,7 +80,7 @@ export default function Compare() {
                               <X className="w-4 h-4" />
                             </button>
                             <div className="aspect-[5/4] rounded-xl overflow-hidden mb-3 border-luxe">
-                              <img src={p.image} alt={isAr ? p.nameAr : p.nameEn} className="w-full h-full object-cover" />
+                              <img src={p.image} alt={isAr ? p.nameAr : p.nameEn} className="w-full h-full object-cover"  loading="lazy" decoding="async" />
                             </div>
                             <Link
                               to={`/products/${p.slug}`}
