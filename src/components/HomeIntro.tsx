@@ -30,15 +30,6 @@ export function HomeIntro() {
 
   if (phase === 'done') return null;
 
-  // transforms for 5 cards (RTL-agnostic; arrangement is symmetric)
-  const transforms = [
-    'translateX(-46%) translateZ(-220px) rotateY(28deg) scale(0.72)',
-    'translateX(-24%) translateZ(-110px) rotateY(16deg) scale(0.82)',
-    'translateX(0) translateZ(0) rotateY(0) scale(1.05)',
-    'translateX(24%) translateZ(-110px) rotateY(-16deg) scale(0.82)',
-    'translateX(46%) translateZ(-220px) rotateY(-28deg) scale(0.72)',
-  ];
-
   return (
     <div
       className={`fixed inset-0 z-[100] overflow-hidden transition-opacity duration-700 ease-out ${
@@ -59,19 +50,19 @@ export function HomeIntro() {
         {isAr ? 'تخطي' : 'Skip'}
       </button>
 
-      <div className="relative h-full w-full flex flex-col items-center justify-center px-6 text-center">
+      <div className="relative h-full w-full flex flex-col items-center justify-center gap-6 md:gap-10 px-4 py-8 text-center">
         {/* Title */}
         <div className="opacity-0 animate-[introUp_0.9s_ease-out_0.2s_forwards]">
-          <h1 className={`text-3xl sm:text-5xl md:text-6xl text-[hsl(var(--jade,142_55%_22%))] ${isAr ? 'font-arabic font-bold' : 'font-display font-bold'}`}
+          <h1 className={`text-2xl sm:text-4xl md:text-5xl lg:text-6xl ${isAr ? 'font-arabic font-bold' : 'font-display font-bold'}`}
               style={{ color: '#1A4A00' }}>
             {isAr ? 'شركة فحم النخلة' : 'Palm Charcoal Company'}
           </h1>
-          <div className="flex items-center justify-center gap-3 mt-4">
-            <span className="block h-px w-16 bg-gradient-to-r from-transparent to-[hsl(var(--gold))]" />
+          <div className="flex items-center justify-center gap-3 mt-3 md:mt-4">
+            <span className="block h-px w-12 md:w-16 bg-gradient-to-r from-transparent to-[hsl(var(--gold))]" />
             <span className="text-[hsl(var(--gold))] rotate-45 inline-block w-2 h-2 border border-[hsl(var(--gold))]" />
-            <span className="block h-px w-16 bg-gradient-to-l from-transparent to-[hsl(var(--gold))]" />
+            <span className="block h-px w-12 md:w-16 bg-gradient-to-l from-transparent to-[hsl(var(--gold))]" />
           </div>
-          <p className={`mt-5 max-w-xl mx-auto text-sm md:text-base text-foreground/75 leading-relaxed ${isAr ? 'font-arabic' : ''}`}>
+          <p className={`mt-4 max-w-xl mx-auto text-xs sm:text-sm md:text-base text-foreground/75 leading-relaxed px-2 ${isAr ? 'font-arabic' : ''}`}>
             {isAr
               ? 'مجموعة علامات تجارية سعودية مسجّلة بجودة عالية، نقدّمها لكم بفخر من المملكة إلى العالم.'
               : 'A family of registered Saudi trademarks of the highest quality — proudly delivered from the Kingdom to the world.'}
@@ -80,38 +71,48 @@ export function HomeIntro() {
 
         {/* Coverflow */}
         <div
-          className="relative mt-10 md:mt-14 w-full max-w-5xl h-[260px] md:h-[340px] opacity-0 animate-[introUp_1s_ease-out_0.6s_forwards]"
-          style={{ perspective: '1400px' }}
+          className="relative w-full max-w-5xl opacity-0 animate-[introUp_1s_ease-out_0.6s_forwards]"
+          style={{ perspective: '1400px', height: 'clamp(180px, 32vw, 320px)' }}
         >
-          {cards.map((c, i) => (
-            <div
-              key={c.id}
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-transform duration-700"
-              style={{
-                width: i === 2 ? '300px' : '220px',
-                height: i === 2 ? '300px' : '220px',
-                transform: transforms[i],
-                zIndex: i === 2 ? 10 : 5 - Math.abs(i - 2),
-              }}
-            >
+          {cards.map((c, i) => {
+            const offset = i - 2; // -2,-1,0,1,2
+            const isCenter = offset === 0;
+            const xPct = offset * 22; // spread in % of container width
+            const rotY = offset * -18;
+            const scale = isCenter ? 1 : 0.78 - Math.abs(offset) * 0.06;
+            const z = -Math.abs(offset) * 90;
+            return (
               <div
-                className={`w-full h-full rounded-2xl bg-white/85 backdrop-blur-sm border ${
-                  i === 2 ? 'border-[hsl(var(--gold))] shadow-[0_20px_60px_-10px_rgba(201,168,76,0.45)]' : 'border-white/60 shadow-[0_12px_30px_-12px_rgba(0,0,0,0.25)]'
-                } flex items-center justify-center p-4`}
+                key={c.id}
+                className="absolute top-1/2 left-1/2 transition-transform duration-700"
+                style={{
+                  width: 'clamp(130px, 22vw, 240px)',
+                  height: 'clamp(130px, 22vw, 240px)',
+                  transform: `translate(-50%, -50%) translateX(${xPct}%) translateZ(${z}px) rotateY(${rotY}deg) scale(${scale})`,
+                  zIndex: isCenter ? 10 : 5 - Math.abs(offset),
+                }}
               >
-                <img
-                  src={c.image}
-                  alt={c.nameAr}
-                  className="max-w-full max-h-full object-contain"
-                  loading="eager"
-                />
+                <div
+                  className={`w-full h-full rounded-2xl bg-white/90 backdrop-blur-sm border ${
+                    isCenter
+                      ? 'border-[hsl(var(--gold))] shadow-[0_20px_60px_-10px_rgba(201,168,76,0.45)]'
+                      : 'border-white/60 shadow-[0_12px_30px_-12px_rgba(0,0,0,0.25)]'
+                  } flex items-center justify-center p-3 md:p-4`}
+                >
+                  <img
+                    src={c.image}
+                    alt={c.nameAr}
+                    className="max-w-full max-h-full object-contain"
+                    loading="eager"
+                  />
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Registration strip */}
-        <div className="mt-10 md:mt-12 bg-white/70 backdrop-blur-sm border border-white/70 rounded-2xl px-5 md:px-8 py-4 md:py-5 shadow-[0_8px_30px_-12px_rgba(0,0,0,0.15)] grid grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-3 text-[11px] md:text-xs opacity-0 animate-[introUp_0.9s_ease-out_1s_forwards]">
+        <div className="bg-white/70 backdrop-blur-sm border border-white/70 rounded-2xl px-4 sm:px-6 md:px-8 py-3 md:py-5 shadow-[0_8px_30px_-12px_rgba(0,0,0,0.15)] grid grid-cols-2 sm:grid-cols-3 gap-x-4 sm:gap-x-8 gap-y-2 sm:gap-y-3 text-[10px] sm:text-[11px] md:text-xs opacity-0 animate-[introUp_0.9s_ease-out_1s_forwards] max-w-2xl w-full">
           <Meta label={isAr ? 'رقم التسجيل' : 'Reg No.'} value={center.registrationNo} />
           <Meta label={isAr ? 'فئة العلامة' : 'Class'} value={center.niceClass.replace('الفئة ', '')} />
           <Meta label={isAr ? 'تاريخ التسجيل' : 'Filed'} value={center.filedHijri} />
