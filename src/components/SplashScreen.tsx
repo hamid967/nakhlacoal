@@ -194,6 +194,14 @@ export function SplashScreen() {
           <p className="mt-2 text-[11px] md:text-sm tracking-[0.35em] uppercase text-[hsl(var(--gold))]/80">
             {isAr ? "جمر الفخامة" : "The Ember of Luxury"}
           </p>
+          {/* Jeddah heritage badge */}
+          <div className="mt-5 inline-flex items-center gap-3 px-4 py-1.5 rounded-full border border-[hsl(var(--gold))]/30 bg-[hsl(var(--gold))]/[0.04] backdrop-blur-sm">
+            <img src={jeddahStamp} alt="" aria-hidden className="h-6 w-6 opacity-80" />
+            <span className={`text-[10px] md:text-[11px] tracking-[0.32em] uppercase text-[hsl(var(--gold-hi))] ${isAr ? "font-arabic" : ""}`}>
+              {isAr ? "من جدة · باب مكة · البلد" : "From Jeddah · Bab Makkah · Al-Balad"}
+            </span>
+            <img src={jeddahStamp} alt="" aria-hidden className="h-6 w-6 opacity-80" />
+          </div>
         </div>
 
         {/* Trademark parade */}
