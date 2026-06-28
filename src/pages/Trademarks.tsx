@@ -29,12 +29,41 @@ export default function Trademarks() {
   return (
     <>
       <SEO
-        title="العلامات التجارية المسجلة | فحم النخلة"
-        description="سجل العلامات التجارية المسجلة لمؤسسة محمد عبدالله باعشن التجارية في المملكة العربية السعودية."
+        title="العلامات التجارية المسجلة | فحم النخلة، نخلان، المركاز، النخلتين، باعشن"
+        description="خمس علامات تجارية سعودية مسجلة رسمياً لدى الهيئة السعودية للملكية الفكرية لمؤسسة محمد عبدالله باعشن التجارية — فحم النخلة، نخلان، المركاز، النخلتين، وباعشن، مع أرقام التسجيل وتواريخ الحماية."
         path="/trademarks"
+        jsonLd={{
+          '@context': 'https://schema.org',
+          '@graph': [
+            {
+              '@type': 'BreadcrumbList',
+              itemListElement: [
+                { '@type': 'ListItem', position: 1, name: 'الرئيسية', item: 'https://alnakhlacoal.com/' },
+                { '@type': 'ListItem', position: 2, name: 'العلامات التجارية', item: 'https://alnakhlacoal.com/trademarks' },
+              ],
+            },
+            {
+              '@type': 'CollectionPage',
+              name: 'العلامات التجارية المسجلة — فحم النخلة',
+              url: 'https://alnakhlacoal.com/trademarks',
+              inLanguage: 'ar',
+              about: trademarks.map((t) => ({
+                '@type': 'Brand',
+                name: t.nameAr,
+                alternateName: t.nameEn,
+                identifier: t.registrationNo,
+              })),
+            },
+          ],
+        }}
       />
-      <PageHero
-        eyebrow="ملكية فكرية موثقة"
+      <Helmet>
+        <meta property="og:locale" content="ar_SA" />
+        <meta property="og:locale:alternate" content="en_US" />
+        <meta property="og:site_name" content="فحم النخلة | Palm Charcoal" />
+        <meta property="article:section" content="Trademarks" />
+        <meta name="keywords" content="فحم النخلة, Palm Charcoal, نخلان, المركاز, النخلتين, باعشن, علامات تجارية سعودية, الهيئة السعودية للملكية الفكرية, SAIP" />
+      </Helmet>
         title="العلامات التجارية المسجلة"
         subtitle="خمس علامات تجارية مسجلة رسمياً لدى الهيئة السعودية للملكية الفكرية — تشمل فحم النخلة، نخلان، المركاز، النخلتين، وباعشن."
       />
