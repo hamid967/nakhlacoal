@@ -7,9 +7,10 @@ import productCoconut from "@/assets/product-coconut.jpg";
 import productHookah from "@/assets/product-hookah.jpg";
 import productLump from "@/assets/product-lump.jpg";
 import productBox from "@/assets/product-box.jpg";
+import jeddahStamp from "@/assets/jeddah-stamp.png";
 import { trademarks } from "@/data/trademarks";
 
-const PRELOAD = [logo, heroCharcoal, productBbq, productCoconut, productHookah, productLump, productBox, ...trademarks.map(t => t.image)];
+const PRELOAD = [logo, heroCharcoal, jeddahStamp, productBbq, productCoconut, productHookah, productLump, productBox, ...trademarks.map(t => t.image)];
 
 const CLIENTS_AR = ["فنادق ريتز كارلتون","مطاعم نسما","أسواق الدانوب","مجموعة هرفي","فنادق روتانا","مطاعم البيك"];
 const CLIENTS_EN = ["Ritz-Carlton Hotels","Nesma Restaurants","Danube Markets","Herfy Group","Rotana Hotels","Albaik"];
