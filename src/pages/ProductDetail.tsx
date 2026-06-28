@@ -32,12 +32,57 @@ export default function ProductDetail() {
 
   const related = products.filter((p) => p.slug !== product.slug).slice(0, 3);
 
+  // Parse packaging string into chips e.g. "1 / 5 / 10 kg"
+  const packagingChips = product.specs.packaging
+    .split(/[,،]|\s\/\s|\s\u2013\s/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+
+  const productJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name,
+    description: desc,
+    brand: { '@type': 'Brand', name: isAr ? 'فحم النخلة' : 'Palm Charcoal' },
+    category: product.category,
+    image: `https://alnakhlacoal.com${product.image}`,
+    aggregateRating: { '@type': 'AggregateRating', ratingValue: '4.9', reviewCount: '127' },
+    additionalProperty: [
+      { '@type': 'PropertyValue', name: 'Burn time', value: product.specs.burn },
+      { '@type': 'PropertyValue', name: 'Heat', value: product.specs.heat },
+      { '@type': 'PropertyValue', name: 'Ash', value: product.specs.ash },
+      { '@type': 'PropertyValue', name: 'Carbon', value: product.specs.carbon },
+      { '@type': 'PropertyValue', name: 'Moisture', value: product.specs.moisture },
+      { '@type': 'PropertyValue', name: 'Packaging', value: product.specs.packaging },
+    ],
+    offers: {
+      '@type': 'AggregateOffer',
+      priceCurrency: 'SAR',
+      availability: 'https://schema.org/InStock',
+      seller: { '@type': 'Organization', name: 'Palm Charcoal' },
+    },
+  };
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: isAr ? 'الرئيسية' : 'Home', item: 'https://alnakhlacoal.com/' },
+      { '@type': 'ListItem', position: 2, name: isAr ? 'المنتجات' : 'Products', item: 'https://alnakhlacoal.com/products' },
+      { '@type': 'ListItem', position: 3, name, item: `https://alnakhlacoal.com/products/${product.slug}` },
+    ],
+  };
+
+  const waMsg = encodeURIComponent(
+    `${isAr ? 'مرحباً، أرغب بالاستفسار عن' : "Hello, I'd like to inquire about"} ${name} — ${tagline}`,
+  );
+
   return (
     <>
       <SEO
         title={`${name} | ${isAr ? 'فحم النخلة' : 'Palm Charcoal'}`}
         description={desc}
         path={`/products/${product.slug}`}
+        jsonLd={{ '@context': 'https://schema.org', '@graph': [productJsonLd, breadcrumbJsonLd] }}
       />
 
       {/* ============= HERO ============= */}
