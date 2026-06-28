@@ -69,7 +69,7 @@ export default function AdminOrders() {
 
   return (
     <>
-      <SEO title="إدارة الطلبات" description="لوحة إدارة طلبات فحم النخلة" noindex />
+      <SEO title="إدارة الطلبات" description="لوحة إدارة طلبات فحم النخلة" path="/admin/orders" noindex />
       <div className="container mx-auto px-4 py-8 max-w-7xl">
         <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
           <div>

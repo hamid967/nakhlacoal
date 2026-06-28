@@ -237,7 +237,7 @@ export default function Assistant() {
 
   return (
     <>
-      <SEO title="مساعد فحم النخلة AI" description="مساعد ذكي يساعدك في تقديم طلب الفحم خطوة بخطوة" noindex />
+      <SEO title="مساعد فحم النخلة AI" description="مساعد ذكي يساعدك في تقديم طلب الفحم خطوة بخطوة" path="/assistant" noindex />
       <div className="min-h-[calc(100vh-5rem)] bg-background grid md:grid-cols-[280px_1fr]">
         {/* Threads sidebar */}
         <aside className="border-e border-border bg-muted/30 p-3 md:p-4 flex flex-col gap-3">
