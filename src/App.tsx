@@ -8,6 +8,7 @@ import { Layout } from '@/components/Layout';
 import { SplashScreen } from '@/components/SplashScreen';
 import Home from '@/pages/Home';
 import Products from '@/pages/Products';
+import ProductDetail from '@/pages/ProductDetail';
 import About from '@/pages/About';
 import Quality from '@/pages/Quality';
 import Wholesale from '@/pages/Wholesale';
@@ -30,6 +31,7 @@ export default function App() {
           <Route element={<Layout />}>
             <Route path="/" element={<Home />} />
             <Route path="/products" element={<Products />} />
+            <Route path="/products/:slug" element={<ProductDetail />} />
             <Route path="/about" element={<About />} />
             <Route path="/quality" element={<Quality />} />
             <Route path="/wholesale" element={<Wholesale />} />
