@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import storyboardImage from '@/assets/storyboard-image.avif'
+import { brand } from '@/lib/brand'
 
 export function About() {
   const [activeFrame, setActiveFrame] = useState(-1)
