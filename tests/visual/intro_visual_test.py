@@ -27,8 +27,14 @@ from PIL import Image
 from playwright.async_api import async_playwright
 
 BASE = os.environ.get("BASE_URL", "http://localhost:8080")
-OUT = Path(__file__).parent / "__screenshots__"
+ROOT = Path(__file__).parent
+OUT = ROOT / "__screenshots__"
+BASELINE = ROOT / "__baseline__"
+DIFFS = OUT / "__diff__"
 OUT.mkdir(parents=True, exist_ok=True)
+BASELINE.mkdir(parents=True, exist_ok=True)
+
+UPDATE = os.environ.get("UPDATE_SNAPSHOTS") in {"1", "true", "yes"}
 
 VIEWPORTS = [
     ("desktop", 1440, 900),
@@ -39,6 +45,35 @@ THEMES = ("dark", "light")
 
 # Fail if more than this fraction of sampled pixels are saturated-green.
 GREEN_THRESHOLD = 0.005  # 0.5%
+# Fail if more than this fraction of pixels differ from the baseline.
+DIFF_THRESHOLD = 0.02   # 2%
+
+
+def diff_ratio(a: Path, b: Path, out: Path) -> float:
+    """Per-pixel diff ratio between two PNGs; writes a red-highlighted diff."""
+    ia = Image.open(a).convert("RGB")
+    ib = Image.open(b).convert("RGB")
+    if ia.size != ib.size:
+        return 1.0
+    pa, pb = ia.load(), ib.load()
+    w, h = ia.size
+    diff = Image.new("RGB", (w, h), (0, 0, 0))
+    pd = diff.load()
+    total = w * h
+    bad = 0
+    for y in range(h):
+        for x in range(w):
+            r1, g1, b1 = pa[x, y]
+            r2, g2, b2 = pb[x, y]
+            if abs(r1 - r2) + abs(g1 - g2) + abs(b1 - b2) > 30:
+                bad += 1
+                pd[x, y] = (255, 0, 0)
+            else:
+                pd[x, y] = (r1 // 4, g1 // 4, b1 // 4)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    diff.save(out)
+    return bad / total
+
 
 
 def green_ratio(path: Path) -> float:
