@@ -121,6 +121,23 @@ export default function Home() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
           {features.map((f, i) => <FeatureCard key={i} icon={f.icon} title={f.title} body={f.body} index={i} />)}
         </div>
+
+        {/* Technical metrics strip */}
+        <ScrollReveal delay={300}>
+          <div className="mt-12 md:mt-16 rounded-3xl section-dark p-6 md:p-8 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-4 text-center">
+            {[
+              { v: '750°C', l: isAr ? 'حرارة قصوى' : 'Max Heat' },
+              { v: '90', l: isAr ? 'دقيقة احتراق' : 'Min Burn' },
+              { v: '85%', l: isAr ? 'كربون ثابت' : 'Fixed Carbon' },
+              { v: '3%', l: isAr ? 'رماد فقط' : 'Ash Only' },
+            ].map((s, i) => (
+              <div key={i} className={`${i > 0 ? 'md:border-s md:border-gold/15' : ''}`}>
+                <div className="text-3xl md:text-4xl font-bold text-gold-hi font-display leading-none">{s.v}</div>
+                <div className="text-[11px] uppercase tracking-[0.2em] text-background/70 mt-2 font-arabic">{s.l}</div>
+              </div>
+            ))}
+          </div>
+        </ScrollReveal>
       </LuxSection>
 
       {/* About band */}
