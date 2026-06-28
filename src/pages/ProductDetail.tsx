@@ -4,6 +4,7 @@ import { ArrowRight, ArrowLeft, ShoppingCart, MessageCircle, Check, Package, Fla
 import { SEO } from '@/components/SEO';
 import { ScrollReveal } from '@/components/ScrollReveal';
 import { WhatsAppFab } from '@/components/WhatsAppFab';
+import { CompareToggle } from '@/components/CompareToggle';
 import { products, getProduct } from '@/data/products';
 
 export default function ProductDetail() {
@@ -92,6 +93,7 @@ export default function ProductDetail() {
                   <a href="https://wa.me/966500000000" target="_blank" rel="noopener noreferrer" className="btn-ghost-gold">
                     <MessageCircle className="w-4 h-4" /> {isAr ? 'تواصل واتساب' : 'WhatsApp us'}
                   </a>
+                  <CompareToggle slug={product.slug} />
                 </div>
               </div>
             </ScrollReveal>
