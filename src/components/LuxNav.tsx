@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, ShoppingCart, User } from 'lucide-react';
 import { LanguageToggle } from './LanguageToggle';
 import logo from '@/assets/palm-charcoal-logo.png';
+
 
 const navItems = [
   { to: '/', key: 'nav.home' },
@@ -42,8 +43,8 @@ export function LuxNav() {
   return (
     <>
       <nav
-        className={`fixed top-0 inset-x-0 z-50 transition-all duration-700 ${
-          scrolled ? 'glass-luxe py-3' : 'bg-transparent py-5'
+        className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 glass-luxe ${
+          scrolled ? 'py-2 shadow-luxe' : 'py-3'
         }`}
       >
         <div className="container flex items-center justify-between gap-6">
@@ -53,15 +54,15 @@ export function LuxNav() {
           </Link>
 
           {/* Desktop nav */}
-          <ul className="hidden lg:flex items-center gap-8">
+          <ul className="hidden lg:flex items-center gap-7">
             {navItems.map((item) => (
               <li key={item.to}>
                 <NavLink
                   to={item.to}
                   end={item.to === '/'}
                   className={({ isActive }) =>
-                    `relative text-xs uppercase tracking-[0.22em] transition-colors duration-500 ${
-                      isActive ? 'text-gold-hi' : 'text-foreground/70 hover:text-gold-hi'
+                    `relative text-sm font-arabic font-medium transition-colors duration-300 ${
+                      isActive ? 'text-gold-hi' : 'text-foreground/80 hover:text-gold-hi'
                     }`
                   }
                 >
@@ -69,7 +70,7 @@ export function LuxNav() {
                     <span className="relative inline-block py-2">
                       {t(item.key)}
                       <span
-                        className={`absolute -bottom-0.5 inset-x-0 h-px bg-gold transition-transform duration-500 origin-left ${
+                        className={`absolute -bottom-0.5 inset-x-0 h-0.5 bg-gold rounded-full transition-transform duration-500 origin-center ${
                           isActive ? 'scale-x-100' : 'scale-x-0'
                         }`}
                       />
@@ -81,7 +82,13 @@ export function LuxNav() {
           </ul>
 
           {/* Right cluster */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 md:gap-3">
+            <button aria-label="Account" className="hidden md:inline-flex w-10 h-10 rounded-full items-center justify-center text-foreground/70 hover:text-gold-hi transition-colors">
+              <User className="w-4 h-4" />
+            </button>
+            <button aria-label="Cart" className="hidden md:inline-flex w-10 h-10 rounded-full items-center justify-center text-foreground/70 hover:text-gold-hi transition-colors">
+              <ShoppingCart className="w-4 h-4" />
+            </button>
             <LanguageToggle compact />
             <Link to="/contact" className="hidden md:inline-flex btn-gold !px-5 !py-2.5 text-xs">
               {t('nav.order')}
@@ -96,6 +103,7 @@ export function LuxNav() {
           </div>
         </div>
       </nav>
+
 
       {/* Mobile drawer */}
       <div
