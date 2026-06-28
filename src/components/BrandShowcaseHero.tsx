@@ -1,5 +1,5 @@
-import { useEffect, useState, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useEffect, useState, useCallback, useRef } from 'react';
+import { motion, AnimatePresence, useScroll, useTransform, useReducedMotion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
@@ -26,6 +26,19 @@ export function BrandShowcaseHero() {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
   const count = trademarks.length;
+  const sectionRef = useRef<HTMLElement>(null);
+  const prefersReducedMotion = useReducedMotion();
+
+  // Scroll-driven parallax + hero scale down
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start start', 'end start'],
+  });
+  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.92]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0.3]);
+  const heroY = useTransform(scrollYProgress, [0, 1], [0, 60]);
+  const bgY = useTransform(scrollYProgress, [0, 1], [0, -80]);
+  const cardSpread = useTransform(scrollYProgress, [0, 1], [0, 40]);
 
   const go = useCallback((n: number) => setActive(((n % count) + count) % count), [count]);
 
@@ -49,14 +62,29 @@ export function BrandShowcaseHero() {
 
   return (
     <section
+      ref={sectionRef}
       dir={isAr ? 'rtl' : 'ltr'}
       className="relative overflow-hidden pt-32 md:pt-36 pb-20 md:pb-28"
       style={{ background: '#F8F5EE' }}
     >
-      {/* Floating palm leaves + glow */}
-      <FloatingBackdrop />
+      {/* Floating palm leaves + glow (parallax + lazy mount) */}
+      <motion.div
+        aria-hidden
+        className="absolute inset-0 pointer-events-none"
+        style={{ y: prefersReducedMotion ? 0 : bgY, willChange: 'transform' }}
+      >
+        <FloatingBackdrop reduced={!!prefersReducedMotion} />
+      </motion.div>
 
-      <div className="container relative z-10">
+      <motion.div
+        className="container relative z-10"
+        style={{
+          scale: prefersReducedMotion ? 1 : heroScale,
+          opacity: prefersReducedMotion ? 1 : heroOpacity,
+          y: prefersReducedMotion ? 0 : heroY,
+          willChange: 'transform, opacity',
+        }}
+      >
         {/* Title block */}
         <div className="text-center max-w-3xl mx-auto mb-12 md:mb-16">
           <motion.div
@@ -129,7 +157,7 @@ export function BrandShowcaseHero() {
                     zIndex: z,
                   }}
                   transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-                  style={{ pointerEvents: visible ? 'auto' : 'none' }}
+                  style={{ pointerEvents: visible ? 'auto' : 'none', willChange: 'transform, opacity' }}
                 >
                   <div
                     className={`relative w-[220px] sm:w-[260px] md:w-[300px] aspect-square rounded-[2rem] bg-white border transition-shadow duration-500 ${
@@ -151,9 +179,13 @@ export function BrandShowcaseHero() {
                     <div className="absolute inset-0 flex items-center justify-center p-6">
                       <img
                         src={t.image}
-                        alt={t.nameAr}
-                        loading="lazy"
-                        className="max-w-full max-h-full object-contain"
+                        alt={`${t.nameAr} — ${t.nameEn} | ${t.registrationNo}`}
+                        loading={isActive ? 'eager' : 'lazy'}
+                        decoding="async"
+                        fetchPriority={isActive ? 'high' : 'low'}
+                        width={400}
+                        height={400}
+                        className="max-w-full max-h-full object-contain select-none"
                         draggable={false}
                       />
                     </div>
@@ -286,14 +318,18 @@ export function BrandShowcaseHero() {
             {isAr ? 'عرض المنتجات' : 'View Products'}
           </Link>
           <a
-            href="/catalog.pdf"
+            href={`https://wa.me/966540060095?text=${encodeURIComponent(
+              isAr ? 'مرحباً، أرغب باستلام كتالوج فحم النخلة الرسمي PDF.' : 'Hello, please share the official Palm Charcoal PDF catalog.'
+            )}`}
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-transparent text-[#0D2818] border border-[#0D2818]/15 font-arabic text-sm font-semibold hover:bg-[#0D2818]/5 hover:-translate-y-0.5 transition-all"
           >
             <Download className="w-4 h-4" />
             {isAr ? 'تحميل الكتالوج' : 'Download Catalog'}
           </a>
         </motion.div>
-      </div>
+      </motion.div>
     </section>
   );
 }
@@ -309,14 +345,30 @@ function DetailItem({ label, value }: { label: string; value: string }) {
   );
 }
 
-function FloatingBackdrop() {
-  // soft gradients + floating palm leaf SVGs
+function FloatingBackdrop({ reduced }: { reduced: boolean }) {
+  // Lazy-mount heavy decorations on idle + skip on mobile/reduced-motion for 60FPS
+  const [ready, setReady] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    setIsMobile(window.matchMedia('(max-width: 640px)').matches);
+    const w = window as Window & { requestIdleCallback?: (cb: () => void) => number };
+    const schedule = w.requestIdleCallback ?? ((cb: () => void) => setTimeout(cb, 200));
+    const id = schedule(() => setReady(true));
+    return () => {
+      if (typeof id === 'number') clearTimeout(id);
+    };
+  }, []);
+
   const leaves = [
     { top: '8%', left: '4%', size: 180, rot: -20, dur: 18, delay: 0 },
     { top: '14%', right: '6%', size: 220, rot: 30, dur: 22, delay: 1 },
     { bottom: '10%', left: '8%', size: 160, rot: 45, dur: 20, delay: 2 },
     { bottom: '16%', right: '10%', size: 200, rot: -35, dur: 24, delay: 0.5 },
   ];
+  const showAnimated = ready && !reduced && !isMobile;
+  const particles = isMobile ? 6 : 14;
+
   return (
     <>
       <div
@@ -327,45 +379,47 @@ function FloatingBackdrop() {
             'radial-gradient(ellipse at 20% 10%, rgba(26,74,0,0.06) 0%, transparent 55%), radial-gradient(ellipse at 80% 0%, rgba(212,175,55,0.10) 0%, transparent 50%), radial-gradient(ellipse at 50% 100%, rgba(212,175,55,0.06) 0%, transparent 55%)',
         }}
       />
-      {leaves.map((l, i) => (
-        <motion.div
-          key={i}
-          aria-hidden
-          className="absolute pointer-events-none"
-          style={{
-            top: (l as any).top,
-            bottom: (l as any).bottom,
-            left: (l as any).left,
-            right: (l as any).right,
-            width: l.size,
-            height: l.size,
-            opacity: 0.12,
-          }}
-          initial={{ rotate: l.rot, y: 0 }}
-          animate={{ rotate: [l.rot, l.rot + 6, l.rot], y: [0, -14, 0] }}
-          transition={{ duration: l.dur, delay: l.delay, repeat: Infinity, ease: 'easeInOut' }}
-        >
-          <PalmLeafSvg />
-        </motion.div>
-      ))}
-      {/* Light particles */}
-      {Array.from({ length: 14 }).map((_, i) => (
-        <motion.span
-          key={`p-${i}`}
-          aria-hidden
-          className="absolute rounded-full pointer-events-none"
-          style={{
-            top: `${(i * 53) % 100}%`,
-            left: `${(i * 37) % 100}%`,
-            width: 4 + (i % 3) * 2,
-            height: 4 + (i % 3) * 2,
-            background:
-              'radial-gradient(circle, rgba(212,175,55,0.55) 0%, rgba(212,175,55,0) 70%)',
-          }}
-          animate={{ y: [0, -20, 0], opacity: [0.25, 0.7, 0.25] }}
-          transition={{ duration: 6 + (i % 5), delay: i * 0.3, repeat: Infinity, ease: 'easeInOut' }}
-        />
-      ))}
+      {ready &&
+        leaves.map((l, i) => (
+          <motion.div
+            key={i}
+            aria-hidden
+            className="absolute pointer-events-none"
+            style={{
+              top: (l as any).top,
+              bottom: (l as any).bottom,
+              left: (l as any).left,
+              right: (l as any).right,
+              width: l.size,
+              height: l.size,
+              opacity: 0.12,
+              willChange: 'transform',
+            }}
+            initial={{ rotate: l.rot, y: 0 }}
+            animate={showAnimated ? { rotate: [l.rot, l.rot + 6, l.rot], y: [0, -14, 0] } : { rotate: l.rot }}
+            transition={{ duration: l.dur, delay: l.delay, repeat: Infinity, ease: 'easeInOut' }}
+          >
+            <PalmLeafSvg />
+          </motion.div>
+        ))}
+      {showAnimated &&
+        Array.from({ length: particles }).map((_, i) => (
+          <motion.span
+            key={`p-${i}`}
+            aria-hidden
+            className="absolute rounded-full pointer-events-none"
+            style={{
+              top: `${(i * 53) % 100}%`,
+              left: `${(i * 37) % 100}%`,
+              width: 4 + (i % 3) * 2,
+              height: 4 + (i % 3) * 2,
+              background: 'radial-gradient(circle, rgba(212,175,55,0.55) 0%, rgba(212,175,55,0) 70%)',
+              willChange: 'transform, opacity',
+            }}
+            animate={{ y: [0, -20, 0], opacity: [0.25, 0.7, 0.25] }}
+            transition={{ duration: 6 + (i % 5), delay: i * 0.3, repeat: Infinity, ease: 'easeInOut' }}
+          />
+        ))}
     </>
   );
 }
