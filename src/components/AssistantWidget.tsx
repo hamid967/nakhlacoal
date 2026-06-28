@@ -61,6 +61,21 @@ const buildWa = (o: Record<string, any>) => [
 
 const PHONE_RE = /^(\+?966|0)?5\d{8}$/;
 
+function parseOrderIntent(text: string): { product_type: string; quantity: number; unit: 'kg' | 'carton' | 'ton' } {
+  const t = text.toLowerCase();
+  let product_type = 'فحم شواء';
+  if (/جوز\s*هند|coconut/i.test(t)) product_type = 'فحم جوز الهند';
+  else if (/شيشة|hookah|معسل/i.test(t)) product_type = 'فحم شيشة (جوز هند طبيعي)';
+  else if (/بخور|incense/i.test(t)) product_type = 'فحم بخور سريع الاشتعال';
+  else if (/خشب|lump/i.test(t)) product_type = 'فحم خشب';
+  else if (/هدايا|gift|box/i.test(t)) product_type = 'صندوق هدايا';
+  const qMatch = text.match(/(\d{1,5})\s*(كيلو|كجم|kg|كرتون|carton|طن|ton)?/i);
+  const quantity = qMatch ? parseInt(qMatch[1], 10) : 50;
+  const unitWord = qMatch?.[2]?.toLowerCase() ?? '';
+  const unit: 'kg' | 'carton' | 'ton' = /كرتون|carton/.test(unitWord) ? 'carton' : /طن|ton/.test(unitWord) ? 'ton' : 'kg';
+  return { product_type, quantity, unit };
+}
+
 export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () => void }) {
   const navigate = useNavigate();
   const [messages, setMessages] = useState<Msg[]>(() => loadMsgs());
