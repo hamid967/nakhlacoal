@@ -67,6 +67,9 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
   const [input, setInput] = useState('');
   const [streaming, setStreaming] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [pendingOrder, setPendingOrder] = useState<Record<string, any> | null>(null);
+  const [formData, setFormData] = useState({ contact_name: '', phone: '', address: '', delivery_method: 'توصيل' as 'توصيل' | 'استلام من المستودع' });
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
