@@ -6,6 +6,7 @@ import { SEO } from '@/components/SEO';
 import { ScrollReveal } from '@/components/ScrollReveal';
 import { PageHero } from '@/components/PageHero';
 import { products, type ProductCategory, type ProductUseCase } from '@/data/products';
+import { CompareToggle } from '@/components/CompareToggle';
 
 const CATEGORIES: { value: ProductCategory | 'all'; ar: string; en: string }[] = [
   { value: 'all', ar: 'الكل', en: 'All' },
@@ -186,6 +187,9 @@ export default function Products() {
                         </div>
                       </div>
                     </Link>
+                    <div className="px-6 pb-5 -mt-2">
+                      <CompareToggle slug={p.slug} className="w-full justify-center" />
+                    </div>
                   </ScrollReveal>
                 );
               })}
