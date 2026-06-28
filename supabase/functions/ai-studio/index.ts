@@ -1,4 +1,6 @@
 // Lovable AI Studio: generates marketing intro copy and an image
+import { createClient } from "npm:@supabase/supabase-js@2";
+
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
@@ -9,9 +11,27 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
+    // Require authenticated user — AI calls are costly
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
+    const ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY")!;
+    const anon = createClient(SUPABASE_URL, ANON_KEY);
+    const token = authHeader.slice(7);
+    const { data: claimsData, error: claimsErr } = await anon.auth.getClaims(token);
+    if (claimsErr || !claimsData?.claims?.sub) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) {
-      return new Response(JSON.stringify({ error: "Missing LOVABLE_API_KEY" }), {
+      return new Response(JSON.stringify({ error: "Service not configured" }), {
         status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
@@ -33,7 +53,8 @@ Deno.serve(async (req) => {
       });
       if (!r.ok) {
         const t = await r.text();
-        return new Response(JSON.stringify({ error: t }), {
+        console.error("[ai-studio] image gen failed:", r.status, t);
+        return new Response(JSON.stringify({ error: "Image generation failed" }), {
           status: r.status, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
@@ -69,7 +90,8 @@ Deno.serve(async (req) => {
 
     if (!r.ok) {
       const t = await r.text();
-      return new Response(JSON.stringify({ error: t }), {
+      console.error("[ai-studio] text gen failed:", r.status, t);
+      return new Response(JSON.stringify({ error: "Text generation failed" }), {
         status: r.status, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
@@ -79,7 +101,8 @@ Deno.serve(async (req) => {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (e) {
-    return new Response(JSON.stringify({ error: String(e) }), {
+    console.error("[ai-studio] unhandled error:", e);
+    return new Response(JSON.stringify({ error: "Internal server error" }), {
       status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
