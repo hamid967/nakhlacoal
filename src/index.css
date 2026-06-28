@@ -136,11 +136,18 @@
     border-bottom: 1px solid hsl(30 12% 14% / 0.06);
   }
 
-  /* Dark accent section (why-us, about, footer) */
+  /* Dark accent section (why-us, hero panel, about, footer) */
   .section-dark {
     background: hsl(var(--dark));
     color: hsl(var(--dark-foreground));
+    --foreground: 40 28% 94%;
+    --border: 76 20% 30%;
+    --surface: 30 8% 14%;
+    --surface-2: 30 8% 16%;
+    --surface-3: 30 8% 18%;
   }
+  .section-dark .border-luxe { border-color: hsl(var(--gold) / 0.18); }
+
 
   /* Premium pill button (green solid) */
   .btn-gold {
