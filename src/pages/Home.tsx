@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom';
 import { Flame, Clock, Leaf, Wind, ShieldCheck, Award, Star } from 'lucide-react';
 import { SEO } from '@/components/SEO';
 import { ScrollReveal } from '@/components/ScrollReveal';
-import { WhatsAppFab } from '@/components/WhatsAppFab';
 import { HomeIntro } from '@/components/HomeIntro';
 import { LocationSection } from '@/components/LocationSection';
 import { FaqSection } from '@/components/FaqSection';
@@ -213,7 +212,6 @@ export default function Home() {
         ctaTo="/contact"
       />
 
-      <WhatsAppFab />
     </>
   );
 }
