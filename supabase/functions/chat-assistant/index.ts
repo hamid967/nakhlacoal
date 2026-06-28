@@ -96,8 +96,10 @@ Deno.serve(async (req) => {
 
     if (!upstream.ok) {
       const t = await upstream.text();
+      console.error("[chat-assistant] upstream error:", upstream.status, t);
       const status = upstream.status === 429 ? 429 : upstream.status === 402 ? 402 : 500;
-      return new Response(JSON.stringify({ error: t }), {
+      const msg = status === 429 ? "Rate limited" : status === 402 ? "AI credits exhausted" : "Upstream error";
+      return new Response(JSON.stringify({ error: msg }), {
         status, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
