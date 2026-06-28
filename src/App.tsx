@@ -1,39 +1,42 @@
-import { Hero } from './components/Hero'
-import { Portfolio } from './components/Portfolio'
-import { Awards } from './components/Awards'
-import { About } from './components/About'
-import { Services } from './components/Services'
-import { Team } from './components/Team'
-import { Contact } from './components/Contact'
-import { Footer } from './components/Footer'
+import { Routes, Route } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Toaster } from '@/components/ui/toaster';
+import { Toaster as Sonner } from '@/components/ui/sonner';
+import { TooltipProvider } from '@/components/ui/tooltip';
+
+import { Layout } from '@/components/Layout';
+import Home from '@/pages/Home';
+import Products from '@/pages/Products';
+import About from '@/pages/About';
+import Quality from '@/pages/Quality';
+import Wholesale from '@/pages/Wholesale';
+import ExportPage from '@/pages/Export';
+import Knowledge from '@/pages/Knowledge';
+import Contact from '@/pages/Contact';
+import NotFound from '@/pages/NotFound';
+
+const queryClient = new QueryClient();
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-background text-foreground" style={{ overflow: 'visible' }}>
-      <main className="relative" role="main" style={{ overflow: 'visible' }}>
-        <section id="hero" aria-label="Hero section">
-          <Hero />
-        </section>
-        <section id="portfolio" aria-label="Portfolio section">
-          <Portfolio />
-        </section>
-        <section id="awards" aria-label="Awards section">
-          <Awards />
-        </section>
-        <section id="about" aria-label="About section">
-          <About />
-        </section>
-        <section id="services" aria-label="Services section">
-          <Services />
-        </section>
-        <section id="team" aria-label="Team section" style={{ overflow: 'visible', height: 'auto', minHeight: '0', maxHeight: 'none' }}>
-          <Team />
-        </section>
-        <section id="contact" aria-label="Contact section">
-          <Contact />
-        </section>
-      </main>
-      <Footer />
-    </div>
-  )
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <Routes>
+          <Route element={<Layout />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/quality" element={<Quality />} />
+            <Route path="/wholesale" element={<Wholesale />} />
+            <Route path="/export" element={<ExportPage />} />
+            <Route path="/knowledge" element={<Knowledge />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="*" element={<NotFound />} />
+          </Route>
+        </Routes>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
 }
