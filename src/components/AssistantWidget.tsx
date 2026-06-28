@@ -49,13 +49,17 @@ const buildWa = (o: Record<string, any>) => [
   '🌴 *طلب جديد — فحم النخلة*', '',
   `*المنتج:* ${o.product_type}`,
   `*الكمية:* ${o.quantity} ${o.unit}`,
-  `*المنشأة:* ${o.company_name}`,
+  `*المنشأة:* ${o.company_name || '—'}`,
   `*المسؤول:* ${o.contact_name}`,
   `*الجوال:* ${o.phone}`,
   o.email && `*البريد:* ${o.email}`,
   o.city && `*المدينة:* ${o.city}`,
+  o.address && `*العنوان:* ${o.address}`,
+  o.delivery_method && `*طريقة الاستلام:* ${o.delivery_method}`,
   o.notes && `*ملاحظات:* ${o.notes}`,
 ].filter(Boolean).join('\n');
+
+const PHONE_RE = /^(\+?966|0)?5\d{8}$/;
 
 export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () => void }) {
   const navigate = useNavigate();
