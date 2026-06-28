@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import logo from "@/assets/palm-charcoal-logo.png";
 import heroCharcoal from "@/assets/hero-charcoal.jpg";
 import productBbq from "@/assets/product-bbq.jpg";
