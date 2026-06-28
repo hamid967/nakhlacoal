@@ -106,10 +106,11 @@ export function BrandShowcaseHero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-            className="font-arabic font-bold text-[#0D2818] leading-[1.1] text-4xl sm:text-5xl md:text-6xl lg:text-7xl"
+            className="fm-display font-arabic font-bold text-[#0D2818] text-4xl sm:text-5xl md:text-6xl lg:text-7xl"
           >
             {isAr ? 'شركة فحم النخلة' : 'Palm Charcoal Company'}
           </motion.h1>
+
 
           <motion.p
             initial={{ opacity: 0, y: 16 }}
