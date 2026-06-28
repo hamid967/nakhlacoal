@@ -7,6 +7,7 @@
       "dependencies": {
         "@fontsource/cormorant-garamond": "^5.2.11",
         "@fontsource/inter-tight": "^5.2.7",
+        "@fontsource/karla": "^5.2.8",
         "@fontsource/tajawal": "^5.2.7",
         "@hookform/resolvers": "^3.10.0",
         "@radix-ui/react-accordion": "^1.2.11",
@@ -177,6 +178,8 @@
     "@fontsource/cormorant-garamond": ["@fontsource/cormorant-garamond@5.2.11", "https://europe-west1-npm.pkg.dev/lovable-core-prod/sandbox-npm-cache/@fontsource/cormorant-garamond/-/cormorant-garamond-5.2.11.tgz", {}, "sha512-5JjpN023lhA5soijgVT0BdRGzmlijm402ppjccMd6h+vRE0mX2lJnE+41UPfnlidrkV9/rCo1mf58WZlHnB0CA=="],
 
     "@fontsource/inter-tight": ["@fontsource/inter-tight@5.2.7", "https://europe-west1-npm.pkg.dev/lovable-core-prod/sandbox-npm-cache/@fontsource/inter-tight/-/inter-tight-5.2.7.tgz", {}, "sha512-44TmSfHdNQus/3MWOMIonUEnbxwQhiaFo2sfBJEGIE4c7TN+GO6kfLzsTH4Nu52BC9HDZFl9fPQ6Cwzp9vYTtQ=="],
+
+    "@fontsource/karla": ["@fontsource/karla@5.2.8", "https://europe-west1-npm.pkg.dev/lovable-core-prod/sandbox-npm-cache/@fontsource/karla/-/karla-5.2.8.tgz", {}, "sha512-uZMA4ugNcHFYMpjr/9FIHQC3ldtILlqPdK3f4P9XInDgRL0NxdIyRwH9MuGZUT7sdup0kshk9zsGXitq1xpFAw=="],
 
     "@fontsource/tajawal": ["@fontsource/tajawal@5.2.7", "https://europe-west1-npm.pkg.dev/lovable-core-prod/sandbox-npm-cache/@fontsource/tajawal/-/tajawal-5.2.7.tgz", {}, "sha512-EzswJ4JoFmYQ7hn7O5Do7Azd1tjzujSEzN+DvTZNcAwZ3usfPvEJ3hTQtYv9VN+mUH4flOi6LedtqCkVUHZs9A=="],
 
