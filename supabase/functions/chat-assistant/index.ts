@@ -53,8 +53,25 @@ Deno.serve(async (req) => {
       });
     }
 
+    // Reject obviously oversized payloads up front
+    const contentLength = Number(req.headers.get("content-length") ?? 0);
+    if (contentLength > 200_000) {
+      return new Response(JSON.stringify({ error: "Payload too large" }), {
+        status: 413, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const body = await req.json();
-    const messages = Array.isArray(body?.messages) ? body.messages : [];
+    const raw = Array.isArray(body?.messages) ? body.messages : [];
+    const ALLOWED_ROLES = ["user", "assistant", "system"] as const;
+    const MAX_CONTENT_CHARS = 4000;
+    const messages = raw
+      .filter((m: unknown): m is { role: string; content: unknown } =>
+        !!m && typeof m === "object" && ALLOWED_ROLES.includes((m as { role: string }).role as typeof ALLOWED_ROLES[number])
+      )
+      .map((m) => ({ role: m.role, content: String(m.content ?? "").slice(0, MAX_CONTENT_CHARS) }))
+      .filter((m) => m.content.length > 0)
+      .slice(-30);
     if (messages.length === 0) {
       return new Response(JSON.stringify({ error: "messages required" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
