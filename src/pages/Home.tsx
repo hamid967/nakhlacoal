@@ -89,17 +89,17 @@ export default function Home() {
             {/* Copy */}
             <div className={`${isAr ? 'lg:text-right' : 'lg:text-left'}`}>
               <ScrollReveal delay={120}>
-                <h1 className={`text-6xl md:text-7xl lg:text-8xl mb-6 ${isAr ? 'font-arabic font-bold' : 'font-display'}`}>
+                <h1 className={`text-5xl sm:text-6xl md:text-7xl lg:text-8xl mb-5 md:mb-6 ${isAr ? 'font-arabic font-bold' : 'font-display'}`}>
                   <span className="text-gold-metal">فحم النخلة</span>
                 </h1>
               </ScrollReveal>
               <ScrollReveal delay={200}>
-                <p className="text-xl md:text-2xl text-gold-hi mb-6 font-arabic">
+                <p className="text-lg sm:text-xl md:text-2xl text-gold-hi mb-5 md:mb-6 font-arabic">
                   طاقة طبيعية… جودة تستحق الثقة
                 </p>
               </ScrollReveal>
               <ScrollReveal delay={280}>
-                <p className="text-base md:text-lg text-foreground/70 leading-loose mb-10 max-w-lg lg:ms-auto">
+                <p className="text-sm sm:text-base md:text-lg text-foreground/70 leading-loose mb-8 md:mb-10 max-w-lg lg:ms-auto">
                   فحم طبيعي فاخر مصنوع من أفضل أنواع الخشب يمنحك احتراق أطول، حرارة ثابتة، ورماد أقل.
                 </p>
               </ScrollReveal>
