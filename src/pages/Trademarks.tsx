@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ZoomIn, ZoomOut, RotateCcw, FileText, Shield, X, ChevronLeft, ChevronRight, Package, FlaskConical, Info, Globe2, MessageCircle } from 'lucide-react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Helmet } from 'react-helmet-async';
 import { SEO } from '@/components/SEO';
 import { PageHero } from '@/components/PageHero';
 import { trademarks } from '@/data/trademarks';
