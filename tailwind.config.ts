@@ -94,7 +94,7 @@ export default {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "ember-pulse": "ember-pulse 2.4s ease-in-out infinite",
+        "ember-pulse": "ember-pulse 4.2s cubic-bezier(0.45, 0, 0.55, 1) infinite",
         "fade-in": "fade-in 0.3s ease-out",
       },
     },
