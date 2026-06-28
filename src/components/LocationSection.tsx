@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { MapPin, Clock, Phone, Navigation } from 'lucide-react';
+import { MapPin, Clock, Phone, Navigation, Mail } from 'lucide-react';
 import { ScrollReveal } from '@/components/ScrollReveal';
 import { LuxSection, SectionHeader, Eyebrow, useDir } from '@/components/ui-lux';
 
