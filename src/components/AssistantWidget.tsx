@@ -127,7 +127,26 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
   const waText = encodeURIComponent('مرحباً فحم النخلة 👋، أرغب بطلب فحم.');
   const waHref = `https://wa.me/${WHATSAPP_NUMBER}?text=${waText}`;
 
+  const lastAssistant = [...messages].reverse().find(m => m.role === 'assistant' && m.content.trim());
+  const preview = lastAssistant?.content.replace(/[#*`_>\-]/g, '').replace(/\s+/g, ' ').trim().slice(0, 90);
+
   return (
+    <>
+      {/* Last-message preview pill (shown when widget is closed) */}
+      {!open && preview && preview !== greet.content.replace(/[#*`_>\-]/g, '').replace(/\s+/g, ' ').trim().slice(0, 90) && (
+        <div
+          className="fixed bottom-24 end-6 z-40 max-w-[280px] rounded-2xl rounded-br-sm border border-gold/30 bg-background shadow-gold px-3 py-2 text-xs text-foreground animate-fade-in font-arabic"
+          role="status"
+          aria-label="آخر رسالة من المساعد"
+        >
+          <div className="flex items-center gap-1.5 mb-1 text-[10px] text-muted-foreground">
+            <img src={logo} alt="" className="w-3 h-3 object-contain" />
+            مساعد فحم النخلة
+          </div>
+          <p className="line-clamp-2 leading-snug">{preview}{preview && preview.length >= 90 ? '…' : ''}</p>
+        </div>
+      )}
+
     <div
       className={`fixed bottom-24 end-6 z-50 w-[92vw] max-w-[380px] h-[78vh] max-h-[560px] rounded-2xl border border-gold/30 bg-background shadow-gold flex flex-col overflow-hidden origin-bottom-right transition-all duration-300 ease-out ${
         open ? 'opacity-100 scale-100 translate-y-0 pointer-events-auto' : 'opacity-0 scale-90 translate-y-4 pointer-events-none'
@@ -146,7 +165,13 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
             مساعد فحم النخلة <Sparkles className="w-3.5 h-3.5 text-gold-hi" />
           </p>
           <p className="text-[10px] opacity-70 flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> متصل · مجاني
+            {streaming ? (
+              <><span className="w-1.5 h-1.5 rounded-full bg-gold-hi animate-pulse" /> يكتب الآن…</>
+            ) : submitting ? (
+              <><Loader2 className="w-3 h-3 animate-spin" /> جارٍ الإرسال…</>
+            ) : (
+              <><span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> متصل · مجاني</>
+            )}
           </p>
         </div>
         <a
@@ -175,7 +200,10 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
 
       {/* Messages */}
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-3 py-3 space-y-3 bg-muted/20">
-        {messages.map(m => (
+        {messages.map((m, idx) => {
+          const isLastAssistant = m.role === 'assistant' && idx === messages.length - 1;
+          const showTyping = isLastAssistant && streaming && !m.content;
+          return (
           <div key={m.id} className={`flex gap-2 ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
             {m.role === 'assistant' && (
               <div className="w-6 h-6 rounded-full bg-dark flex items-center justify-center shrink-0">
@@ -187,14 +215,23 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
                 <div className="rounded-2xl rounded-tr-sm bg-primary text-primary-foreground px-3 py-2 text-sm whitespace-pre-wrap">
                   {m.content}
                 </div>
+              ) : showTyping ? (
+                <div className="inline-flex items-center gap-1 rounded-2xl rounded-tl-sm bg-muted px-3 py-2.5" aria-label="يكتب">
+                  <span className="w-1.5 h-1.5 rounded-full bg-gold animate-bounce" style={{ animationDelay: '0ms' }} />
+                  <span className="w-1.5 h-1.5 rounded-full bg-gold animate-bounce" style={{ animationDelay: '150ms' }} />
+                  <span className="w-1.5 h-1.5 rounded-full bg-gold animate-bounce" style={{ animationDelay: '300ms' }} />
+                </div>
               ) : (
                 <div className="prose prose-sm max-w-none text-foreground text-sm leading-relaxed prose-strong:text-foreground prose-p:my-1">
-                  {m.content ? <ReactMarkdown>{m.content}</ReactMarkdown> : <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />}
+                  {m.content && <ReactMarkdown>{m.content}</ReactMarkdown>}
+                  {isLastAssistant && streaming && m.content && (
+                    <span className="inline-block w-1.5 h-3.5 align-middle bg-gold/80 ms-0.5 animate-pulse" aria-hidden />
+                  )}
                 </div>
               )}
             </div>
           </div>
-        ))}
+        );})}
         {submitting && (
           <div className="flex items-center gap-2 text-xs text-emerald-600">
             <CheckCircle2 className="w-3.5 h-3.5 animate-pulse" /> جارٍ حفظ وإرسال الطلب...
@@ -204,6 +241,12 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
 
       {/* Composer */}
       <div className="border-t border-border p-2 bg-background">
+        {streaming && (
+          <div className="flex items-center gap-1.5 px-1 pb-1.5 text-[11px] text-muted-foreground font-arabic">
+            <Loader2 className="w-3 h-3 animate-spin text-gold" />
+            المساعد يكتب الرد…
+          </div>
+        )}
         <div className="flex items-end gap-1.5">
           <textarea
             ref={inputRef}
@@ -226,5 +269,7 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
         </div>
       </div>
     </div>
+    </>
   );
 }
+
