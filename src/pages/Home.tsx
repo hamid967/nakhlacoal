@@ -106,15 +106,15 @@ export default function Home() {
 
               {/* Mini features */}
               <ScrollReveal delay={360}>
-                <div className="flex flex-wrap gap-8 mb-10 lg:justify-end justify-center">
+                <div className="flex flex-wrap gap-6 sm:gap-8 mb-8 md:mb-10 lg:justify-end justify-center">
                   {[
                     { icon: Clock, label: 'أطول مدة احتراق' },
                     { icon: Flame, label: 'حرارة عالية وثابتة' },
                     { icon: Leaf, label: 'رماد أقل ونظافة أكثر' },
                   ].map((f, i) => (
                     <div key={i} className="flex flex-col items-center gap-2 text-center">
-                      <span className="w-14 h-14 rounded-full border-luxe-strong bg-gold/5 flex items-center justify-center">
-                        <f.icon className="w-6 h-6 text-gold-hi" />
+                      <span className="w-12 h-12 md:w-14 md:h-14 rounded-full border-luxe-strong bg-gold/5 flex items-center justify-center">
+                        <f.icon className="w-5 h-5 md:w-6 md:h-6 text-gold-hi" />
                       </span>
                       <span className="text-xs text-foreground/70 max-w-[7rem]">{f.label}</span>
                     </div>
