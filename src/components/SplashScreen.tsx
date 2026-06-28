@@ -76,13 +76,25 @@ export function SplashScreen() {
     typeof document !== "undefined" && document.documentElement.dir === "rtl";
   const clients = isAr ? CLIENTS_AR : CLIENTS_EN;
 
+  const handleSkip = () => {
+    setStage(3);
+    setTimeout(() => setHidden(true), 600);
+  };
+
   return (
     <div
-      aria-hidden
       className={`fixed inset-0 z-[100] overflow-hidden bg-background transition-opacity duration-[800ms] ease-out ${
         stage === 3 ? "opacity-0 pointer-events-none" : "opacity-100"
       }`}
     >
+      {/* Skip button */}
+      <button
+        type="button"
+        onClick={handleSkip}
+        className="absolute top-5 end-5 z-30 px-4 py-2 text-[11px] uppercase tracking-[0.3em] text-foreground/70 hover:text-[hsl(var(--gold))] border border-foreground/20 hover:border-[hsl(var(--gold))]/60 rounded-full backdrop-blur-sm bg-background/30 transition-colors"
+      >
+        {isAr ? "تخطي" : "Skip"}
+      </button>
       {/* cinematic gold vignette */}
       <div
         className="absolute inset-0"
