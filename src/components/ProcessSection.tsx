@@ -13,6 +13,59 @@ import s5 from '@/assets/step-pack.jpg';
 export function ProcessSection() {
   const { i18n } = useTranslation();
   const isAr = i18n.language?.startsWith('ar');
+  const stripRef = useRef<HTMLDivElement | null>(null);
+  const rafRef = useRef<number | null>(null);
+  const dragState = useRef<{ active: boolean; startX: number; startScroll: number; moved: boolean }>({
+    active: false, startX: 0, startScroll: 0, moved: false,
+  });
+  const [playing, setPlaying] = useState(true);
+  const [dragging, setDragging] = useState(false);
+
+  // Auto-scroll loop (smooth, GPU-friendly via rAF)
+  useEffect(() => {
+    if (!playing) return;
+    const el = stripRef.current;
+    if (!el) return;
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) return;
+
+    const speed = 0.35; // px per frame (~21px/s)
+    const tick = () => {
+      if (!stripRef.current) return;
+      const node = stripRef.current;
+      const max = node.scrollWidth - node.clientWidth;
+      if (max <= 0) { rafRef.current = requestAnimationFrame(tick); return; }
+      let next = node.scrollLeft + speed;
+      if (next >= max - 0.5) next = 0;
+      node.scrollLeft = next;
+      rafRef.current = requestAnimationFrame(tick);
+    };
+    rafRef.current = requestAnimationFrame(tick);
+    return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); };
+  }, [playing, dragging]);
+
+  // Pointer drag-to-scroll
+  const onPointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    const el = stripRef.current;
+    if (!el) return;
+    dragState.current = { active: true, startX: e.clientX, startScroll: el.scrollLeft, moved: false };
+    el.setPointerCapture(e.pointerId);
+    setDragging(true);
+  }, []);
+
+  const onPointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    const st = dragState.current;
+    if (!st.active || !stripRef.current) return;
+    const dx = e.clientX - st.startX;
+    if (Math.abs(dx) > 3) st.moved = true;
+    stripRef.current.scrollLeft = st.startScroll - dx;
+  }, []);
+
+  const onPointerUp = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    dragState.current.active = false;
+    try { stripRef.current?.releasePointerCapture(e.pointerId); } catch {}
+    setDragging(false);
+  }, []);
 
   const steps = [
     { img: s1, ar: { t: 'الحصاد والاختيار', d: 'قشور جوز الهند الناضجة من إندونيسيا، فرز يدوي للأجود فقط.' }, en: { t: 'Harvest & Selection', d: 'Mature coconut shells, hand-sorted for top grade only.' } },
