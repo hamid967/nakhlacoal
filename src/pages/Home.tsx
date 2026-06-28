@@ -98,11 +98,14 @@ export default function Home() {
                 <span className="flex items-center gap-1 text-gold-hi">{[...Array(5)].map((_, i) => <Star key={i} className="w-3.5 h-3.5 fill-current" />)}</span>
               </div>
             </div>
-            <div className="hidden md:flex absolute -bottom-6 -start-6 bg-surface rounded-2xl border-luxe shadow-luxe p-4 items-center gap-3 max-w-[220px]">
-              <span className="w-12 h-12 rounded-full bg-jade/10 text-jade flex items-center justify-center"><ShieldCheck className="w-6 h-6" /></span>
+            <div className="hidden md:flex absolute -bottom-6 -start-6 bg-surface rounded-2xl border-luxe shadow-luxe p-4 items-center gap-3 max-w-[240px] animate-pulse-soft">
+              <span className="relative w-12 h-12 rounded-full bg-jade/10 text-jade flex items-center justify-center">
+                <ShieldCheck className="w-6 h-6" />
+                <span className="absolute inset-0 rounded-full ring-2 ring-jade/40 animate-ping" />
+              </span>
               <div>
                 <div className="text-sm font-bold text-jade font-arabic">{isAr ? 'جودة معتمدة' : 'Certified Quality'}</div>
-                <div className="text-[11px] text-foreground/60 font-arabic">{isAr ? 'فحص مخبري دوري' : 'Lab tested'}</div>
+                <div className="text-[11px] text-foreground/60 font-arabic">{isAr ? 'علامة مسجلة · 143313025' : 'Trademark · 143313025'}</div>
               </div>
             </div>
           </ScrollReveal>
