@@ -95,9 +95,13 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
         body: JSON.stringify({ messages: [...messages, userMsg].map(m => ({ role: m.role, content: m.content })) }),
       });
       if (!resp.ok) {
-        if (resp.status === 429) throw new Error('تم تجاوز حد الاستخدام، حاول لاحقاً');
-        if (resp.status === 402) throw new Error('انتهت الأرصدة، تواصل مع الإدارة');
-        throw new Error('فشل الاتصال');
+        if (resp.status === 429) throw new Error('ضغط مرتفع على المساعد، حاول بعد قليل 🙏');
+        if (resp.status === 402) {
+          const fallback = `عذراً، المساعد الذكي غير متاح مؤقتاً. يسعدنا خدمتك مباشرة:\n\n📱 واتساب: [اضغط هنا للتواصل](${waHref})\n📧 بريد الطلبات: mab355@gmail.com\n📞 جوال: 0540060095`;
+          setMessages(prev => prev.map(m => m.id === aId ? { ...m, content: fallback } : m));
+          return;
+        }
+        throw new Error('فشل الاتصال بالمساعد، جرّب واتساب للتواصل الفوري');
       }
       if (!resp.body) throw new Error('استجابة فارغة');
       const reader = resp.body.getReader();
@@ -116,13 +120,15 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
         await finalize(order);
       }
     } catch (e: any) {
-      toast.error(e?.message ?? 'خطأ');
-      setMessages(prev => prev.filter(m => m.id !== aId));
+      const msg = e?.message ?? 'خطأ';
+      toast.error(msg);
+      setMessages(prev => prev.map(m => m.id === aId ? { ...m, content: `⚠️ ${msg}\n\n[تواصل عبر واتساب](${waHref})` } : m));
     } finally {
       setStreaming(false);
       inputRef.current?.focus();
     }
   };
+
 
   const waText = encodeURIComponent('مرحباً فحم النخلة 👋، أرغب بطلب فحم.');
   const waHref = `https://wa.me/${WHATSAPP_NUMBER}?text=${waText}`;
