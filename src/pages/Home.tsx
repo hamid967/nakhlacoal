@@ -143,19 +143,19 @@ export default function Home() {
 
 
       {/* ============= WHY US ============= */}
-      <section className="py-24 section-dark relative overflow-hidden">
+      <section className="py-20 md:py-28 section-dark relative overflow-hidden">
         <div className="absolute inset-0 ember-glow opacity-20 pointer-events-none" />
 
         <div className="container">
           <ScrollReveal>
-            <div className="text-center mb-16">
+            <div className="text-center mb-12 md:mb-16">
               <span className="eyebrow mb-5">مميزاتنا</span>
-              <h2 className={`text-3xl md:text-5xl mt-5 ${isAr ? 'font-arabic font-bold' : 'font-display'}`}>
+              <h2 className={`text-3xl sm:text-4xl md:text-5xl mt-4 ${isAr ? 'font-arabic font-bold' : 'font-display'}`}>
                 لماذا فحم النخلة هو الخيار <span className="text-gold-metal">الأفضل؟</span>
               </h2>
             </div>
           </ScrollReveal>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4">
             {features.map((f, i) => (
               <ScrollReveal key={i} delay={i * 60}>
                 <div className="shimmer-card h-full p-6 rounded-2xl bg-surface border-luxe hover:border-luxe-strong transition-all duration-500 text-center group">
@@ -172,17 +172,17 @@ export default function Home() {
       </section>
 
       {/* ============= PRODUCTS ============= */}
-      <section className="py-24">
+      <section className="py-20 md:py-28">
         <div className="container">
           <ScrollReveal>
             <div className="text-center mb-4">
               <span className="eyebrow mb-5">تشكيلتنا</span>
-              <h2 className="text-3xl md:text-5xl mt-5 font-arabic font-bold">منتجاتنا</h2>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl mt-4 font-arabic font-bold">منتجاتنا</h2>
               <div className="mt-3 mx-auto w-24 h-px bg-gradient-to-r from-transparent via-gold to-transparent" />
             </div>
           </ScrollReveal>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 mt-10 md:mt-12">
             {products.map((p, i) => (
               <ScrollReveal key={i} delay={i * 80}>
                 <div className="group rounded-2xl bg-surface border-luxe hover:border-luxe-strong transition-all duration-500 overflow-hidden h-full flex flex-col">
@@ -211,9 +211,9 @@ export default function Home() {
       </section>
 
       {/* ============= QUALITY + SAUDI ============= */}
-      <section className="py-24 border-t border-gold/10">
+      <section className="py-20 md:py-28 border-t border-gold/10">
         <div className="container">
-          <div className="grid lg:grid-cols-3 gap-6 items-stretch">
+          <div className="grid lg:grid-cols-3 gap-5 md:gap-6 items-stretch">
             {/* Quality bars */}
             <ScrollReveal>
               <div className="p-7 rounded-2xl bg-surface border-luxe h-full">
@@ -246,7 +246,7 @@ export default function Home() {
                 <div className="mx-auto w-14 h-14 mb-4 rounded-full bg-gold/10 border-luxe-strong flex items-center justify-center">
                   <Leaf className="w-6 h-6 text-gold-hi" />
                 </div>
-                <h3 className="text-3xl md:text-4xl font-arabic font-bold mb-4 leading-snug">
+                <h3 className="text-3xl sm:text-4xl md:text-4xl font-arabic font-bold mb-4 leading-snug">
                   منتج سعودي<br/>
                   <span className="text-gold-metal">بجودة عالمية</span>
                 </h3>
@@ -281,8 +281,8 @@ export default function Home() {
       </section>
 
       {/* ============= QUICK ACTIONS ============= */}
-      <section className="py-16">
-        <div className="container grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <section className="py-14 md:py-20">
+        <div className="container grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
           {quickActions.map((a, i) => (
             <ScrollReveal key={i} delay={i * 80}>
               <div className="p-5 rounded-2xl bg-surface border-luxe hover:border-luxe-strong transition-all duration-500 flex items-center gap-4 group cursor-pointer">
@@ -300,17 +300,17 @@ export default function Home() {
       </section>
 
       {/* ============= TESTIMONIALS ============= */}
-      <section className="py-24 border-t border-gold/10">
+      <section className="py-20 md:py-28 border-t border-gold/10">
         <div className="container">
           <ScrollReveal>
-            <div className="text-center mb-12">
+            <div className="text-center mb-10 md:mb-14">
               <span className="eyebrow mb-5">آراء عملائنا</span>
-              <h2 className="text-3xl md:text-5xl mt-5 font-arabic font-bold">ماذا يقول عملاؤنا؟</h2>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl mt-4 font-arabic font-bold">ماذا يقول عملاؤنا؟</h2>
               <div className="mt-3 mx-auto w-24 h-px bg-gradient-to-r from-transparent via-gold to-transparent" />
             </div>
           </ScrollReveal>
 
-          <div className="grid md:grid-cols-3 gap-5">
+          <div className="grid md:grid-cols-3 gap-4 md:gap-5">
             {testimonials.map((t, i) => (
               <ScrollReveal key={i} delay={i * 100}>
                 <div className="relative p-7 pt-10 rounded-2xl bg-surface border-luxe hover:border-luxe-strong transition-all duration-500 h-full flex flex-col">
@@ -336,14 +336,14 @@ export default function Home() {
       </section>
 
       {/* ============= CTA BAND ============= */}
-      <section className="pb-24">
+      <section className="pb-20 md:pb-28">
         <div className="container">
           <ScrollReveal>
-            <div className="relative rounded-3xl section-dark overflow-hidden p-10 md:p-16 text-center">
+            <div className="relative rounded-3xl section-dark overflow-hidden p-8 sm:p-12 md:p-16 text-center">
               <div className="absolute inset-0 ember-glow opacity-30 animate-ember pointer-events-none" />
               <div className="relative">
                 <span className="eyebrow mb-5">جاهز للطلب؟</span>
-                <h2 className="text-3xl md:text-5xl font-arabic font-bold mt-5 mb-4">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-arabic font-bold mt-4 mb-4">
                   جرب <span className="text-gold-metal">فحم النخلة</span> اليوم
                 </h2>
                 <p className="text-sm md:text-base text-foreground/70 max-w-xl mx-auto mb-8 leading-loose">
