@@ -118,13 +118,26 @@ async def capture(browser, name: str, width: int, height: int, theme: str):
     await page.screenshot(path=str(out))
     await ctx.close()
     ratio = green_ratio(out)
-    return {
+    baseline = BASELINE / out.name
+    info = {
         "theme": theme,
         "viewport": name,
-        "file": str(out.relative_to(Path.cwd())) if out.is_relative_to(Path.cwd()) else str(out),
+        "file": str(out),
         "green_ratio": round(ratio, 5),
-        "pass": ratio < GREEN_THRESHOLD,
+        "green_pass": ratio < GREEN_THRESHOLD,
+        "diff_ratio": None,
+        "diff_pass": True,
+        "baseline": str(baseline),
     }
+    if UPDATE or not baseline.exists():
+        baseline.write_bytes(out.read_bytes())
+        info["updated_baseline"] = True
+    else:
+        d = diff_ratio(out, baseline, DIFFS / out.name)
+        info["diff_ratio"] = round(d, 5)
+        info["diff_pass"] = d < DIFF_THRESHOLD
+    info["pass"] = info["green_pass"] and info["diff_pass"]
+    return info
 
 
 async def main() -> int:
@@ -139,17 +152,24 @@ async def main() -> int:
                 tag = "PASS" if r["pass"] else "FAIL"
                 if not r["pass"]:
                     failed = True
+                d = "—" if r["diff_ratio"] is None else f"{r['diff_ratio'] * 100:.2f}%"
                 print(
                     f"{tag}  {theme:<5} {name:<7} "
-                    f"green={r['green_ratio'] * 100:.3f}%  → {r['file']}"
+                    f"green={r['green_ratio'] * 100:.3f}%  diff={d}"
                 )
         await browser.close()
     (OUT / "report.json").write_text(json.dumps(results, indent=2))
+    if UPDATE:
+        print("\nBaselines updated in tests/visual/__baseline__/")
+        return 0
     if failed:
-        print("\nFAIL: Unwanted green tint detected in intro snapshots.")
+        print("\nFAIL: Visual regression detected. Review diffs in")
+        print("      tests/visual/__screenshots__/__diff__/")
+        print("      Run `npm run test:intro:update` if the change is intentional.")
         return 1
-    print("\nOK: All intro snapshots clean (no unwanted green).")
+    print("\nOK: Intro snapshots match baseline and contain no unwanted green.")
     return 0
+
 
 
 if __name__ == "__main__":
