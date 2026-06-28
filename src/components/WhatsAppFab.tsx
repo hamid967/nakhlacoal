@@ -1,6 +1,10 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import { X } from 'lucide-react';
+import { Sheet, SheetContent } from '@/components/ui/sheet';
 import logo from '@/assets/palm-charcoal-logo.png';
+
 
 export function WhatsAppFab() {
   const { i18n } = useTranslation();
