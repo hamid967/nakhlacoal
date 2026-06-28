@@ -81,19 +81,23 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
     }
   }, [open, messages]);
 
-  const finalize = async (order: Record<string, any>) => {
+  const finalize = async (order: Record<string, any>, waWin?: Window | null) => {
     setSubmitting(true);
+    const waText = buildWa(order);
+    const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(waText)}`;
+    // Navigate the pre-opened tab to WhatsApp immediately (sync-opened to bypass popup blockers)
+    if (waWin && !waWin.closed) {
+      try { waWin.location.href = waUrl; } catch { /* ignore */ }
+    } else {
+      window.open(waUrl, '_blank', 'noopener,noreferrer');
+    }
     try {
       const { data, error } = await supabase.functions.invoke('submit-order', { body: order });
       if (error || !data?.ok) throw new Error(error?.message || data?.error || 'failed');
-      const wa = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(buildWa(order))}`;
-      const mail = `mailto:${ORDER_EMAIL}?subject=${encodeURIComponent('طلب فحم — ' + order.company_name)}&body=${encodeURIComponent(buildWa(order).replace(/\*/g, ''))}`;
-      window.open(wa, '_blank', 'noopener,noreferrer');
-      setTimeout(() => window.open(mail, '_blank', 'noopener,noreferrer'), 250);
-      toast.success('تم إرسال الطلب ✅');
-      setMessages(m => [...m, { id: makeId(), role: 'assistant', content: `✅ **تم استلام طلبك!**\n\nرقم الطلب: \`${data.id}\`\nسنتواصل معك قريباً 🌴` }]);
+      toast.success('تم إرسال الطلب على واتساب ✅');
+      setMessages(m => [...m, { id: makeId(), role: 'assistant', content: `✅ **تم إرسال طلبك على واتساب!**\n\nرقم الطلب: \`${data.id}\`\nسنتواصل معك قريباً 🌴` }]);
     } catch (e: any) {
-      toast.error('تعذر الإرسال: ' + (e?.message ?? ''));
+      toast.error('تم فتح واتساب، لكن تعذّر حفظ الطلب: ' + (e?.message ?? ''));
     } finally { setSubmitting(false); }
   };
 
@@ -164,6 +168,8 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
     if (!formData.delivery_method) errs.delivery_method = 'اختر طريقة الاستلام';
     setFormErrors(errs);
     if (Object.keys(errs).length || !pendingOrder) return;
+    // Open WhatsApp tab synchronously to bypass popup blockers
+    const waWin = window.open('about:blank', '_blank', 'noopener,noreferrer');
     const merged = {
       ...pendingOrder,
       contact_name: formData.contact_name.trim(),
@@ -173,7 +179,7 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
       notes: [pendingOrder.notes, `طريقة الاستلام: ${formData.delivery_method}`].filter(Boolean).join(' · '),
     };
     setPendingOrder(null);
-    await finalize(merged);
+    await finalize(merged, waWin);
   };
 
 
