@@ -559,65 +559,10 @@ export default function Quality() {
       <section className="py-28 bg-gradient-to-b from-background via-surface-2/50 to-background">
         <div className="container">
           <SectionTitle eyebrow="فحص المنتج ثلاثي الأبعاد" title="اسحب لتدوير المكعب وفحص النقاط" />
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div
-              className="relative h-[420px] flex items-center justify-center cursor-grab active:cursor-grabbing select-none"
-              style={{ perspective: '1200px' }}
-              onPointerDown={(e) => { dragRef.current = { x: e.clientX, y: e.clientY }; (e.target as HTMLElement).setPointerCapture(e.pointerId); }}
-              onPointerMove={(e) => {
-                if (!dragRef.current) return;
-                const dx = e.clientX - dragRef.current.x;
-                const dy = e.clientY - dragRef.current.y;
-                setRot((r) => ({ x: r.x - dy * 0.5, y: r.y + dx * 0.5 }));
-                dragRef.current = { x: e.clientX, y: e.clientY };
-              }}
-              onPointerUp={() => { dragRef.current = null; }}
-            >
-              <motion.div
-                animate={{ rotateY: dragRef.current ? rot.y : [rot.y, rot.y + 360] }}
-                transition={{ duration: 24, repeat: Infinity, ease: 'linear' }}
-                style={{ transformStyle: 'preserve-3d', transform: `rotateX(${rot.x}deg)`, width: 220, height: 220, position: 'relative' }}
-              >
-                {['front', 'back', 'right', 'left', 'top', 'bottom'].map((face, i) => {
-                  const transforms: Record<string, string> = {
-                    front: 'translateZ(110px)', back: 'rotateY(180deg) translateZ(110px)',
-                    right: 'rotateY(90deg) translateZ(110px)', left: 'rotateY(-90deg) translateZ(110px)',
-                    top: 'rotateX(90deg) translateZ(110px)', bottom: 'rotateX(-90deg) translateZ(110px)',
-                  };
-                  return (
-                    <div key={face}
-                      className="absolute inset-0 border border-gold/40"
-                      style={{
-                        transform: transforms[face],
-                        background: `linear-gradient(135deg, #1a1410 0%, #0a0806 100%)`,
-                        boxShadow: 'inset 0 0 40px hsl(var(--gold) / 0.15), 0 0 30px hsl(var(--gold) / 0.2)',
-                      }}
-                    >
-                      <div className="absolute inset-2 opacity-40"
-                        style={{ backgroundImage: 'radial-gradient(circle at 30% 30%, hsl(var(--gold-hi) / 0.4), transparent 50%), radial-gradient(circle at 70% 70%, hsl(var(--jade) / 0.3), transparent 50%)' }} />
-                    </div>
-                  );
-                })}
-              </motion.div>
-            </div>
-
-            <ul className="space-y-4 font-arabic">
-              {inspectionSpots.map((s, i) => (
-                <motion.li key={i}
-                  initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }} transition={{ delay: i * 0.1 }}
-                  className="flex items-center gap-4 p-4 rounded-xl bg-white/60 backdrop-blur border border-gold/20"
-                >
-                  <span className="w-10 h-10 rounded-full bg-gold/15 text-gold-hi flex items-center justify-center font-bold">
-                    {i + 1}
-                  </span>
-                  <span className="font-bold">{s.label}</span>
-                </motion.li>
-              ))}
-            </ul>
-          </div>
+          <InspectionCube />
         </div>
       </section>
+
 
       {/* Timeline */}
       <section className="py-28">
