@@ -48,6 +48,9 @@ export function HeroSlideshow() {
         </div>
       ))}
 
+      <ImageWatermark variant="light" position="br" />
+
+
       {/* Caption */}
       <div className="absolute bottom-6 inset-x-6 text-background">
         <div
