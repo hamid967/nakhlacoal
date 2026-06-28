@@ -62,14 +62,37 @@ export function BrandShowcaseHero() {
 
   return (
     <section
+      ref={sectionRef}
       dir={isAr ? 'rtl' : 'ltr'}
       className="relative overflow-hidden pt-32 md:pt-36 pb-20 md:pb-28"
       style={{ background: '#F8F5EE' }}
     >
-      {/* Floating palm leaves + glow */}
-      <FloatingBackdrop />
+      {/* Floating palm leaves + glow (parallax + lazy mount) */}
+      <motion.div
+        aria-hidden
+        className="absolute inset-0 pointer-events-none"
+        style={{ y: prefersReducedMotion ? 0 : bgY, willChange: 'transform' }}
+      >
+        <FloatingBackdrop reduced={!!prefersReducedMotion} />
+      </motion.div>
 
-      <div className="container relative z-10">
+      <motion.div
+        className="container relative z-10"
+        style={{
+          scale: prefersReducedMotion ? 1 : heroScale,
+          opacity: prefersReducedMotion ? 1 : heroOpacity,
+          y: prefersReducedMotion ? 0 : heroY,
+          willChange: 'transform, opacity',
+        }}
+      >
+        {/* Title block */}
+        <div className="text-center max-w-3xl mx-auto mb-12 md:mb-16">
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/70 backdrop-blur border border-[#D4AF37]/30 shadow-[0_4px_24px_-12px_rgba(26,74,0,0.25)] mb-6"
+          >
         {/* Title block */}
         <div className="text-center max-w-3xl mx-auto mb-12 md:mb-16">
           <motion.div
