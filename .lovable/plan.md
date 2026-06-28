@@ -1,54 +1,52 @@
-## Reality check
+# مساعد فحم النخلة AI — نظام طلبات داخلي
 
-You've asked for ~20 routes, full auth, e‑commerce, wholesale/export portals, admin panel, AI assistant, bilingual AR/EN with RTL, and 8 payment methods. That's roughly 4–6 weeks of work — not one chat turn. I'll ship it in **5 phases**, each one a working, shippable milestone you can review before we move on.
+## نظرة عامة
+مساعد محادثة ذكي يجمع بيانات الطلب تدريجياً (نوع الفحم، الكمية، بيانات المنشأة)، ثم يرسل الطلب إلى ثلاث وجهات: واتساب + بريد + لوحة إدارة داخل الموقع.
 
-Today's turn delivers **Phase 1** end-to-end. Phases 2–5 happen on your "go" after each review.
+## بنية المحادثة والتخزين
+- **محادثات متعددة (Threads)** بقائمة جانبية، كل طلب في محادثة مستقلة.
+- **بدون حفظ للمحادثات** — تبقى في الذاكرة فقط (sessionStorage) وتُمسح عند إغلاق المتصفح.
+- **الطلبات المكتملة فقط تُحفظ** في قاعدة البيانات للوحة الإدارة.
 
-## Design system (locked across all phases)
+## التدفق
+1. المستخدم يضغط أيقونة "مساعد فحم النخلة AI" → ينتقل إلى `/assistant`.
+2. صفحة فيها قائمة جانبية للمحادثات + نافذة دردشة.
+3. المساعد يسأل بالعربية بشكل تدريجي:
+   - نوع الفحم (يعرض المنتجات المتاحة كاقتراحات).
+   - الكمية (طن/كرتون).
+   - بيانات المنشأة: اسم الشركة، اسم المسؤول، الجوال، الإيميل، المدينة، العنوان، السجل التجاري (اختياري)، نوع النشاط (مطعم/تصدير/جملة).
+   - تاريخ التسليم المطلوب.
+4. عند اكتمال البيانات، المساعد يعرض ملخص الطلب ويطلب التأكيد.
+5. عند التأكيد:
+   - يُحفظ الطلب في جدول `orders` (مرئي في `/admin/orders`).
+   - تُستدعى وظيفة `submit-order` التي ترسل بريداً إلى `mab355@gmail.com`.
+   - يُفتح واتساب على `+966 54 006 0095` برسالة منسقة.
 
-- **Palette:** Matte Black `#0B0B0B` (bg) · Metallic Gold `#C9A227` (accent) · Charcoal Gray `#1A1A1A` / `#2A2A2A` (surfaces) · Off‑White `#F5F5F0` (text)
-- **Typography:** Display = **Cormorant Garamond** (luxury serif, Apple‑esque restraint) · Body Latin = **Inter Tight** · Arabic = **Tajawal** (display + body). Loaded via `@fontsource`.
-- **Motion:** Framer Motion. Cinematic ease `[0.16, 1, 0.3, 1]`, 600–900ms hero reveals, subtle parallax, gold shimmer on hover, no bouncy springs.
-- **Surfaces:** Rounded `2xl`, hairline gold borders `#C9A227/20`, glass blur on overlays only, deep ambient shadows.
-- **i18n:** `react-i18next` + `dir` attribute swap. Every component built RTL‑aware (logical properties: `ps-*`, `pe-*`, `text-start`).
+## الصفحات والمكونات الجديدة
+- `src/pages/Assistant.tsx` — صفحة المحادثة الرئيسية بـ AI Elements.
+- `src/pages/admin/Orders.tsx` — لوحة إدارة الطلبات (محمية، للأدمن فقط).
+- `src/components/assistant/ThreadList.tsx` — قائمة المحادثات الجانبية.
+- `src/components/assistant/OrderSummaryCard.tsx` — بطاقة ملخص الطلب داخل المحادثة.
+- تحديث `WhatsAppFab` ليوجه "اطلب الآن (نموذج ذكي)" إلى `/assistant` بدلاً من المودال.
 
-## Phase 1 — Luxury marketing site + bilingual shell (this turn)
+## الواجهة الخلفية (Lovable Cloud)
+- **جدول `orders`** بأعمدة: `id, user_id, status, product_type, quantity, unit, company_name, contact_name, phone, email, city, address, commercial_register, business_type, delivery_date, notes, ai_summary, created_at`.
+- **RLS**: المستخدم يرى/ينشئ طلباته فقط، الأدمن يرى الكل.
+- **GRANT** للأدوار `authenticated` و `service_role`.
+- **Edge Function `chat-assistant`** — يستخدم Lovable AI Gateway (`google/gemini-3-flash-preview`) مع `streamText` + tool واحد `finalize_order` يستقبل الـ schema المهيكل للطلب.
+- **Edge Function `submit-order`** — يستقبل الطلب المؤكد، يحفظه في DB، ويرسل بريداً عبر Resend (سأطلب مفتاح `RESEND_API_KEY` لاحقاً عند التنفيذ، أو نكتفي مبدئياً بفتح `mailto:` من المتصفح إذا فضّل المستخدم تجنب طلب مفتاح إضافي).
 
-Replaces the entire current template with the new luxury design.
+## التحقق والأمان
+- Zod على المدخلات في الـ Edge Functions.
+- التحقق من الجوال السعودي والإيميل قبل الإرسال.
+- صفحة `/admin/orders` محمية بـ `<ProtectedRoute requireRole="admin">`.
 
-- **Stack additions:** `react-i18next`, `i18next-browser-languagedetector`, `framer-motion` (already present), `@fontsource/cormorant-garamond`, `@fontsource/inter-tight`, `@fontsource/tajawal`, `react-helmet-async`, `lucide-react` (present).
-- **i18n shell:** `src/i18n/index.ts` + `locales/en.json` + `locales/ar.json`. Language toggle in nav writes `<html lang dir>` and persists choice.
-- **Pages (real routes, not anchors):** `/`, `/products`, `/about`, `/quality`, `/wholesale`, `/export`, `/knowledge`, `/contact`. Each is a full premium page with hero, sections, and footer.
-- **Components:** `LuxNav` (transparent → blurred on scroll, AR/EN toggle), `LuxFooter`, `FireHero` (full‑screen video hero with gold-treated overlays + CTAs Order Now / Wholesale / Become Distributor / Talk to Assistant), `FeatureGrid` (6 cards: Long Burn, High Heat, Low Ash, Eco Friendly, Odor Free, Certified), `ProductCard`, `SpecBar`, `CertificateMarquee`, `QualityDial` (animated metric rings), `LanguageToggle`, `ScrollReveal`.
-- **SEO:** per‑route `<Helmet>` with AR/EN titles, descriptions, canonical, OG; Organization + Product JSON‑LD; `public/sitemap.xml`, `public/robots.txt`.
-- **AI key:** provision `LOVABLE_API_KEY` (no UI yet — wired in Phase 4).
-- **Cloud:** enable Lovable Cloud so Phases 2–5 are unblocked.
+## التفاصيل التقنية
+- AI Elements: `Conversation`, `Message`, `MessageResponse`, `PromptInput`, `Tool`, `Shimmer`.
+- نموذج: `google/gemini-3-flash-preview`.
+- Tool calling: `finalize_order` مع Zod schema للبيانات المهيكلة.
+- شعار المساعد: شعار النخلة الذهبي (موجود مسبقاً).
+- اللغة الافتراضية: عربي، مع دعم RTL كامل.
 
-**Out of Phase 1:** auth UI, cart, orders, admin, AI chat UI, payments. The site is fully browsable, bilingual, and looks like a luxury international brand.
-
-## Phase 2 — Auth + Customer Portal
-
-Email/password + Google sign-in (Lovable Cloud native), phone+OTP, password reset, `profiles` table, `user_roles` table (enum: customer, wholesale, admin), `/login`, `/signup`, `/reset-password`, `/portal` dashboard shell, `/portal/profile`, `/portal/addresses`, `/portal/security`. Protected routes via session guard.
-
-## Phase 3 — Catalog + E‑commerce + Quotations
-
-`products`, `product_specs`, `product_media`, `categories`, `orders`, `order_items`, `quotations`, `addresses` tables with RLS. Cart (zustand, localStorage), `/products/:slug` detail page with gallery + spec table + datasheet PDF, `/cart`, `/checkout`, `/portal/orders`, `/portal/orders/:id` with timeline, `/portal/quotations`, wholesale quotation flow with document upload, server-side PDF generation via edge function.
-
-## Phase 4 — Payments + AI Assistant + Shipping
-
-`enable_stripe_payments` (covers Apple Pay, Google Pay, Visa, Mastercard, Mada via Stripe Saudi). STC Pay, Bank Transfer, COD added as manual methods. Floating `AssistantWidget` using Lovable AI (`google/gemini-3-flash-preview`) with bilingual system prompt, streaming via edge function, tools: `recommend_product`, `estimate_quantity`, `track_order`. Shipping calculator + tracking page.
-
-## Phase 5 — Admin Panel + Knowledge Center + Polish
-
-`/admin` (role-gated) with manage customers/products/orders/quotes/inventory/discounts/coupons/certificates/blog. Sales + revenue analytics with Recharts. Knowledge Center articles (markdown via DB), FAQ accordion, comparison tables. Final SEO audit, performance pass, PWA manifest.
-
-## Technical notes (for the record)
-
-- Stack stays Vite + React + TS + Tailwind + shadcn. Your prompt mentioned Next.js, but this is a Lovable Vite project — Next.js isn't an option. React Router DOM handles routing; SSR isn't available, so per‑route head tags ship via `react-helmet-async` (good for Googlebot, limited for non-JS social crawlers).
-- All colors live as HSL CSS variables in `index.css` and Tailwind tokens — no hardcoded hex in components.
-- Every table created in Phases 2–5 ships with `GRANT` + RLS + policies in the same migration.
-- Roles always live in a separate `user_roles` table with a `has_role()` security‑definer function — never on profiles.
-
----
-
-**Confirm to start Phase 1.** I'll then enable Cloud + provision the AI key, wipe the current template, and rebuild the home + 7 sibling pages in the new matte black + gold luxury system, bilingual from the first commit.
+## ملاحظة حول البريد
+لإرسال البريد تلقائياً نحتاج مفتاح `RESEND_API_KEY`. سأطلبه عند بدء التنفيذ. كبديل سريع: يمكن أن تفتح صفحة التأكيد رابط `mailto:` بمحتوى الطلب — أخبرني إن كنت تفضّل ذلك بدلاً من Resend.
