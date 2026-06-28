@@ -223,6 +223,19 @@ export function ProcessSection() {
           <div className="pointer-events-none absolute inset-y-0 end-0 w-12 md:w-20"
             style={{ background: 'linear-gradient(270deg, #0a0a0a, transparent)' }}
           />
+
+          {/* Play/Pause control */}
+          <button
+            type="button"
+            onClick={() => setPlaying((p) => !p)}
+            aria-label={playing ? (isAr ? 'إيقاف' : 'Pause') : (isAr ? 'تشغيل' : 'Play')}
+            className="absolute bottom-3 end-3 md:bottom-4 md:end-4 z-30 flex items-center gap-2 px-3 py-1.5 bg-dark/80 backdrop-blur-sm text-gold-hi text-[10px] font-mono tracking-[0.2em] uppercase hover:bg-dark transition-colors"
+            style={{ border: '1px solid rgba(212,175,55,0.4)' }}
+          >
+            {playing ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3" />}
+            <span>{playing ? (isAr ? 'إيقاف' : 'Pause') : (isAr ? 'تشغيل' : 'Play')}</span>
+          </button>
+
         </div>
 
         {/* Slate footer */}
