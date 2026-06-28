@@ -93,9 +93,9 @@ export function LuxNav() {
               <ShoppingCart className="w-4 h-4" />
             </button>
             <LanguageToggle compact />
-            <Link to="/contact" className="hidden md:inline-flex btn-gold !px-5 !py-2.5 text-xs">
+            <button onClick={() => setOrderOpen(true)} className="hidden md:inline-flex btn-gold !px-5 !py-2.5 text-xs">
               {t('nav.order')}
-            </Link>
+            </button>
             <button
               className="lg:hidden w-10 h-10 rounded-full border-luxe flex items-center justify-center text-gold"
               onClick={() => setOpen(true)}
@@ -149,11 +149,12 @@ export function LuxNav() {
               </li>
             ))}
           </ul>
-          <Link to="/contact" className="btn-gold mt-10 w-full">
+          <button onClick={() => { setOpen(false); setOrderOpen(true); }} className="btn-gold mt-10 w-full">
             {t('nav.order')}
-          </Link>
+          </button>
         </div>
       </div>
+      <OrderModal open={orderOpen} onOpenChange={setOrderOpen} />
     </>
   );
 }
