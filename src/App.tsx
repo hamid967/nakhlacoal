@@ -58,6 +58,7 @@ export default function App() {
                 <Route path="/trademarks" element={<Trademarks />} />
                 <Route path="/uses" element={<Uses />} />
                 <Route path="/articles" element={<Articles />} />
+                <Route path="/articles/:slug" element={<ArticleDetail />} />
                 <Route path="/studio" element={<ProtectedRoute><Studio /></ProtectedRoute>} />
                 <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                 <Route path="/assistant" element={<Assistant />} />
