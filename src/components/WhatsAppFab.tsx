@@ -85,9 +85,6 @@ export function WhatsAppFab() {
               style={{ filter: 'drop-shadow(0 0 10px hsl(45 95% 72% / 0.55)) drop-shadow(0 1px 2px hsl(0 0% 0% / 0.6))' }}
             />
           </span>
-          <span className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ${open ? 'opacity-100 scale-100 rotate-0' : 'opacity-0 scale-50 -rotate-90'}`}>
-            <X className="w-6 h-6 text-gold-hi relative" />
-          </span>
         </span>
         {!open && (
           <Sparkles className="absolute -top-1 -end-1 w-5 h-5 text-gold-hi drop-shadow-[0_0_6px_hsl(var(--gold-hi))] motion-safe:animate-pulse" />
