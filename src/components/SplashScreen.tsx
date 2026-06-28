@@ -116,15 +116,15 @@ export function SplashScreen() {
         background: "radial-gradient(ellipse at center, hsl(var(--gold) / 0.22) 0%, transparent 55%), radial-gradient(circle at 50% 110%, hsl(var(--gold) / 0.14), transparent 60%), linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--background)) 100%)",
       }} />
 
-      {/* Trademark constellation background */}
+      {/* Trademark constellation background — clamped to corners, never overlaps logo */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden>
         {trademarks.map((t, i) => {
           const positions = [
-            { top: "8%", left: "6%", size: 110, rot: -8, delay: 0 },
-            { top: "14%", right: "8%", size: 130, rot: 6, delay: 0.4 },
-            { bottom: "18%", left: "4%", size: 120, rot: 5, delay: 0.8 },
-            { bottom: "10%", right: "6%", size: 140, rot: -7, delay: 1.2 },
-            { top: "44%", left: "2%", size: 90, rot: 10, delay: 1.6 },
+            { top: "6%",    left: "4%",  size: "clamp(56px, 10vmin, 110px)", rot: -8,  delay: "0s"   },
+            { top: "8%",    right: "4%", size: "clamp(64px, 12vmin, 130px)", rot:  6,  delay: "0.4s" },
+            { bottom: "14%",left: "3%",  size: "clamp(60px, 11vmin, 120px)", rot:  5,  delay: "0.8s" },
+            { bottom: "10%",right: "4%", size: "clamp(70px, 13vmin, 140px)", rot: -7,  delay: "1.2s" },
+            { top: "50%",   left: "1.5%",size: "clamp(48px,  9vmin,  90px)", rot: 10,  delay: "1.6s" },
           ];
           const p: any = positions[i % positions.length];
           return (
@@ -132,20 +132,27 @@ export function SplashScreen() {
               key={t.id}
               src={t.image}
               alt=""
-              className="absolute opacity-[0.08] grayscale animate-[splash-float_9s_ease-in-out_infinite]"
-              style={{ ...p, width: p.size, height: p.size, transform: `rotate(${p.rot}deg)`, animationDelay: `${p.delay}s`, filter: "sepia(1) hue-rotate(8deg) saturate(2)" }}
+              loading="lazy"
+              decoding="async"
+              className="absolute opacity-[0.05] md:opacity-[0.07] motion-safe:animate-[splash-float_11s_ease-in-out_infinite] will-change-transform"
+              style={{ top: p.top, right: p.right, bottom: p.bottom, left: p.left, width: p.size, height: p.size, transform: `rotate(${p.rot}deg)`, animationDelay: p.delay, filter: "sepia(1) hue-rotate(8deg) saturate(2.2) brightness(1.05)" }}
             />
           );
         })}
       </div>
 
-      {/* Jeddah / Bab Makkah heritage watermark */}
+      {/* Jeddah / Bab Makkah heritage watermark — sits behind logo, never above */}
       <img
         src={jeddahStamp}
         alt=""
         aria-hidden
-        className={`absolute pointer-events-none transition-opacity duration-[1400ms] ${stage >= 1 && stage < 4 ? "opacity-[0.07]" : "opacity-0"}`}
-        style={{ width: "min(78vmin, 720px)", height: "auto", top: "50%", left: "50%", transform: "translate(-50%,-50%)", filter: "drop-shadow(0 0 30px hsl(var(--gold) / 0.4))" }}
+        loading="eager"
+        decoding="async"
+        fetchPriority="high"
+        width={640}
+        height={640}
+        className={`absolute pointer-events-none transition-opacity duration-[1400ms] ${stage >= 1 && stage < 4 ? "opacity-[0.06] md:opacity-[0.08]" : "opacity-0"}`}
+        style={{ width: "min(58vmin, 520px)", height: "auto", top: "50%", left: "50%", transform: "translate(-50%, -52%)", filter: "drop-shadow(0 0 30px hsl(var(--gold) / 0.35))" }}
       />
 
       {/* Ornate frame corners */}
