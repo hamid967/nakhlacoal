@@ -1,5 +1,13 @@
 import { useEffect, useState } from "react";
 import logo from "@/assets/palm-charcoal-logo.png";
+import heroCharcoal from "@/assets/hero-charcoal.jpg";
+import productBbq from "@/assets/product-bbq.jpg";
+import productCoconut from "@/assets/product-coconut.jpg";
+import productHookah from "@/assets/product-hookah.jpg";
+import productLump from "@/assets/product-lump.jpg";
+import productBox from "@/assets/product-box.jpg";
+
+const PRELOAD = [logo, heroCharcoal, productBbq, productCoconut, productHookah, productLump, productBox];
 
 const CLIENTS_AR = [
   "فنادق ريتز كارلتون",
@@ -19,21 +27,48 @@ const CLIENTS_EN = [
   "Albaik",
 ];
 
+const preloadImages = (srcs: string[]) =>
+  Promise.all(
+    srcs.map(
+      (src) =>
+        new Promise<void>((resolve) => {
+          const img = new Image();
+          img.onload = () => resolve();
+          img.onerror = () => resolve();
+          img.src = src;
+        }),
+    ),
+  );
+
 export function SplashScreen() {
   const [hidden, setHidden] = useState(false);
+  const [ready, setReady] = useState(false);
   const [stage, setStage] = useState<0 | 1 | 2 | 3>(0);
   // 0 = curtain, 1 = logo reveal, 2 = clients reveal, 3 = fade out
 
+  // 1) Wait for assets (or a safety timeout) before starting the animation.
   useEffect(() => {
-    const isAr =
-      typeof document !== "undefined" && document.documentElement.dir === "rtl";
-    void isAr;
-    const t1 = setTimeout(() => setStage(1), 250);   // logo in
-    const t2 = setTimeout(() => setStage(2), 1700);  // clients in
-    const t3 = setTimeout(() => setStage(3), 3600);  // fade
-    const t4 = setTimeout(() => setHidden(true), 4400);
-    return () => [t1, t2, t3, t4].forEach(clearTimeout);
+    let cancelled = false;
+    const safety = setTimeout(() => !cancelled && setReady(true), 6000);
+    preloadImages(PRELOAD).then(() => {
+      if (!cancelled) setReady(true);
+    });
+    return () => {
+      cancelled = true;
+      clearTimeout(safety);
+    };
   }, []);
+
+  // 2) Once ready, run the cinematic sequence then auto-dismiss.
+  useEffect(() => {
+    if (!ready) return;
+    const t1 = setTimeout(() => setStage(1), 200);   // logo in
+    const t2 = setTimeout(() => setStage(2), 1600);  // clients in
+    const t3 = setTimeout(() => setStage(3), 3400);  // fade
+    const t4 = setTimeout(() => setHidden(true), 4200);
+    return () => [t1, t2, t3, t4].forEach(clearTimeout);
+  }, [ready]);
+
 
   if (hidden) return null;
 
