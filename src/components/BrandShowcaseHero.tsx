@@ -93,14 +93,6 @@ export function BrandShowcaseHero() {
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/70 backdrop-blur border border-[#D4AF37]/30 shadow-[0_4px_24px_-12px_rgba(26,74,0,0.25)] mb-6"
           >
-        {/* Title block */}
-        <div className="text-center max-w-3xl mx-auto mb-12 md:mb-16">
-          <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/70 backdrop-blur border border-[#D4AF37]/30 shadow-[0_4px_24px_-12px_rgba(26,74,0,0.25)] mb-6"
-          >
             <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]" />
             <span className="text-[11px] tracking-[0.25em] uppercase text-[#1A4A00] font-medium">
               {isAr ? 'علامات سعودية مسجلة' : 'Registered Saudi Brands'}
