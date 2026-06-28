@@ -201,7 +201,10 @@ export default function Home() {
         </div>
       </LuxSection>
 
+      <FaqSection />
+
       <LocationSection />
+
 
       <CtaBand
         title={isAr ? 'جاهز لتجربة الفحم الفاخر؟' : 'Ready to taste the premium difference?'}
