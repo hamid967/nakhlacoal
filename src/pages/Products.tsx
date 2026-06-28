@@ -187,7 +187,14 @@ export default function Products() {
                         </div>
                       </div>
                     </Link>
+                    <div className="px-6 pb-5 -mt-2">
+                      <CompareToggle slug={p.slug} className="w-full justify-center" />
+                    </div>
                   </ScrollReveal>
+                );
+              })}
+            </div>
+          )}
                 );
               })}
             </div>
