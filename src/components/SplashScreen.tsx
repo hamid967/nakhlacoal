@@ -65,6 +65,7 @@ export function SplashScreen() {
     timers.push(window.setTimeout(() => {
       setHidden(true);
       try { sessionStorage.setItem(SESSION_KEY, "1"); } catch {}
+      navigate("/");
     }, paradeEnd + 2000));
     return () => timers.forEach(clearTimeout);
   }, [ready]);
