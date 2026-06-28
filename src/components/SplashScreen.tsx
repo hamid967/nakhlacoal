@@ -30,6 +30,7 @@ const preloadImages = (srcs: string[]) =>
   );
 
 export function SplashScreen() {
+  const navigate = useNavigate();
   const [hidden, setHidden] = useState(() => {
     if (typeof window === "undefined") return false;
     try { return sessionStorage.getItem(SESSION_KEY) === "1"; } catch { return false; }
