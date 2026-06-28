@@ -345,14 +345,30 @@ function DetailItem({ label, value }: { label: string; value: string }) {
   );
 }
 
-function FloatingBackdrop() {
-  // soft gradients + floating palm leaf SVGs
+function FloatingBackdrop({ reduced }: { reduced: boolean }) {
+  // Lazy-mount heavy decorations on idle + skip on mobile/reduced-motion for 60FPS
+  const [ready, setReady] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    setIsMobile(window.matchMedia('(max-width: 640px)').matches);
+    const w = window as Window & { requestIdleCallback?: (cb: () => void) => number };
+    const schedule = w.requestIdleCallback ?? ((cb: () => void) => setTimeout(cb, 200));
+    const id = schedule(() => setReady(true));
+    return () => {
+      if (typeof id === 'number') clearTimeout(id);
+    };
+  }, []);
+
   const leaves = [
     { top: '8%', left: '4%', size: 180, rot: -20, dur: 18, delay: 0 },
     { top: '14%', right: '6%', size: 220, rot: 30, dur: 22, delay: 1 },
     { bottom: '10%', left: '8%', size: 160, rot: 45, dur: 20, delay: 2 },
     { bottom: '16%', right: '10%', size: 200, rot: -35, dur: 24, delay: 0.5 },
   ];
+  const showAnimated = ready && !reduced && !isMobile;
+  const particles = isMobile ? 6 : 14;
+
   return (
     <>
       <div
@@ -363,45 +379,47 @@ function FloatingBackdrop() {
             'radial-gradient(ellipse at 20% 10%, rgba(26,74,0,0.06) 0%, transparent 55%), radial-gradient(ellipse at 80% 0%, rgba(212,175,55,0.10) 0%, transparent 50%), radial-gradient(ellipse at 50% 100%, rgba(212,175,55,0.06) 0%, transparent 55%)',
         }}
       />
-      {leaves.map((l, i) => (
-        <motion.div
-          key={i}
-          aria-hidden
-          className="absolute pointer-events-none"
-          style={{
-            top: (l as any).top,
-            bottom: (l as any).bottom,
-            left: (l as any).left,
-            right: (l as any).right,
-            width: l.size,
-            height: l.size,
-            opacity: 0.12,
-          }}
-          initial={{ rotate: l.rot, y: 0 }}
-          animate={{ rotate: [l.rot, l.rot + 6, l.rot], y: [0, -14, 0] }}
-          transition={{ duration: l.dur, delay: l.delay, repeat: Infinity, ease: 'easeInOut' }}
-        >
-          <PalmLeafSvg />
-        </motion.div>
-      ))}
-      {/* Light particles */}
-      {Array.from({ length: 14 }).map((_, i) => (
-        <motion.span
-          key={`p-${i}`}
-          aria-hidden
-          className="absolute rounded-full pointer-events-none"
-          style={{
-            top: `${(i * 53) % 100}%`,
-            left: `${(i * 37) % 100}%`,
-            width: 4 + (i % 3) * 2,
-            height: 4 + (i % 3) * 2,
-            background:
-              'radial-gradient(circle, rgba(212,175,55,0.55) 0%, rgba(212,175,55,0) 70%)',
-          }}
-          animate={{ y: [0, -20, 0], opacity: [0.25, 0.7, 0.25] }}
-          transition={{ duration: 6 + (i % 5), delay: i * 0.3, repeat: Infinity, ease: 'easeInOut' }}
-        />
-      ))}
+      {ready &&
+        leaves.map((l, i) => (
+          <motion.div
+            key={i}
+            aria-hidden
+            className="absolute pointer-events-none"
+            style={{
+              top: (l as any).top,
+              bottom: (l as any).bottom,
+              left: (l as any).left,
+              right: (l as any).right,
+              width: l.size,
+              height: l.size,
+              opacity: 0.12,
+              willChange: 'transform',
+            }}
+            initial={{ rotate: l.rot, y: 0 }}
+            animate={showAnimated ? { rotate: [l.rot, l.rot + 6, l.rot], y: [0, -14, 0] } : { rotate: l.rot }}
+            transition={{ duration: l.dur, delay: l.delay, repeat: Infinity, ease: 'easeInOut' }}
+          >
+            <PalmLeafSvg />
+          </motion.div>
+        ))}
+      {showAnimated &&
+        Array.from({ length: particles }).map((_, i) => (
+          <motion.span
+            key={`p-${i}`}
+            aria-hidden
+            className="absolute rounded-full pointer-events-none"
+            style={{
+              top: `${(i * 53) % 100}%`,
+              left: `${(i * 37) % 100}%`,
+              width: 4 + (i % 3) * 2,
+              height: 4 + (i % 3) * 2,
+              background: 'radial-gradient(circle, rgba(212,175,55,0.55) 0%, rgba(212,175,55,0) 70%)',
+              willChange: 'transform, opacity',
+            }}
+            animate={{ y: [0, -20, 0], opacity: [0.25, 0.7, 0.25] }}
+            transition={{ duration: 6 + (i % 5), delay: i * 0.3, repeat: Infinity, ease: 'easeInOut' }}
+          />
+        ))}
     </>
   );
 }
