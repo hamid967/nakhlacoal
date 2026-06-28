@@ -317,6 +317,80 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
         )}
       </div>
 
+      {/* Order confirmation form */}
+      {pendingOrder && (
+        <div className="border-t border-gold/30 bg-gold/5 p-3 space-y-2 font-arabic max-h-[55%] overflow-y-auto">
+          <div className="flex items-center justify-between">
+            <p className="text-xs font-semibold text-foreground flex items-center gap-1.5">
+              📋 تأكيد بيانات الطلب
+            </p>
+            <button onClick={() => setPendingOrder(null)} className="text-[10px] text-muted-foreground hover:text-foreground">إلغاء</button>
+          </div>
+          <p className="text-[10px] text-muted-foreground">
+            {pendingOrder.product_type} · {pendingOrder.quantity} {pendingOrder.unit}
+          </p>
+          <div className="space-y-1.5">
+            <div>
+              <input
+                value={formData.contact_name}
+                onChange={(e) => setFormData(f => ({ ...f, contact_name: e.target.value }))}
+                placeholder="الاسم الكامل *"
+                className="w-full rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-gold"
+              />
+              {formErrors.contact_name && <p className="text-[10px] text-destructive mt-0.5">{formErrors.contact_name}</p>}
+            </div>
+            <div>
+              <input
+                value={formData.phone}
+                onChange={(e) => setFormData(f => ({ ...f, phone: e.target.value }))}
+                placeholder="رقم الجوال (05xxxxxxxx) *"
+                dir="ltr"
+                className="w-full rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-gold text-right"
+              />
+              {formErrors.phone && <p className="text-[10px] text-destructive mt-0.5">{formErrors.phone}</p>}
+            </div>
+            <div>
+              <textarea
+                value={formData.address}
+                onChange={(e) => setFormData(f => ({ ...f, address: e.target.value }))}
+                placeholder="العنوان (المدينة، الحي، الشارع) *"
+                rows={2}
+                className="w-full rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-gold resize-none"
+              />
+              {formErrors.address && <p className="text-[10px] text-destructive mt-0.5">{formErrors.address}</p>}
+            </div>
+            <div>
+              <label className="text-[10px] text-muted-foreground block mb-1">طريقة الاستلام *</label>
+              <div className="grid grid-cols-2 gap-1.5">
+                {(['توصيل', 'استلام من المستودع'] as const).map(m => (
+                  <button
+                    key={m}
+                    type="button"
+                    onClick={() => setFormData(f => ({ ...f, delivery_method: m }))}
+                    className={`px-2 py-1.5 rounded-lg text-[11px] border transition ${
+                      formData.delivery_method === m
+                        ? 'bg-gold text-dark border-gold font-semibold'
+                        : 'bg-background border-border text-foreground hover:border-gold/50'
+                    }`}
+                  >
+                    {m === 'توصيل' ? '🚚 توصيل' : '🏭 استلام من المستودع'}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+          <button
+            onClick={confirmOrder}
+            disabled={submitting}
+            className="w-full mt-2 py-2 rounded-lg bg-dark text-cream text-xs font-semibold shadow-gold hover:opacity-90 disabled:opacity-50 transition flex items-center justify-center gap-1.5"
+          >
+            {submitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-3.5 h-3.5 text-gold-hi" />}
+            تأكيد وإرسال الطلب
+          </button>
+        </div>
+      )}
+
+
       {/* Composer */}
       <div className="border-t border-border p-2 bg-background">
         {streaming && (
