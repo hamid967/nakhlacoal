@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ImageWatermark } from './ImageWatermark';
 import slide1 from '@/assets/slide-coconut-trees.jpg';
 import slide2 from '@/assets/slide-coconut-factory.jpg';
 import slide3 from '@/assets/slide-coconut-charcoal.jpg';
