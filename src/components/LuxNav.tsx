@@ -157,3 +157,30 @@ export function LuxNav() {
     </>
   );
 }
+
+function AccountButton() {
+  const { user, signOut } = useAuth();
+  const { i18n } = useTranslation();
+  const isAr = i18n.language?.startsWith('ar');
+  if (!user) {
+    return (
+      <Link
+        to="/auth"
+        aria-label={isAr ? 'تسجيل الدخول' : 'Sign in'}
+        className="hidden md:inline-flex w-10 h-10 rounded-full items-center justify-center text-foreground/70 hover:text-gold-hi transition-colors"
+      >
+        <User className="w-4 h-4" />
+      </Link>
+    );
+  }
+  return (
+    <button
+      onClick={signOut}
+      aria-label={isAr ? 'تسجيل الخروج' : 'Sign out'}
+      title={user.email ?? ''}
+      className="hidden md:inline-flex w-10 h-10 rounded-full items-center justify-center text-foreground/70 hover:text-gold-hi transition-colors"
+    >
+      <LogOut className="w-4 h-4" />
+    </button>
+  );
+}
