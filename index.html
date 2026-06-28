@@ -24,25 +24,73 @@
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "فحم النخلة | Palm Charcoal",
-        "alternateName": "Palm Charcoal",
-        "url": "https://palmcharcoal.com",
-        "description": "Premium Saudi date-palm charcoal manufacturer and exporter — longer burn, higher heat, lower ash.",
-        "address": {
-          "@type": "PostalAddress",
-          "streetAddress": "P.O. Box 10273",
-          "addressLocality": "Jeddah",
-          "postalCode": "21433",
-          "addressCountry": "SA"
-        },
-        "contactPoint": {
-          "@type": "ContactPoint",
-          "telephone": "+966-50-123-4567",
-          "contactType": "customer service",
-          "availableLanguage": ["Arabic", "English"]
-        },
-        "sameAs": []
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://starlight-echoes.lovable.app/#organization",
+            "name": "فحم النخلة | Palm Charcoal",
+            "alternateName": "Palm Charcoal",
+            "url": "https://starlight-echoes.lovable.app/",
+            "logo": "https://starlight-echoes.lovable.app/favicon.png",
+            "description": "Premium Saudi date-palm charcoal manufacturer and exporter — longer burn, higher heat, lower ash.",
+            "foundingDate": "2020",
+            "areaServed": ["SA", "AE", "KW", "QA", "BH", "OM", "EU", "US"],
+            "contactPoint": [{
+              "@type": "ContactPoint",
+              "telephone": "+966-50-123-4567",
+              "contactType": "customer service",
+              "areaServed": "SA",
+              "availableLanguage": ["Arabic", "English"]
+            }, {
+              "@type": "ContactPoint",
+              "telephone": "+966-50-123-4567",
+              "contactType": "sales",
+              "availableLanguage": ["Arabic", "English"]
+            }],
+            "sameAs": [
+              "https://www.instagram.com/palmcharcoal",
+              "https://twitter.com/palmcharcoal",
+              "https://wa.me/966501234567"
+            ]
+          },
+          {
+            "@type": "LocalBusiness",
+            "@id": "https://starlight-echoes.lovable.app/#localbusiness",
+            "name": "فحم النخلة | Palm Charcoal",
+            "image": "https://starlight-echoes.lovable.app/favicon.png",
+            "url": "https://starlight-echoes.lovable.app/",
+            "telephone": "+966-50-123-4567",
+            "priceRange": "$$",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "P.O. Box 10273",
+              "addressLocality": "Jeddah",
+              "addressRegion": "Makkah Province",
+              "postalCode": "21433",
+              "addressCountry": "SA"
+            },
+            "geo": {
+              "@type": "GeoCoordinates",
+              "latitude": 21.485811,
+              "longitude": 39.192504
+            },
+            "openingHoursSpecification": [{
+              "@type": "OpeningHoursSpecification",
+              "dayOfWeek": ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"],
+              "opens": "08:00",
+              "closes": "18:00"
+            }],
+            "parentOrganization": { "@id": "https://starlight-echoes.lovable.app/#organization" }
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://starlight-echoes.lovable.app/#website",
+            "url": "https://starlight-echoes.lovable.app/",
+            "name": "فحم النخلة | Palm Charcoal",
+            "inLanguage": ["ar", "en"],
+            "publisher": { "@id": "https://starlight-echoes.lovable.app/#organization" }
+          }
+        ]
       }
     </script>
     <meta property="og:title" content="فحم النخلة | Palm Charcoal — Premium Saudi Date-Palm Charcoal">
