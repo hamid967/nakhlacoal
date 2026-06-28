@@ -7,10 +7,9 @@ import productCoconut from "@/assets/product-coconut.jpg";
 import productHookah from "@/assets/product-hookah.jpg";
 import productLump from "@/assets/product-lump.jpg";
 import productBox from "@/assets/product-box.jpg";
-import jeddahStamp from "@/assets/jeddah-stamp.png";
 import { trademarks } from "@/data/trademarks";
 
-const PRELOAD = [logo, heroCharcoal, jeddahStamp, productBbq, productCoconut, productHookah, productLump, productBox, ...trademarks.map(t => t.image)];
+const PRELOAD = [logo, heroCharcoal, productBbq, productCoconut, productHookah, productLump, productBox, ...trademarks.map(t => t.image)];
 
 const CLIENTS_AR = ["فنادق ريتز كارلتون","مطاعم نسما","أسواق الدانوب","مجموعة هرفي","فنادق روتانا","مطاعم البيك"];
 const CLIENTS_EN = ["Ritz-Carlton Hotels","Nesma Restaurants","Danube Markets","Herfy Group","Rotana Hotels","Albaik"];
@@ -177,19 +176,23 @@ export function SplashScreen() {
         })}
       </div>
 
-      {/* Jeddah / Bab Makkah heritage watermark — sits behind logo, never above */}
-      <img
-        src={jeddahStamp}
-        alt=""
-        aria-hidden
-        loading="eager"
-        decoding="async"
-        {...({ fetchpriority: "high" } as any)}
-        width={640}
-        height={640}
-        className={`absolute pointer-events-none transition-opacity duration-[1400ms] ${stage >= 1 && stage < 4 ? "opacity-[0.06] md:opacity-[0.08]" : "opacity-0"}`}
-        style={{ width: "min(58vmin, 520px)", height: "auto", top: "50%", left: "50%", transform: "translate(-50%, -52%)", filter: "drop-shadow(0 0 30px hsl(var(--gold) / 0.35))" }}
-      />
+      {/* Luxury conic halo behind logo */}
+      <div className={`absolute top-1/2 left-1/2 pointer-events-none transition-opacity duration-[1400ms] ${stage >= 1 && stage < 4 ? "opacity-70" : "opacity-0"}`}
+        style={{
+          width: "min(64vmin, 560px)", height: "min(64vmin, 560px)",
+          transform: "translate(-50%, -50%)",
+          background: "conic-gradient(from 0deg, hsl(var(--gold) / 0.0) 0deg, hsl(var(--gold) / 0.35) 70deg, hsl(var(--gold) / 0.0) 140deg, hsl(var(--gold) / 0.28) 220deg, hsl(var(--gold) / 0.0) 290deg, hsl(var(--gold) / 0.35) 360deg)",
+          filter: "blur(28px)",
+          borderRadius: "50%",
+          animation: stage >= 1 ? "splash-rotate 28s linear infinite" : undefined,
+        }} aria-hidden />
+
+      {/* Caustic sweep — silk-like light passing across the screen */}
+      <div className={`absolute inset-0 pointer-events-none transition-opacity duration-700 ${stage >= 1 && stage < 4 ? "opacity-100" : "opacity-0"}`} aria-hidden style={{
+        background: "linear-gradient(115deg, transparent 30%, hsl(var(--gold) / 0.14) 50%, transparent 70%)",
+        mixBlendMode: "screen",
+        animation: stage >= 1 ? "splash-caustic 9s ease-in-out infinite" : undefined,
+      }} />
 
       {/* Ornate frame corners */}
       <div className={`absolute inset-6 md:inset-10 pointer-events-none transition-opacity duration-1000 ${stage >= 1 && stage < 4 ? "opacity-60" : "opacity-0"}`}>
@@ -248,13 +251,13 @@ export function SplashScreen() {
           <p className="mt-2 text-[11px] md:text-sm tracking-[0.35em] uppercase text-[hsl(var(--gold))]/80">
             {isAr ? "جمر الفخامة" : "The Ember of Luxury"}
           </p>
-          {/* Jeddah heritage badge */}
-          <div className="mt-5 inline-flex items-center gap-3 px-4 py-1.5 rounded-full border border-[hsl(var(--gold))]/30 bg-[hsl(var(--gold))]/[0.04] backdrop-blur-sm">
-            <img src={jeddahStamp} alt="" aria-hidden className="h-6 w-6 opacity-80" />
+          {/* Heritage badge — gilded seal */}
+          <div className="mt-5 inline-flex items-center gap-3 px-5 py-1.5 rounded-full border border-[hsl(var(--gold))]/40 bg-gradient-to-r from-[hsl(var(--gold))]/[0.06] via-[hsl(var(--gold))]/[0.12] to-[hsl(var(--gold))]/[0.06] backdrop-blur-sm shadow-[0_0_24px_hsl(var(--gold)/0.18)]">
+            <span className="text-[hsl(var(--gold))] text-base leading-none">✦</span>
             <span className={`text-[10px] md:text-[11px] tracking-[0.32em] uppercase text-[hsl(var(--gold-hi))] ${isAr ? "font-arabic" : ""}`}>
-              {isAr ? "من جدة · باب مكة · البلد" : "From Jeddah · Bab Makkah · Al-Balad"}
+              {isAr ? "من جدة · صناعة سعودية" : "From Jeddah · Made in Saudi Arabia"}
             </span>
-            <img src={jeddahStamp} alt="" aria-hidden className="h-6 w-6 opacity-80" />
+            <span className="text-[hsl(var(--gold))] text-base leading-none">✦</span>
           </div>
         </div>
 
@@ -366,6 +369,7 @@ export function SplashScreen() {
         @keyframes splash-float { 0%,100% { transform: translateY(0) rotate(var(--r,0deg)); } 50% { transform: translateY(-12px) rotate(var(--r,0deg)); } }
         @keyframes splash-rotate { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
         @keyframes splash-drift { 0% { transform: translate(0, 0); } 50% { transform: translate(18px, -22px); } 100% { transform: translate(-14px, 14px); } }
+        @keyframes splash-caustic { 0%,100% { background-position: -40% 0; opacity: 0.0; } 50% { background-position: 140% 0; opacity: 1; } }
         .mask-fade { -webkit-mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent); mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent); }
         @media (prefers-reduced-motion: reduce) {
           .fixed[class*="z-[100]"] *,
