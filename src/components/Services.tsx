@@ -10,52 +10,52 @@ export function Services() {
 
   const services = [
     {
-      id: 'campaigns',
-      title: "Campaign & Ad Content",
-      description: "Multi-platform video campaigns ready for every channel—YouTube, TikTok, Instagram, and beyond.",
+      id: 'restaurant-grade',
+      title: "Restaurant-Grade Charcoal",
+      description: "Long-burning, low-smoke briquettes engineered for steakhouses, mandi houses, and fine-dining grills.",
       color: 'accent-emerald',
       rotation: 'rotate-2',
-      image: 'https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=400&h=300&fit=crop&auto=format'
+      image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&h=300&fit=crop&auto=format'
     },
     {
-      id: 'brand-films',
-      title: "Brand Films & Stories", 
-      description: "Cinematic brand videos that capture your essence and connect with audiences on an emotional level.",
+      id: 'hookah-coals',
+      title: "Premium Hookah Coals", 
+      description: "Pressed cube charcoal with clean ignition and zero chemical aftertaste — designed for true shisha lounges.",
       color: 'accent-blue',
       rotation: '-rotate-1',
-      image: 'https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=400&h=300&fit=crop&auto=format'
+      image: 'https://images.unsplash.com/photo-1527661591475-527312dd65f5?w=400&h=300&fit=crop&auto=format'
     },
     {
-      id: 'trailers',
-      title: "Trailers & Promos",
-      description: "High-impact teasers that hook viewers instantly—perfect for launches, events, and announcements.",
+      id: 'lump-charcoal',
+      title: "Natural Lump Charcoal",
+      description: "Hand-selected palm wood lumps with crackling heat and authentic aroma for purist grilling enthusiasts.",
       color: 'accent-purple',
       rotation: 'rotate-1',
-      image: 'https://images.unsplash.com/photo-1518676590629-3dcbd9c5a5c9?w=400&h=300&fit=crop&auto=format'
+      image: 'https://images.unsplash.com/photo-1529680459049-bf0340fa0755?w=400&h=300&fit=crop&auto=format'
     },
     {
-      id: 'short-films',
-      title: "Short-Form Films",
-      description: "Festival-ready mini-movies up to 5 minutes—ideal for investors, events, and premium content.",
+      id: 'wholesale',
+      title: "Wholesale & Bulk Supply",
+      description: "Pallet and container orders for distributors across the GCC, with full traceability documentation.",
       color: 'accent-emerald',
       rotation: '-rotate-2',
-      image: 'https://images.unsplash.com/photo-1574267432553-4b4628081c31?w=400&h=300&fit=crop&auto=format'
+      image: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=400&h=300&fit=crop&auto=format'
     },
     {
-      id: 'animation',
-      title: "Animation & Motion",
-      description: "Stylized animated content that explains complex ideas without needing live actors.",
+      id: 'export',
+      title: "Global Export Solutions",
+      description: "EU, UK, and Asia-bound shipments with certified packaging, customs paperwork, and FOB Jeddah pricing.",
       color: 'accent-blue',
       rotation: 'rotate-3',
-      image: 'https://images.unsplash.com/photo-1626785774573-4b799315345d?w=400&h=300&fit=crop&auto=format'
+      image: 'https://images.unsplash.com/photo-1494412651409-8dd6b8c75c1e?w=400&h=300&fit=crop&auto=format'
     },
     {
-      id: 'social',
-      title: "Social Content",
-      description: "Thumb-stopping vertical videos delivered in batches to keep your feed consistently engaging.",
+      id: 'private-label',
+      title: "Private Label Production",
+      description: "Custom branded boxes, weights, and blends for luxury hotels, retailers, and premium grill brands.",
       color: 'accent-purple',
       rotation: '-rotate-1',
-      image: 'https://images.unsplash.com/photo-1562577309-4932fdd64cd1?w=400&h=300&fit=crop&auto=format'
+      image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop&auto=format'
     }
   ]
 
@@ -94,7 +94,7 @@ export function Services() {
           }`}>
             <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />
             <span className="text-sm font-semibold text-amber-200/80">
-              Fresh from the Darkroom
+              Fresh from the Kiln
             </span>
             <div className="w-3 h-3 bg-amber-500 rounded-full animate-pulse" />
           </div>
@@ -102,13 +102,13 @@ export function Services() {
           <h2 className={`text-5xl sm:text-6xl lg:text-7xl font-black leading-tight mb-6 text-amber-100 transform transition-all duration-1000 delay-200 ${
             isVisible ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'
           }`}>
-            What We Develop
+            What We Craft
           </h2>
           
           <p className={`text-xl text-amber-200/90 leading-relaxed max-w-3xl mx-auto transform transition-all duration-1000 delay-400 ${
             isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
           }`}>
-            Developed with precision, delivered with passion
+            Crafted with patience, packed with passion
           </p>
         </div>
 
@@ -533,7 +533,7 @@ export function Services() {
           {/* Darkroom atmosphere note */}
           <div className="mt-16 text-center">
             <p className="text-sm text-amber-200/70 leading-relaxed max-w-2xl mx-auto">
-              Each piece is carefully developed in our creative darkroom, ensuring every detail captures the essence of your vision with precision and artistic flair.
+              Every batch is slow-fired in our Saudi kilns, hand-graded for density and aroma, and sealed to deliver the truest palm-charcoal experience to your grill or hookah.
             </p>
           </div>
         </div>

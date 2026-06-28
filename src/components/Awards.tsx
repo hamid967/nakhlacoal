@@ -51,17 +51,17 @@ export function Awards() {
           <div className="inline-flex items-center gap-3 mb-6">
             <div className="w-3 h-3 bg-accent-purple rounded-full animate-pulse" />
             <span className="text-sm font-semibold text-muted-foreground">
-              Recognition & Achievement
+              Certifications & Honors
             </span>
             <div className="w-3 h-3 bg-accent-blue rounded-full animate-pulse" />
           </div>
           
           <h2 className="text-5xl sm:text-6xl lg:text-7xl font-black leading-tight mb-6 text-foreground">
-            Awards & Recognition
+            Quality, Certified
           </h2>
           
           <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto">
-            Celebrated excellence in AI-powered film production
+            Saudi-made excellence recognized by international charcoal and export standards
           </p>
         </div>
 
@@ -91,7 +91,7 @@ export function Awards() {
                     {/* Award Image */}
                     <img 
                       src={award.image}
-                      alt="Film Festival Award Laurel"
+                      alt="International quality certification laurel for Palm Charcoal"
                       className="w-full h-auto max-w-48 mx-auto"
                       style={{
                         filter: 'contrast(1.02) saturate(1.1)',
