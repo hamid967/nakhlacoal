@@ -120,7 +120,7 @@ export default function Profile() {
           <div className="flex items-center gap-4">
             <div className="w-20 h-20 rounded-full bg-muted overflow-hidden flex items-center justify-center border border-border">
               {form.avatar_url ? (
-                <img src={form.avatar_url} alt="avatar" className="w-full h-full object-cover" />
+                <img src={form.avatar_url} alt="avatar" className="w-full h-full object-cover"  loading="lazy" decoding="async" />
               ) : (
                 <span className="text-2xl text-muted-foreground">?</span>
               )}

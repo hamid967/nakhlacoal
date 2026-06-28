@@ -118,7 +118,7 @@ export function SplashScreen() {
         } ${stage === 2 ? "scale-50 -translate-y-[18vh]" : ""} ${stage >= 3 ? "scale-100 translate-y-0" : ""}`}>
           <div className="absolute inset-0 -m-16 rounded-full opacity-70 animate-[splash-pulse_3.2s_ease-in-out_infinite]"
             style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.35), transparent 65%)" }} />
-          <img src={logo} alt="Palm Charcoal" className="relative w-44 md:w-64 h-auto drop-shadow-[0_0_40px_hsl(var(--gold)/0.45)]" />
+          <img src={logo} alt="Palm Charcoal" className="relative w-44 md:w-64 h-auto drop-shadow-[0_0_40px_hsl(var(--gold)/0.45)]"  />
           <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ mixBlendMode: "overlay" }}>
             <div className="absolute inset-y-0 -left-1/2 w-1/2 bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-12 animate-[splash-sweep_2.4s_ease-in-out_infinite]" />
           </div>
@@ -131,7 +131,7 @@ export function SplashScreen() {
           <div key={current.id} className="flex flex-col items-center animate-[brand-reveal_0.5s_ease-out]">
             <div className="relative w-40 h-40 md:w-56 md:h-56 rounded-2xl bg-white/5 backdrop-blur-sm border border-[hsl(var(--gold))]/30 p-4 flex items-center justify-center"
               style={{ boxShadow: "0 0 60px hsl(var(--gold) / 0.25)" }}>
-              <img src={current.image} alt={current.nameAr} className="max-w-full max-h-full object-contain" />
+              <img src={current.image} alt={current.nameAr} className="max-w-full max-h-full object-contain"  />
             </div>
             <h3 className="mt-5 font-serif text-2xl md:text-3xl text-[hsl(var(--gold))]">{current.nameAr}</h3>
             <p className="text-xs md:text-sm text-foreground/60 mt-1">{current.nameEn}</p>

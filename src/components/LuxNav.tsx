@@ -62,7 +62,7 @@ export function LuxNav() {
                 width={56}
                 height={56}
                 className={`relative w-auto transition-all duration-700 group-hover:scale-105 ${scrolled ? 'h-10 md:h-11' : 'h-12 md:h-14'}`}
-              />
+               />
             </span>
           </Link>
 
@@ -118,7 +118,7 @@ export function LuxNav() {
           }`}
         >
           <div className="flex items-center justify-between mb-12">
-            <img src={logo} alt="Palm Charcoal" width={48} height={48} className="h-12 w-auto" />
+            <img src={logo} alt="Palm Charcoal" width={48} height={48} className="h-12 w-auto"  />
             <button
               className="w-10 h-10 rounded-full border-luxe flex items-center justify-center text-gold"
               onClick={() => setOpen(false)}
