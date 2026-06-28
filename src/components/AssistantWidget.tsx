@@ -168,6 +168,8 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
     if (!formData.delivery_method) errs.delivery_method = 'اختر طريقة الاستلام';
     setFormErrors(errs);
     if (Object.keys(errs).length || !pendingOrder) return;
+    // Open WhatsApp tab synchronously to bypass popup blockers
+    const waWin = window.open('about:blank', '_blank', 'noopener,noreferrer');
     const merged = {
       ...pendingOrder,
       contact_name: formData.contact_name.trim(),
@@ -177,7 +179,7 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
       notes: [pendingOrder.notes, `طريقة الاستلام: ${formData.delivery_method}`].filter(Boolean).join(' · '),
     };
     setPendingOrder(null);
-    await finalize(merged);
+    await finalize(merged, waWin);
   };
 
 
