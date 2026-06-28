@@ -7,6 +7,7 @@ import { HeroSlideshow } from '@/components/HeroSlideshow';
 import { ProcessSection } from '@/components/ProcessSection';
 import { LocationSection } from '@/components/LocationSection';
 import { FaqSection } from '@/components/FaqSection';
+import { Certifications } from '@/components/Certifications';
 import {
   useDir,
   LuxSection,
@@ -139,8 +140,12 @@ export default function Home() {
         </ScrollReveal>
       </LuxSection>
 
+      {/* Certifications / Trust marks */}
+      <Certifications />
+
       {/* About band */}
       <LuxSection className="py-20 md:py-28">
+
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           <ScrollReveal className="lg:col-span-7">
             <Eyebrow>{isAr ? 'من نحن' : 'Our story'}</Eyebrow>
