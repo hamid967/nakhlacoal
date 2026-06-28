@@ -6,10 +6,9 @@ Disallow: /studio
 Disallow: /studio/
 Disallow: /compare
 Disallow: /auth
+Disallow: /profile
 Disallow: /login
 Disallow: /signup
-Disallow: /profile
-Disallow: /account
 Disallow: /api/
 Disallow: /functions/
 
