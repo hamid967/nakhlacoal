@@ -156,6 +156,37 @@ export function WhatsAppFab() {
           aria-hidden
         />
       </button>
+
+      {/* Inline assistant panel — opens on same page */}
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetContent
+          side={isAr ? 'left' : 'right'}
+          className="w-full sm:max-w-md p-0 border-gold/30 bg-dark"
+        >
+          <div className="flex items-center justify-between px-4 py-3 border-b border-gold/20 bg-dark">
+            <div className="flex items-center gap-2">
+              <img src={logo} alt="" className="w-7 h-7 object-contain" />
+              <span className="text-cream font-arabic text-sm font-semibold">
+                {isAr ? 'مساعد فحم النخلة' : 'Palm Charcoal AI'}
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setOpen(false)}
+              aria-label={isAr ? 'إغلاق' : 'Close'}
+              className="text-cream/80 hover:text-gold-hi transition"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+          <iframe
+            src="/assistant?embed=1"
+            title="Palm Charcoal AI"
+            className="w-full h-[calc(100dvh-52px)] border-0 bg-dark"
+          />
+        </SheetContent>
+      </Sheet>
     </div>
   );
+
 }
