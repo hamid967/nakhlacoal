@@ -95,7 +95,7 @@ export default function Home() {
 
           <ScrollReveal delay={150} className="lg:col-span-6 order-1 lg:order-2 relative">
             <div className="relative aspect-[4/5] md:aspect-[5/6] overflow-hidden rounded-[2rem] border-luxe shadow-luxe">
-              <img src={heroCharcoal} alt={isAr ? 'فحم النخلة' : 'Palm Charcoal'} className="w-full h-full object-cover" />
+              <img src={heroCharcoal} alt={isAr ? 'فحم النخلة' : 'Palm Charcoal'} width={1200} height={1500} loading="eager" fetchPriority="high" decoding="async" className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-dark/40 via-transparent to-transparent" />
               <div className="absolute bottom-6 inset-x-6 flex items-center justify-between text-background">
                 <span className="text-[10px] uppercase tracking-[0.3em] opacity-80">{isAr ? 'صناعة سعودية' : 'Made in KSA'}</span>
