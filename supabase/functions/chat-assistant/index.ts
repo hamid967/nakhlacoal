@@ -53,8 +53,25 @@ Deno.serve(async (req) => {
       });
     }
 
+    // Reject obviously oversized payloads up front
+    const contentLength = Number(req.headers.get("content-length") ?? 0);
+    if (contentLength > 200_000) {
+      return new Response(JSON.stringify({ error: "Payload too large" }), {
+        status: 413, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const body = await req.json();
-    const messages = Array.isArray(body?.messages) ? body.messages : [];
+    const raw = Array.isArray(body?.messages) ? body.messages : [];
+    const ALLOWED_ROLES = ["user", "assistant", "system"] as const;
+    const MAX_CONTENT_CHARS = 4000;
+    const messages = raw
+      .filter((m: unknown): m is { role: string; content: unknown } =>
+        !!m && typeof m === "object" && ALLOWED_ROLES.includes((m as { role: string }).role as typeof ALLOWED_ROLES[number])
+      )
+      .map((m) => ({ role: m.role, content: String(m.content ?? "").slice(0, MAX_CONTENT_CHARS) }))
+      .filter((m) => m.content.length > 0)
+      .slice(-30);
     if (messages.length === 0) {
       return new Response(JSON.stringify({ error: "messages required" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -79,8 +96,10 @@ Deno.serve(async (req) => {
 
     if (!upstream.ok) {
       const t = await upstream.text();
+      console.error("[chat-assistant] upstream error:", upstream.status, t);
       const status = upstream.status === 429 ? 429 : upstream.status === 402 ? 402 : 500;
-      return new Response(JSON.stringify({ error: t }), {
+      const msg = status === 429 ? "Rate limited" : status === 402 ? "AI credits exhausted" : "Upstream error";
+      return new Response(JSON.stringify({ error: msg }), {
         status, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
@@ -120,7 +139,8 @@ Deno.serve(async (req) => {
       },
     });
   } catch (e) {
-    return new Response(JSON.stringify({ error: String(e) }), {
+    console.error("[chat-assistant] unhandled error:", e);
+    return new Response(JSON.stringify({ error: "Internal server error" }), {
       status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
