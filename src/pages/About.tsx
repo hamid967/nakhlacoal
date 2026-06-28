@@ -1,7 +1,10 @@
 import { useTranslation } from 'react-i18next';
 import { SEO } from '@/components/SEO';
-import { PageHero } from '@/components/PageHero';
 import { ScrollReveal } from '@/components/ScrollReveal';
+import { PageIntro, LuxSection, SectionHeader, FeatureCard } from '@/components/ui-lux';
+import { Target, Eye, Gem } from 'lucide-react';
+
+const ICONS = [Target, Eye, Gem] as const;
 
 export default function About() {
   const { t, i18n } = useTranslation();
@@ -15,50 +18,53 @@ export default function About() {
         description={t('about.story')}
         path="/about"
       />
-      <PageHero eyebrow={t('about.eyebrow')} title={t('about.title')} subtitle={t('about.story')} />
 
-      <section className="py-32">
-        <div className="container grid grid-cols-1 md:grid-cols-3 gap-6">
-          {['mission', 'vision', 'values'].map((key, i) => {
+      <PageIntro
+        eyebrow={t('about.eyebrow')}
+        title={t('about.title')}
+        lead={t('about.story')}
+      />
+
+      {/* Mission / Vision / Values */}
+      <LuxSection>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {(['mission', 'vision', 'values'] as const).map((key, i) => {
             const item: any = t(`about.${key}`, { returnObjects: true });
             return (
-              <ScrollReveal key={key} delay={i * 100}>
-                <div className="h-full p-10 rounded-2xl bg-surface border-luxe">
-                  <div className="text-xs uppercase tracking-[0.3em] text-gold mb-6">0{i + 1}</div>
-                  <h3 className={`text-3xl mb-4 ${isAr ? 'font-arabic font-bold' : 'font-display'}`}>{item.title}</h3>
-                  <p className="text-sm text-foreground/60 leading-relaxed">{item.body}</p>
-                </div>
-              </ScrollReveal>
+              <FeatureCard
+                key={key}
+                index={i}
+                icon={ICONS[i]}
+                title={item.title}
+                body={item.body}
+              />
             );
           })}
         </div>
-      </section>
+      </LuxSection>
 
-      <section className="py-32 bg-surface border-y border-gold/10">
-        <div className="container">
-          <ScrollReveal>
-            <h2 className={`text-4xl md:text-5xl text-center mb-20 ${isAr ? 'font-arabic font-bold' : 'font-display'}`}>
-              {t('about.timelineTitle')}
-            </h2>
-          </ScrollReveal>
-          <div className="max-w-3xl mx-auto relative">
-            <div className="absolute top-0 bottom-0 start-4 md:start-1/2 md:-translate-x-px w-px bg-gradient-to-b from-transparent via-gold/40 to-transparent" />
-            <div className="space-y-12">
-              {timeline.map((t, i) => (
-                <ScrollReveal key={i} delay={i * 80}>
-                  <div className={`relative flex items-center gap-8 ${i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
-                    <div className="absolute start-4 md:start-1/2 md:-translate-x-1/2 w-3 h-3 rounded-full bg-gold shadow-gold" />
-                    <div className="ps-14 md:ps-0 md:w-1/2 md:px-12">
-                      <div className={`text-3xl text-gold-hi mb-1 ${isAr ? 'font-arabic font-bold' : 'font-display'}`}>{t.year}</div>
-                      <p className="text-sm text-foreground/70">{t.label}</p>
+      {/* Timeline */}
+      <LuxSection tone="surface">
+        <SectionHeader title={t('about.timelineTitle')} />
+        <div className="max-w-3xl mx-auto relative">
+          <div className="absolute top-0 bottom-0 start-4 md:start-1/2 md:-translate-x-px w-px bg-gradient-to-b from-transparent via-gold/40 to-transparent" />
+          <div className="space-y-12">
+            {timeline.map((entry, i) => (
+              <ScrollReveal key={i} delay={i * 80}>
+                <div className={`relative flex items-center gap-8 ${i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
+                  <div className="absolute start-4 md:start-1/2 md:-translate-x-1/2 w-3 h-3 rounded-full bg-gold shadow-gold" />
+                  <div className="ps-14 md:ps-0 md:w-1/2 md:px-12">
+                    <div className={`text-3xl text-gold-hi mb-1 ${isAr ? 'font-arabic font-bold' : 'font-display'}`}>
+                      {entry.year}
                     </div>
+                    <p className="text-sm text-foreground/70">{entry.label}</p>
                   </div>
-                </ScrollReveal>
-              ))}
-            </div>
+                </div>
+              </ScrollReveal>
+            ))}
           </div>
         </div>
-      </section>
+      </LuxSection>
     </>
   );
 }
