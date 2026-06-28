@@ -3,18 +3,19 @@ import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Menu, X, ShoppingCart, User } from 'lucide-react';
 import { LanguageToggle } from './LanguageToggle';
+import { OrderModal } from './OrderModal';
 import logo from '@/assets/palm-charcoal-logo.png';
 
 
 const navItems = [
   { to: '/', key: 'nav.home' },
   { to: '/products', key: 'nav.products' },
+  { to: '/uses', key: 'nav.uses' },
   { to: '/about', key: 'nav.about' },
   { to: '/quality', key: 'nav.quality' },
   { to: '/trademarks', key: 'nav.trademarks' },
-  { to: '/wholesale', key: 'nav.wholesale' },
   { to: '/export', key: 'nav.export' },
-  { to: '/knowledge', key: 'nav.knowledge' },
+  { to: '/articles', key: 'nav.articles' },
   { to: '/contact', key: 'nav.contact' },
 ];
 

@@ -19,6 +19,8 @@ import ExportPage from '@/pages/Export';
 import Knowledge from '@/pages/Knowledge';
 import Contact from '@/pages/Contact';
 import Trademarks from '@/pages/Trademarks';
+import Uses from '@/pages/Uses';
+import Articles from '@/pages/Articles';
 import Studio from '@/pages/Studio';
 import NotFound from '@/pages/NotFound';
 
@@ -45,6 +47,8 @@ export default function App() {
               <Route path="/knowledge" element={<Knowledge />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/trademarks" element={<Trademarks />} />
+              <Route path="/uses" element={<Uses />} />
+              <Route path="/articles" element={<Articles />} />
               <Route path="/studio" element={<Studio />} />
               <Route path="*" element={<NotFound />} />
             </Route>
