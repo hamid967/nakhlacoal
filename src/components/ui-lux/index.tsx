@@ -248,21 +248,30 @@ export function TestimonialCard({
   name,
   role,
   body,
+  meta,
   index = 0,
 }: {
   name: string;
   role: ReactNode;
   body: ReactNode;
+  meta?: ReactNode;
   index?: number;
 }) {
   return (
     <ScrollReveal delay={index * 100}>
       <figure className="h-full rounded-3xl border-luxe bg-surface p-8 flex flex-col">
-        <span className="flex gap-0.5 text-gold-hi mb-5">
-          {[...Array(5)].map((_, j) => (
-            <Star key={j} className="w-4 h-4 fill-current" />
-          ))}
-        </span>
+        <div className="flex items-center justify-between mb-5">
+          <span className="flex gap-0.5 text-gold-hi">
+            {[...Array(5)].map((_, j) => (
+              <Star key={j} className="w-4 h-4 fill-current" />
+            ))}
+          </span>
+          {meta && (
+            <span className="text-[11px] font-arabic px-2.5 py-1 rounded-full bg-jade/10 text-jade border border-jade/20">
+              {meta}
+            </span>
+          )}
+        </div>
         <blockquote className="text-foreground/80 leading-relaxed font-arabic mb-6 flex-1">
           “{body}”
         </blockquote>

@@ -1,43 +1,53 @@
-import { useEffect, useState } from 'react';
-import { X, Flame } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-
-const KEY = 'palm-promo-banner-dismissed';
+import { Flame, MapPin, ShieldCheck, Phone } from 'lucide-react';
 
 export function PromoBanner() {
   const { i18n } = useTranslation();
-  const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    try { if (sessionStorage.getItem(KEY) !== '1') setOpen(true); } catch { setOpen(true); }
-  }, []);
-
-  if (!open) return null;
   const isAr = i18n.language?.startsWith('ar');
 
-  const dismiss = () => {
-    setOpen(false);
-    try { sessionStorage.setItem(KEY, '1'); } catch {}
-  };
+  const items = isAr
+    ? [
+        { icon: Flame, text: 'عروض الجملة متاحة — تواصل معنا الآن' },
+        { icon: MapPin, text: 'سوق الفحم، البلد، جدة' },
+        { icon: ShieldCheck, text: '٥ علامات تجارية مسجلة — وزارة التجارة السعودية' },
+        { icon: Phone, text: '‎+966 50 123 4567' },
+      ]
+    : [
+        { icon: Flame, text: 'Wholesale offers available — contact us now' },
+        { icon: MapPin, text: 'Charcoal Souq, Al-Balad, Jeddah' },
+        { icon: ShieldCheck, text: '5 registered trademarks — KSA Ministry of Commerce' },
+        { icon: Phone, text: '+966 50 123 4567' },
+      ];
+
+  const Row = () => (
+    <div className="flex items-center shrink-0">
+      {items.map((it, i) => (
+        <span key={i} className="flex items-center gap-2 px-8">
+          <it.icon className="w-3.5 h-3.5 text-[hsl(var(--gold-hi))] shrink-0" />
+          <span className="whitespace-nowrap">{it.text}</span>
+        </span>
+      ))}
+    </div>
+  );
 
   return (
-    <div className="fixed top-0 inset-x-0 z-[60] text-cream text-xs md:text-sm" style={{ background: 'hsl(var(--emerald, 158 84% 16%))' }}>
-      <div className="container flex items-center justify-between gap-3 py-2">
-        <div className="flex items-center gap-2 min-w-0">
-          <Flame className="w-4 h-4 text-[hsl(var(--gold))] shrink-0" />
-          <span className="truncate">
-            {isAr
-              ? 'عروض خاصة للطلبات بالجملة — تواصل معنا الآن'
-              : 'Special wholesale offers — contact us now'}
-            <a href="tel:+966501234567" className="ms-3 underline decoration-[hsl(var(--gold))]/50 hover:text-[hsl(var(--gold))]">
-              +966 50 123 4567
-            </a>
-          </span>
+    <div
+      className="fixed top-0 inset-x-0 z-[70] text-[hsl(var(--background))] text-[11px] md:text-xs border-b border-[hsl(var(--gold))]/20"
+      style={{ background: 'hsl(var(--dark))' }}
+    >
+      <div className="relative overflow-hidden py-2">
+        <div
+          className="flex gap-0 w-max"
+          style={{
+            animation: `marquee-promo 38s linear infinite`,
+            animationDirection: isAr ? 'reverse' : 'normal',
+          }}
+        >
+          <Row />
+          <Row />
         </div>
-        <button onClick={dismiss} aria-label="Dismiss" className="p-1 rounded hover:bg-white/10 shrink-0">
-          <X className="w-4 h-4" />
-        </button>
       </div>
+      <style>{`@keyframes marquee-promo { from { transform: translateX(0); } to { transform: translateX(-50%); } }`}</style>
     </div>
   );
 }

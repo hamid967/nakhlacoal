@@ -45,9 +45,9 @@ export default function Home() {
   ];
 
   const reviews = [
-    { name: isAr ? 'أحمد العتيبي' : 'Ahmed Al-Otaibi', role: isAr ? 'صاحب مطعم' : 'Restaurant Owner', body: isAr ? 'فحم النخلة الأفضل للمعسل والشواء — يدوم طويلاً والرماد قليل. جودة عالية.' : 'Best for hookah and grilling — long burn, low ash, premium quality.' },
-    { name: isAr ? 'سعد القحطاني' : 'Saad Al-Qahtani', role: isAr ? 'مستخدم منزلي' : 'Home User', body: isAr ? 'أستخدمه للبخور والعود بدون أي روائح. التعبئة فاخرة والتسليم سريع.' : 'I use it for incense and oud — no smell, premium packaging, fast delivery.' },
-    { name: isAr ? 'منى الزهراني' : 'Mona Al-Zahrani', role: isAr ? 'شيف' : 'Chef', body: isAr ? 'حرارة ثابتة ومثالية للشواء البطيء. أصبح خياري الأول في المطبخ.' : 'Stable heat, perfect for slow grilling. My first choice.' },
+    { name: isAr ? 'علي الزهراني' : 'Ali Al-Zahrani', role: isAr ? 'جدة' : 'Jeddah', meta: isAr ? 'معسل وشيشة 💨' : 'Hookah 💨', body: isAr ? 'جربت كثير وما تركت الفحم الصيني — أداء الفحم الطبيعي أحسن بكثير. أنصح الجميع.' : 'Tried many — natural beats imported by far. Highly recommend.' },
+    { name: isAr ? 'سعد القحطاني' : 'Saad Al-Qahtani', role: isAr ? 'الرياض' : 'Riyadh', meta: isAr ? 'بخور وعود 🪔' : 'Incense 🪔', body: isAr ? 'استخدمته للبخور في عرس أخوي — الرائحة طلعت رائعة وما حس أحد برائحة الفحم.' : 'Used it for incense at a wedding — pure aroma, zero smoke smell.' },
+    { name: isAr ? 'أحمد العتيبي' : 'Ahmed Al-Otaibi', role: isAr ? 'مكة المكرمة' : 'Makkah', meta: isAr ? 'شواء 🔥' : 'BBQ 🔥', body: isAr ? 'اللحم يطلع طعمه مختلف. الحرارة ثابتة من أول الشوية لآخرها بدون إعادة إشعال.' : 'Different flavor entirely. Stable heat from start to finish.' },
   ];
 
   return (
@@ -98,11 +98,14 @@ export default function Home() {
                 <span className="flex items-center gap-1 text-gold-hi">{[...Array(5)].map((_, i) => <Star key={i} className="w-3.5 h-3.5 fill-current" />)}</span>
               </div>
             </div>
-            <div className="hidden md:flex absolute -bottom-6 -start-6 bg-surface rounded-2xl border-luxe shadow-luxe p-4 items-center gap-3 max-w-[220px]">
-              <span className="w-12 h-12 rounded-full bg-jade/10 text-jade flex items-center justify-center"><ShieldCheck className="w-6 h-6" /></span>
+            <div className="hidden md:flex absolute -bottom-6 -start-6 bg-surface rounded-2xl border-luxe shadow-luxe p-4 items-center gap-3 max-w-[240px] animate-pulse-soft">
+              <span className="relative w-12 h-12 rounded-full bg-jade/10 text-jade flex items-center justify-center">
+                <ShieldCheck className="w-6 h-6" />
+                <span className="absolute inset-0 rounded-full ring-2 ring-jade/40 animate-ping" />
+              </span>
               <div>
                 <div className="text-sm font-bold text-jade font-arabic">{isAr ? 'جودة معتمدة' : 'Certified Quality'}</div>
-                <div className="text-[11px] text-foreground/60 font-arabic">{isAr ? 'فحص مخبري دوري' : 'Lab tested'}</div>
+                <div className="text-[11px] text-foreground/60 font-arabic">{isAr ? 'علامة مسجلة · 143313025' : 'Trademark · 143313025'}</div>
               </div>
             </div>
           </ScrollReveal>
@@ -118,6 +121,23 @@ export default function Home() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
           {features.map((f, i) => <FeatureCard key={i} icon={f.icon} title={f.title} body={f.body} index={i} />)}
         </div>
+
+        {/* Technical metrics strip */}
+        <ScrollReveal delay={300}>
+          <div className="mt-12 md:mt-16 rounded-3xl section-dark p-6 md:p-8 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-4 text-center">
+            {[
+              { v: '750°C', l: isAr ? 'حرارة قصوى' : 'Max Heat' },
+              { v: '90', l: isAr ? 'دقيقة احتراق' : 'Min Burn' },
+              { v: '85%', l: isAr ? 'كربون ثابت' : 'Fixed Carbon' },
+              { v: '3%', l: isAr ? 'رماد فقط' : 'Ash Only' },
+            ].map((s, i) => (
+              <div key={i} className={`${i > 0 ? 'md:border-s md:border-gold/15' : ''}`}>
+                <div className="text-3xl md:text-4xl font-bold text-gold-hi font-display leading-none">{s.v}</div>
+                <div className="text-[11px] uppercase tracking-[0.2em] text-background/70 mt-2 font-arabic">{s.l}</div>
+              </div>
+            ))}
+          </div>
+        </ScrollReveal>
       </LuxSection>
 
       {/* About band */}
