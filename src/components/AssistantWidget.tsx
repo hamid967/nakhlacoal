@@ -133,14 +133,45 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
         headers: { 'Content-Type': 'application/json', apikey: anon, Authorization: `Bearer ${anon}` },
         body: JSON.stringify({ messages: [...messages, userMsg].map(m => ({ role: m.role, content: m.content })) }),
       });
+    const triggerOfflineOrder = (note: string) => {
+      const intent = parseOrderIntent(text);
+      const order = {
+        product_type: intent.product_type,
+        quantity: intent.quantity,
+        unit: intent.unit,
+        company_name: 'عميل',
+        contact_name: '',
+        phone: '',
+        address: '',
+        notes: text.slice(0, 200),
+        ai_summary: `طلب مباشر: ${intent.product_type} — ${intent.quantity} ${intent.unit}`,
+      };
+      const summary = `📦 **ملخص الطلب**\n\n- المنتج: **${order.product_type}**\n- الكمية: **${order.quantity} ${order.unit === 'kg' ? 'كجم' : order.unit === 'carton' ? 'كرتون' : 'طن'}**\n\n${note}\n\n👇 أكمل بياناتك في النموذج أدناه لإرسال الطلب فوراً عبر واتساب.`;
+      setMessages(prev => prev.map(m => m.id === aId ? { ...m, content: summary } : m));
+      setFormData({ contact_name: '', phone: '', address: '', delivery_method: 'توصيل' });
+      setFormErrors({});
+      setPendingOrder(order);
+    };
+
+    try {
+      const baseUrl = (supabase as any).supabaseUrl ?? import.meta.env.VITE_SUPABASE_URL;
+      const anon = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+      const resp = await fetch(`${baseUrl}/functions/v1/chat-assistant`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', apikey: anon, Authorization: `Bearer ${anon}` },
+        body: JSON.stringify({ messages: [...messages, userMsg].map(m => ({ role: m.role, content: m.content })) }),
+      });
       if (!resp.ok) {
-        if (resp.status === 429) throw new Error('ضغط مرتفع على المساعد، حاول بعد قليل 🙏');
-        if (resp.status === 402) {
-          const fallback = `عذراً، المساعد الذكي غير متاح مؤقتاً. يسعدنا خدمتك مباشرة:\n\n📱 واتساب: [اضغط هنا للتواصل](${waHref})\n📧 بريد الطلبات: mab355@gmail.com\n📞 جوال: 0540060095`;
-          setMessages(prev => prev.map(m => m.id === aId ? { ...m, content: fallback } : m));
+        if (resp.status === 429) {
+          triggerOfflineOrder('⚡ المساعد مشغول حالياً، لكن يمكنك إكمال طلبك الآن مباشرة.');
           return;
         }
-        throw new Error('فشل الاتصال بالمساعد، جرّب واتساب للتواصل الفوري');
+        if (resp.status === 402) {
+          triggerOfflineOrder('💬 المساعد الذكي غير متاح مؤقتاً — لكن طلبك جاهز للإرسال الآن.');
+          return;
+        }
+        triggerOfflineOrder('تعذّر الاتصال بالمساعد، إليك ملخص طلبك السريع.');
+        return;
       }
       if (!resp.body) throw new Error('استجابة فارغة');
       const reader = resp.body.getReader();
@@ -164,6 +195,8 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
         });
         setFormErrors({});
         setPendingOrder(order);
+      } else if (!acc.trim()) {
+        triggerOfflineOrder('لم يصل رد من المساعد، يمكنك إتمام الطلب مباشرة.');
       }
     } catch (e: any) {
       const msg = e?.message ?? 'خطأ';
