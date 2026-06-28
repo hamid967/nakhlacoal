@@ -1,0 +1,174 @@
+{
+  "brand": {
+    "name": "Palm Charcoal",
+    "nameAr": "فحم النخلة",
+    "tagline": "Premium Saudi Charcoal"
+  },
+  "nav": {
+    "home": "Home",
+    "products": "Products",
+    "about": "About",
+    "quality": "Quality",
+    "wholesale": "Wholesale",
+    "export": "Export",
+    "knowledge": "Knowledge",
+    "track": "Track Order",
+    "portal": "Portal",
+    "contact": "Contact",
+    "order": "Order Now"
+  },
+  "hero": {
+    "eyebrow": "Crafted in the Kingdom",
+    "title": "The Ember of the Desert",
+    "subtitle": "Natural Saudi date-palm charcoal with longer burn time, higher heat, lower ash, and uncompromised purity. Built for the world's finest grills, lounges, and tables.",
+    "ctaOrder": "Order Now",
+    "ctaWholesale": "Wholesale",
+    "ctaDistributor": "Become Distributor",
+    "ctaAssistant": "Talk to AI Assistant",
+    "stat1": "+7,500",
+    "stat1Label": "kcal / kg",
+    "stat2": "3+ hrs",
+    "stat2Label": "burn time",
+    "stat3": "<3%",
+    "stat3Label": "ash content",
+    "stat4": "85%+",
+    "stat4Label": "fixed carbon"
+  },
+  "features": {
+    "title": "Six promises in every kilogram",
+    "subtitle": "Engineered for hospitality. Trusted by exporters.",
+    "longBurn": { "title": "Long Burn Time", "desc": "Three hours of steady, restaurant-grade heat from a single ignition." },
+    "highHeat": { "title": "High Heat Output", "desc": "Over 7,500 kcal/kg — the calorific signature of true date-palm wood." },
+    "lowAsh": { "title": "Low Ash", "desc": "Under 3% residue. Cleaner grills, faster turnaround, fewer complaints." },
+    "eco": { "title": "Eco-Friendly", "desc": "Made entirely from pruned palm wood. No deforestation, no chemicals." },
+    "odor": { "title": "Odor Free", "desc": "Naturally aromatic with no chemical aftertaste or smoke pollution." },
+    "certified": { "title": "Certified Quality", "desc": "ISO 9001, Saudi Standards (SASO), and full export documentation." }
+  },
+  "products": {
+    "title": "The Collection",
+    "subtitle": "Seven product families, one standard of excellence.",
+    "viewAll": "View all products",
+    "spec": "Specifications",
+    "burn": "Burn time",
+    "ash": "Ash",
+    "carbon": "Fixed carbon",
+    "moisture": "Moisture",
+    "packaging": "Packaging",
+    "addCart": "Add to cart",
+    "requestQuote": "Request quote",
+    "datasheet": "Download datasheet",
+    "items": {
+      "bbq": { "name": "BBQ Charcoal", "desc": "Restaurant-grade briquettes for steakhouses and mandi houses." },
+      "coconut": { "name": "Coconut Charcoal", "desc": "Premium coconut-shell cubes for the cleanest, longest hookah session." },
+      "hookah": { "name": "Hookah Charcoal", "desc": "Pressed palm cubes with quick ignition and zero chemical taste." },
+      "compressed": { "name": "Compressed Charcoal", "desc": "High-density hexagon logs engineered for industrial heat." },
+      "restaurant": { "name": "Restaurant Charcoal", "desc": "Bulk pallets sized for high-volume kitchens and grill houses." },
+      "hotel": { "name": "Hotel Charcoal", "desc": "Private-label luxury cartons for resorts and five-star hospitality." },
+      "wholesale": { "name": "Wholesale Packs", "desc": "Container and pallet quantities with full export documentation." }
+    }
+  },
+  "about": {
+    "eyebrow": "About Palm Charcoal",
+    "title": "A Saudi house of fire",
+    "story": "Founded in the heart of Al-Ahsa, فحم النخلة was built on a single conviction: the world's finest charcoal is born from the world's most resilient tree. We work with over 200 Saudi palm farms, transforming pruned date-palm wood into export-grade charcoal trusted by chefs, exporters, and lounges from Riyadh to Tokyo.",
+    "mission": { "title": "Mission", "body": "Set the global benchmark for natural, traceable, premium charcoal." },
+    "vision": { "title": "Vision", "body": "A Saudi brand on every luxury grill, in every continent, by 2030." },
+    "values": { "title": "Values", "body": "Purity, traceability, sustainability, and uncompromising craftsmanship." },
+    "timelineTitle": "Our Journey",
+    "timeline": [
+      { "year": "2014", "label": "First kiln lit in Al-Ahsa" },
+      { "year": "2017", "label": "ISO 9001 certification" },
+      { "year": "2020", "label": "First container exported to Europe" },
+      { "year": "2023", "label": "Partnerships with 200+ Saudi palm farms" },
+      { "year": "2026", "label": "Shipping to 32 countries worldwide" }
+    ]
+  },
+  "quality": {
+    "eyebrow": "Lab-Verified Purity",
+    "title": "Every batch, measured.",
+    "subtitle": "Independent third-party labs verify every shipment. Below is a live snapshot of our most recent grade.",
+    "carbon": "Fixed Carbon",
+    "ash": "Ash Content",
+    "moisture": "Moisture",
+    "burn": "Burn Time",
+    "heat": "Heat Output",
+    "volatile": "Volatile Matter",
+    "certs": "Certifications",
+    "iso": "ISO 9001:2015",
+    "saso": "Saudi Standards (SASO)",
+    "export": "GCC & EU Export"
+  },
+  "wholesale": {
+    "eyebrow": "Wholesale & Distribution",
+    "title": "Built for volume, priced for distributors",
+    "subtitle": "Whether you run a restaurant chain, a hookah lounge network, or a national distribution channel — we have a tier engineered for you.",
+    "tierRestaurant": { "name": "Restaurant", "qty": "From 500 kg", "desc": "Recurring delivery for kitchens and grill houses." },
+    "tierLounge": { "name": "Hookah Lounge", "qty": "From 250 kg", "desc": "Premium hookah cubes with private-label packaging." },
+    "tierDistributor": { "name": "Distributor", "qty": "From 5 tons", "desc": "Mixed pallets across all product families." },
+    "tierContainer": { "name": "Container", "qty": "20 / 40 ft", "desc": "Full container loads with FOB Jeddah pricing." },
+    "register": "Register as Distributor",
+    "uploadDocs": "Upload Company Documents"
+  },
+  "exportPage": {
+    "eyebrow": "Global Export",
+    "title": "Shipped from Jeddah to the world",
+    "subtitle": "Weekly departures, full customs handling, certified packaging. We ship to 32 countries across the GCC, Europe, Asia, and beyond.",
+    "countries": "Countries Served",
+    "ports": "Shipping Ports",
+    "containers": "Container Sizes",
+    "packaging": "Packaging Options",
+    "requestQuote": "Request Export Quote"
+  },
+  "knowledge": {
+    "eyebrow": "Knowledge Center",
+    "title": "Learn the craft of charcoal",
+    "subtitle": "Guides, comparisons, and expert tips for chefs, lounge owners, and importers.",
+    "articles": [
+      { "title": "How to Identify Premium Charcoal", "tag": "Buying Guide", "read": "8 min read" },
+      { "title": "Palm vs Coconut vs Hardwood — A Complete Comparison", "tag": "Comparison", "read": "12 min read" },
+      { "title": "The Chef's Guide to Charcoal Grilling Temperatures", "tag": "Cooking Tips", "read": "6 min read" },
+      { "title": "Hookah Charcoal: Cube, Flat, or Quick-Light?", "tag": "Hookah Tips", "read": "9 min read" },
+      { "title": "Reading a Charcoal Lab Report (Carbon, Ash, Moisture)", "tag": "Quality", "read": "10 min read" },
+      { "title": "Importing Saudi Charcoal: Customs & Documentation", "tag": "Export", "read": "14 min read" }
+    ]
+  },
+  "contact": {
+    "eyebrow": "Contact",
+    "title": "Let's talk charcoal",
+    "subtitle": "Our export desk replies within one business day.",
+    "name": "Full name",
+    "email": "Email",
+    "phone": "Phone (with country code)",
+    "company": "Company (optional)",
+    "country": "Country",
+    "message": "Message",
+    "messagePlaceholder": "Volume, destination, and intended use (grilling, hookah, hospitality)…",
+    "send": "Send inquiry",
+    "sent": "Inquiry sent",
+    "sentDesc": "Our export desk will respond within 24 hours.",
+    "addressLabel": "Headquarters",
+    "address": "King Fahd Road, Riyadh 12241, Kingdom of Saudi Arabia",
+    "phoneLabel": "Phone",
+    "phoneValue": "+966 11 000 0000",
+    "emailLabel": "Export desk",
+    "emailValue": "export@palmcharcoal.sa"
+  },
+  "footer": {
+    "tagline": "Premium Saudi date-palm charcoal — crafted in the Kingdom, shipped to the world.",
+    "company": "Company",
+    "products": "Products",
+    "support": "Support",
+    "legal": "Legal",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "shipping": "Shipping & Returns",
+    "newsletter": "Joined by 8,000+ chefs, distributors, and importers.",
+    "newsletterPlaceholder": "your@email.com",
+    "subscribe": "Subscribe",
+    "rights": "All rights reserved."
+  },
+  "common": {
+    "soon": "Coming soon",
+    "comingPhase": "This page lights up in the next phase of the build."
+  }
+}
