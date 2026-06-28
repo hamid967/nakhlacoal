@@ -3,6 +3,7 @@ import { Flame, Clock, Leaf, Wind, ShieldCheck, Award, Star } from 'lucide-react
 import { SEO } from '@/components/SEO';
 import { ScrollReveal } from '@/components/ScrollReveal';
 import { WhatsAppFab } from '@/components/WhatsAppFab';
+import { HomeIntro } from '@/components/HomeIntro';
 import {
   useDir,
   LuxSection,
