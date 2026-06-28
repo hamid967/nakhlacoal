@@ -67,6 +67,49 @@ export default function About() {
           </div>
         </div>
       </LuxSection>
+
+      {/* Founder story */}
+      <LuxSection>
+        <div className="max-w-4xl mx-auto text-center">
+          <span className="eyebrow mb-5">{isAr ? 'المؤسس' : 'The Founder'}</span>
+          <h2 className={`text-3xl md:text-5xl mt-4 mb-6 ${isAr ? 'font-arabic font-bold' : 'font-display'}`}>
+            <span className="text-gold-metal">{isAr ? 'محمد عبدالله باعشن' : 'Mohammed A. Baashen'}</span>
+          </h2>
+          <p className="text-base md:text-lg text-foreground/75 leading-loose">
+            {isAr
+              ? 'من قلب سوق الفحم في جدة البلد، أسّس محمد عبدالله باعشن مؤسسته عام ١٤٣٤هـ متخصصاً في توريد أجود أنواع فحم المعسل وفحم البخور. على مدى أكثر من عشر سنوات، توسّعت المؤسسة لتمتلك خمس علامات تجارية مسجّلة رسمياً لدى وزارة التجارة السعودية، وتُورّد للمطاعم والكافيهات والموزعين داخل المملكة وخارجها.'
+              : 'From the historic Charcoal Souq in Jeddah Al-Balad, Mohammed A. Baashen founded the firm in 1434 AH, specializing in premium hookah and incense charcoal. Over a decade later, the company holds five officially registered trademarks with the Saudi Ministry of Commerce, supplying restaurants, lounges, and distributors inside the Kingdom and abroad.'}
+          </p>
+        </div>
+      </LuxSection>
+
+      {/* Registered Trademarks */}
+      <LuxSection tone="surface">
+        <SectionHeader
+          eyebrow={isAr ? 'علاماتنا التجارية' : 'Our Trademarks'}
+          title={isAr ? 'خمس علامات مسجّلة رسمياً' : 'Five Officially Registered Brands'}
+        />
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 max-w-6xl mx-auto">
+          {trademarks.map((tm, i) => (
+            <ScrollReveal key={tm.id} delay={i * 80}>
+              <Link
+                to="/trademarks"
+                className="group block p-5 rounded-2xl bg-background border-luxe hover:border-luxe-strong transition-all duration-500 h-full text-center"
+              >
+                <div className="aspect-square mb-4 rounded-xl bg-surface/50 overflow-hidden flex items-center justify-center p-3">
+                  <img src={tm.image} alt={tm.nameAr} loading="lazy" className="max-w-full max-h-full object-contain transition-transform duration-700 group-hover:scale-105" />
+                </div>
+                <h3 className="text-sm font-arabic font-bold text-gold-hi mb-1">{tm.nameAr}</h3>
+                <p className="text-[10px] text-foreground/50 mb-2">{tm.nameEn}</p>
+                <div className="inline-flex items-center gap-1 text-[9px] uppercase tracking-[0.15em] text-foreground/60">
+                  <Award className="w-3 h-3 text-gold" />
+                  {isAr ? `تسجيل ${tm.registrationNo}` : `Reg. ${tm.registrationNo}`}
+                </div>
+              </Link>
+            </ScrollReveal>
+          ))}
+        </div>
+      </LuxSection>
     </>
   );
 }
