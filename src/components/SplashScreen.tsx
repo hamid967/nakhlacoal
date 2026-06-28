@@ -290,6 +290,14 @@ export function SplashScreen() {
         @keyframes splash-scan { 0%,100% { transform: translateY(0); } 50% { transform: translateY(100vh); } }
         @keyframes splash-float { 0%,100% { transform: translateY(0) rotate(var(--r,0deg)); } 50% { transform: translateY(-12px) rotate(var(--r,0deg)); } }
         .mask-fade { -webkit-mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent); mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent); }
+        @media (prefers-reduced-motion: reduce) {
+          .fixed[class*="z-[100]"] *,
+          .fixed[class*="z-[100]"] *::before,
+          .fixed[class*="z-[100]"] *::after {
+            animation: none !important;
+            transition-duration: 0.001ms !important;
+          }
+        }
       `}</style>
     </div>
   );
