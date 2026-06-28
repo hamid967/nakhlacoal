@@ -100,7 +100,7 @@ export function Hero() {
         loop
         playsInline
       >
-        <source src="https://mojli.s3.us-east-2.amazonaws.com/Mojli+Website+upscaled+(12mb).webm" type="video/webm" />
+        <source src={brand.heroVideo.src} type={brand.heroVideo.type} />
         Your browser does not support the video tag.
       </video>
 
@@ -127,7 +127,7 @@ export function Hero() {
                 window.scrollTo({ top: 0, behavior: 'smooth' })
               }}
             >
-              <span className="font-bagel text-white text-xl tracking-wider">MOJJU</span>
+              <span className="font-bagel text-white text-xl tracking-wider">{brand.logo}</span>
             </motion.div>
 
             {/* Navigation Menu */}
