@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom';
-import { Flame, Clock, Leaf, Wind, ShieldCheck, Award, Star } from 'lucide-react';
+import { Flame, Clock, Leaf, Wind, ShieldCheck, Award } from 'lucide-react';
 import { SEO } from '@/components/SEO';
 import { ScrollReveal } from '@/components/ScrollReveal';
 import { HomeIntro } from '@/components/HomeIntro';
+import { HeroSlideshow } from '@/components/HeroSlideshow';
 import { LocationSection } from '@/components/LocationSection';
 import { FaqSection } from '@/components/FaqSection';
 import {
@@ -18,7 +19,7 @@ import {
   TestimonialCard,
   CtaBand,
 } from '@/components/ui-lux';
-import heroCharcoal from '@/assets/hero-charcoal.jpg';
+
 import productBbq from '@/assets/product-bbq.jpg';
 import productHookah from '@/assets/product-hookah.jpg';
 import productCoconut from '@/assets/product-coconut.jpg';
@@ -93,14 +94,8 @@ export default function Home() {
           </ScrollReveal>
 
           <ScrollReveal delay={150} className="lg:col-span-6 order-1 lg:order-2 relative">
-            <div className="relative aspect-[4/5] md:aspect-[5/6] overflow-hidden rounded-[2rem] border-luxe shadow-luxe">
-              <img src={heroCharcoal} alt={isAr ? 'فحم النخلة' : 'Palm Charcoal'} width={1200} height={1500} loading="eager" decoding="async" {...({ fetchpriority: "high" } as any)} className="w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-dark/40 via-transparent to-transparent" />
-              <div className="absolute bottom-6 inset-x-6 flex items-center justify-between text-background">
-                <span className="text-[10px] uppercase tracking-[0.3em] opacity-80">{isAr ? 'صناعة سعودية' : 'Made in KSA'}</span>
-                <span className="flex items-center gap-1 text-gold-hi">{[...Array(5)].map((_, i) => <Star key={i} className="w-3.5 h-3.5 fill-current" />)}</span>
-              </div>
-            </div>
+            <HeroSlideshow />
+
             <div className="hidden md:flex absolute -bottom-6 -start-6 bg-surface rounded-2xl border-luxe shadow-luxe p-4 items-center gap-3 max-w-[240px] animate-pulse-soft">
               <span className="relative w-12 h-12 rounded-full bg-jade/10 text-jade flex items-center justify-center">
                 <ShieldCheck className="w-6 h-6" />
