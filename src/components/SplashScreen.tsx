@@ -251,13 +251,13 @@ export function SplashScreen() {
           <p className="mt-2 text-[11px] md:text-sm tracking-[0.35em] uppercase text-[hsl(var(--gold))]/80">
             {isAr ? "جمر الفخامة" : "The Ember of Luxury"}
           </p>
-          {/* Jeddah heritage badge */}
-          <div className="mt-5 inline-flex items-center gap-3 px-4 py-1.5 rounded-full border border-[hsl(var(--gold))]/30 bg-[hsl(var(--gold))]/[0.04] backdrop-blur-sm">
-            <img src={jeddahStamp} alt="" aria-hidden className="h-6 w-6 opacity-80" />
+          {/* Heritage badge — gilded seal */}
+          <div className="mt-5 inline-flex items-center gap-3 px-5 py-1.5 rounded-full border border-[hsl(var(--gold))]/40 bg-gradient-to-r from-[hsl(var(--gold))]/[0.06] via-[hsl(var(--gold))]/[0.12] to-[hsl(var(--gold))]/[0.06] backdrop-blur-sm shadow-[0_0_24px_hsl(var(--gold)/0.18)]">
+            <span className="text-[hsl(var(--gold))] text-base leading-none">✦</span>
             <span className={`text-[10px] md:text-[11px] tracking-[0.32em] uppercase text-[hsl(var(--gold-hi))] ${isAr ? "font-arabic" : ""}`}>
-              {isAr ? "من جدة · باب مكة · البلد" : "From Jeddah · Bab Makkah · Al-Balad"}
+              {isAr ? "من جدة · صناعة سعودية" : "From Jeddah · Made in Saudi Arabia"}
             </span>
-            <img src={jeddahStamp} alt="" aria-hidden className="h-6 w-6 opacity-80" />
+            <span className="text-[hsl(var(--gold))] text-base leading-none">✦</span>
           </div>
         </div>
 
