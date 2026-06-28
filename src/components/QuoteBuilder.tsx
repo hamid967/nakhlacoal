@@ -52,24 +52,30 @@ export function QuoteBuilder({
     setLines((ls) => ls.map((l, idx) => (idx === i ? { ...l, ...patch, ...(patch.slug ? { unit: availableUnits(patch.slug)[0] } : {}) } : l)));
 
   const summaryText = () => {
+    const sep = '────────────────────';
     const lns = computed.items
-      .map((i, idx) => `${idx + 1}. ${labelOf(i.slug)} — ${i.qty} ${unitAr(i.unit)} × ${fmt(i.unitPrice)} = ${fmt(i.lineTotal)} ر.س`)
-      .join('\n');
+      .map(
+        (i, idx) =>
+          `${idx + 1}) ${labelOf(i.slug)}\n   • الكمية: ${i.qty} ${unitAr(i.unit)}\n   • السعر: ${fmt(i.unitPrice)} ر.س / ${unitAr(i.unit)}\n   • الإجمالي: ${fmt(i.lineTotal)} ر.س`
+      )
+      .join(`\n${sep}\n`);
     return [
       '🌴 *طلب عرض سعر — فحم النخلة*',
-      '',
+      sep,
       lns,
-      '',
-      `*الإجمالي:* ${fmt(computed.subtotal)} ر.س`,
-      `*الضريبة (15%):* ${fmt(computed.vat)} ر.س`,
+      sep,
+      `*المجموع قبل الضريبة:* ${fmt(computed.subtotal)} ر.س`,
+      `*ضريبة القيمة المضافة (15%):* ${fmt(computed.vat)} ر.س`,
       `*الإجمالي شامل الضريبة:* ${fmt(computed.total)} ر.س`,
-      '',
-      '— بيانات العميل —',
-      `الاسم: ${customer.name || '—'}`,
-      `الجوال: ${customer.phone || '—'}`,
-      customer.email && `البريد: ${customer.email}`,
-      customer.company && `المنشأة: ${customer.company}`,
-      customer.city && `المدينة: ${customer.city}`,
+      sep,
+      '*بيانات العميل*',
+      `• الاسم: ${customer.name || '—'}`,
+      `• الجوال: ${customer.phone || '—'}`,
+      customer.email && `• البريد: ${customer.email}`,
+      customer.company && `• المنشأة: ${customer.company}`,
+      customer.city && `• المدينة: ${customer.city}`,
+      sep,
+      '_تم إنشاء العرض من موقع alnakhlacoal.com_',
     ].filter(Boolean).join('\n');
   };
 
