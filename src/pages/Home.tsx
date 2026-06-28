@@ -143,7 +143,9 @@ export default function Home() {
 
 
       {/* ============= WHY US ============= */}
-      <section className="py-24 border-t border-gold/10">
+      <section className="py-24 section-dark relative overflow-hidden">
+        <div className="absolute inset-0 ember-glow opacity-20 pointer-events-none" />
+
         <div className="container">
           <ScrollReveal>
             <h2 className={`text-3xl md:text-5xl text-center mb-16 ${isAr ? 'font-arabic font-bold' : 'font-display'}`}>
