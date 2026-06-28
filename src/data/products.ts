@@ -13,9 +13,14 @@ export type ProductSpec = {
   packaging: string;
 };
 
+export type ProductCategory = 'bbq' | 'shisha' | 'commercial' | 'export';
+export type ProductUseCase = 'home' | 'restaurant' | 'lounge' | 'outdoor' | 'export';
+
 export type Product = {
   slug: string;
   image: string;
+  category: ProductCategory;
+  useCases: ProductUseCase[];
   nameAr: string;
   nameEn: string;
   taglineAr: string;
@@ -33,6 +38,8 @@ export const products: Product[] = [
   {
     slug: 'bbq',
     image: productBbq,
+    category: 'bbq',
+    useCases: ['home', 'outdoor'],
     nameAr: 'فحم الشواء',
     nameEn: 'BBQ Charcoal',
     taglineAr: 'مثالي للشواء والرحلات',
@@ -48,6 +55,8 @@ export const products: Product[] = [
   {
     slug: 'coconut',
     image: productCoconut,
+    category: 'bbq',
+    useCases: ['restaurant', 'home'],
     nameAr: 'فحم جوز الهند',
     nameEn: 'Coconut Charcoal',
     taglineAr: 'صديق للبيئة - احتراق أطول',
@@ -63,6 +72,8 @@ export const products: Product[] = [
   {
     slug: 'hookah',
     image: productHookah,
+    category: 'shisha',
+    useCases: ['lounge', 'home'],
     nameAr: 'فحم المعسل',
     nameEn: 'Hookah Charcoal',
     taglineAr: 'لا يغير طعم المعسل',
@@ -78,6 +89,8 @@ export const products: Product[] = [
   {
     slug: 'compressed',
     image: productLump,
+    category: 'commercial',
+    useCases: ['restaurant'],
     nameAr: 'الفحم المضغوط',
     nameEn: 'Compressed Charcoal',
     taglineAr: 'كثافة عالية - حرارة قوية',
@@ -93,6 +106,8 @@ export const products: Product[] = [
   {
     slug: 'export',
     image: productBox,
+    category: 'export',
+    useCases: ['export'],
     nameAr: 'علبة التصدير الفاخرة',
     nameEn: 'Premium Export Box',
     taglineAr: 'تغليف فاخر للتصدير',
