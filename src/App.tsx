@@ -56,6 +56,7 @@ export default function App() {
                 <Route path="/uses" element={<Uses />} />
                 <Route path="/articles" element={<Articles />} />
                 <Route path="/studio" element={<ProtectedRoute><Studio /></ProtectedRoute>} />
+                <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                 <Route path="*" element={<NotFound />} />
               </Route>
             </Routes>
