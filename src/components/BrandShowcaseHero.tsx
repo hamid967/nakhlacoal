@@ -26,6 +26,19 @@ export function BrandShowcaseHero() {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
   const count = trademarks.length;
+  const sectionRef = useRef<HTMLElement>(null);
+  const prefersReducedMotion = useReducedMotion();
+
+  // Scroll-driven parallax + hero scale down
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start start', 'end start'],
+  });
+  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.92]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0.3]);
+  const heroY = useTransform(scrollYProgress, [0, 1], [0, 60]);
+  const bgY = useTransform(scrollYProgress, [0, 1], [0, -80]);
+  const cardSpread = useTransform(scrollYProgress, [0, 1], [0, 40]);
 
   const go = useCallback((n: number) => setActive(((n % count) + count) % count), [count]);
 
