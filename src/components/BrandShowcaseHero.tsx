@@ -150,14 +150,19 @@ export function BrandShowcaseHero() {
                   aria-label={t.nameAr}
                   className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 focus:outline-none"
                   animate={{
-                    x,
                     scale,
                     opacity: visible ? opacity : 0,
                     filter: `blur(${blur}px)`,
                     zIndex: z,
                   }}
                   transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-                  style={{ pointerEvents: visible ? 'auto' : 'none' }}
+                  style={{
+                    pointerEvents: visible ? 'auto' : 'none',
+                    x: prefersReducedMotion
+                      ? x
+                      : useTransformAdd(x, cardSpread, off * dirSign),
+                    willChange: 'transform, opacity',
+                  }}
                 >
                   <div
                     className={`relative w-[220px] sm:w-[260px] md:w-[300px] aspect-square rounded-[2rem] bg-white border transition-shadow duration-500 ${
