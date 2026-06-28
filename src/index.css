@@ -110,7 +110,7 @@
 }
 
 @layer components {
-  /* Gold metallic text */
+  /* Olive metallic text */
   .text-gold-metal {
     background: var(--gradient-gold);
     -webkit-background-clip: text;
@@ -119,45 +119,53 @@
     color: transparent;
   }
 
-  /* Hairline luxury border */
+  /* Hairline borders */
   .border-luxe {
-    border: 1px solid hsl(var(--gold) / 0.18);
+    border: 1px solid hsl(30 12% 14% / 0.08);
   }
 
   .border-luxe-strong {
-    border: 1px solid hsl(var(--gold) / 0.35);
+    border: 1px solid hsl(var(--gold) / 0.4);
   }
 
-  /* Glass surface */
+  /* Glass surface (light, sits on dark hero panels) */
   .glass-luxe {
-    background: hsl(0 0% 6% / 0.6);
-    backdrop-filter: blur(24px) saturate(1.4);
-    -webkit-backdrop-filter: blur(24px) saturate(1.4);
-    border: 1px solid hsl(var(--gold) / 0.12);
+    background: hsl(0 0% 100% / 0.85);
+    backdrop-filter: blur(20px) saturate(1.2);
+    -webkit-backdrop-filter: blur(20px) saturate(1.2);
+    border-bottom: 1px solid hsl(30 12% 14% / 0.06);
   }
 
-  /* Premium button */
+  /* Dark accent section (why-us, about, footer) */
+  .section-dark {
+    background: hsl(var(--dark));
+    color: hsl(var(--dark-foreground));
+  }
+
+  /* Premium pill button (green solid) */
   .btn-gold {
     @apply inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full font-medium tracking-wide text-sm transition-all duration-500;
-    background: var(--gradient-gold);
-    color: hsl(0 0% 6%);
+    background: hsl(var(--gold));
+    color: #fff;
     box-shadow: var(--shadow-gold);
   }
   .btn-gold:hover {
     transform: translateY(-2px);
-    box-shadow: 0 16px 50px -10px hsl(var(--gold) / 0.55);
+    background: hsl(var(--gold-hi));
+    box-shadow: 0 14px 36px -10px hsl(var(--gold) / 0.5);
   }
 
   .btn-ghost-gold {
     @apply inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full font-medium tracking-wide text-sm transition-all duration-500;
     background: transparent;
     color: hsl(var(--gold-hi));
-    border: 1px solid hsl(var(--gold) / 0.4);
+    border: 1px solid hsl(var(--gold) / 0.55);
   }
   .btn-ghost-gold:hover {
     background: hsl(var(--gold) / 0.08);
-    border-color: hsl(var(--gold) / 0.7);
+    border-color: hsl(var(--gold));
   }
+
 
   /* Section eyebrow */
   .eyebrow {
