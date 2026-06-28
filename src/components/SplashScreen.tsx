@@ -176,19 +176,23 @@ export function SplashScreen() {
         })}
       </div>
 
-      {/* Jeddah / Bab Makkah heritage watermark — sits behind logo, never above */}
-      <img
-        src={jeddahStamp}
-        alt=""
-        aria-hidden
-        loading="eager"
-        decoding="async"
-        {...({ fetchpriority: "high" } as any)}
-        width={640}
-        height={640}
-        className={`absolute pointer-events-none transition-opacity duration-[1400ms] ${stage >= 1 && stage < 4 ? "opacity-[0.06] md:opacity-[0.08]" : "opacity-0"}`}
-        style={{ width: "min(58vmin, 520px)", height: "auto", top: "50%", left: "50%", transform: "translate(-50%, -52%)", filter: "drop-shadow(0 0 30px hsl(var(--gold) / 0.35))" }}
-      />
+      {/* Luxury conic halo behind logo */}
+      <div className={`absolute top-1/2 left-1/2 pointer-events-none transition-opacity duration-[1400ms] ${stage >= 1 && stage < 4 ? "opacity-70" : "opacity-0"}`}
+        style={{
+          width: "min(64vmin, 560px)", height: "min(64vmin, 560px)",
+          transform: "translate(-50%, -50%)",
+          background: "conic-gradient(from 0deg, hsl(var(--gold) / 0.0) 0deg, hsl(var(--gold) / 0.35) 70deg, hsl(var(--gold) / 0.0) 140deg, hsl(var(--gold) / 0.28) 220deg, hsl(var(--gold) / 0.0) 290deg, hsl(var(--gold) / 0.35) 360deg)",
+          filter: "blur(28px)",
+          borderRadius: "50%",
+          animation: stage >= 1 ? "splash-rotate 28s linear infinite" : undefined,
+        }} aria-hidden />
+
+      {/* Caustic sweep — silk-like light passing across the screen */}
+      <div className={`absolute inset-0 pointer-events-none transition-opacity duration-700 ${stage >= 1 && stage < 4 ? "opacity-100" : "opacity-0"}`} aria-hidden style={{
+        background: "linear-gradient(115deg, transparent 30%, hsl(var(--gold) / 0.14) 50%, transparent 70%)",
+        mixBlendMode: "screen",
+        animation: stage >= 1 ? "splash-caustic 9s ease-in-out infinite" : undefined,
+      }} />
 
       {/* Ornate frame corners */}
       <div className={`absolute inset-6 md:inset-10 pointer-events-none transition-opacity duration-1000 ${stage >= 1 && stage < 4 ? "opacity-60" : "opacity-0"}`}>
