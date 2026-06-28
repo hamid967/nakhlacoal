@@ -85,6 +85,8 @@
     font-family: 'Tajawal', serif;
     font-weight: 700;
     letter-spacing: 0;
+    line-height: 1.35;
+    padding-block: 0.15em;
   }
 
   ::selection {
