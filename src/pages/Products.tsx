@@ -3,7 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ArrowLeft, Search, X } from 'lucide-react';
 import { SEO } from '@/components/SEO';
-import { PageIntro, LuxSection } from '@/components/ui-lux';
+import { ScrollReveal } from '@/components/ScrollReveal';
+import { PageIntro } from '@/components/ui-lux';
 import { products, type ProductCategory, type ProductUseCase } from '@/data/products';
 import { CompareToggle } from '@/components/CompareToggle';
 
@@ -60,10 +61,12 @@ export default function Products() {
         description={isAr ? 'تشكيلة فاخرة من الفحم السعودي للشواء والشيشة والتصدير.' : 'Premium Saudi charcoal for grilling, shisha, and export.'}
         path="/products"
       />
-      <PageHero
+      <PageIntro
         eyebrow={isAr ? 'تشكيلتنا' : 'Our range'}
         title={isAr ? 'منتجاتنا' : 'Our Products'}
+        lead={isAr ? 'سبع عائلات منتجات بمعايير عالمية للفحم السعودي الفاخر.' : 'Seven product families crafted to international luxury standards.'}
       />
+
 
       <section className="pt-10 md:pt-14">
         <div className="container">
