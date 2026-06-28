@@ -4,7 +4,7 @@ import { Sparkles, MessageCircle, X } from 'lucide-react';
 import { OrderModal } from './OrderModal';
 import logo from '@/assets/palm-charcoal-logo.png';
 
-const WHATSAPP_NUMBER = '966501234567';
+const WHATSAPP_NUMBER = '966540060095';
 
 export function WhatsAppFab() {
   const { i18n } = useTranslation();

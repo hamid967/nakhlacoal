@@ -15,7 +15,8 @@ export function LocationSection() {
   const rows = [
     { icon: MapPin, label: isAr ? 'العنوان' : 'Address', value: isAr ? 'سوق الفحم، البلد، جدة 21433' : 'Charcoal Souq, Al-Balad, Jeddah 21433' },
     { icon: Clock, label: isAr ? 'أوقات العمل' : 'Hours', value: isAr ? 'السبت – الخميس · 9 ص – 11 م' : 'Sat – Thu · 9 AM – 11 PM' },
-    { icon: Phone, label: isAr ? 'هاتف' : 'Phone', value: '+966 50 123 4567' },
+    { icon: Phone, label: isAr ? 'واتساب' : 'WhatsApp', value: '+966 54 006 0095' },
+    { icon: Mail, label: isAr ? 'البريد للطلبات' : 'Orders email', value: 'mab355@gmail.com' },
   ];
 
   return (

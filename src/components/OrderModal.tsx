@@ -5,7 +5,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { products } from '@/data/products';
 import { MessageCircle } from 'lucide-react';
 
-const WHATSAPP_NUMBER = '966501234567';
+const WHATSAPP_NUMBER = '966540060095';
+const ORDER_EMAIL = 'mab355@gmail.com';
 
 const orderSchema = z.object({
   name: z
