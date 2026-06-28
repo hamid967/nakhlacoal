@@ -2,6 +2,19 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Send, Loader2, Sparkles, X, Maximize2, CheckCircle2, MessageCircle } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
+
+const mdComponents = {
+  a: ({ href, children }: any) => (
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer noopener"
+      className="text-gold underline decoration-gold/40 underline-offset-2 hover:decoration-gold transition font-medium break-all"
+    >
+      {children}
+    </a>
+  ),
+};
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import logo from '@/assets/palm-charcoal-logo.png';
@@ -229,7 +242,7 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
                 </div>
               ) : (
                 <div className="prose prose-sm max-w-none text-foreground text-sm leading-relaxed prose-strong:text-foreground prose-p:my-1">
-                  {m.content && <ReactMarkdown>{m.content}</ReactMarkdown>}
+                  {m.content && <ReactMarkdown components={mdComponents}>{m.content}</ReactMarkdown>}
                   {isLastAssistant && streaming && m.content && (
                     <span className="inline-block w-1.5 h-3.5 align-middle bg-gold/80 ms-0.5 animate-pulse" aria-hidden />
                   )}
