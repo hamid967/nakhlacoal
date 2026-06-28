@@ -200,6 +200,8 @@ export default function Home() {
         </div>
       </LuxSection>
 
+      <LocationSection />
+
       <CtaBand
         title={isAr ? 'جاهز لتجربة الفحم الفاخر؟' : 'Ready to taste the premium difference?'}
         lead={isAr ? 'تواصل معنا الآن واحصل على عرض خاص لجملة وتجزئة وتصدير.' : 'Contact us for wholesale, retail and export offers.'}
