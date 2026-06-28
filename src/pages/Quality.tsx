@@ -195,13 +195,16 @@ const aiSteps = [
   { t: 'اعتماد الجودة', i: ShieldCheck },
 ];
 
-const inspectionSpots = [
-  { x: '22%', y: '30%', label: 'كربون ٨٥٪' },
-  { x: '70%', y: '28%', label: 'كثافة عالية' },
-  { x: '78%', y: '65%', label: 'سطح مصقول' },
-  { x: '30%', y: '72%', label: 'مقاومة الضغط' },
-  { x: '50%', y: '50%', label: 'مقاومة حرارية ٧٥٠°' },
+type Face = 'front' | 'back' | 'right' | 'left' | 'top' | 'bottom';
+const inspectionSpots: { face: Face; x: number; y: number; label: string; value: string; desc: string }[] = [
+  { face: 'front',  x: 30, y: 35, label: 'نسبة الكربون',    value: '٨٥٪',   desc: 'كربون ثابت عالي يمنح احتراقاً نظيفاً وطويلاً.' },
+  { face: 'front',  x: 70, y: 65, label: 'الكثافة',         value: '١٫١ غ/سم³', desc: 'بنية مضغوطة تضمن ثبات الجمرة وعدم التفتت.' },
+  { face: 'right',  x: 50, y: 40, label: 'السطح',           value: 'مصقول', desc: 'سطح ناعم مغلق يقلل الرماد المتطاير.' },
+  { face: 'top',    x: 55, y: 55, label: 'مقاومة الضغط',    value: '٤٢ MPa', desc: 'يتحمل الشحن والتكديس دون كسر.' },
+  { face: 'back',   x: 45, y: 50, label: 'المقاومة الحرارية', value: '٧٥٠°م', desc: 'يحافظ على الحرارة القصوى طوال جلسة الشواء.' },
+  { face: 'left',   x: 50, y: 50, label: 'الرماد',          value: '٣٪',    desc: 'رماد منخفض يعني نظافة أعلى وقيمة أكبر لكل كجم.' },
 ];
+
 
 /* ---------------- Section primitives ---------------- */
 function SectionTitle({ eyebrow, title }: { eyebrow: string; title: string }) {
