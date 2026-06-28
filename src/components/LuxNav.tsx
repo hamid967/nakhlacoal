@@ -3,6 +3,7 @@ import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Menu, X, ShoppingCart, User, LogOut } from 'lucide-react';
 import { LanguageToggle } from './LanguageToggle';
+import { ThemeToggle } from './ThemeToggle';
 import { OrderModal } from './OrderModal';
 import { QuoteBuilder } from './QuoteBuilder';
 import { useAuth } from '@/contexts/AuthContext';
@@ -89,6 +90,7 @@ export function LuxNav() {
             <button aria-label="Cart" className="hidden xl:inline-flex w-10 h-10 rounded-full items-center justify-center text-foreground/70 hover:text-dark hover:bg-gold/10 transition-all">
               <ShoppingCart className="w-4 h-4" />
             </button>
+            <ThemeToggle />
             <LanguageToggle compact />
             <button onClick={() => setQuoteOpen(true)} className="hidden lg:inline-flex items-center text-xs font-semibold text-dark hover:text-gold border-b border-dashed border-gold/50 hover:border-gold transition px-2 py-1 whitespace-nowrap">
               عرض سعر
