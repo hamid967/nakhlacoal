@@ -42,15 +42,66 @@ async def capture_home(page, tag: str):
     )
     await page.wait_for_timeout(1200)
 
+    # Navbar (top of page, full bar)
+    await page.evaluate("window.scrollTo(0, 0)")
+    await page.wait_for_timeout(300)
+    nav = page.locator("nav").first
+    try:
+        await nav.screenshot(path=str(OUT / f"navbar__{tag}.png"))
+    except Exception as e:
+        print("navbar element shot failed, falling back:", e)
+        await page.screenshot(path=str(OUT / f"navbar__{tag}.png"),
+                              clip={"x": 0, "y": 0, "width": VIEWPORT["width"], "height": 140})
+
+    # Navbar — desktop megamenu hovered (skip in reduced/mobile widths)
+    try:
+        trigger = page.locator('nav button:has-text("منتجات"), nav button:has-text("Products")').first
+        if await trigger.count():
+            await trigger.hover(timeout=1500)
+            await page.wait_for_timeout(450)
+            await page.screenshot(path=str(OUT / f"navbar_mega__{tag}.png"),
+                                  clip={"x": 0, "y": 0, "width": VIEWPORT["width"], "height": 420})
+    except Exception as e:
+        print("megamenu skipped:", e)
+
+    # Navbar — mobile drawer open
+    try:
+        await page.set_viewport_size({"width": 414, "height": 900})
+        await page.wait_for_timeout(300)
+        burger = page.locator('button[aria-label="Menu"], button[aria-label="القائمة"]').first
+        if await burger.count():
+            await burger.click(timeout=1500)
+            await page.wait_for_timeout(500)
+            await page.screenshot(path=str(OUT / f"navbar_drawer__{tag}.png"))
+        await page.set_viewport_size(VIEWPORT)
+    except Exception as e:
+        print("drawer skipped:", e)
+        await page.set_viewport_size(VIEWPORT)
+
     # Hero (top viewport)
     await page.evaluate("window.scrollTo(0, 0)")
     await page.wait_for_timeout(300)
     await page.screenshot(path=str(OUT / f"hero__{tag}.png"))
 
+    # Services section (Neo glass wrapper on landing)
+    try:
+        await page.evaluate(
+            "document.querySelector('#services')?.scrollIntoView({block:'center'})"
+        )
+        await page.wait_for_timeout(800)
+        services = page.locator("#services").first
+        if await services.count():
+            await services.screenshot(path=str(OUT / f"services__{tag}.png"))
+        else:
+            await page.screenshot(path=str(OUT / f"services__{tag}.png"))
+    except Exception as e:
+        print("services skipped:", e)
+
     # Footer
     await page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
     await page.wait_for_timeout(800)
     await page.screenshot(path=str(OUT / f"footer__{tag}.png"))
+
 
 
 async def capture_gallery(page, tag: str):
