@@ -181,98 +181,26 @@ export function BrandHero() {
               filter: 'blur(6px)',
             }}
           />
-          <div
-            aria-hidden
-            className="absolute bottom-3 left-1/2 -translate-x-1/2 w-[60%] h-6 rounded-[50%] bg-gradient-to-t from-[#d9c9a8]/70 to-transparent"
-          />
 
-          {/* Cards */}
-          {trademarks.slice(0, 4).map((c, i) => {
-            const offset = slots[i] - (slots[active % 4] - 0); // shift so active sits at 0
-            const isCenter = i === active % 4;
-            const abs = Math.abs(offset);
-            return (
-              <motion.button
-                key={c.id}
-                onClick={() => setActive(i)}
-                aria-label={c.nameAr}
-                className="absolute top-1/2 left-1/2 rounded-[28px] focus:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--gold))]"
-                animate={{
-                  x: `calc(-50% + ${offset * 24}%)`,
-                  y: `calc(-50% + ${isCenter ? -10 : abs * 14}px)`,
-                  scale: isCenter ? 1 : 0.78 - (abs - 0.5) * 0.06,
-                  rotateY: offset * -10,
-                  zIndex: 50 - Math.round(abs * 10),
-                }}
-                transition={{ type: 'spring', stiffness: 110, damping: 20 }}
-                style={{
-                  width: isCenter ? 'clamp(190px,24vw,280px)' : 'clamp(140px,18vw,210px)',
-                  height: isCenter ? 'clamp(260px,33vw,380px)' : 'clamp(200px,26vw,300px)',
-                }}
-              >
-                {/* Glass panel */}
-                <div
-                  className="relative w-full h-full rounded-[28px] overflow-hidden glass-card flex flex-col items-center justify-between p-4 md:p-5"
-                  style={{
-                    boxShadow: isCenter
-                      ? '0 40px 80px -28px rgba(60,40,10,0.35), 0 0 0 1px rgba(201,168,76,0.45)'
-                      : '0 22px 50px -24px rgba(0,0,0,0.25)',
-                  }}
-                >
-                  {/* Logo header */}
-                  <div className="text-[9px] tracking-[0.3em] uppercase text-[hsl(var(--gold-hi))] font-arabic pt-1">
-                    {c.nameEn}
-                  </div>
-
-                  {/* Image */}
-                  <div className="flex-1 w-full flex items-center justify-center px-2">
-                    <img src={c.image} alt={c.nameAr} className="max-w-full max-h-full object-contain drop-shadow-[0_18px_24px_rgba(0,0,0,0.18)]" />
-                  </div>
-
-                  {/* Footer label */}
-                  <div className="text-[10px] tracking-[0.2em] uppercase text-foreground/60 font-arabic pb-1">
-                    {c.goodsAr.split('،')[0]}
-                  </div>
-
-                  {/* Inner glow on center */}
-                  {isCenter && (
-                    <span
-                      aria-hidden
-                      className="pointer-events-none absolute inset-0 rounded-[28px]"
-                      style={{ boxShadow: '0 0 70px 10px rgba(232,185,35,0.22) inset' }}
-                    />
-                  )}
-
-                  {/* Gold "certified" seal — only on center card */}
-                  {isCenter && (
-                    <motion.div
-                      initial={{ scale: 0.6, opacity: 0, rotate: -20 }}
-                      animate={{ scale: 1, opacity: 1, rotate: 0 }}
-                      transition={{ delay: 0.2, type: 'spring', stiffness: 180, damping: 14 }}
-                      className="absolute top-3 end-3 w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center text-[8px] font-arabic text-white text-center leading-tight"
-                      style={{
-                        background:
-                          'radial-gradient(circle at 30% 30%, #F4D67A, #C9A84C 60%, #8A6E2C 100%)',
-                        boxShadow: '0 8px 18px -6px rgba(138,110,44,0.6), inset 0 0 0 2px rgba(255,255,255,0.5)',
-                      }}
-                    >
-                      <BadgeCheck className="w-5 h-5 md:w-6 md:h-6 text-white" />
-                    </motion.div>
-                  )}
-                </div>
-              </motion.button>
-            );
-          })}
+          {/* WebGL 3D trademarks carousel */}
+          <Suspense fallback={<div className="absolute inset-0" />}>
+            <Trademarks3D
+              items={trademarks}
+              active={active}
+              onChange={setActive}
+              className="absolute inset-0"
+            />
+          </Suspense>
 
           {/* Dots */}
           <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-2 z-[60]">
-            {trademarks.slice(0, 4).map((_, i) => (
+            {trademarks.map((_, i) => (
               <button
                 key={i}
                 onClick={() => setActive(i)}
                 aria-label={`Brand ${i + 1}`}
                 className={`h-1.5 rounded-full transition-all ${
-                  i === active % 4 ? 'w-8 bg-[hsl(var(--gold-hi))]' : 'w-2 bg-foreground/20 hover:bg-foreground/40'
+                  i === active ? 'w-8 bg-[hsl(var(--gold-hi))]' : 'w-2 bg-foreground/20 hover:bg-foreground/40'
                 }`}
               />
             ))}
@@ -295,6 +223,7 @@ export function BrandHero() {
           </AnimatePresence>
         </div>
       </motion.div>
+
 
       {/* Feature strip pinned to hero bottom */}
       <div className="absolute bottom-0 inset-x-0 pb-6 md:pb-8 z-[5]">
