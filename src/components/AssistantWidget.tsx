@@ -312,9 +312,13 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
 
   const submitFinal = async () => {
     if (!pendingOrder) return;
-    const waWin = window.open('about:blank', '_blank', 'noopener,noreferrer');
+    // Open WhatsApp tab synchronously (user gesture). NO 'noopener' — we need the handle.
+    const waWin = window.open('about:blank', '_blank');
     const merged = {
       ...pendingOrder,
+      company_name: (pendingOrder.company_name && String(pendingOrder.company_name).trim().length >= 2)
+        ? pendingOrder.company_name
+        : (formData.contact_name.trim() || 'عميل فحم النخلة'),
       contact_name: formData.contact_name.trim(),
       phone: formData.phone.trim(),
       address: formData.address.trim(),
