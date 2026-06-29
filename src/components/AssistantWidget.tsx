@@ -296,7 +296,11 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
       phone: formData.phone.trim(),
       address: formData.address.trim(),
       delivery_method: formData.delivery_method,
-      notes: [pendingOrder.notes, `طريقة الاستلام: ${formData.delivery_method}`].filter(Boolean).join(' · '),
+      notes: [
+        pendingOrder.notes,
+        `طريقة الاستلام: ${formData.delivery_method}`,
+        liveQuote?.ok ? `سعر لحظي: ${liveQuote.pricePerKg} ر.س/كجم · إجمالي ${liveQuote.total} ر.س شامل الضريبة · تجهيز ${liveQuote.leadDays} يوم` : null,
+      ].filter(Boolean).join(' · '),
     };
     setPendingOrder(null);
     setReviewMode(false);
