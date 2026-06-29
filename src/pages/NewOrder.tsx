@@ -91,7 +91,9 @@ export default function NewOrder() {
             </Button>
           )}
         </div>
+        </div>
       </div>
     </>
+
   );
 }
