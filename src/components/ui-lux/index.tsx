@@ -114,7 +114,7 @@ export function LuxButton({
     variant === 'gold'
       ? 'btn-gold !rounded-full'
       : variant === 'ghost'
-      ? 'btn-ghost-gold !rounded-full'
+      ? 'btn-glass'
       : 'inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-gold text-dark text-sm font-bold hover:bg-gold-hi transition-colors';
   const content = (
     <>
@@ -218,7 +218,7 @@ export function ProductCard({
   return (
     <ScrollReveal delay={index * 80}>
       <Link to={to} className="group block">
-        <div className="aspect-[4/5] overflow-hidden rounded-2xl border-luxe bg-background mb-4 relative">
+        <div className="glass-card aspect-[4/5] overflow-hidden rounded-2xl mb-4 relative !p-0">
           <img
             src={img}
             alt={typeof name === 'string' ? name : ''}
