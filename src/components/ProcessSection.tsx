@@ -217,10 +217,10 @@ export function ProcessSection() {
 
           {/* Edge fades */}
           <div className="pointer-events-none absolute inset-y-0 start-0 w-12 md:w-20"
-            style={{ background: 'linear-gradient(90deg, #0a0a0a, transparent)' }}
+            style={{ background: 'linear-gradient(90deg, hsl(var(--dark)), transparent)' }}
           />
           <div className="pointer-events-none absolute inset-y-0 end-0 w-12 md:w-20"
-            style={{ background: 'linear-gradient(270deg, #0a0a0a, transparent)' }}
+            style={{ background: 'linear-gradient(270deg, hsl(var(--dark)), transparent)' }}
           />
 
           {/* Play/Pause control */}

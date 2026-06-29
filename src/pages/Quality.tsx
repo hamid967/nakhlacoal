@@ -236,7 +236,7 @@ export default function Quality() {
       />
 
       {/* Cinematic Hero */}
-      <section className="relative pt-40 pb-32 overflow-hidden bg-gradient-to-b from-[#0c1410] via-[#0f1a14] to-background">
+      <section className="relative pt-40 pb-32 overflow-hidden bg-gradient-to-b from-dark via-dark-2 to-background">
         <div className="absolute inset-0 opacity-40"
           style={{ backgroundImage: 'radial-gradient(circle at 20% 30%, hsl(var(--gold) / 0.18), transparent 40%), radial-gradient(circle at 80% 70%, hsl(var(--jade) / 0.25), transparent 50%)' }}
         />
@@ -319,7 +319,7 @@ export default function Quality() {
                 initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }} transition={{ duration: 0.7, delay: i * 0.08 }}
                 whileHover={{ y: -6 }}
-                className="group relative aspect-[4/5] rounded-2xl overflow-hidden bg-gradient-to-br from-[#1a2520] via-[#0f1814] to-black border border-gold/20"
+                className="group relative aspect-[4/5] rounded-2xl overflow-hidden bg-gradient-to-br from-dark via-dark-2 to-dark border border-gold/20"
               >
                 <div className="absolute inset-0 opacity-30 group-hover:opacity-50 transition-opacity"
                   style={{ backgroundImage: `radial-gradient(circle at ${30 + i * 8}% ${40 + i * 5}%, hsl(var(--gold-hi) / 0.5), transparent 60%)` }} />
@@ -433,7 +433,7 @@ export default function Quality() {
               <DialogHeader>
                 <DialogTitle className="font-arabic text-2xl">{certificates[openCert].name}</DialogTitle>
               </DialogHeader>
-              <div className="aspect-[4/3] rounded-xl bg-gradient-to-br from-[#1a1410] to-black flex flex-col items-center justify-center text-background border border-gold/30">
+              <div className="aspect-[4/3] rounded-xl bg-gradient-to-br from-dark to-dark-2 flex flex-col items-center justify-center text-background border border-gold/30">
                 {(() => { const I = certificates[openCert].icon; return <I className="w-20 h-20 text-gold-hi mb-4" />; })()}
                 <p className="font-arabic text-lg">{certificates[openCert].name}</p>
                 <p className="text-xs font-mono text-gold-hi/70 mt-2">{certificates[openCert].code}</p>
