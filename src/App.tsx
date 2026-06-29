@@ -38,6 +38,7 @@ import AdminInventory from '@/pages/AdminInventory';
 import NewOrder from '@/pages/NewOrder';
 import OrderTracking from '@/pages/OrderTracking';
 
+import Catalog from '@/pages/Catalog';
 import NotFound from '@/pages/NotFound';
 
 const queryClient = new QueryClient();
@@ -86,6 +87,7 @@ export default function App() {
                <Route path="/admin/inventory" element={<ProtectedRoute requireRole="admin"><AdminInventory /></ProtectedRoute>} />
                <Route path="/orders/new" element={<ProtectedRoute><NewOrder /></ProtectedRoute>} />
                <Route path="/orders/:id" element={<ProtectedRoute><OrderTracking /></ProtectedRoute>} />
+               <Route path="/catalog" element={<Catalog />} />
 
                 <Route path="*" element={<NotFound />} />
               </Route>
