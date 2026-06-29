@@ -39,8 +39,16 @@ export default function AdminOrders() {
 
   async function update(id: string, patch: any) {
     const { error } = await supabase.from('orders').update(patch).eq('id', id);
-    if (error) toast.error(error.message);
-    else { setOrders((p) => p.map((o) => o.id === id ? { ...o, ...patch } : o)); toast.success('تم الحفظ'); }
+    if (error) { toast.error(error.message); return; }
+    setOrders((p) => p.map((o) => o.id === id ? { ...o, ...patch } : o));
+    toast.success('تم الحفظ');
+    if (patch.status) {
+      const { error: mailErr } = await supabase.functions.invoke('send-order-status-email', {
+        body: { orderId: id, status: patch.status },
+      });
+      if (mailErr) toast.error('تعذر إرسال الإشعار البريدي');
+      else toast.success('تم إرسال إشعار بريدي للعميل');
+    }
   }
 
   return (
