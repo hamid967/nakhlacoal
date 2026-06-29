@@ -17,7 +17,7 @@ export default function Auth() {
   const isAr = i18n.language?.startsWith('ar');
   const navigate = useNavigate();
   const location = useLocation();
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -27,11 +27,22 @@ export default function Auth() {
 
   const from = (location.state as { from?: string } | null)?.from ?? '/';
 
-  useEffect(() => {
-    if (user) navigate(from, { replace: true });
-  }, [user, from, navigate]);
-
   const t = (ar: string, en: string) => (isAr ? ar : en);
+
+  const handleSignOut = async () => {
+    setBusy(true);
+    try {
+      await signOut();
+      toast.success(t('تم تسجيل الخروج', 'Signed out'));
+      navigate('/', { replace: true });
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : 'Sign-out failed';
+      setErr(msg);
+    } finally {
+      setBusy(false);
+    }
+  };
+
 
   const errMsg = (code: string) => {
     const map: Record<string, [string, string]> = {
