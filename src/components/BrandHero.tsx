@@ -1,12 +1,18 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, ShieldCheck, Flame, Leaf, Wind, Globe2, Award } from 'lucide-react';
+import { ArrowRight, ShieldCheck, Flame, Leaf, Award, BadgeCheck } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { trademarks } from '@/data/trademarks';
 
-const AUTOPLAY_MS = 6000;
+const AUTOPLAY_MS = 5500;
 
+/**
+ * Cinematic Hero — matches the Palm Charcoal premium home mockup:
+ * left editorial title + CTA, right floating glass product cards on a stone
+ * podium with a gold "Certified" seal on the centered card, and a feature
+ * strip pinned at the bottom. Background = warm ivory + soft palm shadow.
+ */
 export function BrandHero() {
   const { i18n } = useTranslation();
   const isAr = i18n.language?.startsWith('ar');
@@ -34,30 +40,28 @@ export function BrandHero() {
 
   const current = trademarks[active];
 
-  const badges = isAr
+  const features = isAr
     ? [
-        { i: ShieldCheck, t: 'علامة سعودية' },
-        { i: Award, t: 'جودة فاخرة' },
-        { i: Flame, t: 'احتراق طويل' },
-        { i: Wind, t: 'رماد منخفض' },
-        { i: Leaf, t: 'مواد طبيعية' },
-        { i: Globe2, t: 'جاهز للتصدير' },
+        { i: Leaf, t: '١٠٠٪ طبيعي', s: 'بدون إضافات' },
+        { i: Flame, t: 'حرارة عالية', s: 'احتراق طويل' },
+        { i: ShieldCheck, t: 'صديق للبيئة', s: 'مستدام' },
+        { i: Award, t: 'جودة فاخرة', s: 'ثابتة' },
       ]
     : [
-        { i: ShieldCheck, t: 'Saudi Brand' },
-        { i: Award, t: 'Premium Quality' },
-        { i: Flame, t: 'Long Burning' },
-        { i: Wind, t: 'Low Ash' },
-        { i: Leaf, t: 'Natural Materials' },
-        { i: Globe2, t: 'Export Ready' },
+        { i: Leaf, t: '100% Natural', s: 'No Additives' },
+        { i: Flame, t: 'High Heat', s: 'Long Burning' },
+        { i: ShieldCheck, t: 'Eco-Friendly', s: 'Sustainable' },
+        { i: Award, t: 'Premium Quality', s: 'Consistent' },
       ];
 
   const sectionRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end start'] });
-  const contentY = useTransform(scrollYProgress, [0, 1], [0, -160]);
-  const contentScale = useTransform(scrollYProgress, [0, 1], [1, 0.94]);
-  const contentOpacity = useTransform(scrollYProgress, [0, 0.7, 1], [1, 0.6, 0]);
-  const bgOpacity = useTransform(scrollYProgress, [0, 1], [1, 0.25]);
+  const contentY = useTransform(scrollYProgress, [0, 1], [0, -120]);
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.7, 1], [1, 0.7, 0]);
+  const bgOpacity = useTransform(scrollYProgress, [0, 1], [1, 0.35]);
+
+  // Card layout — 4 cards, the active is centered/large, others fan out.
+  const slots = [-1.5, -0.5, 0.5, 1.5]; // visual order; offset from center
 
   return (
     <section
@@ -66,183 +70,247 @@ export function BrandHero() {
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
+      {/* Ivory + warm gold bg */}
       <motion.div
         aria-hidden
         className="absolute inset-0"
         style={{
           opacity: bgOpacity,
           background:
-            'radial-gradient(1200px 600px at 85% 0%, rgba(255,232,170,0.55), transparent 60%), radial-gradient(900px 500px at 10% 100%, rgba(26,74,0,0.10), transparent 60%), linear-gradient(180deg, #FBF8F1 0%, #F5EFE0 100%)',
+            'radial-gradient(900px 600px at 85% 15%, rgba(232,200,140,0.45), transparent 60%), radial-gradient(700px 500px at 10% 90%, rgba(26,74,0,0.08), transparent 65%), linear-gradient(180deg, #FAF5EB 0%, #F2E9D4 100%)',
         }}
       />
-      {/* Palm leaf shadows */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 opacity-[0.07]"
-        style={{ backgroundImage: 'url("data:image/svg+xml;utf8,<svg xmlns=%27http://www.w3.org/2000/svg%27 width=%27400%27 height=%27400%27><g fill=%27none%27 stroke=%27%231A4A00%27 stroke-width=%270.6%27><path d=%27M50 350 Q200 100 380 30%27/><path d=%27M60 350 Q170 200 220 80%27/><path d=%27M50 350 Q260 220 380 200%27/></g></svg>")', backgroundSize: '600px 600px', backgroundRepeat: 'no-repeat', backgroundPosition: 'top right' }}
+      {/* Palm leaf shadow top-left */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -top-20 -start-20 w-[55vw] h-[55vw] max-w-[700px] max-h-[700px] opacity-[0.18]"
+        style={{
+          backgroundImage:
+            "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'><g fill='none' stroke='%231A4A00' stroke-width='1.2' stroke-linecap='round'><path d='M40 380 Q160 160 380 40'/><path d='M40 380 Q120 240 200 100'/><path d='M40 380 Q220 280 380 220'/><path d='M40 380 Q100 280 150 200'/><path d='M40 380 Q260 200 380 100'/></g></svg>\")",
+          backgroundSize: 'contain',
+          backgroundRepeat: 'no-repeat',
+        }}
       />
-
       {/* Dust particles */}
       <div aria-hidden className="pointer-events-none absolute inset-0">
-        {Array.from({ length: 18 }).map((_, i) => (
+        {Array.from({ length: 14 }).map((_, i) => (
           <motion.span
             key={i}
-            className="absolute w-1 h-1 rounded-full bg-[hsl(var(--gold))]/40"
+            className="absolute w-1 h-1 rounded-full bg-[hsl(var(--gold))]/35"
             style={{ left: `${(i * 53) % 100}%`, top: `${(i * 29) % 100}%` }}
-            animate={{ y: [0, -20, 0], opacity: [0.2, 0.6, 0.2] }}
+            animate={{ y: [0, -18, 0], opacity: [0.2, 0.55, 0.2] }}
             transition={{ duration: 6 + (i % 5), repeat: Infinity, delay: i * 0.3 }}
           />
         ))}
       </div>
 
-      <motion.div style={{ y: contentY, scale: contentScale, opacity: contentOpacity }} className="relative container pt-28 pb-16 md:pt-32 md:pb-20 flex flex-col items-center text-center">
-        {/* Title */}
-        <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9 }}>
-          <div className="inline-flex items-center gap-3 mb-5">
-            <span className="h-px w-10 bg-gradient-to-r from-transparent to-[hsl(var(--gold))]" />
-            <span className="text-[11px] tracking-[0.35em] uppercase text-[hsl(var(--gold-hi))] font-arabic">
-              {isAr ? 'مجموعة علامات سعودية' : 'Saudi Brand Collection'}
+      <motion.div
+        style={{ y: contentY, opacity: contentOpacity }}
+        className="relative container pt-24 md:pt-28 pb-32 md:pb-40 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center"
+      >
+        {/* LEFT — editorial title */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9 }}
+          className="lg:col-span-5 text-center lg:text-start"
+        >
+          <div className="inline-flex items-center gap-3 mb-6">
+            <span className="h-px w-8 bg-gradient-to-r from-transparent to-[hsl(var(--gold))]" />
+            <span className="text-[10px] tracking-[0.35em] uppercase text-[hsl(var(--gold-hi))] font-arabic">
+              {isAr ? 'علامات سعودية فاخرة' : 'Premium Saudi Brand'}
             </span>
-            <span className="h-px w-10 bg-gradient-to-l from-transparent to-[hsl(var(--gold))]" />
           </div>
-          <h1 className={`text-3xl sm:text-5xl md:text-6xl lg:text-7xl ${isAr ? 'font-arabic font-bold' : 'font-display font-bold'}`}
-              style={{ color: '#1A4A00', letterSpacing: isAr ? '0' : '-0.02em' }}>
-            {isAr ? 'شركة فحم النخلة' : 'Palm Charcoal Company'}
+          <h1
+            className={`text-[clamp(2.5rem,6vw,5rem)] leading-[1.05] tracking-tight ${
+              isAr ? 'font-arabic font-bold' : 'font-display font-bold'
+            }`}
+            style={{ color: '#1A1A1A' }}
+          >
+            {isAr ? (
+              <>
+                نقاء.<br />
+                استدامة.<br />
+                <span style={{ color: '#1A4A00' }}>تميّز.</span>
+              </>
+            ) : (
+              <>
+                Pure.<br />
+                Sustainable.<br />
+                <span style={{ color: '#1A4A00' }}>Excellence.</span>
+              </>
+            )}
           </h1>
-          <p className={`mt-5 max-w-3xl mx-auto text-sm md:text-base leading-relaxed text-foreground/75 px-2 ${isAr ? 'font-arabic' : ''}`}>
+          <p
+            className={`mt-6 max-w-md mx-auto lg:mx-0 text-base leading-relaxed text-foreground/70 ${
+              isAr ? 'font-arabic' : ''
+            }`}
+          >
             {isAr
-              ? 'مجموعة علامات تجارية سعودية رائدة في إنتاج الفحم الطبيعي عالي الجودة، تقدم حلولاً احترافية للمعسل والبخور والشواء والتوريد التجاري والتصدير.'
-              : 'A leading family of registered Saudi trademarks producing premium natural charcoal — for hookah, incense, grilling, wholesale and export.'}
+              ? 'فحم النخلة الفاخر، مصنوع بعناية من أجود المصادر الطبيعية ليمنحك أداءً نقيًا ومستقبلًا أنظف.'
+              : 'Premium coconut shell charcoal, meticulously crafted for purity, performance, and a better tomorrow.'}
           </p>
+
+          <div className="mt-9 flex flex-wrap items-center gap-3 justify-center lg:justify-start">
+            <Link
+              to="/products"
+              className="group inline-flex items-center gap-3 px-7 py-3.5 rounded-full bg-[hsl(var(--gold-hi))] text-white text-sm uppercase tracking-[0.2em] font-medium shadow-[0_14px_36px_-12px_rgba(201,168,76,0.65)] hover:shadow-[0_20px_44px_-12px_rgba(201,168,76,0.85)] hover:-translate-y-0.5 transition-all"
+            >
+              {isAr ? 'استكشف المنتجات' : 'Explore Products'}
+              <ArrowRight className={`w-4 h-4 transition-transform group-hover:translate-x-1 ${isAr ? 'rotate-180 group-hover:-translate-x-1' : ''}`} />
+            </Link>
+            <Link
+              to="/trademarks"
+              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-white/70 backdrop-blur border border-[hsl(var(--gold))]/30 text-sm font-arabic text-foreground/80 hover:border-[hsl(var(--gold))] hover:text-[hsl(var(--gold-hi))] transition-all"
+            >
+              {isAr ? 'علاماتنا' : 'Our Brands'}
+            </Link>
+          </div>
         </motion.div>
 
-        {/* Carousel */}
-        <div className="relative w-full max-w-6xl mt-10 md:mt-14" style={{ perspective: '1600px' }}>
-          <div className="relative h-[230px] sm:h-[280px] md:h-[320px]">
-            {trademarks.map((c, i) => {
-              const total = trademarks.length;
-              let offset = i - active;
-              if (offset > total / 2) offset -= total;
-              if (offset < -total / 2) offset += total;
-              const isCenter = offset === 0;
-              const abs = Math.abs(offset);
-              return (
-                <motion.button
-                  key={c.id}
-                  onClick={() => setActive(i)}
-                  aria-label={c.nameAr}
-                  className="absolute top-1/2 left-1/2 rounded-[28px] bg-white border border-white/80 flex items-center justify-center p-4 md:p-6 focus:outline-none"
-                  animate={{
-                    x: `calc(-50% + ${offset * 22}%)`,
-                    y: '-50%',
-                    scale: isCenter ? 1 : 0.72 - abs * 0.04,
-                    rotateY: offset * -18,
-                    zIndex: 50 - abs,
+        {/* RIGHT — floating glass cards on podium */}
+        <div className="lg:col-span-7 relative h-[460px] sm:h-[520px] md:h-[560px]" style={{ perspective: '1800px' }}>
+          {/* Stone podium */}
+          <div
+            aria-hidden
+            className="absolute bottom-6 left-1/2 -translate-x-1/2 w-[78%] h-12 rounded-[50%]"
+            style={{
+              background:
+                'radial-gradient(ellipse at center, rgba(120,98,72,0.35) 0%, rgba(120,98,72,0.12) 55%, transparent 75%)',
+              filter: 'blur(6px)',
+            }}
+          />
+          <div
+            aria-hidden
+            className="absolute bottom-3 left-1/2 -translate-x-1/2 w-[60%] h-6 rounded-[50%] bg-gradient-to-t from-[#d9c9a8]/70 to-transparent"
+          />
+
+          {/* Cards */}
+          {trademarks.slice(0, 4).map((c, i) => {
+            const offset = slots[i] - (slots[active % 4] - 0); // shift so active sits at 0
+            const isCenter = i === active % 4;
+            const abs = Math.abs(offset);
+            return (
+              <motion.button
+                key={c.id}
+                onClick={() => setActive(i)}
+                aria-label={c.nameAr}
+                className="absolute top-1/2 left-1/2 rounded-[28px] focus:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--gold))]"
+                animate={{
+                  x: `calc(-50% + ${offset * 24}%)`,
+                  y: `calc(-50% + ${isCenter ? -10 : abs * 14}px)`,
+                  scale: isCenter ? 1 : 0.78 - (abs - 0.5) * 0.06,
+                  rotateY: offset * -10,
+                  zIndex: 50 - Math.round(abs * 10),
+                }}
+                transition={{ type: 'spring', stiffness: 110, damping: 20 }}
+                style={{
+                  width: isCenter ? 'clamp(190px,24vw,280px)' : 'clamp(140px,18vw,210px)',
+                  height: isCenter ? 'clamp(260px,33vw,380px)' : 'clamp(200px,26vw,300px)',
+                }}
+              >
+                {/* Glass panel */}
+                <div
+                  className="relative w-full h-full rounded-[28px] overflow-hidden border border-white/60 bg-white/55 backdrop-blur-xl flex flex-col items-center justify-between p-4 md:p-5"
+                  style={{
                     boxShadow: isCenter
-                      ? '0 30px 80px -20px rgba(201,168,76,0.55), 0 0 0 1px rgba(201,168,76,0.5)'
-                      : '0 14px 36px -16px rgba(0,0,0,0.25)',
-                    filter: isCenter ? 'none' : 'saturate(0.85) brightness(0.98)',
+                      ? '0 40px 80px -28px rgba(60,40,10,0.35), 0 0 0 1px rgba(201,168,76,0.45)'
+                      : '0 22px 50px -24px rgba(0,0,0,0.25)',
                   }}
-                  transition={{ type: 'spring', stiffness: 120, damping: 18 }}
-                  style={{ width: 'clamp(150px, 22vw, 240px)', height: 'clamp(150px, 22vw, 240px)' }}
                 >
+                  {/* Logo header */}
+                  <div className="text-[9px] tracking-[0.3em] uppercase text-[hsl(var(--gold-hi))] font-arabic pt-1">
+                    {c.nameEn}
+                  </div>
+
+                  {/* Image */}
+                  <div className="flex-1 w-full flex items-center justify-center px-2">
+                    <img src={c.image} alt={c.nameAr} className="max-w-full max-h-full object-contain drop-shadow-[0_18px_24px_rgba(0,0,0,0.18)]" />
+                  </div>
+
+                  {/* Footer label */}
+                  <div className="text-[10px] tracking-[0.2em] uppercase text-foreground/60 font-arabic pb-1">
+                    {c.goodsAr.split('،')[0]}
+                  </div>
+
+                  {/* Inner glow on center */}
                   {isCenter && (
-                    <span aria-hidden className="absolute inset-0 rounded-[28px] pointer-events-none"
-                      style={{ boxShadow: '0 0 60px 8px rgba(232,185,35,0.25) inset' }} />
+                    <span
+                      aria-hidden
+                      className="pointer-events-none absolute inset-0 rounded-[28px]"
+                      style={{ boxShadow: '0 0 70px 10px rgba(232,185,35,0.22) inset' }}
+                    />
                   )}
-                  <img src={c.image} alt={c.nameAr} className="max-w-full max-h-full object-contain" />
-                </motion.button>
-              );
-            })}
+
+                  {/* Gold "certified" seal — only on center card */}
+                  {isCenter && (
+                    <motion.div
+                      initial={{ scale: 0.6, opacity: 0, rotate: -20 }}
+                      animate={{ scale: 1, opacity: 1, rotate: 0 }}
+                      transition={{ delay: 0.2, type: 'spring', stiffness: 180, damping: 14 }}
+                      className="absolute top-3 end-3 w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center text-[8px] font-arabic text-white text-center leading-tight"
+                      style={{
+                        background:
+                          'radial-gradient(circle at 30% 30%, #F4D67A, #C9A84C 60%, #8A6E2C 100%)',
+                        boxShadow: '0 8px 18px -6px rgba(138,110,44,0.6), inset 0 0 0 2px rgba(255,255,255,0.5)',
+                      }}
+                    >
+                      <BadgeCheck className="w-5 h-5 md:w-6 md:h-6 text-white" />
+                    </motion.div>
+                  )}
+                </div>
+              </motion.button>
+            );
+          })}
+
+          {/* Dots */}
+          <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-2 z-[60]">
+            {trademarks.slice(0, 4).map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setActive(i)}
+                aria-label={`Brand ${i + 1}`}
+                className={`h-1.5 rounded-full transition-all ${
+                  i === active % 4 ? 'w-8 bg-[hsl(var(--gold-hi))]' : 'w-2 bg-foreground/20 hover:bg-foreground/40'
+                }`}
+              />
+            ))}
           </div>
 
-          {/* Arrows */}
-          <button onClick={() => go(-1)} aria-label="Previous"
-            className="absolute top-1/2 -translate-y-1/2 start-0 md:-start-6 z-[60] w-11 h-11 rounded-full bg-white/90 backdrop-blur border border-[hsl(var(--gold))]/30 shadow-lg flex items-center justify-center text-[hsl(var(--gold-hi))] hover:bg-white hover:scale-105 transition">
-            {isAr ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
-          </button>
-          <button onClick={() => go(1)} aria-label="Next"
-            className="absolute top-1/2 -translate-y-1/2 end-0 md:-end-6 z-[60] w-11 h-11 rounded-full bg-white/90 backdrop-blur border border-[hsl(var(--gold))]/30 shadow-lg flex items-center justify-center text-[hsl(var(--gold-hi))] hover:bg-white hover:scale-105 transition">
-            {isAr ? <ChevronLeft className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
-          </button>
-        </div>
-
-        {/* Dots */}
-        <div className="flex items-center gap-2 mt-6">
-          {trademarks.map((_, i) => (
-            <button key={i} onClick={() => setActive(i)} aria-label={`Brand ${i + 1}`}
-              className={`h-1.5 rounded-full transition-all ${i === active ? 'w-8 bg-[hsl(var(--gold-hi))]' : 'w-2 bg-foreground/20 hover:bg-foreground/40'}`} />
-          ))}
-        </div>
-
-        {/* Brand details panel */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={current.id}
-            initial={{ opacity: 0, y: 18, filter: 'blur(6px)' }}
-            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-            exit={{ opacity: 0, y: -10, filter: 'blur(6px)' }}
-            transition={{ duration: 0.55 }}
-            className="mt-10 w-full max-w-3xl bg-white/70 backdrop-blur-xl border border-white/80 rounded-3xl px-6 md:px-8 py-5 md:py-6 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.15)]"
-          >
-            <div className="flex items-center justify-center gap-2 text-[10px] tracking-[0.3em] uppercase text-[hsl(var(--gold-hi))] font-arabic mb-2">
-              <ShieldCheck className="w-3.5 h-3.5" />
-              {isAr ? 'علامة تجارية سعودية مسجّلة' : 'Registered Saudi Trademark'}
-            </div>
-            <h3 className={`text-xl md:text-2xl font-arabic font-bold`} style={{ color: '#1A4A00' }}>{current.nameAr}</h3>
-            <div className="text-xs text-foreground/55 mt-0.5">{current.nameEn}</div>
-            <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-3 text-[11px] md:text-xs font-arabic">
-              <Meta label={isAr ? 'رقم العلامة' : 'Reg No.'} value={current.registrationNo} />
-              <Meta label={isAr ? 'الفئة' : 'Class'} value={current.niceClass.replace('الفئة ', '')} />
-              <Meta label={isAr ? 'تاريخ التسجيل' : 'Filed'} value={current.filedHijri} />
-              <Meta label={isAr ? 'تاريخ الانتهاء' : 'Expires'} value={current.expiresHijri} />
-              <Meta label={isAr ? 'المالك' : 'Owner'} value={current.ownerAr} />
-              <Meta label={isAr ? 'النشاط' : 'Activity'} value={current.goodsAr.split('،')[0]} />
-            </div>
-          </motion.div>
-        </AnimatePresence>
-
-        {/* Feature badges */}
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-2 md:gap-3 max-w-3xl">
-          {badges.map((b, i) => (
-            <motion.div key={i} whileHover={{ y: -2, scale: 1.04 }}
-              className="inline-flex items-center gap-2 bg-white/80 backdrop-blur border border-[hsl(var(--gold))]/25 rounded-full px-3.5 py-1.5 text-[11px] md:text-xs font-arabic text-foreground/80 shadow-sm">
-              <b.i className="w-3.5 h-3.5 text-[hsl(var(--gold-hi))]" />
-              {b.t}
+          {/* Floating brand name */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={current.id}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: 0.4 }}
+              className="absolute -bottom-12 left-1/2 -translate-x-1/2 text-center"
+            >
+              <div className={`text-base md:text-lg ${isAr ? 'font-arabic font-bold' : 'font-display font-semibold'}`} style={{ color: '#1A4A00' }}>
+                {current.nameAr} <span className="text-foreground/40 mx-2">·</span> <span className="text-foreground/60 font-normal text-sm">{current.nameEn}</span>
+              </div>
             </motion.div>
-          ))}
-        </div>
-
-        {/* Buttons */}
-        <div className="mt-9 flex flex-wrap items-center justify-center gap-3 md:gap-4">
-          <CTA to="/products" primary>{isAr ? 'استكشف المنتجات' : 'Explore Products'}</CTA>
-          <CTA to="/trademarks">{isAr ? 'علاماتنا' : 'Our Brands'}</CTA>
-          <CTA to="/products">{isAr ? 'تحميل الكتالوج' : 'Download Catalogue'}</CTA>
-          <CTA to="/contact">{isAr ? 'تواصل المبيعات' : 'Contact Sales'}</CTA>
+          </AnimatePresence>
         </div>
       </motion.div>
+
+      {/* Feature strip pinned to hero bottom */}
+      <div className="absolute bottom-0 inset-x-0 pb-6 md:pb-8 z-[5]">
+        <div className="container">
+          <div className="rounded-2xl bg-white/60 backdrop-blur-xl border border-white/70 shadow-[0_20px_50px_-25px_rgba(0,0,0,0.2)] grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-2 px-4 md:px-8 py-4">
+            {features.map((f, i) => (
+              <div key={i} className={`flex items-center gap-3 ${i > 0 ? 'md:border-s md:border-[hsl(var(--gold))]/15 md:ps-6' : ''}`}>
+                <f.i className="w-5 h-5 text-[hsl(var(--gold-hi))] shrink-0" />
+                <div className="leading-tight">
+                  <div className={`text-xs md:text-sm font-medium text-foreground ${isAr ? 'font-arabic' : ''}`}>{f.t}</div>
+                  <div className={`text-[10px] md:text-xs text-foreground/55 ${isAr ? 'font-arabic' : ''}`}>{f.s}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
     </section>
-  );
-}
-
-function Meta({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex flex-col items-center">
-      <span className="text-[9px] tracking-[0.2em] uppercase text-[hsl(var(--gold-hi))]">{label}</span>
-      <span className="text-foreground/85 font-medium mt-0.5 text-center">{value}</span>
-    </div>
-  );
-}
-
-function CTA({ to, children, primary }: { to: string; children: React.ReactNode; primary?: boolean }) {
-  return (
-    <Link
-      to={to}
-      className={`group inline-flex items-center gap-2 px-5 md:px-6 py-3 rounded-full text-sm font-arabic font-medium transition-all hover:-translate-y-0.5 ${
-        primary
-          ? 'bg-[#1A4A00] text-white shadow-[0_12px_30px_-12px_rgba(26,74,0,0.6)] hover:shadow-[0_18px_40px_-12px_rgba(26,74,0,0.7)]'
-          : 'bg-white/80 backdrop-blur border border-[hsl(var(--gold))]/30 text-foreground/85 hover:border-[hsl(var(--gold))] hover:text-[hsl(var(--gold-hi))]'
-      }`}
-    >
-      {children}
-    </Link>
   );
 }
