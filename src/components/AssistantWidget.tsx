@@ -445,6 +445,11 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
         </button>
       </header>
 
+      {/* Polite live region for status/error announcements (parallel to toast) */}
+      <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+        {liveStatus}
+      </div>
+
 
       {/* Messages */}
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-3 py-3 space-y-3 bg-muted/20">
