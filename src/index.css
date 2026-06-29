@@ -325,21 +325,28 @@
       0 28px 60px -28px hsl(158 78% 10% / 0.3),
       inset 0 1px 0 hsl(0 0% 100% / 0.75);
   }
-  /* Glass pill button (matches hero ghost CTA) */
+  /* Glass pill button — Neo 2.0 */
   .btn-glass {
-    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-medium transition-all duration-500;
-    background: hsl(0 0% 100% / 0.6);
-    backdrop-filter: blur(14px) saturate(1.3);
-    -webkit-backdrop-filter: blur(14px) saturate(1.3);
-    border: 1px solid hsl(var(--gold) / 0.3);
-    color: hsl(var(--foreground) / 0.85);
-    box-shadow: 0 10px 24px -14px hsl(158 78% 10% / 0.25);
+    @apply relative inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-medium transition-all duration-500 overflow-hidden;
+    background:
+      linear-gradient(135deg, hsl(0 0% 100% / 0.7), hsl(46 47% 95% / 0.35));
+    backdrop-filter: blur(20px) saturate(1.5);
+    -webkit-backdrop-filter: blur(20px) saturate(1.5);
+    border: 1px solid hsl(0 0% 100% / 0.6);
+    color: hsl(var(--foreground) / 0.9);
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.8),
+      inset 0 -1px 0 hsl(var(--gold) / 0.15),
+      0 10px 28px -14px hsl(158 78% 10% / 0.3);
   }
   .btn-glass:hover {
     transform: translateY(-2px);
-    border-color: hsl(var(--gold));
+    border-color: hsl(var(--gold) / 0.7);
     color: hsl(var(--gold-lo));
-    box-shadow: 0 16px 32px -14px hsl(var(--gold) / 0.4);
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.9),
+      inset 0 -1px 0 hsl(var(--gold) / 0.3),
+      0 18px 36px -14px hsl(var(--gold) / 0.45);
   }
 
   /* Dark-section variants: keep the glass family readable on the dark footer
