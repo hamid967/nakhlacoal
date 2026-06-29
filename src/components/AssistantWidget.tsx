@@ -106,6 +106,12 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
   const [formData, setFormData] = useState({ contact_name: '', phone: '', address: '', delivery_method: 'توصيل' as 'توصيل' | 'استلام من المستودع' });
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [reviewMode, setReviewMode] = useState(false);
+  const [liveStatus, setLiveStatus] = useState('');
+  const announce = (msg: string, type: 'success' | 'error' = 'success') => {
+    setLiveStatus(''); // reset so SR re-announces identical messages
+    setTimeout(() => setLiveStatus(msg), 50);
+    toast[type](msg);
+  };
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [quoteOpen, setQuoteOpen] = useState(false);
