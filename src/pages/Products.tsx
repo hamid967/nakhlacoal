@@ -79,7 +79,7 @@ export default function Products() {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder={isAr ? 'ابحث عن منتج...' : 'Search products...'}
-                className={`w-full bg-background border-luxe rounded-xl py-3 text-sm focus:outline-none focus:border-luxe-strong transition-colors ${isAr ? 'pr-11 pl-4 text-right font-arabic' : 'pl-11 pr-4'}`}
+                className={`glass-strip w-full rounded-xl py-3 text-sm focus:outline-none focus:border-gold/60 transition-colors ${isAr ? 'pr-11 pl-4 text-right font-arabic' : 'pl-11 pr-4'}`}
               />
             </div>
 
