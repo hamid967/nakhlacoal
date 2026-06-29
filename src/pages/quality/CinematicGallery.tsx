@@ -7,9 +7,9 @@ import burnImg from '@/assets/quality/burn-test.jpg?picture';
 
 export default function CinematicGallery() {
   const shots = [
-    { src: emberImg, title: 'الجمر الحي', sub: 'حرارة موحدة 950°C', tag: 'EMBER' },
-    { src: labImg, title: 'القياس الدقيق', sub: 'تفاوت أقل من ±0.3mm', tag: 'LAB' },
-    { src: burnImg, title: 'اختبار الاحتراق', sub: 'ثبات 180 دقيقة', tag: 'BURN' },
+    { src: emberImg, title: 'الجمر الحي', sub: 'حرارة موحدة 950°C', tag: 'EMBER', pos: '50% 45%' },
+    { src: labImg, title: 'القياس الدقيق', sub: 'تفاوت أقل من ±0.3mm', tag: 'LAB', pos: '50% 35%' },
+    { src: burnImg, title: 'اختبار الاحتراق', sub: 'ثبات 180 دقيقة', tag: 'BURN', pos: '50% 50%' },
   ];
   return (
     <section className="py-28 bg-[#0c1410]">
