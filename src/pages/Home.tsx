@@ -1,14 +1,16 @@
+import { lazy, Suspense } from 'react';
 import { Link } from 'react-router-dom';
 import { Flame, Clock, Leaf, Wind, ShieldCheck, Award } from 'lucide-react';
 import { SEO } from '@/components/SEO';
 import { ScrollReveal } from '@/components/ScrollReveal';
 
-import { BrandHero } from '@/components/BrandHero';
-import { ProcessSection } from '@/components/ProcessSection';
-import { JourneySection } from '@/components/JourneySection';
+// Heavy WebGL/3D hero — code-split so it doesn't block first paint
+const BrandHero = lazy(() => import('@/components/BrandHero').then((m) => ({ default: m.BrandHero })));
+const ProcessSection = lazy(() => import('@/components/ProcessSection').then((m) => ({ default: m.ProcessSection })));
+const JourneySection = lazy(() => import('@/components/JourneySection').then((m) => ({ default: m.JourneySection })));
+const LocationSection = lazy(() => import('@/components/LocationSection').then((m) => ({ default: m.LocationSection })));
+const FaqSection = lazy(() => import('@/components/FaqSection').then((m) => ({ default: m.FaqSection })));
 
-import { LocationSection } from '@/components/LocationSection';
-import { FaqSection } from '@/components/FaqSection';
 import { Certifications } from '@/components/Certifications';
 import { StickyMobileCTA } from '@/components/StickyMobileCTA';
 import { useLiveOrderCount } from '@/hooks/useLiveOrderCount';
@@ -71,10 +73,13 @@ export default function Home() {
         path="/"
       />
 
-      {/* HERO — first impression */}
+      {/* HERO — first impression (lazy-loaded WebGL) */}
       <div className="pt-24 md:pt-28">
-        <BrandHero />
+        <Suspense fallback={<div className="min-h-[60vh] grid place-items-center text-gold-ink/60 font-arabic text-sm">…</div>}>
+          <BrandHero />
+        </Suspense>
       </div>
+
 
       {/* Trust strip — credibility right after the hero */}
       <section className="mt-2 md:mt-6">
@@ -129,9 +134,11 @@ export default function Home() {
         </div>
       </LuxSection>
 
-      <ProcessSection />
+      <Suspense fallback={null}>
+        <ProcessSection />
+        <JourneySection />
+      </Suspense>
 
-      <JourneySection />
 
       {/* About band — story after the user has seen products & process */}
       <LuxSection className="py-20 md:py-28">
@@ -185,9 +192,11 @@ export default function Home() {
         </div>
       </LuxSection>
 
-      <FaqSection />
+      <Suspense fallback={null}>
+        <FaqSection />
+        <LocationSection />
+      </Suspense>
 
-      <LocationSection />
 
       <CtaBand
         title={isAr ? 'جاهز لتجربة الفحم الفاخر؟' : 'Ready to taste the premium difference?'}
