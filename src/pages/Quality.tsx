@@ -518,6 +518,8 @@ export default function Quality() {
         </div>
       </section>
 
+      <CinematicGallery />
+
       {/* Lab Dashboard */}
       <section className="py-28">
         <div className="container">
