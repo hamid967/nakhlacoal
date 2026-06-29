@@ -11,6 +11,7 @@ const JourneySection = lazy(() => import('@/components/JourneySection').then((m)
 const LocationSection = lazy(() => import('@/components/LocationSection').then((m) => ({ default: m.LocationSection })));
 const FaqSection = lazy(() => import('@/components/FaqSection').then((m) => ({ default: m.FaqSection })));
 const Services = lazy(() => import('@/components/Services').then((m) => ({ default: m.Services })));
+const TrademarksShowcase = lazy(() => import('@/components/TrademarksShowcase').then((m) => ({ default: m.TrademarksShowcase })));
 
 
 import { Certifications } from '@/components/Certifications';
@@ -216,6 +217,10 @@ export default function Home() {
 
       {/* Certifications */}
       <Certifications />
+
+      <Suspense fallback={<SectionSkeleton variant="grid" />}>
+        <TrademarksShowcase />
+      </Suspense>
 
       <SectionDivider />
 
