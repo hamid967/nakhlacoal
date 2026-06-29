@@ -170,14 +170,31 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
     setSubmitting(true);
     const waText = buildWa(order);
     const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(waText)}`;
-    // Navigate pre-opened tab (kept within user gesture) → WhatsApp.
+    // Navigate pre-opened tab (kept within user gesture) → WhatsApp, with auto-retry.
+    const MAX_ATTEMPTS = 3;
     let opened = false;
-    if (waWin && !waWin.closed) {
-      try { waWin.location.href = waUrl; opened = true; } catch { /* fallthrough */ }
+    for (let attempt = 1; attempt <= MAX_ATTEMPTS && !opened; attempt++) {
+      try {
+        if (waWin && !waWin.closed) {
+          waWin.location.href = waUrl;
+          opened = !waWin.closed;
+        } else {
+          const w = window.open(waUrl, '_blank');
+          if (w && !w.closed) opened = true;
+        }
+      } catch (err) {
+        console.warn(`[assistant] WhatsApp open attempt ${attempt} failed:`, err);
+      }
+      if (!opened && attempt < MAX_ATTEMPTS) {
+        await new Promise(r => setTimeout(r, 250 * attempt));
+      }
     }
     if (!opened) {
-      const w = window.open(waUrl, '_blank');
-      if (!w) window.location.href = waUrl; // popup blocked → same-tab fallback
+      // Final fallback: same-tab navigation (always honored as user gesture).
+      try { window.location.href = waUrl; opened = true; } catch { /* noop */ }
+    }
+    if (!opened) {
+      toast.error('تعذّر فتح واتساب — انسخ الرسالة وأرسلها يدوياً.');
     }
     try {
       const { data, error } = await supabase.functions.invoke('submit-order', { body: order });
