@@ -234,7 +234,10 @@ export default function Auth() {
               {t('← العودة للصفحة الرئيسية', '← Back to home')}
             </Link>
           </p>
+          </>
+          )}
         </div>
+
       </section>
     </>
   );
