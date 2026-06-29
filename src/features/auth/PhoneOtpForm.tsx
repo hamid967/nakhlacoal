@@ -3,6 +3,7 @@ import { Phone, Loader2, KeyRound } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { phoneSchema, otpSchema } from './schemas';
+import { useRecaptcha } from '@/hooks/useRecaptcha';
 
 interface Props {
   isAr: boolean;
@@ -11,6 +12,7 @@ interface Props {
 
 export function PhoneOtpForm({ isAr, onSuccess }: Props) {
   const t = (ar: string, en: string) => (isAr ? ar : en);
+  const { execute: getCaptcha } = useRecaptcha();
   const [step, setStep] = useState<'phone' | 'otp'>('phone');
   const [phone, setPhone] = useState('+966');
   const [code, setCode] = useState('');
@@ -27,6 +29,13 @@ export function PhoneOtpForm({ isAr, onSuccess }: Props) {
     }
     setBusy(true);
     try {
+      const token = await getCaptcha('phone_otp');
+      if (token) {
+        const { data: v, error: vErr } = await supabase.functions.invoke('verify-captcha', {
+          body: { token, action: 'phone_otp' },
+        });
+        if (vErr || !v?.success) throw new Error(t('فشل التحقق من الحماية', 'Bot check failed'));
+      }
       const { error } = await supabase.auth.signInWithOtp({ phone: parsed.data });
       if (error) throw error;
       toast.success(t('أرسلنا رمزًا إلى هاتفك', 'We sent a code to your phone'));
