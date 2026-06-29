@@ -30,7 +30,7 @@ export default function CinematicGallery() {
                   source={s.src as any}
                   alt={s.title}
                   sizes="(min-width: 1280px) 420px, (min-width: 768px) 33vw, 100vw"
-                  imgClassName="absolute inset-0 w-full h-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.06]"
+                  imgClassName="absolute inset-0 w-full h-full object-cover transition-transform [transition-duration:1400ms] ease-out group-hover:scale-[1.06]"
                   imgStyle={{
                     objectFit: 'cover',
                     objectPosition: s.pos,

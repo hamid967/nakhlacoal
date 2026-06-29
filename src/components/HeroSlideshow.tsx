@@ -93,7 +93,7 @@ export function HeroSlideshow() {
           <div
             key={idx}
             aria-hidden={!active}
-            className="absolute inset-0 transition-opacity duration-[1400ms] ease-out"
+            className="absolute inset-0 transition-opacity [transition-duration:1400ms] ease-out"
             style={{ opacity: active ? 1 : 0 }}
           >
             <div
