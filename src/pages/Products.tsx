@@ -67,6 +67,19 @@ export default function Products() {
         lead={isAr ? 'سبع عائلات منتجات بمعايير عالمية للفحم السعودي الفاخر.' : 'Seven product families crafted to international luxury standards.'}
       />
 
+      <div className="container mt-6 flex justify-center">
+        <a
+          href="/catalog"
+          target="_blank"
+          rel="noopener"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-emerald-900 text-white text-sm hover:bg-emerald-800 transition shadow-lg"
+        >
+          📄 {isAr ? 'تحميل الكتالوج PDF' : 'Download Catalog (PDF)'}
+        </a>
+      </div>
+
+
+
 
       <section className="pt-10 md:pt-14">
         <div className="container">
