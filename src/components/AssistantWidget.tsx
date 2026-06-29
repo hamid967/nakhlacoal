@@ -509,6 +509,30 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
               <dt className="text-muted-foreground">طريقة الاستلام</dt>
               <dd className="font-semibold text-foreground">{formData.delivery_method}</dd>
             </div>
+            {liveQuote?.ok && (
+              <>
+                <div className="flex justify-between gap-2 border-t border-gold/15 pt-1">
+                  <dt className="text-muted-foreground">السعر / كجم</dt>
+                  <dd className="font-semibold text-foreground">{formatSAR(liveQuote.pricePerKg)}</dd>
+                </div>
+                <div className="flex justify-between gap-2">
+                  <dt className="text-muted-foreground">الإجمالي قبل الضريبة</dt>
+                  <dd className="font-semibold text-foreground">{formatSAR(liveQuote.subtotal)}</dd>
+                </div>
+                <div className="flex justify-between gap-2">
+                  <dt className="text-muted-foreground">ضريبة القيمة المضافة (15%)</dt>
+                  <dd className="font-semibold text-foreground">{formatSAR(liveQuote.vat)}</dd>
+                </div>
+                <div className="flex justify-between gap-2 border-t border-gold/30 pt-1 text-[12px]">
+                  <dt className="text-foreground font-bold">الإجمالي شامل الضريبة</dt>
+                  <dd className="font-bold text-emerald-700">{formatSAR(liveQuote.total)}</dd>
+                </div>
+                <div className="flex justify-between gap-2 text-[10px]">
+                  <dt className="text-muted-foreground">مدة التجهيز المتوقعة</dt>
+                  <dd className="text-foreground">{liveQuote.leadDays} يوم عمل</dd>
+                </div>
+              </>
+            )}
             {pendingOrder.ai_summary && (
               <div className="border-t border-gold/15 pt-1 text-[10px] italic text-muted-foreground">
                 {pendingOrder.ai_summary}
