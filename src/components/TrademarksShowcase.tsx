@@ -36,7 +36,9 @@ export function TrademarksShowcase() {
     return () => window.removeEventListener('keydown', onKey);
   }, [go, isAr]);
 
-  const current = trademarks[active];
+  const current = trademarks[Math.min(active, total - 1)] ?? trademarks[0];
+  if (!current) return null;
+
 
   const features = [
     { icon: Leaf, title: isAr ? 'جودة طبيعية' : 'Natural Quality', desc: isAr ? '100% مواد طبيعية' : '100% natural' },
