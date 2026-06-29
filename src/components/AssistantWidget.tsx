@@ -24,13 +24,14 @@ import logo from '@/assets/palm-charcoal-logo.png';
 type Msg = { id: string; role: 'user' | 'assistant'; content: string };
 
 const STORAGE_KEY = 'palm-assistant-widget-v1';
+const ORDER_STORAGE_KEY = 'palm-assistant-pending-order-v1';
 const WHATSAPP_NUMBER = '966540060095';
 const ORDER_EMAIL = 'mab355@gmail.com';
 
 const greet: Msg = {
   id: 'greet',
   role: 'assistant',
-  content: 'أهلاً بك في **مساعد فحم النخلة** 🌴\n\nسأساعدك بتجهيز طلبك خطوة بخطوة. ما نوع الفحم الذي تحتاجه؟ (شواء، جوز هند، شيشة، بخور…)',
+  content: 'أهلاً بك في **مساعد فحم النخلة** 🌴\n\nأنا هنا لأساعدك بتجهيز طلبك خطوة بخطوة وأرشّح لك المنتج الأنسب لاستخدامك. كيف تنوي استخدام الفحم؟\n\n[QR] شواء عائلي | مطعم/مقهى | شيشة/معسل | بخور | تصدير [/QR]',
 };
 
 const loadMsgs = (): Msg[] => {
@@ -39,7 +40,21 @@ const loadMsgs = (): Msg[] => {
     return raw ? JSON.parse(raw) : [greet];
   } catch { return [greet]; }
 };
+const loadPendingOrder = (): Record<string, any> | null => {
+  try {
+    const raw = sessionStorage.getItem(ORDER_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch { return null; }
+};
 const makeId = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+
+// Parse [QR] a | b | c [/QR] markers and strip them from displayed text
+function extractQuickReplies(text: string): { chips: string[]; clean: string } {
+  const m = text.match(/\[QR\]([\s\S]*?)\[\/QR\]/i);
+  if (!m) return { chips: [], clean: text };
+  const chips = m[1].split('|').map(s => s.trim()).filter(Boolean).slice(0, 5);
+  return { chips, clean: text.replace(m[0], '').trim() };
+}
 
 function extractOrder(text: string): { order: Record<string, any> | null; clean: string } {
   const m = text.match(/<<ORDER_READY>>\s*([\s\S]*?)\s*<<END>>/);
