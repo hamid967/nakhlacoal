@@ -94,7 +94,7 @@ export function ProductsHero() {
 
           <ScrollReveal delay={800}>
             <div className="mt-8 flex flex-wrap gap-3 justify-center lg:justify-start">
-              <LuxButton to="/products" variant="primary" withArrow>
+              <LuxButton to="/products" variant="gold" withArrow>
                 {isAr ? 'استكشف المنتجات' : 'Explore products'}
               </LuxButton>
               <LuxButton to="/contact" variant="ghost">
