@@ -27,6 +27,7 @@ export function Layout() {
       <Suspense fallback={null}>
         <WhatsAppFab />
       </Suspense>
+      <ImageDiagnostics />
     </div>
   );
 }
