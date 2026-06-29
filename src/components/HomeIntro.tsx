@@ -23,8 +23,8 @@ export function HomeIntro() {
       }
       sessionStorage.setItem(KEY, '1');
     } catch {}
-    const t1 = setTimeout(() => setPhase('out'), 5200);
-    const t2 = setTimeout(() => setPhase('done'), 6000);
+    const t1 = setTimeout(() => setPhase('out'), 29200);
+    const t2 = setTimeout(() => setPhase('done'), 30000);
     return () => { clearTimeout(t1); clearTimeout(t2); };
   }, []);
 
@@ -117,8 +117,8 @@ export function HomeIntro() {
           <Meta label={isAr ? 'فئة العلامة' : 'Class'} value={center.niceClass.replace('الفئة ', '')} />
           <Meta label={isAr ? 'تاريخ التسجيل' : 'Filed'} value={center.filedHijri} />
           <Meta label={isAr ? 'تاريخ الانتهاء' : 'Expires'} value={center.expiresHijri} />
-          <Meta label={isAr ? 'المالك' : 'Owner'} value={center.ownerAr} />
           <Meta label={isAr ? 'النشاط' : 'Activity'} value={center.goodsAr} />
+          <Meta label={isAr ? 'البلد' : 'Country'} value={center.countryAr} />
         </div>
       </div>
 
