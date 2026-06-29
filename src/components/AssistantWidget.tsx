@@ -200,15 +200,15 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
       try { window.location.href = waUrl; opened = true; } catch { /* noop */ }
     }
     if (!opened) {
-      toast.error('تعذّر فتح واتساب — انسخ الرسالة وأرسلها يدوياً.');
+      announce('تعذّر فتح واتساب — انسخ الرسالة وأرسلها يدوياً.', 'error');
     }
     try {
       const { data, error } = await supabase.functions.invoke('submit-order', { body: order });
       if (error || !data?.ok) throw new Error(error?.message || data?.error || 'failed');
-      toast.success('تم إرسال الطلب على واتساب ✅');
+      announce('تم إرسال الطلب على واتساب ✅', 'success');
       setMessages(m => [...m, { id: makeId(), role: 'assistant', content: `✅ **تم إرسال طلبك على واتساب!**\n\nرقم الطلب: \`${data.id}\`\nسنتواصل معك قريباً 🌴` }]);
     } catch (e: any) {
-      toast.success('تم فتح واتساب — أكمل الإرسال من هناك ✅');
+      announce('تم فتح واتساب — أكمل الإرسال من هناك ✅', 'success');
       setMessages(m => [...m, { id: makeId(), role: 'assistant', content: `✅ **تم تجهيز رسالتك على واتساب.**\n\nأكمل الإرسال من نافذة واتساب وسنتواصل معك فوراً 🌴` }]);
       console.warn('[assistant] order persistence failed:', e?.message);
     } finally { setSubmitting(false); }
@@ -305,7 +305,7 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
       }
     } catch (e: any) {
       const msg = e?.message ?? 'خطأ';
-      toast.error(msg);
+      announce(msg, 'error');
       setMessages(prev => prev.map(m => m.id === aId ? { ...m, content: `⚠️ ${msg}\n\n[تواصل عبر واتساب](${waHref})` } : m));
     } finally {
       setStreaming(false);
@@ -327,7 +327,7 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
     setFormErrors(errs);
     if (Object.keys(errs).length || !pendingOrder) return;
     if (liveQuote && !liveQuote.ok) {
-      toast.error(liveQuote.issues[0] || 'تعذّر تأكيد الكمية، يرجى المراجعة.');
+      announce(liveQuote.issues[0] || 'تعذّر تأكيد الكمية، يرجى المراجعة.', 'error');
       return;
     }
     setReviewMode(true);
