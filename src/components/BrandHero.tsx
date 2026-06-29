@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState, useCallback } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ShieldCheck, Flame, Leaf, Award, BadgeCheck } from 'lucide-react';
+import { ArrowRight, ShieldCheck, Flame, Leaf, Award } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { trademarks } from '@/data/trademarks';
+const Trademarks3D = lazy(() => import('./Trademarks3D'));
 
 const AUTOPLAY_MS = 5500;
 
