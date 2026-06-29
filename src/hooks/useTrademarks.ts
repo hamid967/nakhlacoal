@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { trademarks as fallback, type Trademark } from '@/data/trademarks';
-import tm0 from '@/assets/trademarks/trademark-0.png';
-import tm1 from '@/assets/trademarks/trademark-1.png';
-import tm2 from '@/assets/trademarks/trademark-2.png';
-import tm3 from '@/assets/trademarks/trademark-3.png';
-import tm4 from '@/assets/trademarks/trademark-4.png';
+import tm0 from '@/assets/trademarks/trademark-0.webp';
+import tm1 from '@/assets/trademarks/trademark-1.webp';
+import tm2 from '@/assets/trademarks/trademark-2.webp';
+import tm3 from '@/assets/trademarks/trademark-3.webp';
+import tm4 from '@/assets/trademarks/trademark-4.webp';
 
 const imageById: Record<string, string> = {
   'palm-charcoal': tm0,

@@ -38,7 +38,7 @@ import productBbq from '@/assets/product-bbq.jpg';
 import productHookah from '@/assets/product-hookah.jpg';
 import productCoconut from '@/assets/product-coconut.jpg';
 import productLump from '@/assets/product-lump.jpg';
-import heroTrademark from '@/assets/trademarks/trademark-0.png';
+import heroTrademark from '@/assets/trademarks/trademark-0.webp';
 
 
 export default function Home() {
