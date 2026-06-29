@@ -83,24 +83,27 @@ export function HomeIntro() {
   const [typed, setTyped] = useState('');
   const reduce = useRef(false);
 
+  const settings = useRef(loadSettings());
+  const { slideMs, transitionMs, typeMs } = settings.current;
+
   useEffect(() => {
     reduce.current = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     try {
       if (sessionStorage.getItem(KEY) === '1') { setPhase('done'); return; }
       sessionStorage.setItem(KEY, '1');
     } catch {}
-    const total = SLIDE_MS * SLIDES.length + 800;
+    const total = slideMs * SLIDES.length + 800;
     const t1 = setTimeout(() => setPhase('out'), total - 800);
     const t2 = setTimeout(() => setPhase('done'), total);
     return () => { clearTimeout(t1); clearTimeout(t2); };
-  }, []);
+  }, [slideMs]);
 
   // Auto-advance slides
   useEffect(() => {
     if (phase === 'done') return;
-    const id = setInterval(() => setActive((a) => (a + 1) % SLIDES.length), SLIDE_MS);
+    const id = setInterval(() => setActive((a) => (a + 1) % SLIDES.length), slideMs);
     return () => clearInterval(id);
-  }, [phase]);
+  }, [phase, slideMs]);
 
   // Typewriter dossier per active slide
   const dossierText = useMemo(() => buildDossier(SLIDES[active], !!isAr).join('\n'), [active, isAr]);
@@ -113,9 +116,10 @@ export function HomeIntro() {
       i++;
       setTyped(dossierText.slice(0, i));
       if (i >= dossierText.length) clearInterval(id);
-    }, TYPE_MS);
+    }, typeMs);
     return () => clearInterval(id);
-  }, [dossierText, phase]);
+  }, [dossierText, phase, typeMs]);
+
 
   if (phase === 'done') return null;
 
