@@ -120,7 +120,7 @@ export default function App() {
               <Route path="/portal" element={<ProtectedRoute><PortalLayout /></ProtectedRoute>}>
                 <Route index element={<PortalDashboard />} />
                 <Route path="orders" element={<PortalOrders />} />
-                <Route path="orders/new" element={<NewOrder />} />
+                <Route path="orders/new" element={<PortalNewOrder />} />
                 <Route path="orders/:id" element={<OrderTracking />} />
                 <Route path="tracking" element={<PortalPlaceholder title="تتبع الطلبات" />} />
                 <Route path="quotes" element={<PortalPlaceholder title="العروض السعرية" />} />
