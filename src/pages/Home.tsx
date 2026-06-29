@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { Flame, Clock, Leaf, Wind, ShieldCheck, Award } from 'lucide-react';
 import { SEO } from '@/components/SEO';
 import { ScrollReveal } from '@/components/ScrollReveal';
-import { HomeIntro } from '@/components/HomeIntro';
+
 import { BrandHero } from '@/components/BrandHero';
 import { ProcessSection } from '@/components/ProcessSection';
 import { LocationSection } from '@/components/LocationSection';
@@ -57,7 +57,7 @@ export default function Home() {
 
   return (
     <>
-      <HomeIntro />
+      
       <SEO
         title={isAr ? 'فحم النخلة | الفحم السعودي الفاخر' : 'Palm Charcoal | Premium Saudi Charcoal'}
         description={isAr ? 'فحم طبيعي ١٠٠٪ — احتراق أطول، حرارة أعلى، ورماد أقل.' : '100% natural charcoal — longer burn, higher heat, less ash.'}
