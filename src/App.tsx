@@ -31,6 +31,7 @@ import Articles from '@/pages/Articles';
 import ArticleDetail from '@/pages/ArticleDetail';
 import Studio from '@/pages/Studio';
 import Auth from '@/pages/Auth';
+import ResetPassword from '@/pages/ResetPassword';
 import Profile from '@/pages/Profile';
 import Assistant from '@/pages/Assistant';
 import AdminOrders from '@/pages/AdminOrders';
