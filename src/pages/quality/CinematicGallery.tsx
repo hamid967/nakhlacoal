@@ -29,7 +29,7 @@ export default function CinematicGallery() {
                 <Picture
                   source={s.src as any}
                   alt={s.title}
-                  sizes="(min-width: 768px) 33vw, 100vw"
+                  sizes="(min-width: 1280px) 420px, (min-width: 768px) 33vw, 100vw"
                   imgClassName="w-full h-full object-cover transition-all duration-[1400ms] ease-out group-hover:scale-110 group-hover:rotate-1"
                   imgStyle={{ filter: 'contrast(1.08) saturate(1.05)' }}
                 />
