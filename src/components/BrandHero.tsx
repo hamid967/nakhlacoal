@@ -189,10 +189,12 @@ export function BrandHero() {
             </div>
             <h3 className={`text-xl md:text-2xl font-arabic font-bold`} style={{ color: '#1A4A00' }}>{current.nameAr}</h3>
             <div className="text-xs text-foreground/55 mt-0.5">{current.nameEn}</div>
-            <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-3 text-[11px] md:text-xs font-arabic">
+            <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-3 text-[11px] md:text-xs font-arabic">
               <Meta label={isAr ? 'رقم العلامة' : 'Reg No.'} value={current.registrationNo} />
               <Meta label={isAr ? 'الفئة' : 'Class'} value={current.niceClass.replace('الفئة ', '')} />
               <Meta label={isAr ? 'تاريخ التسجيل' : 'Filed'} value={current.filedHijri} />
+              <Meta label={isAr ? 'تاريخ الانتهاء' : 'Expires'} value={current.expiresHijri} />
+              <Meta label={isAr ? 'المالك' : 'Owner'} value={current.ownerAr} />
               <Meta label={isAr ? 'النشاط' : 'Activity'} value={current.goodsAr.split('،')[0]} />
             </div>
           </motion.div>
@@ -216,7 +218,7 @@ export function BrandHero() {
           <CTA to="/products">{isAr ? 'تحميل الكتالوج' : 'Download Catalogue'}</CTA>
           <CTA to="/contact">{isAr ? 'تواصل المبيعات' : 'Contact Sales'}</CTA>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }
