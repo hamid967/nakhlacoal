@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      analytics_settings: {
+        Row: {
+          enabled: boolean
+          ga4_measurement_id: string | null
+          gtm_container_id: string | null
+          id: boolean
+          updated_at: string
+        }
+        Insert: {
+          enabled?: boolean
+          ga4_measurement_id?: string | null
+          gtm_container_id?: string | null
+          id?: boolean
+          updated_at?: string
+        }
+        Update: {
+          enabled?: boolean
+          ga4_measurement_id?: string | null
+          gtm_container_id?: string | null
+          id?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
       inventory_items: {
         Row: {
           active: boolean
