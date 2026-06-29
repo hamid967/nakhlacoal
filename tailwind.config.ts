@@ -40,6 +40,11 @@ export default {
           ink: "hsl(var(--gold-ink))",
         },
         jade: "hsl(var(--jade))",
+        dark: {
+          DEFAULT: "hsl(var(--dark))",
+          2: "hsl(var(--dark-2))",
+          foreground: "hsl(var(--dark-foreground))",
+        },
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
