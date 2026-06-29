@@ -153,8 +153,9 @@ export default function AdminTracking() {
         </label>
 
         <div>
-          <div className="text-xs mb-1.5" style={{ color: 'var(--a-text-muted)' }}>
-            GA4 Measurement ID
+          <div className="text-xs mb-1.5 flex items-center justify-between" style={{ color: 'var(--a-text-muted)' }}>
+            <span>GA4 Measurement ID</span>
+            <StatusBadge state={ga4Test} />
           </div>
           <input
             className="a-input"
@@ -164,6 +165,11 @@ export default function AdminTracking() {
             disabled={loading}
             dir="ltr"
           />
+          {ga4Test.message && (
+            <p className={`text-xs mt-1 ${ga4Test.status === 'ok' ? 'text-emerald-600' : ga4Test.status === 'fail' ? 'text-red-600' : ''}`}>
+              {ga4Test.message}
+            </p>
+          )}
           <a
             href="https://analytics.google.com/analytics/web/#/p0/admin/streams/table/"
             target="_blank"
@@ -175,8 +181,9 @@ export default function AdminTracking() {
         </div>
 
         <div>
-          <div className="text-xs mb-1.5" style={{ color: 'var(--a-text-muted)' }}>
-            GTM Container ID
+          <div className="text-xs mb-1.5 flex items-center justify-between" style={{ color: 'var(--a-text-muted)' }}>
+            <span>GTM Container ID</span>
+            <StatusBadge state={gtmTest} />
           </div>
           <input
             className="a-input"
@@ -186,11 +193,28 @@ export default function AdminTracking() {
             disabled={loading}
             dir="ltr"
           />
+          {gtmTest.message && (
+            <p className={`text-xs mt-1 ${gtmTest.status === 'ok' ? 'text-emerald-600' : gtmTest.status === 'fail' ? 'text-red-600' : ''}`}>
+              {gtmTest.message}
+            </p>
+          )}
         </div>
 
-        <button type="submit" className="a-btn a-btn-palm" disabled={saving || loading}>
-          <Save className="w-4 h-4" /> {saving ? 'جارٍ الحفظ…' : 'حفظ وتفعيل'}
-        </button>
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={onTest}
+            className="a-btn"
+            disabled={loading || ga4Test.status === 'testing' || gtmTest.status === 'testing'}
+          >
+            {(ga4Test.status === 'testing' || gtmTest.status === 'testing')
+              ? <><Loader2 className="w-4 h-4 animate-spin" /> جارٍ الاختبار…</>
+              : <><PlugZap className="w-4 h-4" /> اختبار المعرّفات</>}
+          </button>
+          <button type="submit" className="a-btn a-btn-palm" disabled={saving || loading}>
+            <Save className="w-4 h-4" /> {saving ? 'جارٍ الحفظ…' : 'حفظ وتفعيل'}
+          </button>
+        </div>
 
         <div className="text-xs leading-relaxed pt-4 border-t" style={{ color: 'var(--a-text-muted)' }}>
           الأحداث الجاهزة للإرسال تلقائياً: <code>audience_track_click</code>، <code>order_open</code>، <code>whatsapp_click</code>، <code>quote_request</code>.
