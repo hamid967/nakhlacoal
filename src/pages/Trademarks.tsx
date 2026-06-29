@@ -156,7 +156,7 @@ export default function Trademarks() {
               <Link
                 key={to}
                 to={to}
-                className="group flex items-start gap-3 p-4 rounded-xl border border-gold/20 bg-white/60 backdrop-blur-md hover:border-gold/60 hover:bg-white/80 hover:shadow-gold transition"
+                className="glass-card group flex items-start gap-3 p-4 rounded-xl hover:border-gold/60 hover:shadow-gold transition"
               >
                 <span className="shrink-0 w-10 h-10 rounded-lg bg-emerald/10 text-emerald flex items-center justify-center group-hover:bg-emerald group-hover:text-cream transition">
                   <Icon className="w-5 h-5" />
