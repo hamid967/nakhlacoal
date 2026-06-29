@@ -86,6 +86,8 @@ async def check(page, route, selector, label, state):
 
     color = await el.evaluate("el => getComputedStyle(el).color")
     bg = await el.evaluate(JS_EFFECTIVE_BG)
+    if bg is None:
+        return {"label": f"{route} {label} {state}", "skipped": True, "reason": "bg-image"}
     fg_rgb, bg_rgb = parse_rgb(color), parse_rgb(bg)
     ratio = contrast(fg_rgb, bg_rgb)
     shot = OUT / f"{label}_{state}.png"
