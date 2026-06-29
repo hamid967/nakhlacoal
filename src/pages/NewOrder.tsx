@@ -20,7 +20,25 @@ export default function NewOrder() {
   return (
     <>
       <SeoHead title={isAr ? "طلب جديد" : "New Order"} noindex />
-      <div className="container max-w-3xl py-24">
+      <div className="relative overflow-hidden">
+        {/* Natural-light parallax layers */}
+        <div
+          aria-hidden
+          className="lux-parallax lux-parallax-slow pointer-events-none absolute -top-32 -start-24 w-[420px] h-[420px] rounded-full blur-3xl opacity-60"
+          style={{ background: "radial-gradient(closest-side, hsl(var(--gold-hi) / 0.35), transparent)" }}
+        />
+        <div
+          aria-hidden
+          className="lux-parallax lux-parallax-med pointer-events-none absolute top-40 -end-24 w-[360px] h-[360px] rounded-full blur-3xl opacity-50"
+          style={{ background: "radial-gradient(closest-side, hsl(var(--jade) / 0.30), transparent)" }}
+        />
+        <div
+          aria-hidden
+          className="lux-parallax lux-parallax-fast pointer-events-none absolute bottom-0 start-1/3 w-[300px] h-[300px] rounded-full blur-3xl opacity-40"
+          style={{ background: "radial-gradient(closest-side, hsl(var(--gold) / 0.25), transparent)" }}
+        />
+
+        <div className="container max-w-3xl py-24 relative">
         <header className="mb-10 text-center">
           <span className="text-xs tracking-[0.3em] text-gold">11 · ORDER FLOW</span>
           <h1 className="font-serif text-4xl mt-2">{isAr ? "طلب جديد" : "New Order"}</h1>
@@ -73,7 +91,9 @@ export default function NewOrder() {
             </Button>
           )}
         </div>
+        </div>
       </div>
     </>
+
   );
 }
