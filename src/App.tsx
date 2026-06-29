@@ -31,6 +31,7 @@ import Articles from '@/pages/Articles';
 import ArticleDetail from '@/pages/ArticleDetail';
 import Studio from '@/pages/Studio';
 import Auth from '@/pages/Auth';
+import ResetPassword from '@/pages/ResetPassword';
 import Profile from '@/pages/Profile';
 import Assistant from '@/pages/Assistant';
 import AdminOrders from '@/pages/AdminOrders';
@@ -88,6 +89,7 @@ export default function App() {
               <Route element={<Layout />}>
                 <Route path="/" element={<Home />} />
                 <Route path="/auth" element={<Auth />} />
+                <Route path="/auth/reset" element={<ResetPassword />} />
                 <Route path="/products" element={<Products />} />
                 <Route path="/products/:slug" element={<ProductDetail />} />
                 <Route path="/compare" element={<ProtectedRoute><Compare /></ProtectedRoute>} />

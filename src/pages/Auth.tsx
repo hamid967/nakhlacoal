@@ -1,133 +1,61 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet-async';
-import { z } from 'zod';
 import { toast } from 'sonner';
-import { supabase } from '@/integrations/supabase/client';
-import { lovable } from '@/integrations/lovable';
-import { useAuth } from '@/contexts/AuthContext';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { LogOut } from 'lucide-react';
 
-const emailSchema = z.string().trim().email({ message: 'invalid_email' }).max(255);
-const passwordSchema = z.string().min(8, { message: 'password_short' }).max(72);
-const nameSchema = z.string().trim().min(2, { message: 'name_short' }).max(60);
+import { useAuth } from '@/contexts/AuthContext';
+import { AuthCard } from '@/features/auth/AuthCard';
+import { BrandCanvas } from '@/features/auth/BrandCanvas';
+import { TwoFactorChallenge } from '@/features/auth/TwoFactorChallenge';
+import { resolveRoleRoute, sanitizeFrom } from '@/features/auth/useRoleRedirect';
 
 export default function Auth() {
   const { i18n } = useTranslation();
   const isAr = i18n.language?.startsWith('ar');
+  const reduce = useReducedMotion();
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, signOut } = useAuth();
-  const [mode, setMode] = useState<'signin' | 'signup'>('signin');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
+  const { user, roles, loading, signOut } = useAuth();
   const [busy, setBusy] = useState(false);
-  const [err, setErr] = useState<string | null>(null);
-
-  const sanitizeFrom = (raw?: string | null) => {
-    if (!raw) return '/';
-    try {
-      // Only allow internal, relative paths — reject //, http(s)://, javascript:, etc.
-      if (!raw.startsWith('/') || raw.startsWith('//')) return '/';
-      const u = new URL(raw, window.location.origin);
-      if (u.origin !== window.location.origin) return '/';
-      if (u.pathname === '/auth') return '/';
-      return u.pathname + u.search + u.hash;
-    } catch {
-      return '/';
-    }
-  };
-  const queryFrom = new URLSearchParams(location.search).get('from');
-  const stateFrom = (location.state as { from?: string } | null)?.from;
-  const from = sanitizeFrom(queryFrom ?? stateFrom);
-
-  const hasExplicitFrom = Boolean(queryFrom ?? stateFrom);
-  // Auto-redirect only when the user was sent here from a protected route.
-  // Otherwise keep them on /auth so the Sign-out panel stays accessible.
-  useEffect(() => {
-    if (user && hasExplicitFrom) navigate(from, { replace: true });
-  }, [user, hasExplicitFrom, from, navigate]);
-
-
+  const [mfaPassed, setMfaPassed] = useState(false);
 
   const t = (ar: string, en: string) => (isAr ? ar : en);
+
+  const queryFrom = new URLSearchParams(location.search).get('from');
+  const stateFrom = (location.state as { from?: string } | null)?.from;
+  const explicitFrom = sanitizeFrom(queryFrom ?? stateFrom);
+
+  // Resolve the post-auth target route from role-based mapping, with a
+  // sanitized `from` taking precedence when present.
+  const target = useMemo(() => {
+    if (explicitFrom) return explicitFrom;
+    const stored = (() => {
+      try { return sessionStorage.getItem('post-auth-redirect'); } catch { return null; }
+    })();
+    const sanitizedStored = sanitizeFrom(stored);
+    if (sanitizedStored) return sanitizedStored;
+    return resolveRoleRoute(roles);
+  }, [explicitFrom, roles]);
+
+  // Auto-redirect once we have a user, roles are fetched, and MFA (if any) is clear.
+  useEffect(() => {
+    if (!user || loading) return;
+    if (!mfaPassed) return;
+    try { sessionStorage.removeItem('post-auth-redirect'); } catch {/* noop */}
+    navigate(target, { replace: true });
+  }, [user, loading, mfaPassed, target, navigate]);
 
   const handleSignOut = async () => {
     setBusy(true);
     try {
       await signOut();
       toast.success(t('تم تسجيل الخروج', 'Signed out'));
-      navigate('/', { replace: true });
     } catch (e) {
-      const msg = e instanceof Error ? e.message : 'Sign-out failed';
-      setErr(msg);
+      toast.error(t('فشل تسجيل الخروج', 'Sign-out failed'));
     } finally {
-      setBusy(false);
-    }
-  };
-
-
-  const errMsg = (code: string) => {
-    const map: Record<string, [string, string]> = {
-      invalid_email: ['بريد إلكتروني غير صحيح', 'Invalid email address'],
-      password_short: ['كلمة المرور 8 أحرف على الأقل', 'Password must be at least 8 characters'],
-      name_short: ['الاسم قصير جداً', 'Name is too short'],
-    };
-    const [ar, en] = map[code] ?? [code, code];
-    return isAr ? ar : en;
-  };
-
-  const submit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setErr(null);
-
-    const emailRes = emailSchema.safeParse(email);
-    if (!emailRes.success) return setErr(errMsg(emailRes.error.issues[0].message));
-    const pwRes = passwordSchema.safeParse(password);
-    if (!pwRes.success) return setErr(errMsg(pwRes.error.issues[0].message));
-
-    setBusy(true);
-    try {
-      if (mode === 'signup') {
-        const nameRes = nameSchema.safeParse(name);
-        if (!nameRes.success) {
-          setBusy(false);
-          return setErr(errMsg(nameRes.error.issues[0].message));
-        }
-        const { error } = await supabase.auth.signUp({
-          email: emailRes.data,
-          password: pwRes.data,
-          options: {
-            emailRedirectTo: `${window.location.origin}/`,
-            data: { full_name: nameRes.data },
-          },
-        });
-        if (error) throw error;
-        toast.success(t('تم إنشاء الحساب. تحقق من بريدك لتأكيد الحساب.', 'Account created. Check your email to confirm.'));
-      } else {
-        const { error } = await supabase.auth.signInWithPassword({
-          email: emailRes.data,
-          password: pwRes.data,
-        });
-        if (error) throw error;
-        toast.success(t('مرحباً بعودتك', 'Welcome back'));
-      }
-    } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : 'Authentication failed';
-      setErr(msg);
-    } finally {
-      setBusy(false);
-    }
-  };
-
-  const google = async () => {
-    setBusy(true);
-    const result = await lovable.auth.signInWithOAuth('google', {
-      redirect_uri: window.location.origin,
-    });
-    if (result.error) {
-      setErr(result.error.message ?? 'Google sign-in failed');
       setBusy(false);
     }
   };
@@ -137,132 +65,103 @@ export default function Auth() {
       <Helmet>
         <title>{t('تسجيل الدخول | فحم النخلة', 'Sign In | Palm Charcoal')}</title>
         <meta name="robots" content="noindex, nofollow" />
+        <meta name="description" content={t('بوابة دخول آمنة لعملاء وشركاء فحم النخلة.', 'Secure access portal for Palm Charcoal clients & partners.')} />
       </Helmet>
-      <section className="min-h-[80vh] flex items-center justify-center px-4 py-16">
-        <div className="w-full max-w-md bg-card border border-border rounded-2xl p-8 shadow-sm">
-          {user ? (
-            <div className="text-center space-y-4">
-              <h1 className="font-serif text-2xl">{t('أنت مسجّل الدخول', 'You are signed in')}</h1>
-              <p className="text-sm text-muted-foreground break-all">{user.email}</p>
-              <div className="flex flex-col gap-2 pt-2">
-                <Link to="/" className="w-full py-2.5 rounded-lg border border-input bg-background hover:bg-muted text-sm font-medium">
-                  {t('الذهاب إلى الصفحة الرئيسية', 'Go to homepage')}
-                </Link>
-                <button
-                  type="button"
-                  onClick={handleSignOut}
-                  disabled={busy}
-                  className="w-full py-2.5 rounded-lg bg-destructive text-destructive-foreground font-medium hover:opacity-90 transition disabled:opacity-50"
-                >
-                  {busy ? '...' : t('تسجيل الخروج', 'Sign out')}
-                </button>
-              </div>
-              {err && <p className="text-xs text-destructive">{err}</p>}
-            </div>
-          ) : (
-          <>
 
-          <h1 className="font-serif text-3xl text-center mb-2">
-            {mode === 'signin' ? t('تسجيل الدخول', 'Sign In') : t('إنشاء حساب', 'Create Account')}
-          </h1>
-          <p className="text-center text-sm text-muted-foreground mb-6">
-            {t('فحم النخلة — للعملاء والشركاء', 'Palm Charcoal — for clients & partners')}
-          </p>
+      <section
+        className="relative grid min-h-[calc(100dvh-4rem)] lg:grid-cols-[1.05fr_1fr] xl:grid-cols-[1.2fr_1fr]"
+        dir={isAr ? 'rtl' : 'ltr'}
+      >
+        <BrandCanvas isAr={isAr} />
 
-          <button
-            type="button"
-            onClick={google}
-            disabled={busy}
-            className="w-full py-2.5 rounded-lg border border-input bg-background hover:bg-muted transition flex items-center justify-center gap-2 text-sm font-medium disabled:opacity-50"
-          >
-            <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden>
-              <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.4 29.3 35.5 24 35.5c-6.4 0-11.5-5.1-11.5-11.5S17.6 12.5 24 12.5c2.9 0 5.6 1.1 7.7 2.9l5.7-5.7C33.6 6.2 29 4.5 24 4.5 13.2 4.5 4.5 13.2 4.5 24S13.2 43.5 24 43.5 43.5 34.8 43.5 24c0-1.2-.1-2.3-.3-3.5z" />
-              <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 16 18.9 12.5 24 12.5c2.9 0 5.6 1.1 7.7 2.9l5.7-5.7C33.6 6.2 29 4.5 24 4.5 16.3 4.5 9.7 8.9 6.3 14.7z" />
-              <path fill="#4CAF50" d="M24 43.5c5 0 9.5-1.7 13-4.6l-6-5.1c-1.9 1.3-4.3 2-7 2-5.2 0-9.6-3.1-11.2-7.5l-6.5 5C9.5 39 16.2 43.5 24 43.5z" />
-              <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.2-4.3 5.5l6 5.1c4-3.7 6.5-9.1 6.5-15.1 0-1.2-.1-2.3-.3-3z" />
-            </svg>
-            {t('المتابعة بحساب Google', 'Continue with Google')}
-          </button>
+        {/* Right: auth surface */}
+        <div className="relative flex items-center justify-center px-4 py-12 sm:px-8 lg:py-16">
+          {/* Mobile ambient background */}
+          <div
+            className="lg:hidden absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,hsl(var(--primary)/0.12),transparent_60%)]"
+            aria-hidden="true"
+          />
 
-          <div className="my-5 flex items-center gap-3 text-xs text-muted-foreground">
-            <div className="flex-1 h-px bg-border" />
-            {t('أو', 'OR')}
-            <div className="flex-1 h-px bg-border" />
-          </div>
-
-          <form onSubmit={submit} noValidate className="space-y-3 text-sm">
-            {mode === 'signup' && (
-              <div>
-                <label className="block mb-1 text-muted-foreground">{t('الاسم الكامل', 'Full Name')}</label>
-                <input
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  maxLength={60}
-                  className="w-full px-3 py-2 rounded-lg border border-input bg-background"
-                />
-              </div>
-            )}
-            <div>
-              <label className="block mb-1 text-muted-foreground">{t('البريد الإلكتروني', 'Email')}</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                maxLength={255}
-                autoComplete="email"
-                className="w-full px-3 py-2 rounded-lg border border-input bg-background"
-              />
-            </div>
-            <div>
-              <label className="block mb-1 text-muted-foreground">{t('كلمة المرور', 'Password')}</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                maxLength={72}
-                autoComplete={mode === 'signup' ? 'new-password' : 'current-password'}
-                className="w-full px-3 py-2 rounded-lg border border-input bg-background"
-              />
-            </div>
-
-            {err && <p className="text-xs text-destructive">{err}</p>}
-
-            <button
-              type="submit"
-              disabled={busy}
-              className="w-full py-2.5 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition disabled:opacity-50"
-            >
-              {busy ? '...' : mode === 'signin' ? t('دخول', 'Sign In') : t('إنشاء حساب', 'Create Account')}
-            </button>
-          </form>
-
-          <p className="mt-5 text-center text-xs text-muted-foreground">
-            {mode === 'signin' ? (
-              <>
-                {t('ليس لديك حساب؟', "Don't have an account?")}{' '}
-                <button type="button" onClick={() => setMode('signup')} className="text-primary underline">
-                  {t('إنشاء حساب', 'Create one')}
-                </button>
-              </>
+          <AnimatePresence mode="wait">
+            {user && !loading ? (
+              <motion.div
+                key="signed-in"
+                initial={{ opacity: 0, y: reduce ? 0 : 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5 }}
+                className="w-full max-w-md rounded-3xl border border-border/60 bg-card/70 backdrop-blur-2xl p-8 text-center shadow-2xl"
+              >
+                <h1 className="font-serif text-2xl text-foreground">
+                  {t('أنت مسجّل الدخول', 'You are signed in')}
+                </h1>
+                <p className="text-sm text-muted-foreground mt-2 break-all">{user.email}</p>
+                <p className="text-xs uppercase tracking-[0.3em] text-primary mt-4">
+                  {t('جارٍ التوجيه…', 'Redirecting…')}
+                </p>
+                <div className="flex flex-col gap-2 mt-6">
+                  <Link
+                    to={target}
+                    className="w-full h-11 rounded-xl bg-primary text-primary-foreground font-medium grid place-items-center hover:opacity-90 transition"
+                  >
+                    {t('المتابعة', 'Continue')}
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={handleSignOut}
+                    disabled={busy}
+                    className="w-full h-11 rounded-xl border border-border bg-background/60 text-foreground inline-flex items-center justify-center gap-2 hover:bg-muted transition disabled:opacity-60"
+                  >
+                    <LogOut className="size-4" aria-hidden="true" />
+                    {busy ? '…' : t('تسجيل الخروج', 'Sign out')}
+                  </button>
+                </div>
+              </motion.div>
             ) : (
-              <>
-                {t('لديك حساب؟', 'Already have an account?')}{' '}
-                <button type="button" onClick={() => setMode('signin')} className="text-primary underline">
-                  {t('سجّل الدخول', 'Sign in')}
-                </button>
-              </>
+              <AuthCard
+                key="auth-card"
+                isAr={isAr}
+                redirectTo={target}
+                onSuccess={() => { /* navigation happens via auth-state effect */ }}
+              />
             )}
-          </p>
-          <p className="mt-2 text-center text-xs">
-            <Link to="/" className="text-muted-foreground hover:text-foreground">
-              {t('← العودة للصفحة الرئيسية', '← Back to home')}
-            </Link>
-          </p>
-          </>
-          )}
+          </AnimatePresence>
         </div>
-
       </section>
+
+      {user && !mfaPassed && (
+        <TwoFactorChallenge isAr={isAr} onVerified={() => setMfaPassed(true)} />
+      )}
+      {user && mfaPassed === false && (
+        // Hidden auto-clear: if no factor enrollment exists, TwoFactorChallenge
+        // renders null and we still need to release the redirect gate.
+        <MfaAutoPass onPass={() => setMfaPassed(true)} />
+      )}
     </>
   );
+}
+
+/**
+ * Fallback that releases the MFA gate when the account has no enrolled factor.
+ * It checks once after auth and flips `mfaPassed` so the redirect can proceed.
+ */
+function MfaAutoPass({ onPass }: { onPass: () => void }) {
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        const { supabase } = await import('@/integrations/supabase/client');
+        const { data } = await supabase.auth.mfa.listFactors();
+        const verified = data?.totp?.some((f) => f.status === 'verified');
+        if (!verified && alive) onPass();
+        if (verified) {
+          // Defer to TwoFactorChallenge; do nothing here.
+        }
+      } catch {
+        if (alive) onPass();
+      }
+    })();
+    return () => { alive = false; };
+  }, [onPass]);
+  return null;
 }
