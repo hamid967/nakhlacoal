@@ -112,40 +112,7 @@ export default function Home() {
         </ScrollReveal>
       </LuxSection>
 
-      {/* Certifications / Trust marks */}
-      <Certifications />
-
-      {/* About band */}
-      <LuxSection className="py-20 md:py-28">
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          <ScrollReveal className="lg:col-span-7">
-            <Eyebrow>{isAr ? 'من نحن' : 'Our story'}</Eyebrow>
-            <h2 className={`text-3xl md:text-5xl leading-tight my-6 ${isAr ? 'font-arabic font-bold' : 'font-display font-bold'}`}>
-              {isAr ? 'الخيار الأمثل لعشاق الجودة' : 'The first choice for quality lovers'}
-            </h2>
-            <p className="text-base md:text-lg leading-relaxed text-foreground/75 mb-8 font-arabic max-w-2xl">
-              {isAr ? 'فحم النخلة هو الخيار الأمثل لعشاق الجودة. نحرص على تقديم فحم طبيعي ١٠٠٪ يتم إنتاجه بأحدث التقنيات وبمعايير عالمية ليمنحك أفضل تجربة.' : 'Palm Charcoal is the first choice for quality lovers — 100% natural, latest tech, international standards.'}
-            </p>
-            <LuxButton to="/about" variant="ghost" withArrow>{isAr ? 'تعرف علينا أكثر' : 'Learn more'}</LuxButton>
-          </ScrollReveal>
-
-          <ScrollReveal delay={150} className="lg:col-span-5">
-            <div className="rounded-3xl glass-card p-8 md:p-10">
-              <Stat value="+5" label={isAr ? 'سنوات من الخبرة' : 'years of expertise'} size="lg" />
-              <div className="divider-luxe my-8" />
-              <div className="grid grid-cols-2 gap-6">
-                <Stat value="12+" label={isAr ? 'دولة' : 'Countries'} size="sm" />
-                <Stat value="50K+" label={isAr ? 'عميل' : 'Clients'} size="sm" />
-                <Stat value="24/7" label={isAr ? 'دعم' : 'Support'} size="sm" />
-                <Stat value="100%" label={isAr ? 'طبيعي' : 'Natural'} size="sm" />
-              </div>
-            </div>
-          </ScrollReveal>
-        </div>
-      </LuxSection>
-
-      {/* Products */}
+      {/* Products — move higher for conversion */}
       <LuxSection tone="surface" className="py-20 md:py-28">
         <SectionHeader
           align="between"
@@ -166,9 +133,48 @@ export default function Home() {
 
       <JourneySection />
 
+      {/* About band — story after the user has seen products & process */}
+      <LuxSection className="py-20 md:py-28">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          <ScrollReveal className="lg:col-span-7">
+            <Eyebrow>{isAr ? 'من نحن' : 'Our story'}</Eyebrow>
+            <h2 className={`text-3xl md:text-5xl leading-tight my-6 ${isAr ? 'font-arabic font-bold' : 'font-display font-bold'}`}>
+              {isAr ? 'الخيار الأمثل لعشاق الجودة' : 'The first choice for quality lovers'}
+            </h2>
+            <p className="text-base md:text-lg leading-relaxed text-foreground/75 mb-8 font-arabic max-w-2xl">
+              {isAr ? 'فحم النخلة هو الخيار الأمثل لعشاق الجودة. نحرص على تقديم فحم طبيعي ١٠٠٪ يتم إنتاجه بأحدث التقنيات وبمعايير عالمية ليمنحك أفضل تجربة.' : 'Palm Charcoal is the first choice for quality lovers — 100% natural, latest tech, international standards.'}
+            </p>
+            <LuxButton to="/about" variant="ghost" withArrow>{isAr ? 'تعرف علينا أكثر' : 'Learn more'}</LuxButton>
+          </ScrollReveal>
+
+          <ScrollReveal delay={150} className="lg:col-span-5">
+            <div className="rounded-3xl glass-card p-8 md:p-10">
+              <Stat value="+5" label={isAr ? 'سنوات من الخبرة' : 'years of expertise'} size="lg" />
+              <div className="divider-luxe my-8" />
+              <div className="grid grid-cols-2 gap-6">
+                <Stat value="12+" label={isAr ? 'دولة' : 'Countries'} size="sm" />
+                <Stat
+                  value={`${liveOrders.toLocaleString(isAr ? 'ar-SA' : 'en-US')}+`}
+                  label={
+                    <span className="inline-flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" aria-hidden />
+                      {isAr ? 'طلب مُنجز' : 'Orders fulfilled'}
+                    </span>
+                  }
+                  size="sm"
+                />
+                <Stat value="24/7" label={isAr ? 'دعم' : 'Support'} size="sm" />
+                <Stat value="100%" label={isAr ? 'طبيعي' : 'Natural'} size="sm" />
+              </div>
+            </div>
+          </ScrollReveal>
+        </div>
+      </LuxSection>
+
+      {/* Certifications */}
+      <Certifications />
 
       {/* Testimonials */}
-
       <LuxSection tone="dark" className="py-20 md:py-28">
         <SectionHeader
           eyebrow={isAr ? 'آراء عملائنا' : 'Customer voices'}
@@ -183,7 +189,6 @@ export default function Home() {
 
       <LocationSection />
 
-
       <CtaBand
         title={isAr ? 'جاهز لتجربة الفحم الفاخر؟' : 'Ready to taste the premium difference?'}
         lead={isAr ? 'تواصل معنا الآن واحصل على عرض خاص لجملة وتجزئة وتصدير.' : 'Contact us for wholesale, retail and export offers.'}
@@ -191,6 +196,8 @@ export default function Home() {
         ctaTo="/contact"
       />
 
+      <StickyMobileCTA />
     </>
   );
 }
+
