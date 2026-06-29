@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Menu, X, ShoppingCart, User, LogOut } from 'lucide-react';
+import { Menu, X, ShoppingCart, User, LogOut, ChevronDown } from 'lucide-react';
 import { LanguageToggle } from './LanguageToggle';
 import { ThemeToggle } from './ThemeToggle';
 import { OrderModal } from './OrderModal';
@@ -9,17 +9,39 @@ import { QuoteBuilder } from './QuoteBuilder';
 import { useAuth } from '@/contexts/AuthContext';
 import logo from '@/assets/palm-charcoal-logo.png';
 
+type MegaItem = { to: string; titleAr: string; titleEn: string; descAr?: string; descEn?: string };
 
-const navItems = [
-  { to: '/', key: 'nav.home' },
-  { to: '/products', key: 'nav.products' },
-  { to: '/uses', key: 'nav.uses' },
-  { to: '/about', key: 'nav.about' },
-  { to: '/quality', key: 'nav.quality' },
-  { to: '/trademarks', key: 'nav.trademarks' },
-  { to: '/export', key: 'nav.export' },
-  { to: '/articles', key: 'nav.articles' },
-  { to: '/contact', key: 'nav.contact' },
+type NavEntry =
+  | { type: 'link'; to: string; key: string }
+  | { type: 'mega'; key: string; to: string; columns: MegaItem[] };
+
+const navItems: NavEntry[] = [
+  { type: 'link', to: '/', key: 'nav.home' },
+  {
+    type: 'mega',
+    key: 'nav.products',
+    to: '/products',
+    columns: [
+      { to: '/products', titleAr: 'كل المنتجات', titleEn: 'All Products', descAr: 'تشكيلة فحم النخلة الكاملة', descEn: 'Full Palm Charcoal range' },
+      { to: '/compare', titleAr: 'مقارنة', titleEn: 'Compare', descAr: 'قارن المنتجات جنبًا إلى جنب', descEn: 'Compare side by side' },
+      { to: '/catalog', titleAr: 'الكتالوج PDF', titleEn: 'Catalog PDF', descAr: 'كتالوج مطبوع للجملة', descEn: 'Printable wholesale catalog' },
+      { to: '/wholesale', titleAr: 'الجملة', titleEn: 'Wholesale', descAr: 'أسعار وشروط الجملة', descEn: 'B2B pricing & terms' },
+      { to: '/export', titleAr: 'التصدير', titleEn: 'Export', descAr: 'حلول التصدير الدولية', descEn: 'Global export solutions' },
+    ],
+  },
+  { type: 'link', to: '/about', key: 'nav.about' },
+  { type: 'link', to: '/quality', key: 'nav.quality' },
+  {
+    type: 'mega',
+    key: 'nav.knowledge',
+    to: '/articles',
+    columns: [
+      { to: '/uses', titleAr: 'الاستخدامات', titleEn: 'Uses', descAr: 'شيشة، شواء، مطاعم', descEn: 'Shisha, BBQ, restaurants' },
+      { to: '/trademarks', titleAr: 'علاماتنا', titleEn: 'Trademarks', descAr: '٥ علامات مسجّلة', descEn: '5 registered marks' },
+      { to: '/articles', titleAr: 'المقالات', titleEn: 'Articles', descAr: 'مدوّنة الفحم الفاخر', descEn: 'Premium charcoal blog' },
+    ],
+  },
+  { type: 'link', to: '/contact', key: 'nav.contact' },
 ];
 
 export function LuxNav() {
@@ -28,6 +50,8 @@ export function LuxNav() {
   const [open, setOpen] = useState(false);
   const [orderOpen, setOrderOpen] = useState(false);
   const [quoteOpen, setQuoteOpen] = useState(false);
+  const [activeMega, setActiveMega] = useState<string | null>(null);
+  const closeTimer = useRef<number | null>(null);
   const location = useLocation();
 
   useEffect(() => {
@@ -39,6 +63,7 @@ export function LuxNav() {
 
   useEffect(() => {
     setOpen(false);
+    setActiveMega(null);
   }, [location.pathname]);
 
   useEffect(() => {
@@ -47,15 +72,24 @@ export function LuxNav() {
 
   const isAr = i18n.language?.startsWith('ar');
 
+  const openMega = (key: string) => {
+    if (closeTimer.current) window.clearTimeout(closeTimer.current);
+    setActiveMega(key);
+  };
+  const scheduleClose = () => {
+    if (closeTimer.current) window.clearTimeout(closeTimer.current);
+    closeTimer.current = window.setTimeout(() => setActiveMega(null), 140);
+  };
+
   return (
     <>
       <nav
         className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 glass-strip ${
           scrolled ? 'py-2 shadow-lg' : 'py-4'
         }`}
+        onMouseLeave={scheduleClose}
       >
         <div className="container flex items-center justify-between gap-6">
-          {/* Brand mark */}
           <Link to="/" className="group flex items-center gap-3" aria-label="Palm Charcoal">
             <span className="relative">
               <span className="absolute inset-0 rounded-full bg-gold/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
@@ -65,26 +99,51 @@ export function LuxNav() {
                 width={56}
                 height={56}
                 className={`relative w-auto transition-all duration-700 group-hover:scale-105 ${scrolled ? 'h-10 md:h-11' : 'h-12 md:h-14'}`}
-               />
+              />
             </span>
           </Link>
 
-          {/* Desktop nav */}
+          {/* Desktop nav — 6 items max */}
           <ul className="hidden lg:flex flex-nowrap items-center gap-0.5 xl:gap-1 rounded-full px-2 py-1 glass-card">
-            {navItems.map((item) => (
-              <li key={item.to}>
-                <NavLink to={item.to} end={item.to === '/'} className="block">
-                  {({ isActive }) => (
-                    <span className="nav-pill font-arabic" data-active={isActive}>
+            {navItems.map((item) => {
+              if (item.type === 'link') {
+                return (
+                  <li key={item.to} onMouseEnter={() => setActiveMega(null)}>
+                    <NavLink to={item.to} end={item.to === '/'} className="block">
+                      {({ isActive }) => (
+                        <span className="nav-pill font-arabic" data-active={isActive}>
+                          {t(item.key)}
+                        </span>
+                      )}
+                    </NavLink>
+                  </li>
+                );
+              }
+              const expanded = activeMega === item.key;
+              return (
+                <li
+                  key={item.key}
+                  className="relative"
+                  onMouseEnter={() => openMega(item.key)}
+                  onFocus={() => openMega(item.key)}
+                >
+                  <button
+                    type="button"
+                    aria-expanded={expanded}
+                    aria-haspopup="true"
+                    onClick={() => setActiveMega(expanded ? null : item.key)}
+                    className="block"
+                  >
+                    <span className="nav-pill font-arabic inline-flex items-center gap-1" data-active={location.pathname.startsWith(item.to)}>
                       {t(item.key)}
+                      <ChevronDown className={`w-3 h-3 transition-transform ${expanded ? 'rotate-180' : ''}`} />
                     </span>
-                  )}
-                </NavLink>
-              </li>
-            ))}
+                  </button>
+                </li>
+              );
+            })}
           </ul>
 
-          {/* Right cluster */}
           <div className="flex items-center gap-1.5 md:gap-2">
             <AccountButton />
             <button aria-label="Cart" className="hidden xl:inline-flex w-10 h-10 rounded-full items-center justify-center text-foreground/70 hover:text-dark hover:bg-gold/10 transition-all">
@@ -92,14 +151,12 @@ export function LuxNav() {
             </button>
             <ThemeToggle />
             <LanguageToggle compact />
-            <button onClick={() => setQuoteOpen(true)} className="hidden lg:inline-flex items-center text-xs font-semibold text-dark hover:text-gold border-b border-dashed border-gold/50 hover:border-gold transition px-2 py-1 whitespace-nowrap">
-              عرض سعر
-            </button>
-            <button onClick={() => setOrderOpen(true)} className="hidden md:inline-flex btn-gold !px-4 xl:!px-5 !py-2 xl:!py-2.5 text-xs !rounded-full whitespace-nowrap">
+            {/* Unified single primary CTA */}
+            <button onClick={() => setOrderOpen(true)} className="hidden md:inline-flex btn-gold !px-4 xl:!px-5 !py-2 xl:!py-2.5 text-xs !rounded-full whitespace-nowrap min-h-11">
               {t('nav.order')}
             </button>
             <button
-              className="lg:hidden w-10 h-10 rounded-full border-luxe flex items-center justify-center text-dark hover:bg-gold/10 transition-colors"
+              className="lg:hidden w-11 h-11 rounded-full border-luxe flex items-center justify-center text-dark hover:bg-gold/10 transition-colors"
               onClick={() => setOpen(true)}
               aria-label="Open menu"
             >
@@ -107,8 +164,54 @@ export function LuxNav() {
             </button>
           </div>
         </div>
-      </nav>
 
+        {/* Megamenu panel */}
+        <div
+          className={`hidden lg:block absolute inset-x-0 top-full transition-all duration-300 ${
+            activeMega ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 -translate-y-2 pointer-events-none'
+          }`}
+          onMouseEnter={() => activeMega && openMega(activeMega)}
+          onMouseLeave={scheduleClose}
+        >
+          <div className="container pt-3">
+            <div className="glass-card rounded-2xl p-6 shadow-xl border border-gold/15">
+              {navItems.map((item) => {
+                if (item.type !== 'mega' || activeMega !== item.key) return null;
+                return (
+                  <div key={item.key} className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                    {item.columns.map((col) => (
+                      <Link
+                        key={col.to}
+                        to={col.to}
+                        onClick={() => setActiveMega(null)}
+                        className="group rounded-xl p-4 hover:bg-gold/5 border border-transparent hover:border-gold/20 transition-all"
+                      >
+                        <div className="text-sm font-semibold text-dark group-hover:text-gold-ink font-arabic">
+                          {isAr ? col.titleAr : col.titleEn}
+                        </div>
+                        <div className="text-xs text-foreground/60 mt-1 font-arabic">
+                          {isAr ? col.descAr : col.descEn}
+                        </div>
+                      </Link>
+                    ))}
+                    <button
+                      onClick={() => { setActiveMega(null); setQuoteOpen(true); }}
+                      className="group rounded-xl p-4 text-start hover:bg-gold/5 border border-dashed border-gold/30 hover:border-gold/60 transition-all"
+                    >
+                      <div className="text-sm font-semibold text-gold-ink font-arabic">
+                        {isAr ? 'طلب عرض سعر' : 'Request a quote'}
+                      </div>
+                      <div className="text-xs text-foreground/60 mt-1 font-arabic">
+                        {isAr ? 'مخصّص للجملة والتصدير' : 'Tailored for B2B & export'}
+                      </div>
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </nav>
 
       {/* Mobile drawer */}
       <div
@@ -118,14 +221,14 @@ export function LuxNav() {
       >
         <div className="absolute inset-0 bg-background/90 backdrop-blur-2xl" onClick={() => setOpen(false)} />
         <aside
-          className={`absolute top-0 ${isAr ? 'left-0' : 'right-0'} h-full w-[85vw] max-w-sm glass-card rounded-none ${
+          className={`absolute top-0 ${isAr ? 'left-0' : 'right-0'} h-dvh w-[85vw] max-w-sm glass-card rounded-none ${
             open ? 'translate-x-0' : isAr ? '-translate-x-full' : 'translate-x-full'
-          } transition-transform duration-500 ease-out p-8`}
+          } transition-transform duration-500 ease-out p-8 overflow-y-auto`}
         >
-          <div className="flex items-center justify-between mb-12">
-            <img src={logo} alt="Palm Charcoal" width={48} height={48} className="h-12 w-auto"  />
+          <div className="flex items-center justify-between mb-10">
+            <img src={logo} alt="Palm Charcoal" width={48} height={48} className="h-12 w-auto" />
             <button
-              className="w-10 h-10 rounded-full border-luxe flex items-center justify-center text-gold"
+              className="w-11 h-11 rounded-full border-luxe flex items-center justify-center text-gold"
               onClick={() => setOpen(false)}
               aria-label="Close menu"
             >
@@ -134,24 +237,46 @@ export function LuxNav() {
           </div>
           <ul className="space-y-1">
             {navItems.map((item) => (
-              <li key={item.to}>
+              <li key={item.type === 'link' ? item.to : item.key}>
                 <NavLink
                   to={item.to}
                   end={item.to === '/'}
                   className={({ isActive }) =>
-                    `block py-4 text-sm uppercase tracking-[0.22em] border-b border-gold/10 ${
+                    `block py-4 text-sm uppercase tracking-[0.22em] border-b border-gold/10 font-arabic ${
                       isActive ? 'text-gold-hi' : 'text-foreground/80'
                     }`
                   }
                 >
                   {t(item.key)}
                 </NavLink>
+                {item.type === 'mega' && (
+                  <ul className="ps-3 pb-2">
+                    {item.columns.map((col) => (
+                      <li key={col.to}>
+                        <NavLink
+                          to={col.to}
+                          className="block py-2 text-xs text-foreground/60 hover:text-gold-ink font-arabic"
+                        >
+                          • {isAr ? col.titleAr : col.titleEn}
+                        </NavLink>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </li>
             ))}
           </ul>
-          <button onClick={() => { setOpen(false); setOrderOpen(true); }} className="btn-gold mt-10 w-full">
-            {t('nav.order')}
-          </button>
+          <div className="mt-8 space-y-3">
+            <button onClick={() => { setOpen(false); setOrderOpen(true); }} className="btn-gold w-full min-h-12">
+              {t('nav.order')}
+            </button>
+            <button
+              onClick={() => { setOpen(false); setQuoteOpen(true); }}
+              className="w-full min-h-12 rounded-full border border-gold/40 text-gold-ink font-arabic text-sm hover:bg-gold/5 transition"
+            >
+              {isAr ? 'طلب عرض سعر' : 'Request a quote'}
+            </button>
+          </div>
         </aside>
       </div>
       <OrderModal open={orderOpen} onOpenChange={setOrderOpen} />
@@ -169,7 +294,7 @@ function AccountButton() {
       <Link
         to="/auth"
         aria-label={isAr ? 'تسجيل الدخول' : 'Sign in'}
-        className="hidden md:inline-flex w-10 h-10 rounded-full items-center justify-center text-foreground/70 hover:text-gold-ink focus-visible:text-gold-ink transition-colors"
+        className="hidden md:inline-flex w-11 h-11 rounded-full items-center justify-center text-foreground/70 hover:text-gold-ink focus-visible:text-gold-ink transition-colors"
       >
         <User className="w-4 h-4" />
       </Link>
@@ -181,14 +306,14 @@ function AccountButton() {
         to="/profile"
         aria-label={isAr ? 'الملف الشخصي' : 'Profile'}
         title={user.email ?? ''}
-        className="w-10 h-10 rounded-full inline-flex items-center justify-center text-foreground/70 hover:text-gold-ink focus-visible:text-gold-ink transition-colors"
+        className="w-11 h-11 rounded-full inline-flex items-center justify-center text-foreground/70 hover:text-gold-ink focus-visible:text-gold-ink transition-colors"
       >
         <User className="w-4 h-4" />
       </Link>
       <button
         onClick={signOut}
         aria-label={isAr ? 'تسجيل الخروج' : 'Sign out'}
-        className="w-10 h-10 rounded-full inline-flex items-center justify-center text-foreground/70 hover:text-gold-ink focus-visible:text-gold-ink transition-colors"
+        className="w-11 h-11 rounded-full inline-flex items-center justify-center text-foreground/70 hover:text-gold-ink focus-visible:text-gold-ink transition-colors"
       >
         <LogOut className="w-4 h-4" />
       </button>
