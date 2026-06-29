@@ -119,7 +119,9 @@ export default function App() {
                 <Route path="reports" element={<AdminReports />} />
                 <Route path="analytics" element={<AdminReports />} />
                 <Route path="settings" element={<AdminSettings />} />
+                <Route path="trademarks" element={<AdminTrademarks />} />
                 <Route path="*" element={<AdminPlaceholder />} />
+
               </Route>
               <Route path="/portal" element={<ProtectedRoute><PortalLayout /></ProtectedRoute>}>
                 <Route index element={<PortalDashboard />} />
