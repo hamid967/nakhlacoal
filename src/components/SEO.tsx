@@ -3,15 +3,24 @@ import { useTranslation } from 'react-i18next';
 
 const SITE = 'https://alnakhlacoal.com';
 
+type PreloadImage = {
+  href: string;
+  type?: string;          // e.g. "image/avif"
+  imageSrcSet?: string;   // responsive srcset string
+  imageSizes?: string;    // sizes attr to match the <img>
+  fetchPriority?: 'high' | 'low' | 'auto';
+};
+
 type Props = {
   title: string;
   description: string;
   path: string;
   jsonLd?: object;
   noindex?: boolean;
+  preloadImages?: PreloadImage[];
 };
 
-export function SEO({ title, description, path, jsonLd, noindex = false }: Props) {
+export function SEO({ title, description, path, jsonLd, noindex = false, preloadImages }: Props) {
   const { i18n } = useTranslation();
   const lang = i18n.language?.startsWith('ar') ? 'ar' : 'en';
   const cleanPath = path.startsWith('http') ? path : `${SITE}${path}`;
@@ -34,6 +43,18 @@ export function SEO({ title, description, path, jsonLd, noindex = false }: Props
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
       {jsonLd && <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>}
+      {preloadImages?.map((p, i) => (
+        <link
+          key={i}
+          rel="preload"
+          as="image"
+          href={p.href}
+          {...(p.type ? { type: p.type } : {})}
+          {...(p.imageSrcSet ? { imagesrcset: p.imageSrcSet } : {})}
+          {...(p.imageSizes ? { imagesizes: p.imageSizes } : {})}
+          {...(p.fetchPriority ? { fetchpriority: p.fetchPriority } : {})}
+        />
+      ))}
     </Helmet>
   );
 }

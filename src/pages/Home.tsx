@@ -35,6 +35,7 @@ import productBbq from '@/assets/product-bbq.jpg';
 import productHookah from '@/assets/product-hookah.jpg';
 import productCoconut from '@/assets/product-coconut.jpg';
 import productLump from '@/assets/product-lump.jpg';
+import heroTrademark from '@/assets/trademarks/trademark-0.png';
 
 
 export default function Home() {
@@ -74,6 +75,9 @@ export default function Home() {
         title={isAr ? 'فحم النخلة | الفحم السعودي الفاخر' : 'Palm Charcoal | Premium Saudi Charcoal'}
         description={isAr ? 'فحم طبيعي ١٠٠٪ — احتراق أطول، حرارة أعلى، ورماد أقل.' : '100% natural charcoal — longer burn, higher heat, less ash.'}
         path="/"
+        preloadImages={[
+          { href: heroTrademark, type: 'image/png', fetchPriority: 'high' },
+        ]}
       />
 
       {/* HERO — first impression (lazy-loaded WebGL) */}
