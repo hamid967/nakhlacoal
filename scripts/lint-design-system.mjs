@@ -106,13 +106,36 @@ for (const file of files) {
   });
 }
 
-if (violations.length === 0) {
-  console.log("✓ design-system lint passed — no forbidden tokens introduced.");
+// Baseline: existing violations are grandfathered. CI fails only on NEW additions.
+// Regenerate after intentional cleanup with: bun run lint:design -- --update-baseline
+const BASELINE_PATH = join(ROOT, ".lovable/design-lint-baseline.json");
+const keyOf = (v) => `${v.file}::${v.rule}::${v.snippet}`;
+
+if (process.argv.includes("--update-baseline")) {
+  const { writeFileSync, mkdirSync } = await import("node:fs");
+  mkdirSync(join(ROOT, ".lovable"), { recursive: true });
+  const baseline = [...new Set(violations.map(keyOf))].sort();
+  writeFileSync(BASELINE_PATH, JSON.stringify(baseline, null, 2) + "\n");
+  console.log(`Baseline updated: ${baseline.length} grandfathered violation key(s).`);
   process.exit(0);
 }
 
-console.error(`\n✗ design-system lint failed — ${violations.length} violation(s):\n`);
-for (const v of violations) {
+let baseline = new Set();
+try {
+  baseline = new Set(JSON.parse(readFileSync(BASELINE_PATH, "utf8")));
+} catch {
+  console.warn("⚠ No baseline file. Run: bun run lint:design -- --update-baseline");
+}
+
+const newViolations = violations.filter((v) => !baseline.has(keyOf(v)));
+
+if (newViolations.length === 0) {
+  console.log(`✓ design-system lint passed — ${violations.length} grandfathered, 0 new.`);
+  process.exit(0);
+}
+
+console.error(`\n✗ design-system lint failed — ${newViolations.length} NEW violation(s) (baseline: ${baseline.size}):\n`);
+for (const v of newViolations) {
   console.error(`  ${v.file}:${v.line}  [${v.rule}]  ${v.snippet}`);
   console.error(`    → ${v.msg}`);
 }
@@ -120,3 +143,4 @@ console.error(
   `\nSee .lovable/design-system.md for allowed tokens. If you genuinely need a new token, add it there + src/index.css + tailwind.config.ts in the same PR.`
 );
 process.exit(1);
+
