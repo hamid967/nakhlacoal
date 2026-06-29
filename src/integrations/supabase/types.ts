@@ -72,6 +72,7 @@ export type Database = {
           created_at: string
           delivery_date: string | null
           email: string | null
+          grand_total_sar: number | null
           id: string
           notes: string | null
           payment_method: string | null
@@ -81,9 +82,14 @@ export type Database = {
           quantity: number
           shipping_method: string | null
           status: string
+          subtotal_sar: number | null
+          total_sar: number | null
           unit: string
+          unit_price_sar: number | null
           updated_at: string
           user_id: string | null
+          vat_amount_sar: number | null
+          vat_rate: number | null
         }
         Insert: {
           address?: string | null
@@ -97,6 +103,7 @@ export type Database = {
           created_at?: string
           delivery_date?: string | null
           email?: string | null
+          grand_total_sar?: number | null
           id?: string
           notes?: string | null
           payment_method?: string | null
@@ -106,9 +113,14 @@ export type Database = {
           quantity: number
           shipping_method?: string | null
           status?: string
+          subtotal_sar?: number | null
+          total_sar?: number | null
           unit?: string
+          unit_price_sar?: number | null
           updated_at?: string
           user_id?: string | null
+          vat_amount_sar?: number | null
+          vat_rate?: number | null
         }
         Update: {
           address?: string | null
@@ -122,6 +134,7 @@ export type Database = {
           created_at?: string
           delivery_date?: string | null
           email?: string | null
+          grand_total_sar?: number | null
           id?: string
           notes?: string | null
           payment_method?: string | null
@@ -131,9 +144,14 @@ export type Database = {
           quantity?: number
           shipping_method?: string | null
           status?: string
+          subtotal_sar?: number | null
+          total_sar?: number | null
           unit?: string
+          unit_price_sar?: number | null
           updated_at?: string
           user_id?: string | null
+          vat_amount_sar?: number | null
+          vat_rate?: number | null
         }
         Relationships: []
       }
