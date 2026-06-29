@@ -5,12 +5,11 @@ import { SEO } from '@/components/SEO';
 import { ScrollReveal } from '@/components/ScrollReveal';
 
 // Heavy WebGL/3D hero — code-split so it doesn't block first paint
-const ProductsHero = lazy(() => import('@/components/ProductsHero').then((m) => ({ default: m.ProductsHero })));
+const BrandHero = lazy(() => import('@/components/BrandHero').then((m) => ({ default: m.BrandHero })));
 const ProcessSection = lazy(() => import('@/components/ProcessSection').then((m) => ({ default: m.ProcessSection })));
 const JourneySection = lazy(() => import('@/components/JourneySection').then((m) => ({ default: m.JourneySection })));
 const LocationSection = lazy(() => import('@/components/LocationSection').then((m) => ({ default: m.LocationSection })));
 const FaqSection = lazy(() => import('@/components/FaqSection').then((m) => ({ default: m.FaqSection })));
-const OccasionsGrid = lazy(() => import('@/components/OccasionsGrid').then((m) => ({ default: m.OccasionsGrid })));
 
 import { Certifications } from '@/components/Certifications';
 import { StickyMobileCTA } from '@/components/StickyMobileCTA';
@@ -81,10 +80,10 @@ export default function Home() {
         ]}
       />
 
-      {/* HERO — editorial products + stacked headline */}
+      {/* HERO — first impression (lazy-loaded WebGL) */}
       <div className="pt-24 md:pt-28">
         <Suspense fallback={<SectionSkeleton variant="hero" label={isAr ? 'جارٍ تحميل الواجهة' : 'Loading hero'} />}>
-          <ProductsHero />
+          <BrandHero />
         </Suspense>
       </div>
 
@@ -151,7 +150,6 @@ export default function Home() {
       <Suspense fallback={<SectionSkeleton variant="timeline" />}>
         <ProcessSection />
         <JourneySection />
-        <OccasionsGrid />
       </Suspense>
 
 
