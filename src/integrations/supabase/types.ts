@@ -14,6 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
+      inventory_items: {
+        Row: {
+          active: boolean
+          created_at: string
+          id: string
+          in_stock_kg: number
+          label: string
+          lead_days: number
+          match_pattern: string
+          min_order_kg: number
+          slug: string
+          sort_order: number
+          tiers: Json
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          in_stock_kg?: number
+          label: string
+          lead_days?: number
+          match_pattern: string
+          min_order_kg?: number
+          slug: string
+          sort_order?: number
+          tiers?: Json
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          in_stock_kg?: number
+          label?: string
+          lead_days?: number
+          match_pattern?: string
+          min_order_kg?: number
+          slug?: string
+          sort_order?: number
+          tiers?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
       orders: {
         Row: {
           address: string | null
