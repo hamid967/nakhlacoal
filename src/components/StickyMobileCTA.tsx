@@ -40,6 +40,7 @@ export function StickyMobileCTA() {
           </button>
           <a
             href={WHATSAPP}
+            onClick={() => trackWhatsApp('sticky_mobile')}
             target="_blank"
             rel="noopener noreferrer"
             aria-label="WhatsApp"
