@@ -54,13 +54,15 @@ async def capture_home(page, tag: str):
 
 
 async def capture_gallery(page, tag: str):
-    await page.goto(f"{BASE}/quality", wait_until="networkidle")
-    await page.wait_for_timeout(600)
-    gal = page.locator("figure").first
+    await page.goto(f"{BASE}/quality", wait_until="domcontentloaded")
+    await page.wait_for_timeout(1500)
+    # Scroll until a figure is visible, then screenshot the viewport
     try:
-        await gal.scroll_into_view_if_needed(timeout=3000)
-        await page.wait_for_timeout(400)
-        await gal.screenshot(path=str(OUT / f"gallery__{tag}.png"))
+        await page.evaluate(
+            "document.querySelector('figure')?.scrollIntoView({block:'center'})"
+        )
+        await page.wait_for_timeout(600)
+        await page.screenshot(path=str(OUT / f"gallery__{tag}.png"))
     except Exception as e:
         print("gallery skipped:", e)
 
