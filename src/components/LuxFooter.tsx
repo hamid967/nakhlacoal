@@ -51,9 +51,9 @@ export function LuxFooter() {
             <FooterLink to="/contact">{t('products.requestQuote')}</FooterLink>
           </FooterCol>
           <FooterCol title={t('footer.legal')}>
-            <FooterLink to="#">{t('footer.privacy')}</FooterLink>
-            <FooterLink to="#">{t('footer.terms')}</FooterLink>
-            <FooterLink to="#">{t('footer.shipping')}</FooterLink>
+            <FooterLink to="/contact">{t('footer.privacy')}</FooterLink>
+            <FooterLink to="/contact">{t('footer.terms')}</FooterLink>
+            <FooterLink to="/contact">{t('footer.shipping')}</FooterLink>
           </FooterCol>
         </div>
         </div>
