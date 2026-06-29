@@ -565,5 +565,13 @@
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
   }
+  /* Disable premium motion presets entirely */
+  .lux-parallax { transform: none !important; }
+  .lux-glass-hover:hover { transform: none !important; box-shadow: none !important; }
+  .lux-glass-hover::before { display: none !important; }
+  .lux-timeline-dot[data-active="true"]::after { animation: none !important; opacity: 0 !important; }
+  .lux-rise { animation: none !important; opacity: 1 !important; transform: none !important; }
 }
+
