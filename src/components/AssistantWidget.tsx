@@ -3,7 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { Send, Loader2, Sparkles, X, Maximize2, CheckCircle2, MessageCircle, FileText } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { QuoteBuilder } from './QuoteBuilder';
-import { quoteFor, formatSAR } from '@/data/inventory';
+import { quoteForItems, formatSAR } from '@/data/inventory';
+import { useInventory } from '@/hooks/useInventory';
+
 
 
 const mdComponents = {
@@ -109,6 +111,8 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
   const [quoteOpen, setQuoteOpen] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
   const hydratedFromCloud = useRef(false);
+  const { items: inventoryItems } = useInventory();
+
 
   // Track auth + hydrate pending order from cloud (cross-device) for signed-in users
   useEffect(() => {
@@ -269,8 +273,9 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
   };
 
   const liveQuote = pendingOrder
-    ? quoteFor(pendingOrder.product_type, Number(pendingOrder.quantity) || 0, pendingOrder.unit || 'kg')
+    ? quoteForItems(inventoryItems, pendingOrder.product_type, Number(pendingOrder.quantity) || 0, pendingOrder.unit || 'kg')
     : null;
+
 
   const confirmOrder = () => {
     const errs: Record<string, string> = {};

@@ -32,6 +32,8 @@ import Auth from '@/pages/Auth';
 import Profile from '@/pages/Profile';
 import Assistant from '@/pages/Assistant';
 import AdminOrders from '@/pages/AdminOrders';
+import AdminInventory from '@/pages/AdminInventory';
+
 import NotFound from '@/pages/NotFound';
 
 const queryClient = new QueryClient();
@@ -77,6 +79,8 @@ export default function App() {
                 <Route path="/assistant" element={<Assistant />} />
                 <Route path="/assistant/:threadId" element={<Assistant />} />
                 <Route path="/admin/orders" element={<ProtectedRoute requireRole="admin"><AdminOrders /></ProtectedRoute>} />
+                <Route path="/admin/inventory" element={<ProtectedRoute requireRole="admin"><AdminInventory /></ProtectedRoute>} />
+
                 <Route path="*" element={<NotFound />} />
               </Route>
             </Routes>
