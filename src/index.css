@@ -274,6 +274,40 @@
     box-shadow: 0 16px 32px -14px hsl(var(--gold) / 0.4);
   }
 
+  /* Dark-section variants: keep the glass family readable on the dark footer
+     and over imagery without clashing white panels. */
+  .section-dark .glass-card,
+  .glass-card.glass-dark {
+    background: hsl(158 30% 8% / 0.55);
+    border: 1px solid hsl(var(--gold) / 0.18);
+    box-shadow:
+      0 24px 60px -30px hsl(0 0% 0% / 0.6),
+      inset 0 1px 0 hsl(var(--gold) / 0.12);
+  }
+  .section-dark .glass-card:hover,
+  .glass-card.glass-dark:hover {
+    border-color: hsl(var(--gold) / 0.45);
+    box-shadow:
+      0 32px 80px -30px hsl(0 0% 0% / 0.7),
+      0 4px 14px -4px hsl(var(--gold) / 0.22),
+      inset 0 1px 0 hsl(var(--gold) / 0.2);
+  }
+  .section-dark .glass-strip,
+  .glass-strip.glass-dark {
+    background: hsl(158 30% 8% / 0.65);
+    border: 1px solid hsl(var(--gold) / 0.22);
+    box-shadow:
+      0 24px 55px -28px hsl(0 0% 0% / 0.55),
+      inset 0 1px 0 hsl(var(--gold) / 0.14);
+  }
+  .section-dark .glass-strip input,
+  .section-dark .glass-strip input::placeholder {
+    color: hsl(0 0% 100% / 0.85);
+  }
+  .section-dark .glass-strip input::placeholder {
+    color: hsl(0 0% 100% / 0.45);
+  }
+
   /* Nav link pill */
   .nav-pill {
     @apply relative inline-flex items-center px-2.5 xl:px-4 py-2 rounded-full text-[13px] xl:text-sm font-medium transition-all duration-500 whitespace-nowrap;

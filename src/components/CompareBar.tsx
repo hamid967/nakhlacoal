@@ -13,7 +13,7 @@ export function CompareBar() {
 
   return (
     <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-40 w-[min(95vw,720px)]">
-      <div className="glass-strip rounded-2xl p-3 md:p-4 flex items-center gap-3">
+      <div className="glass-strip glass-dark rounded-2xl p-3 md:p-4 flex items-center gap-3 text-foreground">
         <div className="flex items-center gap-2 shrink-0 text-gold-hi">
           <GitCompare className="w-4 h-4" />
           <span className="text-xs uppercase tracking-[0.2em] hidden sm:inline">
