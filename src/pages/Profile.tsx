@@ -193,7 +193,9 @@ export default function Profile() {
             {isAr ? 'حفظ التغييرات' : 'Save changes'}
           </Button>
         </div>
+        </div>
       </div>
     </>
+
   );
 }
