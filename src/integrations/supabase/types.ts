@@ -340,7 +340,54 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      trademarks_public: {
+        Row: {
+          colors: string[] | null
+          description_ar: string | null
+          expires_hijri: string | null
+          filed_hijri: string | null
+          goods_ar: string | null
+          id: string | null
+          is_active: boolean | null
+          name_ar: string | null
+          name_en: string | null
+          nice_class: string | null
+          registered_hijri: string | null
+          sort_order: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          colors?: string[] | null
+          description_ar?: string | null
+          expires_hijri?: string | null
+          filed_hijri?: string | null
+          goods_ar?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          name_ar?: string | null
+          name_en?: string | null
+          nice_class?: string | null
+          registered_hijri?: string | null
+          sort_order?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          colors?: string[] | null
+          description_ar?: string | null
+          expires_hijri?: string | null
+          filed_hijri?: string | null
+          goods_ar?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          name_ar?: string | null
+          name_en?: string | null
+          nice_class?: string | null
+          registered_hijri?: string | null
+          sort_order?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       has_role: {
