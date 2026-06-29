@@ -79,6 +79,10 @@ export default function Products() {
         </a>
       </div>
 
+      <ProductRecommender />
+
+
+
 
 
 
