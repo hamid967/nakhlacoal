@@ -26,7 +26,8 @@
     /* Primary spectrum — royal gold */
     --gold: 43 53% 54%;                   /* #c9a84c */
     --gold-hi: 43 65% 64%;                /* #d6bb6a */
-    --gold-lo: 43 45% 42%;
+    --gold-lo: 38 60% 32%;                /* #836021 — AA contrast on cream */
+    --gold-ink: 35 78% 22%;               /* #6b4a10 — body-text gold on light bg */
 
     /* Jade secondary */
     --jade: 158 70% 26%;                  /* #0d7a5f */
