@@ -211,7 +211,7 @@ export function BrandHero() {
               >
                 {/* Glass panel */}
                 <div
-                  className="relative w-full h-full rounded-[28px] overflow-hidden border border-white/60 bg-white/55 backdrop-blur-xl flex flex-col items-center justify-between p-4 md:p-5"
+                  className="relative w-full h-full rounded-[28px] overflow-hidden glass-card flex flex-col items-center justify-between p-4 md:p-5"
                   style={{
                     boxShadow: isCenter
                       ? '0 40px 80px -28px rgba(60,40,10,0.35), 0 0 0 1px rgba(201,168,76,0.45)'
