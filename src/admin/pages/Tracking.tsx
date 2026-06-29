@@ -219,8 +219,17 @@ export default function AdminTracking() {
             dir="ltr"
           />
           {gtmTest.message && (
-            <p className={`text-xs mt-1 ${gtmTest.status === 'ok' ? 'text-emerald-600' : gtmTest.status === 'fail' ? 'text-red-600' : ''}`}>
-              {gtmTest.message}
+            <p className={`text-xs mt-1 flex items-center gap-2 ${gtmTest.status === 'ok' ? 'text-emerald-600' : gtmTest.status === 'fail' ? 'text-red-600' : ''}`}>
+              <span>{gtmTest.message}</span>
+              {gtmTest.status === 'fail' && gtm && (
+                <button
+                  type="button"
+                  onClick={async () => { setGtmTest({ status: 'testing' }); setGtmTest(await testGtm(gtm)); }}
+                  className="underline shrink-0"
+                >
+                  إعادة المحاولة
+                </button>
+              )}
             </p>
           )}
         </div>
