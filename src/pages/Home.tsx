@@ -15,6 +15,7 @@ const TrademarksShowcase = lazy(() => import('@/components/TrademarksShowcase').
 
 
 import { Certifications } from '@/components/Certifications';
+import { AudienceTracks } from '@/components/AudienceTracks';
 import { StickyMobileCTA } from '@/components/StickyMobileCTA';
 import { SectionSkeleton } from '@/components/SectionSkeleton';
 import { SectionDivider } from '@/components/SectionDivider';
@@ -100,6 +101,11 @@ export default function Home() {
 
 
       <SectionDivider />
+
+      {/* Audience tracks — clear commercial paths: Individuals / Wholesale / Export */}
+      <AudienceTracks />
+
+
 
       {/* Features */}
       <LuxSection tone="surface">

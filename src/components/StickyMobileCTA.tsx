@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ShoppingBag, MessageCircle } from 'lucide-react';
 import { OrderModal } from './OrderModal';
+import { trackWhatsApp, trackConversion } from '@/lib/track';
 
 const WHATSAPP = 'https://wa.me/966540060095';
 
@@ -31,7 +32,7 @@ export function StickyMobileCTA() {
       >
         <div className="glass-card rounded-2xl border border-gold/20 shadow-xl p-2 flex items-center gap-2">
           <button
-            onClick={() => setOrderOpen(true)}
+            onClick={() => { trackConversion('order_open', { source: 'sticky_mobile' }); setOrderOpen(true); }}
             className="btn-gold flex-1 min-h-12 !py-3 !text-sm !rounded-xl inline-flex items-center justify-center gap-2"
           >
             <ShoppingBag className="w-4 h-4" />
@@ -39,6 +40,7 @@ export function StickyMobileCTA() {
           </button>
           <a
             href={WHATSAPP}
+            onClick={() => trackWhatsApp('sticky_mobile')}
             target="_blank"
             rel="noopener noreferrer"
             aria-label="WhatsApp"
