@@ -71,15 +71,18 @@ export default function Home() {
         path="/"
       />
 
-      {/* Trust strip */}
-      <section className="pt-24 md:pt-28">
+      {/* HERO — first impression */}
+      <div className="pt-24 md:pt-28">
+        <BrandHero />
+      </div>
+
+      {/* Trust strip — credibility right after the hero */}
+      <section className="mt-2 md:mt-6">
         <div className="container grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
           {topStrip.map((f, i) => <TrustItem key={i} icon={f.icon} text={f.text} index={i} />)}
         </div>
       </section>
 
-      {/* HERO */}
-      <BrandHero />
 
       {/* Features */}
       <LuxSection tone="surface">
