@@ -68,14 +68,18 @@ export type Database = {
           commercial_register: string | null
           company_name: string
           contact_name: string
+          country: string | null
           created_at: string
           delivery_date: string | null
           email: string | null
           id: string
           notes: string | null
+          payment_method: string | null
           phone: string
+          postal_code: string | null
           product_type: string
           quantity: number
+          shipping_method: string | null
           status: string
           unit: string
           updated_at: string
@@ -89,14 +93,18 @@ export type Database = {
           commercial_register?: string | null
           company_name: string
           contact_name: string
+          country?: string | null
           created_at?: string
           delivery_date?: string | null
           email?: string | null
           id?: string
           notes?: string | null
+          payment_method?: string | null
           phone: string
+          postal_code?: string | null
           product_type: string
           quantity: number
+          shipping_method?: string | null
           status?: string
           unit?: string
           updated_at?: string
@@ -110,14 +118,18 @@ export type Database = {
           commercial_register?: string | null
           company_name?: string
           contact_name?: string
+          country?: string | null
           created_at?: string
           delivery_date?: string | null
           email?: string | null
           id?: string
           notes?: string | null
+          payment_method?: string | null
           phone?: string
+          postal_code?: string | null
           product_type?: string
           quantity?: number
+          shipping_method?: string | null
           status?: string
           unit?: string
           updated_at?: string
