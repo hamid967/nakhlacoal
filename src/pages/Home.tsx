@@ -10,6 +10,7 @@ const ProcessSection = lazy(() => import('@/components/ProcessSection').then((m)
 const JourneySection = lazy(() => import('@/components/JourneySection').then((m) => ({ default: m.JourneySection })));
 const LocationSection = lazy(() => import('@/components/LocationSection').then((m) => ({ default: m.LocationSection })));
 const FaqSection = lazy(() => import('@/components/FaqSection').then((m) => ({ default: m.FaqSection })));
+const OccasionsGrid = lazy(() => import('@/components/OccasionsGrid').then((m) => ({ default: m.OccasionsGrid })));
 
 import { Certifications } from '@/components/Certifications';
 import { StickyMobileCTA } from '@/components/StickyMobileCTA';
@@ -150,6 +151,7 @@ export default function Home() {
       <Suspense fallback={<SectionSkeleton variant="timeline" />}>
         <ProcessSection />
         <JourneySection />
+        <OccasionsGrid />
       </Suspense>
 
 
