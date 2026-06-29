@@ -59,6 +59,48 @@ export type Database = {
         }
         Relationships: []
       }
+      lab_reports: {
+        Row: {
+          ash_pct: number
+          batch_code: string
+          burn_time_min: number
+          carbon_pct: number
+          created_at: string
+          id: string
+          max_temp_c: number
+          moisture_pct: number
+          notes: string | null
+          updated_at: string
+          volatile_pct: number
+        }
+        Insert: {
+          ash_pct?: number
+          batch_code: string
+          burn_time_min?: number
+          carbon_pct?: number
+          created_at?: string
+          id?: string
+          max_temp_c?: number
+          moisture_pct?: number
+          notes?: string | null
+          updated_at?: string
+          volatile_pct?: number
+        }
+        Update: {
+          ash_pct?: number
+          batch_code?: string
+          burn_time_min?: number
+          carbon_pct?: number
+          created_at?: string
+          id?: string
+          max_temp_c?: number
+          moisture_pct?: number
+          notes?: string | null
+          updated_at?: string
+          volatile_pct?: number
+        }
+        Relationships: []
+      }
       orders: {
         Row: {
           address: string | null

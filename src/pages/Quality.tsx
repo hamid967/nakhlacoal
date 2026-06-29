@@ -12,6 +12,7 @@ import { SEO } from '@/components/SEO';
 import { SectionHeader, Stat } from '@/components/ui-lux';
 import { SectionSkeleton } from '@/components/SectionSkeleton';
 import { trademarks } from '@/data/trademarks';
+import { useLiveLabReport } from '@/hooks/useLiveLabReport';
 
 const CinematicGallery = lazy(() => import('./quality/CinematicGallery'));
 const QualityCharts = lazy(() => import('./quality/QualityCharts'));
@@ -39,13 +40,15 @@ function Gauge({
   label, value, suffix, max = 100, tip, icon: Icon,
 }: { label: string; value: number; suffix: string; max?: number; tip: string; icon: any }) {
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: '-80px' });
+  const inView = useInView(ref, { margin: '-80px' });
   const [progress, setProgress] = useState(0);
+  const prevValue = useRef(0);
   useEffect(() => {
     if (!inView) return;
-    const controls = animate(0, value, {
-      duration: 1.8, ease: [0.16, 1, 0.3, 1],
+    const controls = animate(prevValue.current, value, {
+      duration: 1.2, ease: [0.16, 1, 0.3, 1],
       onUpdate: (v) => setProgress(v),
+      onComplete: () => { prevValue.current = value; },
     });
     return controls.stop;
   }, [inView, value]);
@@ -184,6 +187,18 @@ export default function Quality() {
   const { i18n } = useTranslation();
   const isAr = i18n.language?.startsWith('ar');
   const [openCert, setOpenCert] = useState<number | null>(null);
+  const { latest, updatedAt } = useLiveLabReport();
+
+  const liveGauges = latest
+    ? [
+        { ...gauges[0], value: Number(latest.carbon_pct) },
+        { ...gauges[1], value: Number(latest.ash_pct) },
+        { ...gauges[2], value: Number(latest.moisture_pct) },
+        { ...gauges[3], value: Number(latest.burn_time_min) },
+        { ...gauges[4], value: Number(latest.max_temp_c) },
+        { ...gauges[5], value: Number(latest.volatile_pct) },
+      ]
+    : gauges;
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -259,8 +274,24 @@ export default function Quality() {
       <section className="py-28">
         <div className="container">
           <SectionTitle eyebrow="لوحة المختبر الحية" title="مؤشرات الجودة في الزمن الحقيقي" />
+          <div
+            aria-live="polite"
+            className="flex flex-wrap items-center justify-center gap-3 mb-8 text-sm font-arabic"
+          >
+            <span className="relative flex h-2.5 w-2.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-jade/70 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-jade" />
+            </span>
+            <span className="text-foreground/70">
+              {latest ? (
+                <>دفعة <span className="text-gold-hi font-semibold">{latest.batch_code}</span> — تم التحديث {new Date(updatedAt).toLocaleTimeString('ar-EG')}</>
+              ) : (
+                <>جارٍ الاتصال بالمختبر…</>
+              )}
+            </span>
+          </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-6 lg:gap-8">
-            {gauges.map((g) => <Gauge key={g.label} {...g} />)}
+            {liveGauges.map((g) => <Gauge key={g.label} {...g} />)}
           </div>
         </div>
       </section>
