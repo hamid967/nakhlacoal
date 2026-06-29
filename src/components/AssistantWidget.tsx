@@ -594,6 +594,7 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
               ))}
             </div>
           )}
+          <div className="space-y-1.5">
             <div>
               <input
                 value={formData.contact_name}
