@@ -32,6 +32,11 @@ export default function OrderTracking() {
           className="lux-parallax lux-parallax-med pointer-events-none absolute top-40 -end-20 w-[320px] h-[320px] rounded-full blur-3xl opacity-40"
           style={{ background: "radial-gradient(closest-side, hsl(var(--jade) / 0.28), transparent)" }}
         />
+        <div
+          aria-hidden
+          className="lux-parallax lux-parallax-fast pointer-events-none absolute bottom-10 start-1/3 w-[280px] h-[280px] rounded-full blur-3xl opacity-35"
+          style={{ background: "radial-gradient(closest-side, hsl(var(--gold) / 0.25), transparent)" }}
+        />
 
         <div className="container max-w-4xl py-24 relative">
           <header className="mb-10">
