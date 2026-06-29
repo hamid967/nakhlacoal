@@ -11,32 +11,53 @@ const SLIDES = ORDER.map((i) => trademarks[i]);
 const SLIDE_MS = 5200;
 const TYPE_MS = 22;
 
+// Strict, uniform dossier — driven only by real fields in trademarks.ts.
+// Any empty/undefined value is replaced by a visible "—" so the layout is
+// identical for every brand (no missing rows, no shifting alignment).
 function buildDossier(tm: Trademark, isAr: boolean): string[] {
-  if (isAr) {
-    return [
-      `> PALM_CHARCOAL // ملف العلامة`,
-      `> العلامة: ${tm.nameAr}  (${tm.nameEn})`,
-      `> رقم التسجيل: ${tm.registrationNo}`,
-      `> ${tm.niceClass} — ${tm.goodsAr}`,
-      `> المالك: ${tm.ownerAr}`,
-      `> العنوان: ${tm.addressAr} — ${tm.countryAr}`,
-      `> تاريخ الإيداع: ${tm.filedHijri}هـ`,
-      `> الانتهاء: ${tm.expiresHijri}هـ`,
-      `> [✓] موثّقة لدى وزارة التجارة السعودية`,
-    ];
-  }
+  const v = (x?: string) => (x && x.trim() ? x.trim() : '—');
+  const klass = isAr
+    ? v(tm.niceClass)
+    : v(tm.niceClass).replace('الفئة', 'Class');
+
+  const rows: Array<[string, string]> = isAr
+    ? [
+        ['العلامة',       `${v(tm.nameAr)}  (${v(tm.nameEn)})`],
+        ['رقم التسجيل',   v(tm.registrationNo)],
+        ['الفئة',         klass],
+        ['البضائع',       v(tm.goodsAr)],
+        ['المالك',        v(tm.ownerAr)],
+        ['العنوان',       `${v(tm.addressAr)} — ${v(tm.countryAr)}`],
+        ['تاريخ الإيداع', `${v(tm.filedHijri)} هـ`],
+        ['تاريخ التسجيل', `${v(tm.registeredHijri)} هـ`],
+        ['الانتهاء',      `${v(tm.expiresHijri)} هـ`],
+      ]
+    : [
+        ['Mark',     `${v(tm.nameEn)}  (${v(tm.nameAr)})`],
+        ['Reg. No',  v(tm.registrationNo)],
+        ['Class',    klass],
+        ['Goods',    v(tm.goodsAr)],
+        ['Owner',    v(tm.ownerAr)],
+        ['Address',  `${v(tm.addressAr)} — ${v(tm.countryAr)}`],
+        ['Filed',    `${v(tm.filedHijri)} AH`],
+        ['Reg.',     `${v(tm.registeredHijri)} AH`],
+        ['Expires',  `${v(tm.expiresHijri)} AH`],
+      ];
+
+  const pad = Math.max(...rows.map(([k]) => k.length));
+  const header = isAr ? 'PALM_CHARCOAL // ملف العلامة' : 'PALM_CHARCOAL // BRAND DOSSIER';
+  const footer = isAr
+    ? '[✓] موثّقة لدى وزارة التجارة السعودية'
+    : '[✓] Certified by Saudi Ministry of Commerce';
+
   return [
-    `> PALM_CHARCOAL // BRAND DOSSIER`,
-    `> Mark: ${tm.nameEn}  (${tm.nameAr})`,
-    `> Reg. No: ${tm.registrationNo}`,
-    `> ${tm.niceClass.replace('الفئة', 'Class')} — Charcoal`,
-    `> Owner: ${tm.ownerAr}`,
-    `> Address: ${tm.addressAr} — ${tm.countryAr}`,
-    `> Filed: ${tm.filedHijri} AH`,
-    `> Expires: ${tm.expiresHijri} AH`,
-    `> [✓] Certified by Saudi Ministry of Commerce`,
+    `> ${header}`,
+    ...rows.map(([k, val]) => `> ${k.padEnd(pad, ' ')} : ${val}`),
+    `> ${footer}`,
   ];
 }
+
+
 
 export function HomeIntro() {
   const { i18n } = useTranslation();
