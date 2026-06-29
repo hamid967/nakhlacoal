@@ -99,7 +99,7 @@ export function SplashScreen() {
 
   return (
     <div
-      className={`fixed inset-0 z-[100] overflow-hidden bg-background transition-opacity duration-[800ms] ease-out ${
+      className={`fixed inset-0 z-[100] overflow-hidden bg-background transition-opacity [transition-duration:800ms] ease-out ${
         stage === 4 ? "opacity-0 pointer-events-none" : "opacity-100"
       }`}
     >
@@ -126,7 +126,7 @@ export function SplashScreen() {
       }} />
 
       {/* Slow rotating gilded ring behind logo */}
-      <div className={`absolute top-1/2 left-1/2 pointer-events-none transition-opacity duration-[1400ms] ${stage >= 1 && stage < 4 ? "opacity-60" : "opacity-0"}`}
+      <div className={`absolute top-1/2 left-1/2 pointer-events-none transition-opacity [transition-duration:1400ms] ${stage >= 1 && stage < 4 ? "opacity-60" : "opacity-0"}`}
         style={{ width: "min(72vmin, 640px)", height: "min(72vmin, 640px)", transform: "translate(-50%, -50%)", animation: stage >= 1 ? "splash-rotate 60s linear infinite" : undefined }} aria-hidden>
         <div className="w-full h-full rounded-full border border-[hsl(var(--gold))]/20"
           style={{ boxShadow: "inset 0 0 80px hsl(var(--gold) / 0.08), 0 0 60px hsl(var(--gold) / 0.06)" }} />
@@ -177,7 +177,7 @@ export function SplashScreen() {
       </div>
 
       {/* Luxury conic halo behind logo */}
-      <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none transition-opacity duration-[1600ms] ease-out ${stage >= 1 && stage < 4 ? "opacity-70" : "opacity-0"}`}
+      <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none transition-opacity [transition-duration:1600ms] ease-out ${stage >= 1 && stage < 4 ? "opacity-70" : "opacity-0"}`}
         style={{ width: "min(64vmin, 560px)", height: "min(64vmin, 560px)", transitionDelay: stage >= 1 && stage < 4 ? "200ms" : "0ms", transform: "translate3d(-50%, -50%, 0)" }} aria-hidden>
         <div style={{
           width: "100%", height: "100%", borderRadius: "50%",
@@ -191,7 +191,7 @@ export function SplashScreen() {
       </div>
 
       {/* Caustic sweep — silk-like light passing across the screen */}
-      <div className={`absolute inset-0 pointer-events-none transition-opacity duration-[1100ms] ease-out ${stage >= 1 && stage < 4 ? "opacity-100" : "opacity-0"}`}
+      <div className={`absolute inset-0 pointer-events-none transition-opacity [transition-duration:1100ms] ease-out ${stage >= 1 && stage < 4 ? "opacity-100" : "opacity-0"}`}
         aria-hidden style={{ overflow: "hidden", transitionDelay: stage >= 1 && stage < 4 ? "700ms" : "0ms" }}>
         <div style={{
           position: "absolute",
@@ -222,8 +222,8 @@ export function SplashScreen() {
         ))}
       </div>
 
-      <div className={`absolute inset-x-0 top-0 h-[12vh] bg-background z-10 transition-transform duration-[1100ms] ease-[cubic-bezier(.22,.61,.36,1)] ${stage >= 1 ? "-translate-y-full" : "translate-y-0"}`} />
-      <div className={`absolute inset-x-0 bottom-0 h-[12vh] bg-background z-10 transition-transform duration-[1100ms] ease-[cubic-bezier(.22,.61,.36,1)] ${stage >= 1 ? "translate-y-full" : "translate-y-0"}`} />
+      <div className={`absolute inset-x-0 top-0 h-[12vh] bg-background z-10 transition-transform [transition-duration:1100ms] [transition-timing-function:cubic-bezier(.22,.61,.36,1)] ${stage >= 1 ? "-translate-y-full" : "translate-y-0"}`} />
+      <div className={`absolute inset-x-0 bottom-0 h-[12vh] bg-background z-10 transition-transform [transition-duration:1100ms] [transition-timing-function:cubic-bezier(.22,.61,.36,1)] ${stage >= 1 ? "translate-y-full" : "translate-y-0"}`} />
 
       <div className="relative h-full w-full flex flex-col items-center justify-center px-6">
         {/* Gold scanning line */}
@@ -232,7 +232,7 @@ export function SplashScreen() {
         }`} style={{ animation: stage >= 1 ? "splash-scan 4s ease-in-out infinite" : undefined }} />
 
         {/* Arabic ornament above logo */}
-        <div className={`absolute top-[18vh] flex items-center gap-3 transition-all duration-[1200ms] ${
+        <div className={`absolute top-[18vh] flex items-center gap-3 transition-all [transition-duration:1200ms] ${
           stage >= 1 && stage < 2 ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"
         }`}>
           <span className="h-px w-10 bg-[hsl(var(--gold))]/50" />
@@ -243,7 +243,7 @@ export function SplashScreen() {
         </div>
 
         {/* Logo (shrinks/moves up during brand parade) */}
-        <div className={`relative transition-all duration-[1000ms] ease-out ${
+        <div className={`relative transition-all [transition-duration:1000ms] ease-out ${
           stage >= 1 ? "opacity-100 scale-100 blur-0" : "opacity-0 scale-[1.12] blur-md"
         } ${stage === 2 ? "scale-50 -translate-y-[18vh]" : ""} ${stage >= 3 ? "scale-100 translate-y-0" : ""}`}>
           <div className="absolute inset-0 -m-16 rounded-full opacity-70 animate-[splash-pulse_4.5s_ease-in-out_infinite]"
@@ -255,7 +255,7 @@ export function SplashScreen() {
         </div>
 
         {/* Tagline under logo */}
-        <div className={`mt-6 text-center transition-all duration-[1000ms] ${
+        <div className={`mt-6 text-center transition-all [transition-duration:1000ms] ${
           (stage === 1 || stage >= 3) ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
         }`}>
           <h1 className={`font-serif text-2xl md:text-4xl text-foreground ${isAr ? "font-arabic" : ""}`}>
@@ -349,7 +349,7 @@ export function SplashScreen() {
         </div>
 
         {/* Clients reveal — final stage */}
-        <div className={`absolute bottom-[10vh] left-0 right-0 flex flex-col items-center transition-all duration-[1000ms] ${
+        <div className={`absolute bottom-[10vh] left-0 right-0 flex flex-col items-center transition-all [transition-duration:1000ms] ${
           stage >= 3 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
         }`}>
           <div className="text-[10px] md:text-xs uppercase tracking-[0.45em] text-[hsl(var(--gold))]/80 mb-4">

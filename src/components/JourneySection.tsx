@@ -74,7 +74,7 @@ export function JourneySection() {
                   loading="lazy"
                   width={1024}
                   height={1024}
-                  className={`absolute inset-0 w-full h-full object-cover will-change-transform transition-transform duration-[7000ms] ease-out ${
+                  className={`absolute inset-0 w-full h-full object-cover will-change-transform transition-transform [transition-duration:7000ms] ease-out ${
                     isOn ? 'scale-110' : 'scale-100'
                   }`}
                 />
