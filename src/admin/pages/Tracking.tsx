@@ -182,8 +182,17 @@ export default function AdminTracking() {
             dir="ltr"
           />
           {ga4Test.message && (
-            <p className={`text-xs mt-1 ${ga4Test.status === 'ok' ? 'text-emerald-600' : ga4Test.status === 'fail' ? 'text-red-600' : ''}`}>
-              {ga4Test.message}
+            <p className={`text-xs mt-1 flex items-center gap-2 ${ga4Test.status === 'ok' ? 'text-emerald-600' : ga4Test.status === 'fail' ? 'text-red-600' : ''}`}>
+              <span>{ga4Test.message}</span>
+              {ga4Test.status === 'fail' && ga4 && (
+                <button
+                  type="button"
+                  onClick={async () => { setGa4Test({ status: 'testing' }); setGa4Test(await testGa4(ga4)); }}
+                  className="underline shrink-0"
+                >
+                  إعادة المحاولة
+                </button>
+              )}
             </p>
           )}
           <a
