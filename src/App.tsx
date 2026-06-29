@@ -46,6 +46,8 @@ import AdminReports from '@/admin/pages/Reports';
 import AdminSettings from '@/admin/pages/Settings';
 import AdminPlaceholder from '@/admin/pages/Placeholder';
 import AdminTrademarks from '@/admin/pages/Trademarks';
+import AdminTracking from '@/admin/pages/Tracking';
+import TrackingLoader from '@/components/TrackingLoader';
 
 import PortalLayout from '@/portal/PortalLayout';
 import PortalDashboard from '@/portal/pages/Dashboard';
