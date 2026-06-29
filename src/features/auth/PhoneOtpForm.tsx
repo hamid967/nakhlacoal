@@ -29,6 +29,13 @@ export function PhoneOtpForm({ isAr, onSuccess }: Props) {
     }
     setBusy(true);
     try {
+      const token = await getCaptcha('phone_otp');
+      if (token) {
+        const { data: v, error: vErr } = await supabase.functions.invoke('verify-captcha', {
+          body: { token, action: 'phone_otp' },
+        });
+        if (vErr || !v?.success) throw new Error(t('فشل التحقق من الحماية', 'Bot check failed'));
+      }
       const { error } = await supabase.auth.signInWithOtp({ phone: parsed.data });
       if (error) throw error;
       toast.success(t('أرسلنا رمزًا إلى هاتفك', 'We sent a code to your phone'));
