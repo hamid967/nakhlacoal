@@ -70,7 +70,7 @@ export function LuxNav() {
           </Link>
 
           {/* Desktop nav */}
-          <ul className="hidden lg:flex flex-nowrap items-center gap-0.5 xl:gap-1 rounded-full px-2 py-1 border-luxe bg-surface/60 backdrop-blur-sm">
+          <ul className="hidden lg:flex flex-nowrap items-center gap-0.5 xl:gap-1 rounded-full px-2 py-1 glass-card">
             {navItems.map((item) => (
               <li key={item.to}>
                 <NavLink to={item.to} end={item.to === '/'} className="block">
