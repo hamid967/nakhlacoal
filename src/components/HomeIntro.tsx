@@ -1,79 +1,88 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { trademarks } from '@/data/trademarks';
-import { brand } from '@/lib/brand';
+import { trademarks, type Trademark } from '@/data/trademarks';
 import bg from '@/assets/intro-palm-bg.jpg';
 
 const KEY = 'palm-home-intro-played';
 
-const order = [2, 1, 0, 3, 4];
-const cards = order.map((i) => trademarks[i]);
-const center = trademarks[0];
+// Show all 5 trademarks in this on-stage order
+const ORDER = [0, 1, 2, 3, 4];
+const SLIDES = ORDER.map((i) => trademarks[i]);
+const SLIDE_MS = 5200;
+const TYPE_MS = 22;
+
+function buildDossier(tm: Trademark, isAr: boolean): string[] {
+  if (isAr) {
+    return [
+      `> PALM_CHARCOAL // ملف العلامة`,
+      `> العلامة: ${tm.nameAr}  (${tm.nameEn})`,
+      `> رقم التسجيل: ${tm.registrationNo}`,
+      `> ${tm.niceClass} — ${tm.goodsAr}`,
+      `> المالك: ${tm.ownerAr}`,
+      `> العنوان: ${tm.addressAr} — ${tm.countryAr}`,
+      `> تاريخ الإيداع: ${tm.filedHijri}هـ`,
+      `> الانتهاء: ${tm.expiresHijri}هـ`,
+      `> [✓] موثّقة لدى وزارة التجارة السعودية`,
+    ];
+  }
+  return [
+    `> PALM_CHARCOAL // BRAND DOSSIER`,
+    `> Mark: ${tm.nameEn}  (${tm.nameAr})`,
+    `> Reg. No: ${tm.registrationNo}`,
+    `> ${tm.niceClass.replace('الفئة', 'Class')} — Charcoal`,
+    `> Owner: ${tm.ownerAr}`,
+    `> Address: ${tm.addressAr} — ${tm.countryAr}`,
+    `> Filed: ${tm.filedHijri} AH`,
+    `> Expires: ${tm.expiresHijri} AH`,
+    `> [✓] Certified by Saudi Ministry of Commerce`,
+  ];
+}
 
 export function HomeIntro() {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const isAr = i18n.language?.startsWith('ar');
   const [phase, setPhase] = useState<'in' | 'out' | 'done'>('in');
+  const [active, setActive] = useState(0);
   const [typed, setTyped] = useState('');
-
-  const dossier = useMemo(() => {
-    const id = `PC-${center.registrationNo}`;
-    const brandName = isAr ? center.nameAr : center.nameEn;
-    const allBrands = trademarks.map((x) => (isAr ? x.nameAr : x.nameEn)).join(' · ');
-    const mission = t('about.mission.body', '');
-    const vision = t('about.vision.body', '');
-    const loc = isAr ? 'جدة · حي البلد · سوق الفحم' : 'Jeddah · Al-Balad · Charcoal Souq';
-    if (isAr) {
-      return [
-        `> PALM_CHARCOAL // ملف العلامة ${id}`,
-        `> العلامة: ${brandName} — ${brand.logo}`,
-        `> المالك: ${center.ownerAr}`,
-        `> المقر: ${loc}`,
-        `> الفئة: ${center.niceClass} · الفحم`,
-        `> التسجيل: ${center.filedHijri} → الانتهاء ${center.expiresHijri}`,
-        `> العلامات المسجّلة: ${allBrands}`,
-        `> الرسالة: ${mission}`,
-        `> الرؤية: ${vision}`,
-        `> [✓] تم التحقق — جودة سعودية موثّقة`,
-      ].join('\n');
-    }
-    return [
-      `> PALM_CHARCOAL // BRAND DOSSIER ${id}`,
-      `> Brand: ${brandName} — ${brand.name}`,
-      `> Owner: ${center.ownerAr}`,
-      `> HQ: ${loc}`,
-      `> Class: ${center.niceClass.replace('الفئة ', 'Class ')} · Charcoal`,
-      `> Filed: ${center.filedHijri} → Expires ${center.expiresHijri}`,
-      `> Registered marks: ${allBrands}`,
-      `> Mission: ${mission}`,
-      `> Vision: ${vision}`,
-      `> [✓] Authenticated — Certified Saudi Quality`,
-    ].join('\n');
-  }, [isAr, t]);
-
+  const reduce = useRef(false);
 
   useEffect(() => {
+    reduce.current = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     try {
       if (sessionStorage.getItem(KEY) === '1') { setPhase('done'); return; }
       sessionStorage.setItem(KEY, '1');
     } catch {}
-    const t1 = setTimeout(() => setPhase('out'), 29200);
-    const t2 = setTimeout(() => setPhase('done'), 30000);
+    const total = SLIDE_MS * SLIDES.length + 800;
+    const t1 = setTimeout(() => setPhase('out'), total - 800);
+    const t2 = setTimeout(() => setPhase('done'), total);
     return () => { clearTimeout(t1); clearTimeout(t2); };
   }, []);
 
+  // Auto-advance slides
   useEffect(() => {
     if (phase === 'done') return;
+    const id = setInterval(() => setActive((a) => (a + 1) % SLIDES.length), SLIDE_MS);
+    return () => clearInterval(id);
+  }, [phase]);
+
+  // Typewriter dossier per active slide
+  const dossierText = useMemo(() => buildDossier(SLIDES[active], !!isAr).join('\n'), [active, isAr]);
+  useEffect(() => {
+    setTyped('');
+    if (phase === 'done') return;
+    if (reduce.current) { setTyped(dossierText); return; }
     let i = 0;
     const id = setInterval(() => {
       i++;
-      setTyped(dossier.slice(0, i));
-      if (i >= dossier.length) clearInterval(id);
-    }, 28);
+      setTyped(dossierText.slice(0, i));
+      if (i >= dossierText.length) clearInterval(id);
+    }, TYPE_MS);
     return () => clearInterval(id);
-  }, [dossier, phase]);
+  }, [dossierText, phase]);
 
   if (phase === 'done') return null;
+
+  const current = SLIDES[active];
 
   return (
     <div
@@ -81,142 +90,128 @@ export function HomeIntro() {
         phase === 'out' ? 'opacity-0 pointer-events-none' : 'opacity-100'
       }`}
       style={{
-        backgroundImage: `linear-gradient(180deg, rgba(5,12,8,0.92), rgba(2,8,5,0.96)), url(${bg})`,
+        backgroundImage: `linear-gradient(180deg, rgba(248,242,228,0.94), rgba(238,225,200,0.96)), url(${bg})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}
       aria-hidden
     >
-      {/* Cyber grid */}
-      <div className="absolute inset-0 opacity-[0.18] pointer-events-none"
-        style={{
-          backgroundImage:
-            'linear-gradient(rgba(201,168,76,0.55) 1px, transparent 1px), linear-gradient(90deg, rgba(201,168,76,0.55) 1px, transparent 1px)',
-          backgroundSize: '48px 48px',
-          maskImage: 'radial-gradient(ellipse at center, black 35%, transparent 75%)',
-          WebkitMaskImage: 'radial-gradient(ellipse at center, black 35%, transparent 75%)',
-        }}
-      />
-      {/* Scan line */}
-      <div className="absolute inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[hsl(var(--gold-hi))] to-transparent shadow-[0_0_24px_hsl(var(--gold-hi))] pointer-events-none animate-[scan2060_4.5s_linear_infinite]" />
-      {/* Vignette + noise */}
+      {/* Classic paper grain + vignette */}
+      <div className="absolute inset-0 pointer-events-none opacity-[0.15] mix-blend-multiply"
+        style={{ backgroundImage: 'radial-gradient(rgba(60,40,10,0.5) 1px, transparent 1px)', backgroundSize: '3px 3px' }} />
       <div className="absolute inset-0 pointer-events-none"
-        style={{ background: 'radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.7) 100%)' }} />
+        style={{ background: 'radial-gradient(ellipse at center, transparent 55%, rgba(60,40,10,0.35) 100%)' }} />
 
       {/* Skip */}
       <button
         onClick={() => setPhase('done')}
-        className="absolute top-6 end-6 z-20 text-[11px] tracking-[0.3em] uppercase text-[hsl(var(--gold-hi))]/70 hover:text-[hsl(var(--gold-hi))] transition-colors font-arabic border border-[hsl(var(--gold-hi))]/30 px-3 py-1 rounded-sm backdrop-blur"
+        className="absolute top-6 end-6 z-20 text-[11px] tracking-[0.3em] uppercase text-[#1A4A00]/70 hover:text-[hsl(var(--gold-hi))] transition-colors font-arabic border border-[#1A4A00]/25 px-3 py-1 rounded-sm bg-white/40 backdrop-blur"
       >
         {isAr ? 'تخطي ▸' : 'SKIP ▸'}
       </button>
 
-      {/* HUD corners */}
+      {/* Classic ornament corners */}
       {[
-        'top-4 start-4 border-t-2 border-s-2',
-        'top-4 end-4 border-t-2 border-e-2',
-        'bottom-4 start-4 border-b-2 border-s-2',
-        'bottom-4 end-4 border-b-2 border-e-2',
+        'top-5 start-5 border-t-2 border-s-2',
+        'top-5 end-5 border-t-2 border-e-2',
+        'bottom-5 start-5 border-b-2 border-s-2',
+        'bottom-5 end-5 border-b-2 border-e-2',
       ].map((c, i) => (
-        <div key={i} className={`absolute ${c} w-10 h-10 border-[hsl(var(--gold-hi))]/70`} />
+        <div key={i} className={`absolute ${c} w-12 h-12 border-[hsl(var(--gold))]/70`} />
       ))}
 
-      <div className="relative h-full w-full flex flex-col items-center justify-center gap-5 md:gap-8 px-4 py-8 text-center">
-        {/* Title */}
+      <div className="relative h-full w-full flex flex-col items-center justify-center gap-5 md:gap-8 px-4 py-10 text-center">
+        {/* Heading */}
         <div className="opacity-0 animate-[introUp_0.9s_ease-out_0.2s_forwards]">
-          <div className="text-[10px] tracking-[0.5em] text-[hsl(var(--gold-hi))]/80 mb-2 font-mono">
-            EST · 2010 — PROTOCOL 2060
+          <div className="text-[10px] tracking-[0.5em] text-[hsl(var(--gold-hi))] mb-2 font-mono">
+            EST · 2010 — DOSSIER 2060
           </div>
-          <h1 className={`text-2xl sm:text-4xl md:text-5xl lg:text-6xl ${isAr ? 'font-arabic font-bold' : 'font-display font-bold'}`}
-              style={{ color: 'hsl(var(--gold-hi))', textShadow: '0 0 24px rgba(201,168,76,0.45)' }}>
-            {isAr ? 'شركة فحم النخلة' : 'Palm Charcoal Company'}
+          <h1 className={`text-2xl sm:text-4xl md:text-5xl ${isAr ? 'font-arabic font-bold' : 'font-display font-bold'}`}
+              style={{ color: '#1A4A00' }}>
+            {isAr ? 'علاماتنا التجارية المسجّلة' : 'Our Registered Trademarks'}
           </h1>
-          <div className="flex items-center justify-center gap-3 mt-3 md:mt-4">
-            <span className="block h-px w-12 md:w-16 bg-gradient-to-r from-transparent to-[hsl(var(--gold-hi))]" />
-            <span className="text-[hsl(var(--gold-hi))] rotate-45 inline-block w-2 h-2 border border-[hsl(var(--gold-hi))] animate-pulse" />
-            <span className="block h-px w-12 md:w-16 bg-gradient-to-l from-transparent to-[hsl(var(--gold-hi))]" />
+          <div className="flex items-center justify-center gap-3 mt-3">
+            <span className="block h-px w-16 bg-gradient-to-r from-transparent to-[hsl(var(--gold))]" />
+            <span className="text-[hsl(var(--gold))] rotate-45 inline-block w-2 h-2 border border-[hsl(var(--gold))]" />
+            <span className="block h-px w-16 bg-gradient-to-l from-transparent to-[hsl(var(--gold))]" />
           </div>
         </div>
 
-        {/* Coverflow */}
-        <div
-          className="relative w-full max-w-5xl opacity-0 animate-[introUp_1s_ease-out_0.6s_forwards]"
-          style={{ perspective: '1400px', height: 'clamp(180px, 32vw, 320px)' }}
-        >
-          {cards.map((c, i) => {
-            const offset = i - 2;
-            const isCenter = offset === 0;
-            const xPct = offset * 22;
-            const rotY = offset * -18;
-            const scale = isCenter ? 1 : 0.78 - Math.abs(offset) * 0.06;
-            const z = -Math.abs(offset) * 90;
+        {/* Slide stage — single classic framed card cross-fading */}
+        <div className="relative w-full max-w-md" style={{ height: 'clamp(200px, 34vw, 320px)' }}>
+          {SLIDES.map((tm, i) => {
+            const isActive = i === active;
             return (
               <div
-                key={c.id}
-                className="absolute top-1/2 left-1/2 transition-transform duration-700"
+                key={tm.id}
+                className="absolute inset-0 flex items-center justify-center transition-all duration-700 ease-out"
                 style={{
-                  width: 'clamp(130px, 22vw, 240px)',
-                  height: 'clamp(130px, 22vw, 240px)',
-                  transform: `translate(-50%, -50%) translateX(${xPct}%) translateZ(${z}px) rotateY(${rotY}deg) scale(${scale})`,
-                  zIndex: isCenter ? 10 : 5 - Math.abs(offset),
+                  opacity: isActive ? 1 : 0,
+                  transform: isActive ? 'scale(1)' : 'scale(0.94)',
+                  pointerEvents: isActive ? 'auto' : 'none',
                 }}
               >
-                <div
-                  className={`relative w-full h-full rounded-2xl bg-black/40 backdrop-blur-md border flex items-center justify-center p-3 md:p-4 overflow-hidden ${
-                    isCenter
-                      ? 'border-[hsl(var(--gold-hi))] shadow-[0_0_60px_-5px_rgba(201,168,76,0.6)]'
-                      : 'border-[hsl(var(--gold-hi))]/30 shadow-[0_0_30px_-12px_rgba(201,168,76,0.35)]'
-                  }`}
-                >
-                  {/* Holo sweep */}
-                  <div className="absolute inset-0 pointer-events-none opacity-60"
+                <div className="relative w-full h-full rounded-2xl bg-white/95 border border-[hsl(var(--gold))] shadow-[0_20px_60px_-10px_rgba(160,120,40,0.5)] p-5 overflow-hidden">
+                  {/* inner classic frame */}
+                  <div className="absolute inset-2 rounded-xl border border-[hsl(var(--gold))]/40 pointer-events-none" />
+                  {/* gold scan sweep (motion-safe via keyframe) */}
+                  <div className="absolute inset-0 pointer-events-none"
                     style={{
-                      background: 'linear-gradient(115deg, transparent 40%, rgba(201,168,76,0.25) 50%, transparent 60%)',
-                      animation: 'holoSweep 3.6s ease-in-out infinite',
-                    }}
+                      background: 'linear-gradient(115deg, transparent 42%, rgba(201,168,76,0.28) 50%, transparent 58%)',
+                      animation: 'holoSweep 3.2s ease-in-out infinite',
+                    }} />
+                  <img
+                    src={tm.image}
+                    alt={tm.nameAr}
+                    className="relative z-[1] w-full h-full object-contain"
+                    loading="eager"
                   />
-                  <img src={c.image} alt={c.nameAr} className="max-w-full max-h-full object-contain relative z-[1] drop-shadow-[0_0_12px_rgba(201,168,76,0.3)]" loading="eager" />
                 </div>
               </div>
             );
           })}
         </div>
 
-        {/* 2060 Dossier terminal */}
-        <div className="opacity-0 animate-[introUp_0.9s_ease-out_1s_forwards] w-full max-w-2xl">
-          <pre className="text-start font-mono text-[10px] sm:text-[11px] md:text-xs leading-relaxed whitespace-pre-wrap bg-black/55 border border-[hsl(var(--gold-hi))]/40 rounded-lg p-3 sm:p-4 text-[hsl(var(--gold-hi))] shadow-[inset_0_0_30px_rgba(201,168,76,0.15)] min-h-[110px]">
-{typed}<span className="inline-block w-2 h-3 bg-[hsl(var(--gold-hi))] ms-1 animate-pulse" />
-          </pre>
+        {/* Brand name + slide pager */}
+        <div className="opacity-0 animate-[introUp_0.7s_ease-out_0.6s_forwards] flex flex-col items-center gap-2">
+          <div className={`text-lg md:text-2xl font-bold ${isAr ? 'font-arabic' : 'font-display'}`} style={{ color: '#1A4A00' }}>
+            {isAr ? current.nameAr : current.nameEn}
+            <span className="mx-2 text-[hsl(var(--gold))]">·</span>
+            <span className="text-[hsl(var(--gold-hi))] text-sm md:text-base font-mono">#{current.registrationNo}</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            {SLIDES.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setActive(i)}
+                aria-label={`slide ${i + 1}`}
+                className={`h-1.5 rounded-full transition-all duration-500 ${
+                  i === active ? 'w-8 bg-[hsl(var(--gold-hi))]' : 'w-2 bg-[#1A4A00]/30'
+                }`}
+              />
+            ))}
+          </div>
         </div>
 
-        {/* Registration strip */}
-        <div className="bg-black/50 backdrop-blur-md border border-[hsl(var(--gold-hi))]/40 rounded-2xl px-4 sm:px-6 md:px-8 py-3 md:py-5 shadow-[0_0_30px_-10px_rgba(201,168,76,0.4)] grid grid-cols-2 sm:grid-cols-3 gap-x-4 sm:gap-x-8 gap-y-2 sm:gap-y-3 text-[10px] sm:text-[11px] md:text-xs opacity-0 animate-[introUp_0.9s_ease-out_1.3s_forwards] max-w-2xl w-full">
-          <Meta label={isAr ? 'رقم التسجيل' : 'Reg No.'} value={center.registrationNo} />
-          <Meta label={isAr ? 'فئة العلامة' : 'Class'} value={center.niceClass.replace('الفئة ', '')} />
-          <Meta label={isAr ? 'تاريخ التسجيل' : 'Filed'} value={center.filedHijri} />
-          <Meta label={isAr ? 'تاريخ الانتهاء' : 'Expires'} value={center.expiresHijri} />
-          <Meta label={isAr ? 'النشاط' : 'Activity'} value={center.goodsAr} />
-          <Meta label={isAr ? 'البلد' : 'Country'} value={center.countryAr} />
+        {/* 2060 terminal — live, per-slide */}
+        <div className="opacity-0 animate-[introUp_0.9s_ease-out_0.9s_forwards] w-full max-w-2xl">
+          <pre
+            className="text-start font-mono text-[10px] sm:text-[11px] md:text-xs leading-relaxed whitespace-pre-wrap bg-[#0c1108]/92 border border-[hsl(var(--gold-hi))]/50 rounded-lg p-3 sm:p-4 text-[hsl(var(--gold-hi))] shadow-[inset_0_0_30px_rgba(201,168,76,0.18)] min-h-[180px]"
+            dir="ltr"
+            style={{ textAlign: isAr ? 'right' : 'left' }}
+          >
+{typed}<span className="inline-block w-2 h-3 bg-[hsl(var(--gold-hi))] ms-1 align-middle animate-pulse" />
+          </pre>
         </div>
       </div>
 
       <style>{`
         @keyframes introUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes scan2060 { 0% { top: -2%; } 100% { top: 102%; } }
         @keyframes holoSweep { 0%,100% { transform: translateX(-30%); } 50% { transform: translateX(30%); } }
         @media (prefers-reduced-motion: reduce) {
-          .animate-\\[scan2060_4\\.5s_linear_infinite\\] { animation: none !important; display: none; }
+          [style*="holoSweep"] { animation: none !important; }
         }
       `}</style>
-    </div>
-  );
-}
-
-function Meta({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex flex-col items-center md:items-start font-arabic">
-      <span className="text-[10px] uppercase tracking-[0.2em] text-[hsl(var(--gold-hi))]">{label}</span>
-      <span className="text-[hsl(var(--gold-hi))]/85 font-medium mt-0.5 text-center md:text-start">{value}</span>
     </div>
   );
 }
