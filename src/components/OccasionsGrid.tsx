@@ -54,7 +54,7 @@ export function OccasionsGrid() {
           return (
             <ScrollReveal key={i} delay={120 + i * 110}>
               <article
-                className="group relative flex items-stretch gap-4 rounded-2xl bg-[hsl(var(--card))] border border-[hsl(var(--gold))]/20 p-3 md:p-4 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.25)] hover:shadow-[0_20px_50px_-15px_hsl(var(--gold)/0.35)] hover:-translate-y-1 hover:border-[hsl(var(--gold))]/50 transition-all duration-500 overflow-hidden"
+                className="group relative flex items-stretch gap-4 rounded-2xl bg-[hsl(var(--card))] border border-[hsl(var(--gold))]/20 p-3 md:p-4 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.25)] hover:border-[hsl(var(--gold))]/50 transition-[border-color,box-shadow] duration-500 overflow-hidden motion-safe:hover:shadow-[0_20px_50px_-15px_hsl(var(--gold)/0.35)] motion-safe:hover:-translate-y-1 motion-safe:transition-all"
               >
                 {/* Cinematic shimmer sweep on hover */}
                 <span
@@ -63,7 +63,7 @@ export function OccasionsGrid() {
                 />
 
                 {/* Icon — start side */}
-                <div className="shrink-0 grid place-items-center w-14 h-14 md:w-16 md:h-16 rounded-xl bg-gradient-to-br from-[hsl(var(--gold))]/15 to-[hsl(var(--gold))]/5 border border-[hsl(var(--gold))]/30 text-[hsl(var(--gold))] group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500">
+                <div className="shrink-0 grid place-items-center w-14 h-14 md:w-16 md:h-16 rounded-xl bg-gradient-to-br from-[hsl(var(--gold))]/15 to-[hsl(var(--gold))]/5 border border-[hsl(var(--gold))]/30 text-[hsl(var(--gold))] motion-safe:group-hover:scale-110 motion-safe:group-hover:rotate-3 transition-transform duration-500">
                   <Icon className="w-7 h-7 md:w-8 md:h-8" strokeWidth={1.6} />
                 </div>
 
@@ -85,7 +85,7 @@ export function OccasionsGrid() {
                     loading="lazy"
                     width={800}
                     height={600}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                    className="w-full h-full object-cover motion-safe:group-hover:scale-110 transition-transform duration-700"
                   />
                 </div>
               </article>
