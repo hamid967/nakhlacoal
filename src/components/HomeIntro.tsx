@@ -4,12 +4,28 @@ import { trademarks, type Trademark } from '@/data/trademarks';
 import bg from '@/assets/intro-palm-bg.jpg';
 
 const KEY = 'palm-home-intro-played';
+const SETTINGS_KEY = 'palm-intro-settings';
 
 // Show all 5 trademarks in this on-stage order
 const ORDER = [0, 1, 2, 3, 4];
 const SLIDES = ORDER.map((i) => trademarks[i]);
-const SLIDE_MS = 5200;
-const TYPE_MS = 22;
+
+// Defaults — overridable from Settings via localStorage `palm-intro-settings`:
+// { slideMs: 5200, transitionMs: 1100, typeMs: 22 }
+const DEFAULTS = { slideMs: 5200, transitionMs: 1100, typeMs: 22 };
+function loadSettings() {
+  try {
+    const raw = localStorage.getItem(SETTINGS_KEY);
+    if (!raw) return DEFAULTS;
+    const p = JSON.parse(raw);
+    return {
+      slideMs: Math.max(1500, Number(p.slideMs) || DEFAULTS.slideMs),
+      transitionMs: Math.max(200, Number(p.transitionMs) || DEFAULTS.transitionMs),
+      typeMs: Math.max(5, Number(p.typeMs) || DEFAULTS.typeMs),
+    };
+  } catch { return DEFAULTS; }
+}
+
 
 // Strict, uniform dossier — driven only by real fields in trademarks.ts.
 // Any empty/undefined value is replaced by a visible "—" so the layout is
