@@ -33,6 +33,8 @@ import Profile from '@/pages/Profile';
 import Assistant from '@/pages/Assistant';
 import AdminOrders from '@/pages/AdminOrders';
 import AdminInventory from '@/pages/AdminInventory';
+import NewOrder from '@/pages/NewOrder';
+import OrderTracking from '@/pages/OrderTracking';
 
 import NotFound from '@/pages/NotFound';
 
