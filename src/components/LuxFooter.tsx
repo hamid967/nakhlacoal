@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Instagram, Linkedin, Mail } from 'lucide-react';
 import logo from '@/assets/palm-charcoal-logo.png';
+import { brand } from '@/lib/brand';
 
 export function LuxFooter() {
   const { t, i18n } = useTranslation();
@@ -50,9 +51,9 @@ export function LuxFooter() {
             <FooterLink to="/contact">{t('products.requestQuote')}</FooterLink>
           </FooterCol>
           <FooterCol title={t('footer.legal')}>
-            <FooterLink to="#">{t('footer.privacy')}</FooterLink>
-            <FooterLink to="#">{t('footer.terms')}</FooterLink>
-            <FooterLink to="#">{t('footer.shipping')}</FooterLink>
+            <FooterLink to="/contact">{t('footer.privacy')}</FooterLink>
+            <FooterLink to="/contact">{t('footer.terms')}</FooterLink>
+            <FooterLink to="/contact">{t('footer.shipping')}</FooterLink>
           </FooterCol>
         </div>
         </div>
@@ -63,13 +64,13 @@ export function LuxFooter() {
           © {year} Palm Charcoal Co. — {t('footer.rights')}
         </p>
         <div className="flex items-center gap-4 text-foreground/40">
-          <a href="#" aria-label="Instagram" className="hover:text-gold transition-colors duration-500">
+          <a href={brand.social.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="hover:text-gold transition-colors duration-500">
             <Instagram className="w-4 h-4" />
           </a>
-          <a href="#" aria-label="LinkedIn" className="hover:text-gold transition-colors duration-500">
+          <a href={brand.social.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="hover:text-gold transition-colors duration-500">
             <Linkedin className="w-4 h-4" />
           </a>
-          <a href="mailto:export@palmcharcoal.sa" aria-label="Email" className="hover:text-gold transition-colors duration-500">
+          <a href={`mailto:${brand.footer.email}`} aria-label="Email" className="hover:text-gold transition-colors duration-500">
             <Mail className="w-4 h-4" />
           </a>
         </div>
