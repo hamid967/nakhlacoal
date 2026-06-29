@@ -59,7 +59,7 @@ export function OccasionsGrid() {
                 {/* Cinematic shimmer sweep on hover */}
                 <span
                   aria-hidden
-                  className="pointer-events-none absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-[1400ms] ease-out bg-gradient-to-r from-transparent via-[hsl(var(--gold))]/10 to-transparent"
+                  className="pointer-events-none absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-[1400ms] ease-out bg-gradient-to-r from-transparent via-[hsl(var(--gold))]/10 to-transparent motion-reduce:hidden"
                 />
 
                 {/* Icon — start side */}
