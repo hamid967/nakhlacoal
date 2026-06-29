@@ -565,7 +565,35 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
             <span className="font-semibold text-foreground">{pendingOrder.product_type}</span> · {pendingOrder.quantity} {pendingOrder.unit}
             {pendingOrder.ai_summary && <span className="block mt-0.5 italic">{pendingOrder.ai_summary}</span>}
           </p>
-          <div className="space-y-1.5">
+          {liveQuote && (
+            <div className={`rounded-lg border p-2 text-[10.5px] space-y-1 ${liveQuote.ok ? 'border-emerald-500/40 bg-emerald-500/5' : 'border-destructive/50 bg-destructive/5'}`} aria-live="polite">
+              <div className="flex items-center justify-between">
+                <span className="font-semibold text-foreground flex items-center gap-1">
+                  {liveQuote.ok ? '✅ متوفر' : '⚠️ تحقق الكمية'}
+                </span>
+                {liveQuote.item && (
+                  <span className="text-muted-foreground">
+                    المخزون: {liveQuote.item.inStockKg.toLocaleString('ar-SA')} كجم · تجهيز {liveQuote.leadDays} يوم
+                  </span>
+                )}
+              </div>
+              {liveQuote.ok && (
+                <div className="flex items-center justify-between font-arabic">
+                  <span className="text-muted-foreground">السعر اللحظي</span>
+                  <span className="font-semibold text-foreground">
+                    {formatSAR(liveQuote.pricePerKg)} / كجم · إجمالي <span className="text-emerald-700">{formatSAR(liveQuote.total)}</span>
+                    <span className="block text-[9px] text-muted-foreground text-end">شامل ضريبة القيمة المضافة</span>
+                  </span>
+                </div>
+              )}
+              {liveQuote.issues.map((i, idx) => (
+                <p key={idx} className="text-destructive">• {i}</p>
+              ))}
+              {liveQuote.notes.map((n, idx) => (
+                <p key={idx} className="text-[10px] text-emerald-700">💡 {n}</p>
+              ))}
+            </div>
+          )}
             <div>
               <input
                 value={formData.contact_name}
