@@ -7,9 +7,11 @@ import './admin.css';
 
 export default function AdminLayout() {
   const [collapsed, setCollapsed] = useState(false);
-  const [theme, setTheme] = useState<'light' | 'dark'>(
-    (typeof localStorage !== 'undefined' && (localStorage.getItem('admin-theme') as any)) || 'light'
-  );
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    if (typeof localStorage === 'undefined') return 'light';
+    const stored = localStorage.getItem('admin-theme');
+    return stored === 'dark' ? 'dark' : 'light';
+  });
   const location = useLocation();
 
   useEffect(() => { localStorage.setItem('admin-theme', theme); }, [theme]);
