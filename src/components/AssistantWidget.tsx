@@ -315,6 +315,14 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
           <MessageCircle className="w-4 h-4" />
         </a>
         <button
+          onClick={() => { setMessages([greet]); setPendingOrder(null); setInput(''); inputRef.current?.focus(); }}
+          className="p-1.5 rounded-lg hover:bg-white/10 transition"
+          aria-label="محادثة جديدة"
+          title="بدء محادثة جديدة"
+        >
+          <Sparkles className="w-4 h-4 text-gold-hi" />
+        </button>
+        <button
           onClick={() => { onClose(); navigate('/assistant'); }}
           className="p-1.5 rounded-lg hover:bg-white/10 transition"
           aria-label="تكبير"
