@@ -170,11 +170,14 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
     setSubmitting(true);
     const waText = buildWa(order);
     const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(waText)}`;
-    // Navigate the pre-opened tab to WhatsApp immediately (sync-opened to bypass popup blockers)
+    // Navigate pre-opened tab (kept within user gesture) → WhatsApp.
+    let opened = false;
     if (waWin && !waWin.closed) {
-      try { waWin.location.href = waUrl; } catch { /* ignore */ }
-    } else {
-      window.open(waUrl, '_blank', 'noopener,noreferrer');
+      try { waWin.location.href = waUrl; opened = true; } catch { /* fallthrough */ }
+    }
+    if (!opened) {
+      const w = window.open(waUrl, '_blank');
+      if (!w) window.location.href = waUrl; // popup blocked → same-tab fallback
     }
     try {
       const { data, error } = await supabase.functions.invoke('submit-order', { body: order });
@@ -182,7 +185,9 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
       toast.success('تم إرسال الطلب على واتساب ✅');
       setMessages(m => [...m, { id: makeId(), role: 'assistant', content: `✅ **تم إرسال طلبك على واتساب!**\n\nرقم الطلب: \`${data.id}\`\nسنتواصل معك قريباً 🌴` }]);
     } catch (e: any) {
-      toast.error('تم فتح واتساب، لكن تعذّر حفظ الطلب: ' + (e?.message ?? ''));
+      toast.success('تم فتح واتساب — أكمل الإرسال من هناك ✅');
+      setMessages(m => [...m, { id: makeId(), role: 'assistant', content: `✅ **تم تجهيز رسالتك على واتساب.**\n\nأكمل الإرسال من نافذة واتساب وسنتواصل معك فوراً 🌴` }]);
+      console.warn('[assistant] order persistence failed:', e?.message);
     } finally { setSubmitting(false); }
   };
 
