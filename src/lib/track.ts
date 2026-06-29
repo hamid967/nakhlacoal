@@ -5,7 +5,7 @@ type Props = Record<string, string | number | boolean | undefined>;
 
 declare global {
   interface Window {
-    dataLayer?: Array<Record<string, unknown>>;
+    dataLayer?: any[];
     plausible?: (event: string, opts?: { props?: Props }) => void;
   }
 }
