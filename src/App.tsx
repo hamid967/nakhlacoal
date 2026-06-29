@@ -89,6 +89,7 @@ export default function App() {
               <Route element={<Layout />}>
                 <Route path="/" element={<Home />} />
                 <Route path="/auth" element={<Auth />} />
+                <Route path="/auth/reset" element={<ResetPassword />} />
                 <Route path="/products" element={<Products />} />
                 <Route path="/products/:slug" element={<ProductDetail />} />
                 <Route path="/compare" element={<ProtectedRoute><Compare /></ProtectedRoute>} />
