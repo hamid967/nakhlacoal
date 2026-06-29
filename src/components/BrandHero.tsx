@@ -221,6 +221,12 @@ export function BrandHero() {
                   tabIndex={i === active ? 0 : -1}
                   onClick={() => setActive(i)}
                   onFocus={() => setActive(i)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+                      e.preventDefault();
+                      setActive(i);
+                    }
+                  }}
                   className={`block rounded-md transition-all outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--gold-hi))] focus-visible:ring-offset-2 focus-visible:ring-offset-[#FAF5EB] ${
                     i === active ? 'w-[140px] h-[200px]' : 'w-[110px] h-[160px] opacity-0'
                   }`}
@@ -229,6 +235,12 @@ export function BrandHero() {
               </li>
             ))}
           </ul>
+
+          <div className="sr-only" aria-live="polite" aria-atomic="true">
+            {isAr
+              ? `العلامة النشطة: ${current.nameAr} — ${active + 1} من ${trademarks.length}`
+              : `Active brand: ${current.nameEn} — ${active + 1} of ${trademarks.length}`}
+          </div>
 
           {/* Dots — tablist */}
           <div
