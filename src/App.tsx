@@ -45,6 +45,8 @@ import AdminCustomers from '@/admin/pages/Customers';
 import AdminReports from '@/admin/pages/Reports';
 import AdminSettings from '@/admin/pages/Settings';
 import AdminPlaceholder from '@/admin/pages/Placeholder';
+import AdminTrademarks from '@/admin/pages/Trademarks';
+
 import PortalLayout from '@/portal/PortalLayout';
 import PortalDashboard from '@/portal/pages/Dashboard';
 import PortalOrders from '@/portal/pages/Orders';
@@ -117,7 +119,9 @@ export default function App() {
                 <Route path="reports" element={<AdminReports />} />
                 <Route path="analytics" element={<AdminReports />} />
                 <Route path="settings" element={<AdminSettings />} />
+                <Route path="trademarks" element={<AdminTrademarks />} />
                 <Route path="*" element={<AdminPlaceholder />} />
+
               </Route>
               <Route path="/portal" element={<ProtectedRoute><PortalLayout /></ProtectedRoute>}>
                 <Route index element={<PortalDashboard />} />
