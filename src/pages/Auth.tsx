@@ -116,6 +116,28 @@ export default function Auth() {
       </Helmet>
       <section className="min-h-[80vh] flex items-center justify-center px-4 py-16">
         <div className="w-full max-w-md bg-card border border-border rounded-2xl p-8 shadow-sm">
+          {user ? (
+            <div className="text-center space-y-4">
+              <h1 className="font-serif text-2xl">{t('أنت مسجّل الدخول', 'You are signed in')}</h1>
+              <p className="text-sm text-muted-foreground break-all">{user.email}</p>
+              <div className="flex flex-col gap-2 pt-2">
+                <Link to="/" className="w-full py-2.5 rounded-lg border border-input bg-background hover:bg-muted text-sm font-medium">
+                  {t('الذهاب إلى الصفحة الرئيسية', 'Go to homepage')}
+                </Link>
+                <button
+                  type="button"
+                  onClick={handleSignOut}
+                  disabled={busy}
+                  className="w-full py-2.5 rounded-lg bg-destructive text-destructive-foreground font-medium hover:opacity-90 transition disabled:opacity-50"
+                >
+                  {busy ? '...' : t('تسجيل الخروج', 'Sign out')}
+                </button>
+              </div>
+              {err && <p className="text-xs text-destructive">{err}</p>}
+            </div>
+          ) : (
+          <>
+
           <h1 className="font-serif text-3xl text-center mb-2">
             {mode === 'signin' ? t('تسجيل الدخول', 'Sign In') : t('إنشاء حساب', 'Create Account')}
           </h1>
