@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { trademarks } from '@/data/trademarks';
+import { brand } from '@/lib/brand';
 import bg from '@/assets/intro-palm-bg.jpg';
 
 const KEY = 'palm-home-intro-played';
@@ -10,14 +11,46 @@ const cards = order.map((i) => trademarks[i]);
 const center = trademarks[0];
 
 export function HomeIntro() {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const isAr = i18n.language?.startsWith('ar');
   const [phase, setPhase] = useState<'in' | 'out' | 'done'>('in');
   const [typed, setTyped] = useState('');
 
-  const dossier = isAr
-    ? `> PALM_CHARCOAL // ملف العلامة 2060\n> تهيئة الواجهة الهولوغرافية ...\n> فحص العلامات التجارية المسجّلة ...\n> [✓] تم التحقق — جودة سعودية موثّقة\n> فتح بوابة فحم النخلة ...`
-    : `> PALM_CHARCOAL // BRAND DOSSIER 2060\n> Initializing holographic interface ...\n> Verifying registered trademarks ...\n> [✓] Authenticated — Certified Saudi Quality\n> Opening Palm Charcoal portal ...`;
+  const dossier = useMemo(() => {
+    const id = `PC-${center.registrationNo}`;
+    const brandName = isAr ? center.nameAr : center.nameEn;
+    const allBrands = trademarks.map((x) => (isAr ? x.nameAr : x.nameEn)).join(' · ');
+    const mission = t('about.mission.body', '');
+    const vision = t('about.vision.body', '');
+    const loc = isAr ? 'جدة · حي البلد · سوق الفحم' : 'Jeddah · Al-Balad · Charcoal Souq';
+    if (isAr) {
+      return [
+        `> PALM_CHARCOAL // ملف العلامة ${id}`,
+        `> العلامة: ${brandName} — ${brand.logo}`,
+        `> المالك: ${center.ownerAr}`,
+        `> المقر: ${loc}`,
+        `> الفئة: ${center.niceClass} · الفحم`,
+        `> التسجيل: ${center.filedHijri} → الانتهاء ${center.expiresHijri}`,
+        `> العلامات المسجّلة: ${allBrands}`,
+        `> الرسالة: ${mission}`,
+        `> الرؤية: ${vision}`,
+        `> [✓] تم التحقق — جودة سعودية موثّقة`,
+      ].join('\n');
+    }
+    return [
+      `> PALM_CHARCOAL // BRAND DOSSIER ${id}`,
+      `> Brand: ${brandName} — ${brand.name}`,
+      `> Owner: ${center.ownerAr}`,
+      `> HQ: ${loc}`,
+      `> Class: ${center.niceClass.replace('الفئة ', 'Class ')} · Charcoal`,
+      `> Filed: ${center.filedHijri} → Expires ${center.expiresHijri}`,
+      `> Registered marks: ${allBrands}`,
+      `> Mission: ${mission}`,
+      `> Vision: ${vision}`,
+      `> [✓] Authenticated — Certified Saudi Quality`,
+    ].join('\n');
+  }, [isAr, t]);
+
 
   useEffect(() => {
     try {
