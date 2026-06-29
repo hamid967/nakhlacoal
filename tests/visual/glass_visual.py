@@ -35,25 +35,22 @@ async def shoot(page, name: str):
 
 
 async def capture_home(page, tag: str):
-    await page.goto(f"{BASE}/", wait_until="networkidle")
-    # Skip splash if present
-    try:
-        await page.get_by_role("button", name="Skip").click(timeout=1500)
-    except Exception:
-        pass
-    await page.wait_for_timeout(800)
+    await page.goto(f"{BASE}/", wait_until="domcontentloaded")
+    # Force-dismiss intro splash if it sneaks in
+    await page.evaluate(
+        "document.querySelectorAll('[data-intro-splash], .home-intro').forEach(n => n.remove())"
+    )
+    await page.wait_for_timeout(1200)
 
-    # Hero
-    hero = page.locator("section").first
-    await hero.scroll_into_view_if_needed()
-    await page.wait_for_timeout(400)
-    await hero.screenshot(path=str(OUT / f"hero__{tag}.png"))
+    # Hero (top viewport)
+    await page.evaluate("window.scrollTo(0, 0)")
+    await page.wait_for_timeout(300)
+    await page.screenshot(path=str(OUT / f"hero__{tag}.png"))
 
     # Footer
-    footer = page.locator("footer").first
-    await footer.scroll_into_view_if_needed()
-    await page.wait_for_timeout(400)
-    await footer.screenshot(path=str(OUT / f"footer__{tag}.png"))
+    await page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
+    await page.wait_for_timeout(800)
+    await page.screenshot(path=str(OUT / f"footer__{tag}.png"))
 
 
 async def capture_gallery(page, tag: str):
