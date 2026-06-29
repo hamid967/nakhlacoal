@@ -130,9 +130,9 @@ try {
 const newViolations = violations.filter((v) => !baseline.has(keyOf(v)));
 
 // Always emit machine + human summaries for CI artifact upload.
-const { writeFileSync: w, mkdirSync: mk } = await import("node:fs");
+const { writeFileSync, mkdirSync, appendFileSync } = await import("node:fs");
 const REPORT_DIR = join(ROOT, "reports/design-lint");
-mk(REPORT_DIR, { recursive: true });
+mkdirSync(REPORT_DIR, { recursive: true });
 
 // Group by (file, rule) → count
 const grouped = {};
@@ -161,7 +161,6 @@ writeFileSync(join(REPORT_DIR, "summary.md"), md);
 
 // Mirror to GitHub Actions step summary when available.
 if (process.env.GITHUB_STEP_SUMMARY) {
-  const { appendFileSync } = await import("node:fs");
   appendFileSync(process.env.GITHUB_STEP_SUMMARY, md);
 }
 
