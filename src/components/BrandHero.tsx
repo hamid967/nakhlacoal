@@ -161,7 +161,7 @@ export function BrandHero() {
             </Link>
             <Link
               to="/trademarks"
-              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-white/70 backdrop-blur border border-[hsl(var(--gold))]/30 text-sm font-arabic text-foreground/80 hover:border-[hsl(var(--gold))] hover:text-[hsl(var(--gold-hi))] transition-all"
+              className="btn-glass inline-flex items-center gap-2 px-6 py-3.5 rounded-full text-sm font-arabic"
             >
               {isAr ? 'علاماتنا' : 'Our Brands'}
             </Link>
@@ -211,7 +211,7 @@ export function BrandHero() {
               >
                 {/* Glass panel */}
                 <div
-                  className="relative w-full h-full rounded-[28px] overflow-hidden border border-white/60 bg-white/55 backdrop-blur-xl flex flex-col items-center justify-between p-4 md:p-5"
+                  className="relative w-full h-full rounded-[28px] overflow-hidden glass-card flex flex-col items-center justify-between p-4 md:p-5"
                   style={{
                     boxShadow: isCenter
                       ? '0 40px 80px -28px rgba(60,40,10,0.35), 0 0 0 1px rgba(201,168,76,0.45)'
@@ -298,7 +298,7 @@ export function BrandHero() {
       {/* Feature strip pinned to hero bottom */}
       <div className="absolute bottom-0 inset-x-0 pb-6 md:pb-8 z-[5]">
         <div className="container">
-          <div className="rounded-2xl bg-white/60 backdrop-blur-xl border border-white/70 shadow-[0_20px_50px_-25px_rgba(0,0,0,0.2)] grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-2 px-4 md:px-8 py-4">
+          <div className="rounded-2xl glass-strip grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-2 px-4 md:px-8 py-4">
             {features.map((f, i) => (
               <div key={i} className={`flex items-center gap-3 ${i > 0 ? 'md:border-s md:border-[hsl(var(--gold))]/15 md:ps-6' : ''}`}>
                 <f.i className="w-5 h-5 text-[hsl(var(--gold-hi))] shrink-0" />
