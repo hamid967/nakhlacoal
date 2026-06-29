@@ -12,39 +12,46 @@ type TestState = { status: 'idle' | 'testing' | 'ok' | 'fail'; message?: string 
  * Probes a tag URL by injecting a <script> tag. onload => network reachable + ID
  * served by Google. onerror => blocked/invalid. Times out after 6s.
  */
-function probeScript(url: string, timeoutMs = 6000): Promise<boolean> {
+type ProbeResult = 'ok' | 'error' | 'timeout';
+
+function probeScript(url: string, timeoutMs = 7000): Promise<ProbeResult> {
   return new Promise((resolve) => {
     const s = document.createElement('script');
     let done = false;
-    const finish = (ok: boolean) => {
+    const finish = (r: ProbeResult) => {
       if (done) return;
       done = true;
+      clearTimeout(t);
       s.remove();
-      resolve(ok);
+      resolve(r);
     };
     s.async = true;
     s.src = url;
-    s.onload = () => finish(true);
-    s.onerror = () => finish(false);
+    s.onload = () => finish('ok');
+    s.onerror = () => finish('error');
     document.head.appendChild(s);
-    setTimeout(() => finish(false), timeoutMs);
+    const t = setTimeout(() => finish('timeout'), timeoutMs);
   });
+}
+
+function resultToState(label: string, r: ProbeResult): TestState {
+  if (r === 'ok') return { status: 'ok', message: `${label} يستجيب — المعرّف صالح ومحمّل من Google.` };
+  if (r === 'timeout')
+    return {
+      status: 'fail',
+      message: `انتهت مهلة الاختبار (الشبكة بطيئة أو محجوبة). جرّب «إعادة المحاولة».`,
+    };
+  return { status: 'fail', message: `تعذّر تحميل سكربت ${label} (تحقّق من المعرّف أو مانع الإعلانات).` };
 }
 
 async function testGa4(id: string): Promise<TestState> {
   if (!GA4_RE.test(id)) return { status: 'fail', message: 'صيغة GA4 غير صالحة (G-XXXXXXXXXX)' };
-  const ok = await probeScript(`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(id)}`);
-  return ok
-    ? { status: 'ok', message: 'GA4 يستجيب — المعرّف صالح ومحمّل من Google.' }
-    : { status: 'fail', message: 'تعذّر تحميل سكربت GA4 (تحقّق من المعرّف أو مانع الإعلانات).' };
+  return resultToState('GA4', await probeScript(`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(id)}`));
 }
 
 async function testGtm(id: string): Promise<TestState> {
   if (!GTM_RE.test(id)) return { status: 'fail', message: 'صيغة GTM غير صالحة (GTM-XXXXXXX)' };
-  const ok = await probeScript(`https://www.googletagmanager.com/gtm.js?id=${encodeURIComponent(id)}`);
-  return ok
-    ? { status: 'ok', message: 'GTM يستجيب — الحاوية محمّلة بنجاح.' }
-    : { status: 'fail', message: 'تعذّر تحميل حاوية GTM (تحقّق من المعرّف أو مانع الإعلانات).' };
+  return resultToState('GTM', await probeScript(`https://www.googletagmanager.com/gtm.js?id=${encodeURIComponent(id)}`));
 }
 
 function StatusBadge({ state }: { state: TestState }) {
