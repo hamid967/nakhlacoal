@@ -40,13 +40,15 @@ function Gauge({
   label, value, suffix, max = 100, tip, icon: Icon,
 }: { label: string; value: number; suffix: string; max?: number; tip: string; icon: any }) {
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: '-80px' });
+  const inView = useInView(ref, { margin: '-80px' });
   const [progress, setProgress] = useState(0);
+  const prevValue = useRef(0);
   useEffect(() => {
     if (!inView) return;
-    const controls = animate(0, value, {
-      duration: 1.8, ease: [0.16, 1, 0.3, 1],
+    const controls = animate(prevValue.current, value, {
+      duration: 1.2, ease: [0.16, 1, 0.3, 1],
       onUpdate: (v) => setProgress(v),
+      onComplete: () => { prevValue.current = value; },
     });
     return controls.stop;
   }, [inView, value]);
