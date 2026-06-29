@@ -1,0 +1,51 @@
+name: Security Scan
+
+on:
+  pull_request:
+    branches: [main]
+  schedule:
+    # Nightly at 02:00 UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+jobs:
+  security:
+    name: Dependency & Backend Security Audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: NPM audit (high + critical)
+        run: bun audit --audit-level=high || true
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Supabase DB linter (RLS / policy / function checks)
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          if [ -n "$SUPABASE_DB_URL" ]; then
+            supabase db lint --db-url "$SUPABASE_DB_URL" --level warning
+          else
+            echo "::warning::SUPABASE_DB_URL secret not configured — skipping DB lint"
+          fi
+
+      # NOTE: Lovable's internal `security--run_security_scan` is invoked from
+      # the Lovable chat agent and is not exposed as a public CLI/API.
+      # Trigger it manually after this CI passes, or via the Lovable dashboard.
+      - name: Reminder — run Lovable security scan
+        run: |
+          echo "::notice::Run 'security--run_security_scan' from the Lovable chat for full backend scan."
