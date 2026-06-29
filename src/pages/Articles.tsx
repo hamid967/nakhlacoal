@@ -18,7 +18,7 @@ export default function Articles() {
         description="دلائل تفصيلية: كيف تختار أفضل فحم معسل، فحم البخور سريع الإشعال، الفحم الطبيعي مقابل المضغوط، والمزيد."
         path="/articles"
       />
-      <PageHero
+      <PageHero number={9}
         eyebrow="معرفة وخبرة"
         title="مقالات فحم النخلة"
         subtitle="نصائح، دلائل، ومعرفة فنية عن صناعة الفحم واستخداماته."

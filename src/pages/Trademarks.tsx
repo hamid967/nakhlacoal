@@ -65,7 +65,7 @@ export default function Trademarks() {
         <meta property="article:section" content="Trademarks" />
         <meta name="keywords" content="فحم النخلة, Palm Charcoal, نخلان, المركاز, النخلتين, باعشن, علامات تجارية سعودية, الهيئة السعودية للملكية الفكرية, SAIP" />
       </Helmet>
-      <PageHero
+      <PageHero number={3}
         eyebrow="ملكية فكرية موثقة"
         title="العلامات التجارية المسجلة"
         subtitle="خمس علامات تجارية مسجلة رسمياً لدى الهيئة السعودية للملكية الفكرية — تشمل فحم النخلة، نخلان، المركاز، النخلتين، وباعشن."

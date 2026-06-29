@@ -21,7 +21,7 @@ export default function About() {
         path="/about"
       />
 
-      <PageIntro
+      <PageIntro number={6}
         eyebrow={t('about.eyebrow')}
         title={t('about.title')}
         lead={t('about.story')}

@@ -69,7 +69,7 @@ export default function ExportPage() {
         description={isAr ? t('exportPage.subtitle') : 'Supplying premium Saudi charcoal worldwide — MOQ 500 KG, FOB Jeddah, ISO 9001 / SASO certified.'}
         path="/export"
       />
-      <PageHero
+      <PageHero number={5}
         eyebrow={isAr ? t('exportPage.eyebrow') : 'Global Export'}
         title={isAr ? t('exportPage.title') : 'Supplying Premium Saudi Charcoal to 20+ Countries'}
         subtitle={isAr ? t('exportPage.subtitle') : 'Weekly shipments, full customs clearance, OEM packaging. We ship from Jeddah to the Gulf, Europe, Asia and beyond.'}

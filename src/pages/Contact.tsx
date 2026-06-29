@@ -45,7 +45,7 @@ export default function Contact() {
         description={t('contact.subtitle')}
         path="/contact"
       />
-      <PageHero eyebrow={t('contact.eyebrow')} title={t('contact.title')} subtitle={t('contact.subtitle')} />
+      <PageHero number={15} eyebrow={t("contact.eyebrow")} title={t("contact.title")} subtitle={t("contact.subtitle")} />
 
       <section className="py-24">
         <div className="container grid grid-cols-1 lg:grid-cols-12 gap-12">
