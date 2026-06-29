@@ -124,10 +124,10 @@ export function HeroSlideshow() {
       <ImageWatermark variant="light" position="br" />
 
       {/* Caption */}
-      <div className="absolute bottom-8 inset-x-6 text-background pointer-events-none">
+      <div className="absolute bottom-8 inset-x-6 text-background pointer-events-none flex justify-center">
         <div
           key={i}
-          className="text-sm md:text-base font-arabic font-medium animate-[fade-in_0.8s_ease-out] drop-shadow-[0_2px_10px_rgba(0,0,0,0.6)]"
+          className="glass-strip glass-dark inline-block rounded-full px-5 py-2 text-sm md:text-base font-arabic font-medium animate-[fade-in_0.8s_ease-out]"
         >
           {isAr ? slides[i].ar : slides[i].en}
         </div>
@@ -138,7 +138,7 @@ export function HeroSlideshow() {
         type="button"
         onClick={() => go(isAr ? 1 : -1)}
         aria-label={isAr ? 'التالي' : 'Previous'}
-        className="absolute top-1/2 -translate-y-1/2 start-3 grid place-items-center h-10 w-10 rounded-full bg-dark/40 backdrop-blur-md text-background/90 border border-background/15 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity duration-300 hover:bg-dark/60"
+        className="glass-strip glass-dark absolute top-1/2 -translate-y-1/2 start-3 grid place-items-center h-11 w-11 rounded-full text-background/95 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity duration-300"
       >
         <ChevronLeft className="h-5 w-5" />
       </button>
@@ -146,7 +146,7 @@ export function HeroSlideshow() {
         type="button"
         onClick={() => go(isAr ? -1 : 1)}
         aria-label={isAr ? 'السابق' : 'Next'}
-        className="absolute top-1/2 -translate-y-1/2 end-3 grid place-items-center h-10 w-10 rounded-full bg-dark/40 backdrop-blur-md text-background/90 border border-background/15 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity duration-300 hover:bg-dark/60"
+        className="glass-strip glass-dark absolute top-1/2 -translate-y-1/2 end-3 grid place-items-center h-11 w-11 rounded-full text-background/95 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity duration-300"
       >
         <ChevronRight className="h-5 w-5" />
       </button>
