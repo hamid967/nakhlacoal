@@ -44,6 +44,17 @@ import AdminCustomers from '@/admin/pages/Customers';
 import AdminReports from '@/admin/pages/Reports';
 import AdminSettings from '@/admin/pages/Settings';
 import AdminPlaceholder from '@/admin/pages/Placeholder';
+import PortalLayout from '@/portal/PortalLayout';
+import PortalDashboard from '@/portal/pages/Dashboard';
+import PortalOrders from '@/portal/pages/Orders';
+import PortalCatalog from '@/portal/pages/Catalog';
+import PortalFavorites from '@/portal/pages/Favorites';
+import PortalTrademarks from '@/portal/pages/Trademarks';
+import PortalSupport from '@/portal/pages/Support';
+import PortalProfile from '@/portal/pages/Profile';
+import PortalSettings from '@/portal/pages/Settings';
+import PortalPlaceholder from '@/portal/pages/Placeholder';
+
 
 import NewOrder from '@/pages/NewOrder';
 import OrderTracking from '@/pages/OrderTracking';
