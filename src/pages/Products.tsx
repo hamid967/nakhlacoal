@@ -160,7 +160,7 @@ export default function Products() {
                   <ScrollReveal key={p.slug} delay={i * 60}>
                     <Link
                       to={`/products/${p.slug}`}
-                      className="group block rounded-2xl bg-surface border-luxe hover:border-luxe-strong transition-all duration-500 overflow-hidden h-full"
+                      className="group block rounded-2xl glass-card hover:shadow-gold transition-all duration-500 overflow-hidden h-full"
                     >
                       <div className="aspect-[5/4] overflow-hidden">
                         <img
