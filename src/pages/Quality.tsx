@@ -582,7 +582,7 @@ export default function Quality() {
               <motion.div key={t.id}
                 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }} transition={{ delay: i * 0.08 }}
-                className="group rounded-2xl border border-gold/20 bg-white/60 backdrop-blur p-4 hover:border-gold/60 hover:shadow-gold transition"
+                className="group rounded-2xl glass-card p-4 hover:shadow-gold transition"
               >
                 <div className="aspect-square bg-cream rounded-lg overflow-hidden mb-3">
                   <img src={t.image} alt={t.nameAr} className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform" loading="lazy" />

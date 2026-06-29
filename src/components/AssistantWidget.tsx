@@ -246,7 +246,7 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
       {/* Last-message preview pill (shown when widget is closed) */}
       {!open && preview && preview !== greet.content.replace(/[#*`_>\-]/g, '').replace(/\s+/g, ' ').trim().slice(0, 90) && (
         <div
-          className="fixed bottom-24 end-6 z-40 max-w-[280px] rounded-2xl rounded-br-sm border border-gold/30 bg-background shadow-gold px-3 py-2 text-xs text-foreground animate-fade-in font-arabic"
+          className="fixed bottom-24 end-6 z-40 max-w-[280px] rounded-2xl rounded-br-sm glass-strip !border-gold/30 px-3 py-2 text-xs text-foreground animate-fade-in font-arabic"
           role="status"
           aria-label="آخر رسالة من المساعد"
         >
@@ -259,7 +259,7 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
       )}
 
     <div
-      className={`fixed bottom-24 end-6 z-50 w-[92vw] max-w-[380px] h-[78vh] max-h-[560px] rounded-2xl border border-gold/30 bg-background shadow-gold flex flex-col overflow-hidden origin-bottom-right transition-all duration-300 ease-out ${
+      className={`fixed bottom-24 end-6 z-50 w-[92vw] max-w-[380px] h-[78vh] max-h-[560px] rounded-2xl glass-card !border-gold/30 flex flex-col overflow-hidden origin-bottom-right transition-all duration-300 ease-out ${
         open ? 'opacity-100 scale-100 translate-y-0 pointer-events-auto' : 'opacity-0 scale-90 translate-y-4 pointer-events-none'
       }`}
       role="dialog"
@@ -452,7 +452,7 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
 
 
       {/* Composer */}
-      <div className="border-t border-border p-2 bg-background">
+      <div className="border-t border-gold/20 p-2 glass-strip">
         {streaming && (
           <div className="flex items-center gap-1.5 px-1 pb-1.5 text-[11px] text-muted-foreground font-arabic">
             <Loader2 className="w-3 h-3 animate-spin text-gold" />

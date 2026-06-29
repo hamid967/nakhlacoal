@@ -50,8 +50,8 @@ export function LuxNav() {
   return (
     <>
       <nav
-        className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 ${
-          scrolled ? 'py-2 glass-luxe-solid' : 'py-4 glass-luxe'
+        className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 glass-strip ${
+          scrolled ? 'py-2 shadow-lg' : 'py-4'
         }`}
       >
         <div className="container flex items-center justify-between gap-6">
@@ -70,7 +70,7 @@ export function LuxNav() {
           </Link>
 
           {/* Desktop nav */}
-          <ul className="hidden lg:flex flex-nowrap items-center gap-0.5 xl:gap-1 rounded-full px-2 py-1 border-luxe bg-surface/60 backdrop-blur-sm">
+          <ul className="hidden lg:flex flex-nowrap items-center gap-0.5 xl:gap-1 rounded-full px-2 py-1 glass-card">
             {navItems.map((item) => (
               <li key={item.to}>
                 <NavLink to={item.to} end={item.to === '/'} className="block">
@@ -117,12 +117,10 @@ export function LuxNav() {
         }`}
       >
         <div className="absolute inset-0 bg-background/90 backdrop-blur-2xl" onClick={() => setOpen(false)} />
-        <div
-          className={`absolute top-0 ${isAr ? 'left-0' : 'right-0'} h-full w-[85vw] max-w-sm bg-surface border-luxe ${
-            isAr ? 'border-r' : 'border-l'
-          } p-8 transition-transform duration-700 ${
+        <aside
+          className={`absolute top-0 ${isAr ? 'left-0' : 'right-0'} h-full w-[85vw] max-w-sm glass-card rounded-none ${
             open ? 'translate-x-0' : isAr ? '-translate-x-full' : 'translate-x-full'
-          }`}
+          } transition-transform duration-500 ease-out p-8`}
         >
           <div className="flex items-center justify-between mb-12">
             <img src={logo} alt="Palm Charcoal" width={48} height={48} className="h-12 w-auto"  />
@@ -154,7 +152,7 @@ export function LuxNav() {
           <button onClick={() => { setOpen(false); setOrderOpen(true); }} className="btn-gold mt-10 w-full">
             {t('nav.order')}
           </button>
-        </div>
+        </aside>
       </div>
       <OrderModal open={orderOpen} onOpenChange={setOrderOpen} />
       <QuoteBuilder open={quoteOpen} onOpenChange={setQuoteOpen} />

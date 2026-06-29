@@ -70,7 +70,7 @@ export default function Products() {
 
       <section className="pt-10 md:pt-14">
         <div className="container">
-          <div className="rounded-2xl bg-surface border-luxe p-4 md:p-6 space-y-5">
+          <div className="rounded-2xl glass-card p-4 md:p-6 space-y-5">
             {/* Search */}
             <div className="relative">
               <Search className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/40 ${isAr ? 'right-4' : 'left-4'}`} />
@@ -160,7 +160,7 @@ export default function Products() {
                   <ScrollReveal key={p.slug} delay={i * 60}>
                     <Link
                       to={`/products/${p.slug}`}
-                      className="group block rounded-2xl bg-surface border-luxe hover:border-luxe-strong transition-all duration-500 overflow-hidden h-full"
+                      className="group block rounded-2xl glass-card hover:shadow-gold transition-all duration-500 overflow-hidden h-full"
                     >
                       <div className="aspect-[5/4] overflow-hidden">
                         <img

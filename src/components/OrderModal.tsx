@@ -112,7 +112,7 @@ export function OrderModal({ open, onOpenChange }: { open: boolean; onOpenChange
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="max-w-xl">
+      <DialogContent className="max-w-xl glass-card !border-gold/30">
         <DialogHeader>
           <DialogTitle className="font-serif text-2xl">{isAr ? 'اطلب الآن' : 'Place an Order'}</DialogTitle>
         </DialogHeader>
