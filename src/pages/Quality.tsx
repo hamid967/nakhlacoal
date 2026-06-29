@@ -274,8 +274,24 @@ export default function Quality() {
       <section className="py-28">
         <div className="container">
           <SectionTitle eyebrow="لوحة المختبر الحية" title="مؤشرات الجودة في الزمن الحقيقي" />
+          <div
+            aria-live="polite"
+            className="flex flex-wrap items-center justify-center gap-3 mb-8 text-sm font-arabic"
+          >
+            <span className="relative flex h-2.5 w-2.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-jade/70 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-jade" />
+            </span>
+            <span className="text-foreground/70">
+              {latest ? (
+                <>دفعة <span className="text-gold-hi font-semibold">{latest.batch_code}</span> — تم التحديث {new Date(updatedAt).toLocaleTimeString('ar-EG')}</>
+              ) : (
+                <>جارٍ الاتصال بالمختبر…</>
+              )}
+            </span>
+          </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-6 lg:gap-8">
-            {gauges.map((g) => <Gauge key={g.label} {...g} />)}
+            {liveGauges.map((g) => <Gauge key={g.label} {...g} />)}
           </div>
         </div>
       </section>
