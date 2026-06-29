@@ -62,7 +62,7 @@ export function BrandHero() {
   const bgOpacity = useTransform(scrollYProgress, [0, 1], [1, 0.35]);
 
   // Card layout — 4 cards, the active is centered/large, others fan out.
-  const slots = [-1.5, -0.5, 0.5, 1.5]; // visual order; offset from center
+  
 
   return (
     <section
