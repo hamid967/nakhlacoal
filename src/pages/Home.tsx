@@ -1,14 +1,16 @@
+import { lazy, Suspense } from 'react';
 import { Link } from 'react-router-dom';
 import { Flame, Clock, Leaf, Wind, ShieldCheck, Award } from 'lucide-react';
 import { SEO } from '@/components/SEO';
 import { ScrollReveal } from '@/components/ScrollReveal';
 
-import { BrandHero } from '@/components/BrandHero';
-import { ProcessSection } from '@/components/ProcessSection';
-import { JourneySection } from '@/components/JourneySection';
+// Heavy WebGL/3D hero — code-split so it doesn't block first paint
+const BrandHero = lazy(() => import('@/components/BrandHero').then((m) => ({ default: m.BrandHero })));
+const ProcessSection = lazy(() => import('@/components/ProcessSection').then((m) => ({ default: m.ProcessSection })));
+const JourneySection = lazy(() => import('@/components/JourneySection').then((m) => ({ default: m.JourneySection })));
+const LocationSection = lazy(() => import('@/components/LocationSection').then((m) => ({ default: m.LocationSection })));
+const FaqSection = lazy(() => import('@/components/FaqSection').then((m) => ({ default: m.FaqSection })));
 
-import { LocationSection } from '@/components/LocationSection';
-import { FaqSection } from '@/components/FaqSection';
 import { Certifications } from '@/components/Certifications';
 import { StickyMobileCTA } from '@/components/StickyMobileCTA';
 import { useLiveOrderCount } from '@/hooks/useLiveOrderCount';
