@@ -104,7 +104,7 @@ export default function ExportPage() {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 max-w-5xl mx-auto">
             {tradeTerms.map((tt, i) => (
               <ScrollReveal key={tt.label} delay={i * 60}>
-                <div className="p-5 rounded-2xl bg-background/40 border-luxe text-center h-full">
+                <div className="glass-card p-5 rounded-2xl text-center h-full">
                   <tt.icon className="w-5 h-5 text-gold-hi mx-auto mb-2.5" />
                   <div className="text-[10px] uppercase tracking-[0.2em] text-foreground/50 mb-1">{tt.label}</div>
                   <div className="text-sm font-bold text-gold-hi">{tt.value}</div>

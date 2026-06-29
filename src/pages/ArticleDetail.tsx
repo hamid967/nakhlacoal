@@ -50,7 +50,7 @@ export default function ArticleDetail() {
         </div>
 
         {content.length === 0 ? (
-          <div className="rounded-2xl border border-gold/20 bg-white/60 backdrop-blur-md p-10 text-center">
+          <div className="glass-card rounded-2xl p-10 text-center">
             <p className="text-muted-foreground">{isAr ? 'هذه المقالة قيد التحضير. ترقّب نشرها قريباً.' : 'This article is being prepared. Check back soon.'}</p>
           </div>
         ) : (
@@ -87,7 +87,7 @@ export default function ArticleDetail() {
             <Link
               key={a.id}
               to={`/articles/${a.id}`}
-              className="rounded-2xl border border-gold/20 bg-white/60 backdrop-blur-md p-5 hover:border-gold/60 hover:shadow-gold transition block"
+              className="glass-card rounded-2xl p-5 hover:border-gold/60 hover:shadow-gold transition block"
             >
               <span className="text-[11px] px-2 py-0.5 rounded-full bg-[hsl(var(--gold))]/15 text-[hsl(var(--gold))]">{a.category}</span>
               <h4 className="font-serif text-base text-emerald mt-3 leading-snug">{isAr ? a.titleAr : a.titleEn}</h4>
