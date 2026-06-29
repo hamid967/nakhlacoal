@@ -1,5 +1,7 @@
 # Design-System Lint — Net-New Violations
 
-**New:** 0  •  **Grandfathered:** 167
+**New:** 4  •  **Grandfathered:** 167
 
-_No new violations._
+| File | Rule | Count | Sample |
+|---|---|---:|---|
+| `src/features/auth/OAuthButtons.tsx` | `no-raw-hex` | 4 | L71: `#4285F4` |
