@@ -6,8 +6,7 @@ import type { Trademark } from '@/data/trademarks';
 
 /**
  * WebGL 3D carousel for trademarks (Three.js + R3F).
- * Cards arc along a curve, active card centers/scales up, others fan
- * back with rotation. Click a card to activate.
+ * Auto-caps render quality on weak devices and respects reduced motion.
  */
 
 type Props = {
@@ -21,35 +20,52 @@ function lerp(a: number, b: number, t: number) {
   return a + (b - a) * t;
 }
 
+/** Detect weak devices once at module load (SSR-safe). */
+function detectTier(): 'low' | 'high' {
+  if (typeof window === 'undefined') return 'high';
+  const nav = navigator as Navigator & { deviceMemory?: number; connection?: { saveData?: boolean; effectiveType?: string } };
+  const cores = nav.hardwareConcurrency ?? 4;
+  const memory = nav.deviceMemory ?? 4;
+  const saveData = nav.connection?.saveData === true;
+  const slowNet = ['slow-2g', '2g', '3g'].includes(nav.connection?.effectiveType ?? '');
+  const smallScreen = Math.min(window.innerWidth, window.innerHeight) < 600;
+  const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  if (saveData || slowNet || reduced) return 'low';
+  if (cores <= 4 && memory <= 4) return 'low';
+  if (smallScreen && cores <= 6) return 'low';
+  return 'high';
+}
+
 function Card({
   item,
   index,
   active,
   total,
   onChange,
+  lowTier,
 }: {
   item: Trademark;
   index: number;
   active: number;
   total: number;
   onChange: (i: number) => void;
+  lowTier: boolean;
 }) {
   const group = useRef<THREE.Group>(null!);
   const tex = useLoader(THREE.TextureLoader, item.image);
   useMemo(() => {
-    tex.anisotropy = 8;
+    tex.anisotropy = lowTier ? 1 : 8;
     tex.colorSpace = THREE.SRGBColorSpace;
-  }, [tex]);
+  }, [tex, lowTier]);
 
-  // signed shortest offset from active (handles wrap)
   const rawOffset = index - active;
   const half = total / 2;
   const offset =
     rawOffset > half ? rawOffset - total : rawOffset < -half ? rawOffset + total : rawOffset;
 
   const target = useMemo(() => {
-    const spread = 1.25; // horizontal spacing
-    const depth = 0.55; // pull non-active cards back
+    const spread = 1.25;
+    const depth = 0.55;
     const abs = Math.abs(offset);
     return {
       x: offset * spread,
@@ -63,7 +79,7 @@ function Card({
   useFrame((_, dt) => {
     const g = group.current;
     if (!g) return;
-    const k = 1 - Math.exp(-dt * 6); // critically-damped follow
+    const k = 1 - Math.exp(-dt * 6);
     g.position.x = lerp(g.position.x, target.x, k);
     g.position.y = lerp(g.position.y, target.y, k);
     g.position.z = lerp(g.position.z, target.z, k);
@@ -76,8 +92,7 @@ function Card({
 
   return (
     <group ref={group} onClick={(e) => { e.stopPropagation(); onChange(index); }}>
-      {/* Gold frame */}
-      <RoundedBox args={[1.15, 1.55, 0.06]} radius={0.06} smoothness={4}>
+      <RoundedBox args={[1.15, 1.55, 0.06]} radius={0.06} smoothness={lowTier ? 2 : 4}>
         <meshStandardMaterial
           color={isCenter ? '#dfbd68' : '#a8884a'}
           metalness={0.9}
@@ -86,12 +101,10 @@ function Card({
           emissiveIntensity={isCenter ? 0.25 : 0}
         />
       </RoundedBox>
-      {/* Cream card face */}
       <mesh position={[0, 0, 0.035]}>
         <planeGeometry args={[1.04, 1.44]} />
         <meshStandardMaterial color="#f6efd9" roughness={0.85} metalness={0} />
       </mesh>
-      {/* Trademark image */}
       <mesh position={[0, 0, 0.04]}>
         <planeGeometry args={[0.92, 1.3]} />
         <meshBasicMaterial map={tex} transparent toneMapped={false} />
@@ -102,14 +115,38 @@ function Card({
 
 function Podium() {
   return (
-    <mesh position={[0, -1.15, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+    <mesh position={[0, -1.15, 0]} rotation={[-Math.PI / 2, 0, 0]}>
       <ringGeometry args={[1.2, 2.4, 64]} />
       <meshBasicMaterial color="#c9a84c" transparent opacity={0.18} />
     </mesh>
   );
 }
 
+/** Cream/gold skeleton shown while WebGL + textures load. */
+export function Trademarks3DSkeleton({ className = '' }: { className?: string }) {
+  return (
+    <div className={`relative ${className}`} aria-hidden>
+      <div className="absolute inset-0 flex items-center justify-center gap-3">
+        {[0, 1, 2].map((i) => (
+          <div
+            key={i}
+            className="rounded-md border border-[hsl(var(--gold))]/30 bg-gradient-to-b from-[#f6efd9] to-[#ecdfb8] animate-pulse"
+            style={{
+              width: i === 1 ? 140 : 110,
+              height: i === 1 ? 200 : 160,
+              opacity: i === 1 ? 1 : 0.65,
+              boxShadow: '0 10px 30px -12px rgba(120,98,72,0.35)',
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function Trademarks3D({ items, active, onChange, className = '' }: Props) {
+  const tier = useMemo(detectTier, []);
+  const lowTier = tier === 'low';
   const reduced =
     typeof window !== 'undefined' &&
     window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
@@ -117,14 +154,18 @@ export default function Trademarks3D({ items, active, onChange, className = '' }
   return (
     <div className={`relative ${className}`} style={{ touchAction: 'pan-y' }}>
       <Canvas
-        dpr={[1, 2]}
+        dpr={lowTier ? [1, 1.25] : [1, 2]}
         camera={{ position: [0, 0.05, 3.4], fov: 38 }}
-        gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
+        gl={{
+          antialias: !lowTier,
+          alpha: true,
+          powerPreference: lowTier ? 'low-power' : 'high-performance',
+        }}
         frameloop={reduced ? 'demand' : 'always'}
       >
-        <ambientLight intensity={0.65} />
-        <directionalLight position={[3, 4, 5]} intensity={1.1} color="#fff3d2" castShadow />
-        <pointLight position={[-3, -1, 2]} intensity={0.55} color="#c9a84c" />
+        <ambientLight intensity={lowTier ? 0.85 : 0.65} />
+        <directionalLight position={[3, 4, 5]} intensity={1.1} color="#fff3d2" />
+        {!lowTier && <pointLight position={[-3, -1, 2]} intensity={0.55} color="#c9a84c" />}
 
         <Suspense fallback={null}>
           <Podium />
@@ -136,9 +177,10 @@ export default function Trademarks3D({ items, active, onChange, className = '' }
               active={active}
               total={items.length}
               onChange={onChange}
+              lowTier={lowTier}
             />
           ))}
-          <Environment preset="warehouse" />
+          {!lowTier && <Environment preset="warehouse" />}
         </Suspense>
       </Canvas>
     </div>
