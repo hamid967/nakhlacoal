@@ -12,8 +12,23 @@ const STATUS_AR: Record<string, { title: string; body: string }> = {
   cancelled:  { title: 'تم إلغاء الطلب',  body: 'تم إلغاء طلبك. للاستفسار راسلنا على mab355@gmail.com' },
 };
 
+const ALLOWED_STATUSES = Object.keys(STATUS_AR);
+
+function escapeHtml(input: string): string {
+  return String(input ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 function tpl(orderId: string, status: string, customer: string, summary: string) {
-  const s = STATUS_AR[status] ?? { title: `تحديث حالة الطلب: ${status}`, body: '' };
+  // status is guaranteed to be in STATUS_AR by the caller's whitelist check
+  const s = STATUS_AR[status];
+  const safeCustomer = escapeHtml(customer);
+  const safeSummary = escapeHtml(summary);
+  const safeOrderId = escapeHtml(orderId.slice(0, 8).toUpperCase());
   return `<!doctype html><html dir="rtl" lang="ar"><body style="margin:0;background:#f6f5ef;font-family:'Segoe UI',Tahoma,Arial,sans-serif;color:#1a1a1a">
     <table width="100%" cellpadding="0" cellspacing="0" style="background:#f6f5ef;padding:32px 0">
       <tr><td align="center">
@@ -24,12 +39,12 @@ function tpl(orderId: string, status: string, customer: string, summary: string)
           </td></tr>
           <tr><td style="padding:32px">
             <h1 style="margin:0 0 12px;font-size:22px;color:#1A4A00">${s.title}</h1>
-            <p style="margin:0 0 16px;line-height:1.8;color:#333">عميلنا العزيز ${customer || ''}،</p>
+            <p style="margin:0 0 16px;line-height:1.8;color:#333">عميلنا العزيز ${safeCustomer},</p>
             <p style="margin:0 0 20px;line-height:1.8;color:#333">${s.body}</p>
             <div style="background:#f6f5ef;border-radius:12px;padding:16px;margin:20px 0">
               <div style="font-size:12px;color:#8a8674;letter-spacing:2px;margin-bottom:6px">ORDER</div>
-              <div style="font-size:16px;font-weight:600">#${orderId.slice(0,8).toUpperCase()}</div>
-              ${summary ? `<div style="margin-top:10px;color:#555;font-size:14px">${summary}</div>` : ''}
+              <div style="font-size:16px;font-weight:600">#${safeOrderId}</div>
+              ${safeSummary ? `<div style="margin-top:10px;color:#555;font-size:14px">${safeSummary}</div>` : ''}
             </div>
             <p style="font-size:13px;color:#888;margin:24px 0 0">للاستفسارات: واتساب 0540060095 · mab355@gmail.com</p>
           </td></tr>
@@ -56,16 +71,29 @@ Deno.serve(async (req) => {
       { global: { headers: { Authorization: authHeader } } }
     );
     const { data: claims, error: authErr } = await supabase.auth.getClaims(authHeader.replace('Bearer ', ''));
-    if (authErr || !claims?.claims) {
+    if (authErr || !claims?.claims?.sub) {
       return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
 
-    const { orderId, status } = await req.json();
-    if (!orderId || !status) {
-      return new Response(JSON.stringify({ error: 'orderId and status are required' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    // Require admin role — only admins may send status notification emails
+    const admin = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
+    const userId = claims.claims.sub as string;
+    const { data: isAdmin, error: roleErr } = await admin.rpc('has_role', {
+      _user_id: userId,
+      _role: 'admin',
+    });
+    if (roleErr || !isAdmin) {
+      return new Response(JSON.stringify({ error: 'Forbidden' }), { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
 
-    const admin = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
+    const { orderId, status } = await req.json();
+    if (!orderId || typeof orderId !== 'string' || !status || typeof status !== 'string') {
+      return new Response(JSON.stringify({ error: 'orderId and status are required' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+    if (!ALLOWED_STATUSES.includes(status)) {
+      return new Response(JSON.stringify({ error: 'Invalid status' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+
     const { data: order } = await admin.from('orders').select('*').eq('id', orderId).maybeSingle();
     if (!order?.email) {
       return new Response(JSON.stringify({ skipped: true, reason: 'no email' }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
@@ -74,13 +102,13 @@ Deno.serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
     const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY');
     if (!LOVABLE_API_KEY || !RESEND_API_KEY) {
-      return new Response(JSON.stringify({ error: 'Resend connector not configured' }), { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+      return new Response(JSON.stringify({ error: 'Email service not configured' }), { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
 
     const summary = `${order.product_type} · ${order.quantity} ${order.unit}` +
       (order.grand_total_sar ? ` · الإجمالي شامل الضريبة: ${Number(order.grand_total_sar).toFixed(2)} ر.س` : '');
     const html = tpl(order.id, status, order.contact_name || order.company_name || '', summary);
-    const subject = (STATUS_AR[status]?.title ?? 'تحديث حالة الطلب') + ` — #${order.id.slice(0,8).toUpperCase()}`;
+    const subject = STATUS_AR[status].title + ` — #${order.id.slice(0,8).toUpperCase()}`;
 
     const r = await fetch(`${GATEWAY_URL}/emails`, {
       method: 'POST',
@@ -99,11 +127,11 @@ Deno.serve(async (req) => {
     const body = await r.json().catch(() => ({}));
     if (!r.ok) {
       console.error('resend error', r.status, body);
-      return new Response(JSON.stringify({ error: 'send failed', detail: body }), { status: 502, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+      return new Response(JSON.stringify({ error: 'send failed' }), { status: 502, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
     return new Response(JSON.stringify({ ok: true, id: body?.id }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
   } catch (e) {
-    console.error(e);
-    return new Response(JSON.stringify({ error: String(e) }), { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    console.error('[send-order-status-email] unhandled error:', e);
+    return new Response(JSON.stringify({ error: 'Internal server error' }), { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
   }
 });

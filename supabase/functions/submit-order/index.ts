@@ -71,7 +71,8 @@ Deno.serve(async (req) => {
 
     const { data, error } = await admin.from("orders").insert(payload).select("id").single();
     if (error) {
-      return new Response(JSON.stringify({ error: error.message }), {
+      console.error("[submit-order] insert error:", error);
+      return new Response(JSON.stringify({ error: "Internal server error" }), {
         status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
