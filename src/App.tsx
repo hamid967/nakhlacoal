@@ -57,6 +57,7 @@ import PortalPlaceholder from '@/portal/pages/Placeholder';
 
 
 import NewOrder from '@/pages/NewOrder';
+import PortalNewOrder from '@/portal/pages/NewOrder';
 import OrderTracking from '@/pages/OrderTracking';
 
 import Catalog from '@/pages/Catalog';
