@@ -111,6 +111,8 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
   const [quoteOpen, setQuoteOpen] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
   const hydratedFromCloud = useRef(false);
+  const { items: inventoryItems } = useInventory();
+
 
   // Track auth + hydrate pending order from cloud (cross-device) for signed-in users
   useEffect(() => {
@@ -271,8 +273,9 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
   };
 
   const liveQuote = pendingOrder
-    ? quoteFor(pendingOrder.product_type, Number(pendingOrder.quantity) || 0, pendingOrder.unit || 'kg')
+    ? quoteForItems(inventoryItems, pendingOrder.product_type, Number(pendingOrder.quantity) || 0, pendingOrder.unit || 'kg')
     : null;
+
 
   const confirmOrder = () => {
     const errs: Record<string, string> = {};
