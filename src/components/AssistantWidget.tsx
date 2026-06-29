@@ -99,7 +99,7 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
   const [input, setInput] = useState('');
   const [streaming, setStreaming] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [pendingOrder, setPendingOrder] = useState<Record<string, any> | null>(null);
+  const [pendingOrder, setPendingOrder] = useState<Record<string, any> | null>(() => loadPendingOrder());
   const [formData, setFormData] = useState({ contact_name: '', phone: '', address: '', delivery_method: 'توصيل' as 'توصيل' | 'استلام من المستودع' });
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -108,6 +108,10 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
 
 
   useEffect(() => { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(messages)); }, [messages]);
+  useEffect(() => {
+    if (pendingOrder) sessionStorage.setItem(ORDER_STORAGE_KEY, JSON.stringify(pendingOrder));
+    else sessionStorage.removeItem(ORDER_STORAGE_KEY);
+  }, [pendingOrder]);
   useEffect(() => {
     if (open) {
       scrollRef.current?.scrollTo({ top: 9e9, behavior: 'smooth' });
