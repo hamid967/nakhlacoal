@@ -6,6 +6,7 @@ import { brand } from '@/lib/brand';
 import logo from '@/assets/palm-charcoal-logo.png';
 import { Button } from '@/components/ui/button';
 import { Download, Printer } from 'lucide-react';
+import { SEO } from '@/components/SEO';
 
 /**
  * Print-optimized bilingual product catalog.
