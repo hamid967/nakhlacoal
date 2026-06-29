@@ -70,10 +70,49 @@ export default function AdminTracking() {
     })();
   }, []);
 
+  const [ga4Test, setGa4Test] = useState<TestState>({ status: 'idle' });
+  const [gtmTest, setGtmTest] = useState<TestState>({ status: 'idle' });
+
+  // Reset test result when value changes
+  useEffect(() => setGa4Test({ status: 'idle' }), [ga4]);
+  useEffect(() => setGtmTest({ status: 'idle' }), [gtm]);
+
+  const runTests = async (): Promise<{ ga4Ok: boolean; gtmOk: boolean }> => {
+    const tasks: Promise<void>[] = [];
+    let ga4Ok = true;
+    let gtmOk = true;
+    if (ga4) {
+      setGa4Test({ status: 'testing' });
+      tasks.push(testGa4(ga4).then((r) => { setGa4Test(r); ga4Ok = r.status === 'ok'; }));
+    }
+    if (gtm) {
+      setGtmTest({ status: 'testing' });
+      tasks.push(testGtm(gtm).then((r) => { setGtmTest(r); gtmOk = r.status === 'ok'; }));
+    }
+    await Promise.all(tasks);
+    return { ga4Ok, gtmOk };
+  };
+
+  const onTest = async () => {
+    if (!ga4 && !gtm) return toast.error('أدخل GA4 أو GTM ID للاختبار');
+    const { ga4Ok, gtmOk } = await runTests();
+    if (ga4Ok && gtmOk) toast.success('✓ كل المعرّفات صالحة');
+    else toast.error('فشل الاختبار — راجع التفاصيل أدناه');
+  };
+
   const onSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (ga4 && !GA4_RE.test(ga4)) return toast.error('GA4 ID غير صالح. مثال: G-XXXXXXXXXX');
     if (gtm && !GTM_RE.test(gtm)) return toast.error('GTM ID غير صالح. مثال: GTM-XXXXXXX');
+
+    // Auto-verify reachability before saving
+    if (ga4 || gtm) {
+      const { ga4Ok, gtmOk } = await runTests();
+      if (!ga4Ok || !gtmOk) {
+        return toast.error('تعذّر التحقّق من المعرّفات — صحّح الأخطاء قبل الحفظ');
+      }
+    }
+
     setSaving(true);
     const { error } = await supabase
       .from('analytics_settings')
