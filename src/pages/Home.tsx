@@ -14,6 +14,8 @@ const FaqSection = lazy(() => import('@/components/FaqSection').then((m) => ({ d
 import { Certifications } from '@/components/Certifications';
 import { StickyMobileCTA } from '@/components/StickyMobileCTA';
 import { SectionSkeleton } from '@/components/SectionSkeleton';
+import { SectionDivider } from '@/components/SectionDivider';
+import { SectionNumber } from '@/components/SectionNumber';
 import { useLiveOrderCount } from '@/hooks/useLiveOrderCount';
 import {
   useDir,
@@ -90,8 +92,11 @@ export default function Home() {
       </section>
 
 
+      <SectionDivider />
+
       {/* Features */}
       <LuxSection tone="surface">
+        <div className="container"><SectionNumber index={2} /></div>
         <SectionHeader
           eyebrow={isAr ? 'لماذا فحم النخلة' : 'Why Palm Charcoal'}
           title={isAr ? 'تفوّق ملموس في كل تفصيلة' : 'Excellence in every detail'}
@@ -118,8 +123,11 @@ export default function Home() {
         </ScrollReveal>
       </LuxSection>
 
+      <SectionDivider flip />
+
       {/* Products — move higher for conversion */}
       <LuxSection tone="surface" className="py-20 md:py-28">
+        <div className="container"><SectionNumber index={3} /></div>
         <SectionHeader
           align="between"
           eyebrow={isAr ? 'منتجاتنا' : 'Our products'}
