@@ -86,6 +86,7 @@ export default function App() {
           <CompareProvider>
             <HomeIntro />
             <AnalyticsTracker />
+            <TrackingLoader />
 
             <Toaster />
             <Sonner />
