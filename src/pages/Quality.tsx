@@ -187,6 +187,18 @@ export default function Quality() {
   const { i18n } = useTranslation();
   const isAr = i18n.language?.startsWith('ar');
   const [openCert, setOpenCert] = useState<number | null>(null);
+  const { latest, updatedAt } = useLiveLabReport();
+
+  const liveGauges = latest
+    ? [
+        { ...gauges[0], value: Number(latest.carbon_pct) },
+        { ...gauges[1], value: Number(latest.ash_pct) },
+        { ...gauges[2], value: Number(latest.moisture_pct) },
+        { ...gauges[3], value: Number(latest.burn_time_min) },
+        { ...gauges[4], value: Number(latest.max_temp_c) },
+        { ...gauges[5], value: Number(latest.volatile_pct) },
+      ]
+    : gauges;
 
   const jsonLd = {
     '@context': 'https://schema.org',
