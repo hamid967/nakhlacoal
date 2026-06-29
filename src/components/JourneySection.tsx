@@ -99,7 +99,7 @@ export function JourneySection() {
                   {String(i + 1).padStart(2, '0')} / {SCENES.length.toString().padStart(2, '0')}
                 </div>
                 <h3 className={`text-2xl md:text-4xl mb-4 ${isAr ? 'font-arabic font-bold' : 'font-display'}`}
-                    style={{ color: '#1A4A00' }}>
+                    className="text-primary">
                   {isAr ? sc.titleAr : sc.titleEn}
                 </h3>
                 <p className={`text-base md:text-lg leading-loose text-foreground/75 ${isAr ? 'font-arabic' : ''}`}>

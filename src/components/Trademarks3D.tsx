@@ -130,7 +130,7 @@ export function Trademarks3DSkeleton({ className = '' }: { className?: string })
         {[0, 1, 2].map((i) => (
           <div
             key={i}
-            className="rounded-md border border-[hsl(var(--gold))]/30 bg-gradient-to-b from-[#f6efd9] to-[#ecdfb8] animate-pulse"
+            className="rounded-md border border-[hsl(var(--gold))]/30 bg-gradient-to-b from-surface-2 to-surface-3 animate-pulse"
             style={{
               width: i === 1 ? 140 : 110,
               height: i === 1 ? 200 : 160,

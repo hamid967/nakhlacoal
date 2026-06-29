@@ -130,7 +130,7 @@ export function HomeIntro() {
       className={`fixed inset-0 z-[100] overflow-hidden transition-opacity duration-700 ease-out ${
         phase === 'out' ? 'opacity-0 pointer-events-none' : 'opacity-100'
       }`}
-      style={{ backgroundColor: '#f2e9d2' }}
+      style={{ backgroundColor: 'hsl(var(--background))' }}
       aria-hidden
     >
       {/* WebGL cinematic backdrop (Three.js + R3F) */}
@@ -148,7 +148,7 @@ export function HomeIntro() {
       {/* Skip */}
       <button
         onClick={() => setPhase('done')}
-        className="absolute top-6 end-6 z-20 text-[11px] tracking-[0.3em] uppercase text-[#1A4A00]/70 hover:text-[hsl(var(--gold-hi))] transition-colors font-arabic border border-[#1A4A00]/25 px-3 py-1 rounded-sm bg-white/40 backdrop-blur"
+        className="absolute top-6 end-6 z-20 text-[11px] tracking-[0.3em] uppercase text-primary/70 hover:text-[hsl(var(--gold-hi))] transition-colors font-arabic border border-primary/25 px-3 py-1 rounded-sm bg-white/40 backdrop-blur"
       >
         {isAr ? 'تخطي ▸' : 'SKIP ▸'}
       </button>
@@ -254,7 +254,7 @@ export function HomeIntro() {
                 onClick={() => setActive(i)}
                 aria-label={`slide ${i + 1}`}
                 className={`h-1.5 rounded-full transition-all duration-500 ${
-                  i === active ? 'w-8 bg-[hsl(var(--gold-hi))]' : 'w-2 bg-[#1A4A00]/30'
+                  i === active ? 'w-8 bg-[hsl(var(--gold-hi))]' : 'w-2 bg-primary/30'
                 }`}
               />
             ))}
