@@ -333,20 +333,31 @@ export function CtaBand({
 }
 
 /* ---------- Page hero (compact, for inner pages) ---------- */
+import { SectionChip, PalmCorner } from './PageHero';
+export { SectionChip, PalmCorner } from './PageHero';
+
 export function PageIntro({
   eyebrow,
   title,
   lead,
+  number,
 }: {
   eyebrow?: ReactNode;
   title: ReactNode;
   lead?: ReactNode;
+  number?: string | number;
 }) {
   const { isAr } = useDir();
   return (
-    <section className="pt-28 md:pt-36 pb-12 md:pb-16">
-      <div className="container text-center max-w-3xl mx-auto">
-        {eyebrow && <span className="eyebrow mb-5">{eyebrow}</span>}
+    <section className="relative pt-28 md:pt-36 pb-12 md:pb-16 overflow-hidden">
+      <PalmCorner position="top-left" />
+      <PalmCorner position="top-right" />
+      <div className="container relative max-w-5xl mx-auto text-center">
+        {number !== undefined ? (
+          <div className="flex justify-center"><SectionChip number={number} label={eyebrow} /></div>
+        ) : (
+          eyebrow && <span className="eyebrow mb-5">{eyebrow}</span>
+        )}
         <h1 className={cx('text-4xl md:text-6xl leading-tight mt-4', isAr ? 'font-arabic font-bold' : 'font-display font-bold')}>
           {title}
         </h1>
@@ -359,3 +370,4 @@ export function PageIntro({
     </section>
   );
 }
+
