@@ -3,7 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { Send, Loader2, Sparkles, X, Maximize2, CheckCircle2, MessageCircle, FileText } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { QuoteBuilder } from './QuoteBuilder';
-import { quoteFor, formatSAR } from '@/data/inventory';
+import { quoteForItems, formatSAR } from '@/data/inventory';
+import { useInventory } from '@/hooks/useInventory';
+
 
 
 const mdComponents = {
