@@ -23,7 +23,7 @@ export default function CinematicGallery() {
               viewport={{ once: true, margin: '-80px' }}
               transition={{ duration: 0.9, delay: i * 0.12, ease: [0.16, 1, 0.3, 1] }}
               whileHover={{ y: -8 }}
-              className="group relative overflow-hidden rounded-2xl border border-gold/20 hover:border-gold/60 shadow-luxe"
+              className="glass-card glass-dark group relative overflow-hidden rounded-2xl"
             >
               <div className="relative aspect-[4/5] overflow-hidden">
                 <Picture
