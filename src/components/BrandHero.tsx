@@ -52,16 +52,29 @@ export function BrandHero() {
         { i: Globe2, t: 'Export Ready' },
       ];
 
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end start'] });
+  const contentY = useTransform(scrollYProgress, [0, 1], [0, -160]);
+  const contentScale = useTransform(scrollYProgress, [0, 1], [1, 0.94]);
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.7, 1], [1, 0.6, 0]);
+  const bgOpacity = useTransform(scrollYProgress, [0, 1], [1, 0.25]);
+
   return (
     <section
+      ref={sectionRef}
       className="relative min-h-[100svh] overflow-hidden"
-      style={{
-        background:
-          'radial-gradient(1200px 600px at 85% 0%, rgba(255,232,170,0.55), transparent 60%), radial-gradient(900px 500px at 10% 100%, rgba(26,74,0,0.10), transparent 60%), linear-gradient(180deg, #FBF8F1 0%, #F5EFE0 100%)',
-      }}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
+      <motion.div
+        aria-hidden
+        className="absolute inset-0"
+        style={{
+          opacity: bgOpacity,
+          background:
+            'radial-gradient(1200px 600px at 85% 0%, rgba(255,232,170,0.55), transparent 60%), radial-gradient(900px 500px at 10% 100%, rgba(26,74,0,0.10), transparent 60%), linear-gradient(180deg, #FBF8F1 0%, #F5EFE0 100%)',
+        }}
+      />
       {/* Palm leaf shadows */}
       <div aria-hidden className="pointer-events-none absolute inset-0 opacity-[0.07]"
         style={{ backgroundImage: 'url("data:image/svg+xml;utf8,<svg xmlns=%27http://www.w3.org/2000/svg%27 width=%27400%27 height=%27400%27><g fill=%27none%27 stroke=%27%231A4A00%27 stroke-width=%270.6%27><path d=%27M50 350 Q200 100 380 30%27/><path d=%27M60 350 Q170 200 220 80%27/><path d=%27M50 350 Q260 220 380 200%27/></g></svg>")', backgroundSize: '600px 600px', backgroundRepeat: 'no-repeat', backgroundPosition: 'top right' }}
