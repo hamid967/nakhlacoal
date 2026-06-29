@@ -4,12 +4,28 @@ import { trademarks, type Trademark } from '@/data/trademarks';
 import bg from '@/assets/intro-palm-bg.jpg';
 
 const KEY = 'palm-home-intro-played';
+const SETTINGS_KEY = 'palm-intro-settings';
 
 // Show all 5 trademarks in this on-stage order
 const ORDER = [0, 1, 2, 3, 4];
 const SLIDES = ORDER.map((i) => trademarks[i]);
-const SLIDE_MS = 5200;
-const TYPE_MS = 22;
+
+// Defaults — overridable from Settings via localStorage `palm-intro-settings`:
+// { slideMs: 5200, transitionMs: 1100, typeMs: 22 }
+const DEFAULTS = { slideMs: 5200, transitionMs: 1100, typeMs: 22 };
+function loadSettings() {
+  try {
+    const raw = localStorage.getItem(SETTINGS_KEY);
+    if (!raw) return DEFAULTS;
+    const p = JSON.parse(raw);
+    return {
+      slideMs: Math.max(1500, Number(p.slideMs) || DEFAULTS.slideMs),
+      transitionMs: Math.max(200, Number(p.transitionMs) || DEFAULTS.transitionMs),
+      typeMs: Math.max(5, Number(p.typeMs) || DEFAULTS.typeMs),
+    };
+  } catch { return DEFAULTS; }
+}
+
 
 // Strict, uniform dossier — driven only by real fields in trademarks.ts.
 // Any empty/undefined value is replaced by a visible "—" so the layout is
@@ -67,24 +83,27 @@ export function HomeIntro() {
   const [typed, setTyped] = useState('');
   const reduce = useRef(false);
 
+  const settings = useRef(loadSettings());
+  const { slideMs, transitionMs, typeMs } = settings.current;
+
   useEffect(() => {
     reduce.current = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     try {
       if (sessionStorage.getItem(KEY) === '1') { setPhase('done'); return; }
       sessionStorage.setItem(KEY, '1');
     } catch {}
-    const total = SLIDE_MS * SLIDES.length + 800;
+    const total = slideMs * SLIDES.length + 800;
     const t1 = setTimeout(() => setPhase('out'), total - 800);
     const t2 = setTimeout(() => setPhase('done'), total);
     return () => { clearTimeout(t1); clearTimeout(t2); };
-  }, []);
+  }, [slideMs]);
 
   // Auto-advance slides
   useEffect(() => {
     if (phase === 'done') return;
-    const id = setInterval(() => setActive((a) => (a + 1) % SLIDES.length), SLIDE_MS);
+    const id = setInterval(() => setActive((a) => (a + 1) % SLIDES.length), slideMs);
     return () => clearInterval(id);
-  }, [phase]);
+  }, [phase, slideMs]);
 
   // Typewriter dossier per active slide
   const dossierText = useMemo(() => buildDossier(SLIDES[active], !!isAr).join('\n'), [active, isAr]);
@@ -97,9 +116,10 @@ export function HomeIntro() {
       i++;
       setTyped(dossierText.slice(0, i));
       if (i >= dossierText.length) clearInterval(id);
-    }, TYPE_MS);
+    }, typeMs);
     return () => clearInterval(id);
-  }, [dossierText, phase]);
+  }, [dossierText, phase, typeMs]);
+
 
   if (phase === 'done') return null;
 
@@ -158,24 +178,48 @@ export function HomeIntro() {
           </div>
         </div>
 
-        {/* Slide stage — single classic framed card cross-fading */}
-        <div className="relative w-full max-w-md" style={{ height: 'clamp(200px, 34vw, 320px)' }}>
+        {/* Slide stage — cinematic 2060 cross-fade with 3D depth + holo flicker */}
+        <div
+          className="relative w-full max-w-md"
+          style={{ height: 'clamp(200px, 34vw, 320px)', perspective: '1400px' }}
+        >
           {SLIDES.map((tm, i) => {
             const isActive = i === active;
+            // Direction: previous slide exits left/back, next enters from right/front.
+            const delta = (i - active + SLIDES.length) % SLIDES.length;
+            const isNext = delta === 1;
+            const xOff = isActive ? 0 : isNext ? 60 : -60;
+            const ry = isActive ? 0 : isNext ? -18 : 18;
             return (
               <div
                 key={tm.id}
-                className="absolute inset-0 flex items-center justify-center transition-all duration-700 ease-out"
+                className="absolute inset-0 flex items-center justify-center"
                 style={{
                   opacity: isActive ? 1 : 0,
-                  transform: isActive ? 'scale(1)' : 'scale(0.94)',
+                  transform: `translate3d(${xOff}px,0,${isActive ? 0 : -120}px) rotateY(${ry}deg) scale(${isActive ? 1 : 0.9})`,
+                  filter: isActive ? 'blur(0) saturate(1.05)' : 'blur(6px) saturate(0.85)',
+                  transformStyle: 'preserve-3d',
+                  transition: `opacity ${transitionMs}ms cubic-bezier(0.22,1,0.36,1), transform ${transitionMs}ms cubic-bezier(0.22,1,0.36,1), filter ${transitionMs}ms ease-out`,
                   pointerEvents: isActive ? 'auto' : 'none',
+                  willChange: 'transform, opacity, filter',
                 }}
               >
                 <div className="relative w-full h-full rounded-2xl bg-white/95 border border-[hsl(var(--gold))] shadow-[0_20px_60px_-10px_rgba(160,120,40,0.5)] p-5 overflow-hidden">
                   {/* inner classic frame */}
                   <div className="absolute inset-2 rounded-xl border border-[hsl(var(--gold))]/40 pointer-events-none" />
-                  {/* gold scan sweep (motion-safe via keyframe) */}
+                  {/* 2060 holo flicker on enter */}
+                  {isActive && (
+                    <div
+                      key={`flick-${active}`}
+                      className="absolute inset-0 pointer-events-none mix-blend-screen"
+                      style={{
+                        background:
+                          'repeating-linear-gradient(to bottom, rgba(201,168,76,0.10) 0 1px, transparent 1px 3px)',
+                        animation: `holoFlicker ${Math.max(420, transitionMs * 0.7)}ms ease-out 1`,
+                      }}
+                    />
+                  )}
+                  {/* gold scan sweep */}
                   <div className="absolute inset-0 pointer-events-none"
                     style={{
                       background: 'linear-gradient(115deg, transparent 42%, rgba(201,168,76,0.28) 50%, transparent 58%)',
@@ -192,6 +236,7 @@ export function HomeIntro() {
             );
           })}
         </div>
+
 
         {/* Brand name + slide pager */}
         <div className="opacity-0 animate-[introUp_0.7s_ease-out_0.6s_forwards] flex flex-col items-center gap-2">
@@ -229,10 +274,18 @@ export function HomeIntro() {
       <style>{`
         @keyframes introUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes holoSweep { 0%,100% { transform: translateX(-30%); } 50% { transform: translateX(30%); } }
+        @keyframes holoFlicker {
+          0%   { opacity: 0; transform: translateY(-6px); }
+          20%  { opacity: 0.9; }
+          40%  { opacity: 0.35; }
+          60%  { opacity: 0.75; }
+          100% { opacity: 0; transform: translateY(0); }
+        }
         @media (prefers-reduced-motion: reduce) {
-          [style*="holoSweep"] { animation: none !important; }
+          [style*="holoSweep"], [style*="holoFlicker"] { animation: none !important; }
         }
       `}</style>
+
     </div>
   );
 }
