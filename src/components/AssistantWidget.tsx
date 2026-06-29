@@ -259,7 +259,7 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
       )}
 
     <div
-      className={`fixed bottom-24 end-6 z-50 w-[92vw] max-w-[380px] h-[78vh] max-h-[560px] rounded-2xl border border-gold/30 bg-background shadow-gold flex flex-col overflow-hidden origin-bottom-right transition-all duration-300 ease-out ${
+      className={`fixed bottom-24 end-6 z-50 w-[92vw] max-w-[380px] h-[78vh] max-h-[560px] rounded-2xl glass-card !border-gold/30 flex flex-col overflow-hidden origin-bottom-right transition-all duration-300 ease-out ${
         open ? 'opacity-100 scale-100 translate-y-0 pointer-events-auto' : 'opacity-0 scale-90 translate-y-4 pointer-events-none'
       }`}
       role="dialog"
