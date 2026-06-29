@@ -171,7 +171,19 @@ export function BrandHero() {
         </motion.div>
 
         {/* RIGHT — floating glass cards on podium */}
-        <div className="lg:col-span-7 relative h-[460px] sm:h-[520px] md:h-[560px]" style={{ perspective: '1800px' }}>
+        <div
+          className="lg:col-span-7 relative h-[460px] sm:h-[520px] md:h-[560px]"
+          style={{ perspective: '1800px' }}
+          role="region"
+          aria-roledescription={isAr ? 'دائرة عرض' : 'carousel'}
+          aria-label={isAr ? 'علاماتنا التجارية' : 'Our trademarks'}
+          onKeyDown={(e) => {
+            if (e.key === 'ArrowRight') { e.preventDefault(); go(isAr ? -1 : 1); }
+            else if (e.key === 'ArrowLeft') { e.preventDefault(); go(isAr ? 1 : -1); }
+            else if (e.key === 'Home') { e.preventDefault(); setActive(0); }
+            else if (e.key === 'End') { e.preventDefault(); setActive(trademarks.length - 1); }
+          }}
+        >
           {/* Stone podium */}
           <div
             aria-hidden
@@ -193,19 +205,52 @@ export function BrandHero() {
             />
           </Suspense>
 
-          {/* Dots */}
-          <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-2 z-[60]">
-            {trademarks.map((_, i) => (
+          {/* Accessible focusable layer for each card (WebGL has no DOM nodes) */}
+          <ul
+            className="absolute inset-0 z-[55] flex items-center justify-center gap-2 pointer-events-none"
+            aria-label={isAr ? 'بطاقات العلامات' : 'Trademark cards'}
+          >
+            {trademarks.map((t, i) => (
+              <li key={t.id} className="pointer-events-auto">
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={i === active}
+                  aria-current={i === active ? 'true' : undefined}
+                  aria-label={isAr ? `${t.nameAr} — علامة ${i + 1} من ${trademarks.length}` : `${t.nameEn} — brand ${i + 1} of ${trademarks.length}`}
+                  tabIndex={i === active ? 0 : -1}
+                  onClick={() => setActive(i)}
+                  onFocus={() => setActive(i)}
+                  className={`block rounded-md transition-all outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--gold-hi))] focus-visible:ring-offset-2 focus-visible:ring-offset-[#FAF5EB] ${
+                    i === active ? 'w-[140px] h-[200px]' : 'w-[110px] h-[160px] opacity-0'
+                  }`}
+                  style={{ background: 'transparent' }}
+                />
+              </li>
+            ))}
+          </ul>
+
+          {/* Dots — tablist */}
+          <div
+            role="tablist"
+            aria-label={isAr ? 'تنقّل بين العلامات' : 'Trademark navigation'}
+            className="absolute -bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-2 z-[60]"
+          >
+            {trademarks.map((t, i) => (
               <button
                 key={i}
+                role="tab"
+                aria-selected={i === active}
+                aria-label={isAr ? `${t.nameAr}` : `${t.nameEn}`}
+                tabIndex={i === active ? 0 : -1}
                 onClick={() => setActive(i)}
-                aria-label={`Brand ${i + 1}`}
-                className={`h-1.5 rounded-full transition-all ${
+                className={`h-1.5 rounded-full transition-all outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--gold-hi))] focus-visible:ring-offset-2 focus-visible:ring-offset-[#FAF5EB] ${
                   i === active ? 'w-8 bg-[hsl(var(--gold-hi))]' : 'w-2 bg-foreground/20 hover:bg-foreground/40'
                 }`}
               />
             ))}
           </div>
+
 
           {/* Floating brand name */}
           <AnimatePresence mode="wait">
