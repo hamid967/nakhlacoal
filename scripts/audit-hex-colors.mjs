@@ -26,8 +26,11 @@ const ALLOWLIST = new Set([
   'src/admin/pages/Trademarks.tsx',
   // Theme picker swatches must be literal
   'src/components/ThemeToggle.tsx',
-  // Recharts datavis palette
+  // Recharts datavis palettes (chart layer is exempt from theme tokens)
   'src/portal/pages/Dashboard.tsx',
+  'src/admin/pages/Dashboard.tsx',
+  'src/pages/AdminAnalytics.tsx',
+  'src/components/ui/chart.tsx',
   // WebGL/Three.js material colors (cannot use CSS vars)
   'src/components/Trademarks3D.tsx',
   'src/components/IntroWebGL.tsx',
@@ -35,8 +38,13 @@ const ALLOWLIST = new Set([
   'src/components/ImageDiagnostics.tsx',
   // Naturalistic wood-grain conic gradient
   'src/components/Services.tsx',
-  // Pure #fff over branded gradient
+  // Pure #fff text over branded gradients (equivalent to background token in light theme)
   'src/portal/PortalTopbar.tsx',
+  'src/admin/AdminTopbar.tsx',
+  'src/admin/pages/Customers.tsx',
+  'src/admin/pages/Placeholder.tsx',
+  // Documentation/demo content displaying hex values as text
+  'src/pages/Index.tsx',
   // Generated / config
   'src/integrations/supabase/client.ts',
   'src/integrations/supabase/types.ts',
