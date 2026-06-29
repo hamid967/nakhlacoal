@@ -93,7 +93,7 @@ export function BrandHero() {
         ))}
       </div>
 
-      <div className="relative container pt-28 pb-16 md:pt-32 md:pb-20 flex flex-col items-center text-center">
+      <motion.div style={{ y: contentY, scale: contentScale, opacity: contentOpacity }} className="relative container pt-28 pb-16 md:pt-32 md:pb-20 flex flex-col items-center text-center">
         {/* Title */}
         <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9 }}>
           <div className="inline-flex items-center gap-3 mb-5">
