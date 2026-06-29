@@ -50,8 +50,8 @@ export function LuxNav() {
   return (
     <>
       <nav
-        className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 ${
-          scrolled ? 'py-2 glass-luxe-solid' : 'py-4 glass-luxe'
+        className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 glass-strip ${
+          scrolled ? 'py-2 shadow-lg' : 'py-4'
         }`}
       >
         <div className="container flex items-center justify-between gap-6">
