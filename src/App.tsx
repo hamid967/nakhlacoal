@@ -33,6 +33,8 @@ import Profile from '@/pages/Profile';
 import Assistant from '@/pages/Assistant';
 import AdminOrders from '@/pages/AdminOrders';
 import AdminInventory from '@/pages/AdminInventory';
+import NewOrder from '@/pages/NewOrder';
+import OrderTracking from '@/pages/OrderTracking';
 
 import NotFound from '@/pages/NotFound';
 
@@ -79,7 +81,9 @@ export default function App() {
                 <Route path="/assistant" element={<Assistant />} />
                 <Route path="/assistant/:threadId" element={<Assistant />} />
                 <Route path="/admin/orders" element={<ProtectedRoute requireRole="admin"><AdminOrders /></ProtectedRoute>} />
-                <Route path="/admin/inventory" element={<ProtectedRoute requireRole="admin"><AdminInventory /></ProtectedRoute>} />
+               <Route path="/admin/inventory" element={<ProtectedRoute requireRole="admin"><AdminInventory /></ProtectedRoute>} />
+               <Route path="/orders/new" element={<ProtectedRoute><NewOrder /></ProtectedRoute>} />
+               <Route path="/orders/:id" element={<ProtectedRoute><OrderTracking /></ProtectedRoute>} />
 
                 <Route path="*" element={<NotFound />} />
               </Route>
