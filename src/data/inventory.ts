@@ -97,10 +97,10 @@ function toKg(qty: number, unit: string): number {
   return qty;
 }
 
-export function quoteFor(productType: string, qty: number, unit: string): QuoteResult {
+export function quoteForItems(items: InventoryItem[], productType: string, qty: number, unit: string): QuoteResult {
   const issues: string[] = [];
   const notes: string[] = [];
-  const item = INVENTORY.find(i => i.match.test(productType || ''));
+  const item = items.find(i => i.match.test(productType || ''));
   const qtyKg = toKg(qty || 0, unit);
 
   if (!item) {
@@ -120,7 +120,6 @@ export function quoteFor(productType: string, qty: number, unit: string): QuoteR
   const vat = +(subtotal * VAT_RATE).toFixed(2);
   const total = +(subtotal + vat).toFixed(2);
 
-  // Suggest next tier savings
   const nextTier = item.tiers.find(t => t.minKg > qtyKg);
   if (nextTier) {
     const diff = nextTier.minKg - qtyKg;
@@ -128,20 +127,14 @@ export function quoteFor(productType: string, qty: number, unit: string): QuoteR
     if (saving > 0) notes.push(`بزيادة ${diff} كجم تصل لشريحة ${nextTier.pricePerKg} ر.س/كجم وتوفّر تقريباً ${saving} ر.س.`);
   }
 
-  return {
-    ok: issues.length === 0,
-    item,
-    qtyKg,
-    pricePerKg,
-    subtotal,
-    vat,
-    total,
-    leadDays: item.leadDays,
-    issues,
-    notes,
-  };
+  return { ok: issues.length === 0, item, qtyKg, pricePerKg, subtotal, vat, total, leadDays: item.leadDays, issues, notes };
+}
+
+export function quoteFor(productType: string, qty: number, unit: string): QuoteResult {
+  return quoteForItems(INVENTORY, productType, qty, unit);
 }
 
 export function formatSAR(n: number): string {
   return new Intl.NumberFormat('ar-SA', { style: 'currency', currency: 'SAR', maximumFractionDigits: 2 }).format(n);
 }
+
