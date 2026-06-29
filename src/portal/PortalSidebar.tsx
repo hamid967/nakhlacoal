@@ -55,7 +55,7 @@ export function PortalSidebar({ collapsed, onToggle }: { collapsed: boolean; onT
 
   return (
     <aside
-      className="a-glass a-scroll shrink-0 sticky top-0 self-start h-screen overflow-y-auto transition-all duration-300"
+      className="a-glass a-scroll shrink-0 sticky top-0 self-start h-dvh overflow-y-auto transition-all duration-300"
       style={{ width: collapsed ? 78 : 270, borderInlineEnd: '1px solid var(--a-border)' }}
     >
       <div className="flex items-center gap-2 px-4 h-16 border-b" style={{ borderColor: 'var(--a-border)' }}>

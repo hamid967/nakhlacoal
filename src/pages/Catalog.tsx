@@ -32,7 +32,7 @@ export default function Catalog() {
   const handlePrint = () => window.print();
 
   return (
-    <div dir={dir} className="catalog-root bg-white text-stone-900 min-h-screen">
+    <div dir={dir} className="catalog-root bg-white text-stone-900 min-h-dvh">
       {/* Action bar (hidden on print) */}
       <div className="no-print sticky top-0 z-50 bg-stone-50 border-b border-stone-200 p-4 flex items-center justify-between gap-3">
         <p className="text-sm text-stone-600">

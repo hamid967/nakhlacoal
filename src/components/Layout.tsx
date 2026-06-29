@@ -16,7 +16,7 @@ export function Layout() {
   }, [pathname]);
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-dvh bg-background text-foreground">
       <PromoBanner />
       <LuxNav />
       <main>
