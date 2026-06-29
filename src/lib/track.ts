@@ -28,8 +28,15 @@ function isDebug(): boolean {
 }
 
 export function trackConversion(event: string, props: Props = {}): void {
-  const payload = { event, ...props, _ts: new Date().toISOString() };
-  const debug = isDebug();
+  const debugFlag = isDebug();
+  // GA4 DebugView: any event carrying debug_mode:true is routed to DebugView in real-time.
+  const payload = {
+    event,
+    ...props,
+    ...(debugFlag ? { debug_mode: true } : {}),
+    _ts: new Date().toISOString(),
+  };
+  const debug = debugFlag;
 
   if (debug) {
     /* eslint-disable no-console */
