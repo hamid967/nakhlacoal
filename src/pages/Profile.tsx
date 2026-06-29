@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { SeoHead } from '@/components/SeoHead';
 import { Loader2, Upload } from 'lucide-react';
+import { useParallax } from '@/hooks/useParallax';
 
 const profileSchema = z.object({
   full_name: z.string().trim().min(2, 'الاسم قصير جدًا').max(80),
