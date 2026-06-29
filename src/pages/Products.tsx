@@ -61,7 +61,7 @@ export default function Products() {
         description={isAr ? 'تشكيلة فاخرة من الفحم السعودي للشواء والشيشة والتصدير.' : 'Premium Saudi charcoal for grilling, shisha, and export.'}
         path="/products"
       />
-      <PageIntro
+      <PageIntro number={2}
         eyebrow={isAr ? 'تشكيلتنا' : 'Our range'}
         title={isAr ? 'منتجاتنا' : 'Our Products'}
         lead={isAr ? 'سبع عائلات منتجات بمعايير عالمية للفحم السعودي الفاخر.' : 'Seven product families crafted to international luxury standards.'}

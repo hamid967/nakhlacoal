@@ -18,7 +18,7 @@ export default function Wholesale() {
         description={t('wholesale.subtitle')}
         path="/wholesale"
       />
-      <PageHero eyebrow={t('wholesale.eyebrow')} title={t('wholesale.title')} subtitle={t('wholesale.subtitle')} />
+      <PageHero number={8} eyebrow={t("wholesale.eyebrow")} title={t("wholesale.title")} subtitle={t("wholesale.subtitle")} />
 
       <section className="py-32">
         <div className="container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

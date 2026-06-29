@@ -16,7 +16,7 @@ export default function Knowledge() {
         description={t('knowledge.subtitle')}
         path="/knowledge"
       />
-      <PageHero eyebrow={t('knowledge.eyebrow')} title={t('knowledge.title')} subtitle={t('knowledge.subtitle')} />
+      <PageHero number={9} eyebrow={t("knowledge.eyebrow")} title={t("knowledge.title")} subtitle={t("knowledge.subtitle")} />
 
       <section className="py-24">
         <div className="container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
