@@ -1,5 +1,5 @@
-import { useEffect, useState, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useEffect, useRef, useState, useCallback } from 'react';
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, ShieldCheck, Flame, Leaf, Wind, Globe2, Award } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -52,16 +52,29 @@ export function BrandHero() {
         { i: Globe2, t: 'Export Ready' },
       ];
 
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end start'] });
+  const contentY = useTransform(scrollYProgress, [0, 1], [0, -160]);
+  const contentScale = useTransform(scrollYProgress, [0, 1], [1, 0.94]);
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.7, 1], [1, 0.6, 0]);
+  const bgOpacity = useTransform(scrollYProgress, [0, 1], [1, 0.25]);
+
   return (
     <section
+      ref={sectionRef}
       className="relative min-h-[100svh] overflow-hidden"
-      style={{
-        background:
-          'radial-gradient(1200px 600px at 85% 0%, rgba(255,232,170,0.55), transparent 60%), radial-gradient(900px 500px at 10% 100%, rgba(26,74,0,0.10), transparent 60%), linear-gradient(180deg, #FBF8F1 0%, #F5EFE0 100%)',
-      }}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
+      <motion.div
+        aria-hidden
+        className="absolute inset-0"
+        style={{
+          opacity: bgOpacity,
+          background:
+            'radial-gradient(1200px 600px at 85% 0%, rgba(255,232,170,0.55), transparent 60%), radial-gradient(900px 500px at 10% 100%, rgba(26,74,0,0.10), transparent 60%), linear-gradient(180deg, #FBF8F1 0%, #F5EFE0 100%)',
+        }}
+      />
       {/* Palm leaf shadows */}
       <div aria-hidden className="pointer-events-none absolute inset-0 opacity-[0.07]"
         style={{ backgroundImage: 'url("data:image/svg+xml;utf8,<svg xmlns=%27http://www.w3.org/2000/svg%27 width=%27400%27 height=%27400%27><g fill=%27none%27 stroke=%27%231A4A00%27 stroke-width=%270.6%27><path d=%27M50 350 Q200 100 380 30%27/><path d=%27M60 350 Q170 200 220 80%27/><path d=%27M50 350 Q260 220 380 200%27/></g></svg>")', backgroundSize: '600px 600px', backgroundRepeat: 'no-repeat', backgroundPosition: 'top right' }}
@@ -80,7 +93,7 @@ export function BrandHero() {
         ))}
       </div>
 
-      <div className="relative container pt-28 pb-16 md:pt-32 md:pb-20 flex flex-col items-center text-center">
+      <motion.div style={{ y: contentY, scale: contentScale, opacity: contentOpacity }} className="relative container pt-28 pb-16 md:pt-32 md:pb-20 flex flex-col items-center text-center">
         {/* Title */}
         <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9 }}>
           <div className="inline-flex items-center gap-3 mb-5">
@@ -176,10 +189,12 @@ export function BrandHero() {
             </div>
             <h3 className={`text-xl md:text-2xl font-arabic font-bold`} style={{ color: '#1A4A00' }}>{current.nameAr}</h3>
             <div className="text-xs text-foreground/55 mt-0.5">{current.nameEn}</div>
-            <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-3 text-[11px] md:text-xs font-arabic">
+            <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-3 text-[11px] md:text-xs font-arabic">
               <Meta label={isAr ? 'رقم العلامة' : 'Reg No.'} value={current.registrationNo} />
               <Meta label={isAr ? 'الفئة' : 'Class'} value={current.niceClass.replace('الفئة ', '')} />
               <Meta label={isAr ? 'تاريخ التسجيل' : 'Filed'} value={current.filedHijri} />
+              <Meta label={isAr ? 'تاريخ الانتهاء' : 'Expires'} value={current.expiresHijri} />
+              <Meta label={isAr ? 'المالك' : 'Owner'} value={current.ownerAr} />
               <Meta label={isAr ? 'النشاط' : 'Activity'} value={current.goodsAr.split('،')[0]} />
             </div>
           </motion.div>
@@ -203,7 +218,7 @@ export function BrandHero() {
           <CTA to="/products">{isAr ? 'تحميل الكتالوج' : 'Download Catalogue'}</CTA>
           <CTA to="/contact">{isAr ? 'تواصل المبيعات' : 'Contact Sales'}</CTA>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }
