@@ -76,9 +76,9 @@ export function TrademarksShowcase() {
               {isAr ? 'جاري تحميل العلامات…' : 'Loading trademarks…'}
             </span>
           ) : error ? (
-            <span className="inline-flex items-center gap-2 text-xs text-destructive">
-              <span className="w-2 h-2 rounded-full bg-destructive" />
-              {error}
+            <span className="inline-flex items-center gap-2 text-xs text-foreground/55">
+              <span className="w-2 h-2 rounded-full bg-foreground/30" />
+              {isAr ? 'عرض النسخة المحفوظة' : 'Showing cached version'}
             </span>
           ) : (
             <span className="inline-flex items-center gap-2 text-[11px] text-foreground/55">
