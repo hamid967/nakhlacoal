@@ -43,6 +43,18 @@ export function SEO({ title, description, path, jsonLd, noindex = false, preload
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
       {jsonLd && <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>}
+      {preloadImages?.map((p, i) => (
+        <link
+          key={i}
+          rel="preload"
+          as="image"
+          href={p.href}
+          {...(p.type ? { type: p.type } : {})}
+          {...(p.imageSrcSet ? { imagesrcset: p.imageSrcSet } : {})}
+          {...(p.imageSizes ? { imagesizes: p.imageSizes } : {})}
+          {...(p.fetchPriority ? { fetchpriority: p.fetchPriority } : {})}
+        />
+      ))}
     </Helmet>
   );
 }
