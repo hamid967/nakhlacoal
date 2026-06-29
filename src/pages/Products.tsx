@@ -70,7 +70,7 @@ export default function Products() {
 
       <section className="pt-10 md:pt-14">
         <div className="container">
-          <div className="rounded-2xl bg-surface border-luxe p-4 md:p-6 space-y-5">
+          <div className="rounded-2xl glass-card p-4 md:p-6 space-y-5">
             {/* Search */}
             <div className="relative">
               <Search className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/40 ${isAr ? 'right-4' : 'left-4'}`} />
