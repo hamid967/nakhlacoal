@@ -50,7 +50,7 @@ export default function ArticleDetail() {
         </div>
 
         {content.length === 0 ? (
-          <div className="rounded-2xl border border-gold/20 bg-white/60 backdrop-blur-md p-10 text-center">
+          <div className="glass-card rounded-2xl p-10 text-center">
             <p className="text-muted-foreground">{isAr ? 'هذه المقالة قيد التحضير. ترقّب نشرها قريباً.' : 'This article is being prepared. Check back soon.'}</p>
           </div>
         ) : (
