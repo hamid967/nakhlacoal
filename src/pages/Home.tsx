@@ -73,10 +73,13 @@ export default function Home() {
         path="/"
       />
 
-      {/* HERO — first impression */}
+      {/* HERO — first impression (lazy-loaded WebGL) */}
       <div className="pt-24 md:pt-28">
-        <BrandHero />
+        <Suspense fallback={<div className="min-h-[60vh] grid place-items-center text-gold-ink/60 font-arabic text-sm">…</div>}>
+          <BrandHero />
+        </Suspense>
       </div>
+
 
       {/* Trust strip — credibility right after the hero */}
       <section className="mt-2 md:mt-6">
@@ -131,9 +134,11 @@ export default function Home() {
         </div>
       </LuxSection>
 
-      <ProcessSection />
+      <Suspense fallback={null}>
+        <ProcessSection />
+        <JourneySection />
+      </Suspense>
 
-      <JourneySection />
 
       {/* About band — story after the user has seen products & process */}
       <LuxSection className="py-20 md:py-28">
@@ -187,9 +192,11 @@ export default function Home() {
         </div>
       </LuxSection>
 
-      <FaqSection />
+      <Suspense fallback={null}>
+        <FaqSection />
+        <LocationSection />
+      </Suspense>
 
-      <LocationSection />
 
       <CtaBand
         title={isAr ? 'جاهز لتجربة الفحم الفاخر؟' : 'Ready to taste the premium difference?'}
