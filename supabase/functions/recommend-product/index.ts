@@ -36,19 +36,30 @@ Deno.serve(async (req) => {
       type: "function",
       function: {
         name: "recommend",
-        description: "Return the single best product recommendation.",
+        description: "Return the top 3 product recommendations ranked best to good.",
         parameters: {
           type: "object",
           properties: {
-            slug: { type: "string", enum: PRODUCTS.map((p) => p.slug) },
-            reason: { type: "string", description: "1-2 sentences explaining why this fits, in the user's language." },
-            quantitySuggestion: { type: "string", description: "Suggested starting quantity, e.g. '10 kg' or '50 kg for a restaurant'." },
-            alternativeSlug: { type: "string", enum: PRODUCTS.map((p) => p.slug), description: "An optional secondary product the user might also consider." },
+            recommendations: {
+              type: "array",
+              minItems: 3,
+              maxItems: 3,
+              items: {
+                type: "object",
+                properties: {
+                  slug: { type: "string", enum: PRODUCTS.map((p) => p.slug) },
+                  reason: { type: "string", description: "One short sentence (max ~20 words) in the user's language." },
+                  quantitySuggestion: { type: "string", description: "Suggested starting quantity, e.g. '10 kg' or '50 kg'." },
+                },
+                required: ["slug", "reason", "quantitySuggestion"],
+              },
+            },
           },
-          required: ["slug", "reason", "quantitySuggestion"],
+          required: ["recommendations"],
         },
       },
     };
+
 
     const aiRes = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",

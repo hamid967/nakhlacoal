@@ -6,12 +6,12 @@ import { supabase } from '@/integrations/supabase/client';
 import { products } from '@/data/products';
 import { toast } from 'sonner';
 
-type Recommendation = {
+type RecItem = {
   slug: string;
   reason: string;
   quantitySuggestion: string;
-  alternativeSlug?: string;
 };
+
 
 const PRESETS_AR = [
   'مطعم شواء يحتاج فحم يومي',
@@ -31,13 +31,13 @@ export function ProductRecommender() {
   const isAr = i18n.language === 'ar';
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(false);
-  const [rec, setRec] = useState<Recommendation | null>(null);
+  const [recs, setRecs] = useState<RecItem[] | null>(null);
 
   const ask = async (q?: string) => {
     const text = (q ?? query).trim();
     if (!text) return;
     setLoading(true);
-    setRec(null);
+    setRecs(null);
     try {
       const { data, error } = await supabase.functions.invoke('recommend-product', {
         body: { query: text, lang: isAr ? 'ar' : 'en' },
@@ -47,18 +47,18 @@ export function ProductRecommender() {
         toast.error(isAr ? 'المستشار الذكي غير متاح حالياً، حاول لاحقاً.' : 'AI advisor temporarily unavailable.');
         return;
       }
-      if (!data?.slug) throw new Error('No recommendation');
-      setRec(data as Recommendation);
+      const list: RecItem[] = Array.isArray(data?.recommendations) ? data.recommendations : [];
+      if (!list.length) throw new Error('No recommendations');
+      setRecs(list.slice(0, 3));
     } catch (e) {
-      toast.error(isAr ? 'تعذّر إيجاد توصية. حاول مرة أخرى.' : 'Could not generate recommendation.');
+      toast.error(isAr ? 'تعذّر إيجاد توصية. حاول مرة أخرى.' : 'Could not generate recommendations.');
     } finally {
       setLoading(false);
     }
   };
 
   const presets = isAr ? PRESETS_AR : PRESETS_EN;
-  const product = rec ? products.find((p) => p.slug === rec.slug) : null;
-  const alternative = rec?.alternativeSlug ? products.find((p) => p.slug === rec.alternativeSlug) : null;
+
 
   return (
     <section className="container py-12">
@@ -108,42 +108,53 @@ export function ProductRecommender() {
           ))}
         </div>
 
-        {rec && product && (
-          <div className="mt-6 grid md:grid-cols-[180px_1fr] gap-5 p-5 rounded-xl bg-emerald-900/5 border border-emerald-900/10 animate-in fade-in slide-in-from-bottom-2">
-            <img src={product.image} alt={product.nameEn} className="w-full h-32 md:h-full object-cover rounded-lg" />
-            <div>
-              <div className="text-[10px] uppercase tracking-[0.3em] text-emerald-800 mb-1">
-                {isAr ? 'التوصية' : 'Recommended'}
-              </div>
-              <h3 className="text-xl font-bold text-emerald-900 mb-2">
-                {isAr ? product.nameAr : product.nameEn}
-              </h3>
-              <p className="text-sm text-foreground/80 leading-relaxed mb-3">{rec.reason}</p>
-              <div className="text-xs text-foreground/60 mb-4">
-                <strong className="text-amber-700">{isAr ? 'الكمية المقترحة:' : 'Suggested quantity:'} </strong>
-                {rec.quantitySuggestion}
-              </div>
-              <div className="flex flex-wrap items-center gap-3">
-                <Link
-                  to={`/products/${product.slug}`}
-                  className="inline-flex items-center gap-1.5 text-sm bg-emerald-900 hover:bg-emerald-800 text-white px-4 py-2 rounded-lg transition"
+        {recs && recs.length > 0 && (
+          <div className="mt-6 grid md:grid-cols-3 gap-4 animate-in fade-in slide-in-from-bottom-2">
+            {recs.map((r, i) => {
+              const product = products.find((p) => p.slug === r.slug);
+              if (!product) return null;
+              const isTop = i === 0;
+              return (
+                <div
+                  key={`${r.slug}-${i}`}
+                  className={`relative p-4 rounded-xl border transition ${
+                    isTop
+                      ? 'bg-emerald-900/[0.06] border-emerald-900/20 shadow-sm'
+                      : 'bg-foreground/[0.02] border-foreground/10'
+                  }`}
                 >
-                  {isAr ? 'عرض المنتج' : 'View product'}
-                  <ArrowRight className={`w-4 h-4 ${isAr ? 'rotate-180' : ''}`} />
-                </Link>
-                {alternative && (
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-[10px] uppercase tracking-[0.3em] text-emerald-800">
+                      {isAr ? `الخيار ${i + 1}` : `Option ${i + 1}`}
+                    </span>
+                    {isTop && (
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-600 text-white">
+                        {isAr ? 'الأفضل' : 'Top pick'}
+                      </span>
+                    )}
+                  </div>
+                  <img src={product.image} alt={product.nameEn} className="w-full h-28 object-cover rounded-lg mb-3" />
+                  <h3 className="text-base font-bold text-emerald-900 mb-1">
+                    {isAr ? product.nameAr : product.nameEn}
+                  </h3>
+                  <p className="text-xs text-foreground/75 leading-relaxed mb-2">{r.reason}</p>
+                  <div className="text-[11px] text-foreground/60 mb-3">
+                    <strong className="text-amber-700">{isAr ? 'الكمية:' : 'Qty:'} </strong>
+                    {r.quantitySuggestion}
+                  </div>
                   <Link
-                    to={`/products/${alternative.slug}`}
-                    className="text-sm text-amber-700 hover:underline"
+                    to={`/products/${product.slug}`}
+                    className="inline-flex items-center gap-1.5 text-xs bg-emerald-900 hover:bg-emerald-800 text-white px-3 py-1.5 rounded-lg transition"
                   >
-                    {isAr ? 'أو جرّب: ' : 'Or consider: '}
-                    {isAr ? alternative.nameAr : alternative.nameEn}
+                    {isAr ? 'عرض المنتج' : 'View'}
+                    <ArrowRight className={`w-3.5 h-3.5 ${isAr ? 'rotate-180' : ''}`} />
                   </Link>
-                )}
-              </div>
-            </div>
+                </div>
+              );
+            })}
           </div>
         )}
+
       </div>
     </section>
   );
