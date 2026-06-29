@@ -63,7 +63,7 @@ export function OccasionsGrid() {
                 />
 
                 {/* Icon — start side */}
-                <div className="shrink-0 grid place-items-center w-14 h-14 md:w-16 md:h-16 rounded-xl bg-gradient-to-br from-[hsl(var(--gold))]/15 to-[hsl(var(--gold))]/5 border border-[hsl(var(--gold))]/30 text-[hsl(var(--gold))] group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500">
+                <div className="shrink-0 grid place-items-center w-14 h-14 md:w-16 md:h-16 rounded-xl bg-gradient-to-br from-[hsl(var(--gold))]/15 to-[hsl(var(--gold))]/5 border border-[hsl(var(--gold))]/30 text-[hsl(var(--gold))] motion-safe:group-hover:scale-110 motion-safe:group-hover:rotate-3 transition-transform duration-500">
                   <Icon className="w-7 h-7 md:w-8 md:h-8" strokeWidth={1.6} />
                 </div>
 
