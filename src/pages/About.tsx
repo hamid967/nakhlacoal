@@ -27,8 +27,26 @@ export default function About() {
         lead={t('about.story')}
       />
 
-      {/* Mission / Vision / Values */}
+      {/* Long-form story */}
       <LuxSection>
+        <div className="max-w-3xl mx-auto space-y-5">
+          {((t('about.paragraphs', { returnObjects: true }) as string[]) || []).map((p, i) => (
+            <ScrollReveal key={i} delay={i * 60}>
+              <p className={`text-base md:text-lg leading-loose text-foreground/80 ${isAr ? 'font-arabic text-right' : ''}`}>
+                {p}
+              </p>
+            </ScrollReveal>
+          ))}
+          <ScrollReveal delay={200}>
+            <p className={`mt-8 text-center text-lg md:text-2xl text-gold-hi ${isAr ? 'font-arabic font-bold' : 'font-display'}`}>
+              {t('about.tagline')}
+            </p>
+          </ScrollReveal>
+        </div>
+      </LuxSection>
+
+      {/* Mission / Vision / Values */}
+      <LuxSection tone="surface">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {(['mission', 'vision', 'values'] as const).map((key, i) => {
             const item: any = t(`about.${key}`, { returnObjects: true });
@@ -44,6 +62,7 @@ export default function About() {
           })}
         </div>
       </LuxSection>
+
 
       {/* Timeline */}
       <LuxSection tone="surface">
