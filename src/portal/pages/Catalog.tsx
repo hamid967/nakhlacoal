@@ -40,7 +40,7 @@ export default function PortalCatalog() {
               <button
                 onClick={() => toggleFav(p.slug)}
                 className="absolute top-3 end-3 w-9 h-9 rounded-full grid place-items-center backdrop-blur"
-                style={{ background: 'rgba(255,255,255,.85)', color: fav.includes(p.slug) ? '#C0392B' : 'var(--a-text-muted)' }}
+                style={{ background: 'rgba(255,255,255,.85)', color: fav.includes(p.slug) ? 'hsl(var(--destructive))' : 'var(--a-text-muted)' }}
                 aria-label="favorite"
               >
                 <Heart className="w-4 h-4" fill={fav.includes(p.slug) ? 'currentColor' : 'none'} />

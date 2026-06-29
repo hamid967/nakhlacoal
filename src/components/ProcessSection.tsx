@@ -92,7 +92,7 @@ export function ProcessSection() {
           className="relative mx-[-1rem] md:mx-[-2rem] py-6 md:py-8"
           style={{
             background:
-              'linear-gradient(180deg, #0a0a0a 0%, #141414 50%, #0a0a0a 100%)',
+              'linear-gradient(180deg, hsl(var(--dark)) 0%, hsl(var(--dark-2, var(--dark))) 50%, hsl(var(--dark)) 100%)',
             boxShadow: 'inset 0 0 80px rgba(0,0,0,0.7), 0 30px 60px -20px rgba(0,0,0,0.5)',
           }}
         >
@@ -144,8 +144,8 @@ export function ProcessSection() {
                     key={i}
                     className="group snap-center shrink-0 w-[78vw] sm:w-[44vw] md:w-[32vw] lg:w-[22vw] relative"
                     style={{
-                      border: '1px solid rgba(212,175,55,0.25)',
-                      background: '#000',
+                      border: '1px solid hsl(var(--gold) / 0.25)',
+                      background: 'hsl(var(--dark))',
                       boxShadow: '0 10px 30px -10px rgba(0,0,0,0.7)',
                     }}
                   >

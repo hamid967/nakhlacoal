@@ -20,7 +20,7 @@ export default function PortalFavorites() {
       {!items.length ? (
         <div className="a-card p-10 text-center">
           <div className="w-14 h-14 rounded-2xl grid place-items-center mx-auto"
-               style={{ background: 'var(--a-surface-2)', color: '#C0392B' }}>
+               style={{ background: 'var(--a-surface-2)', color: 'hsl(var(--destructive))' }}>
             <Heart className="w-6 h-6" />
           </div>
           <p className="text-sm mt-4" style={{ color: 'var(--a-text-muted)' }}>لا توجد منتجات في المفضلة بعد.</p>

@@ -71,7 +71,7 @@ function Cell({ label, value, warn }: { label: string; value: string; warn?: boo
   return (
     <div className="rounded-xl py-2 px-1" style={{ background: 'var(--a-surface-2)' }}>
       <div className="text-[10px]" style={{ color: 'var(--a-text-muted)' }}>{label}</div>
-      <div className="text-sm font-semibold" style={{ color: warn ? '#BE123C' : 'var(--a-text)' }}>{value}</div>
+      <div className="text-sm font-semibold" style={{ color: warn ? 'hsl(var(--destructive))' : 'var(--a-text)' }}>{value}</div>
     </div>
   );
 }

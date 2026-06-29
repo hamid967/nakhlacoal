@@ -95,8 +95,8 @@ export function Team() {
       >
         <path 
           d={mustaches[style as keyof typeof mustaches]} 
-          fill="#2D1810" 
-          stroke="#1A0F08" 
+          fill="hsl(var(--dark))" 
+          stroke="hsl(var(--dark-2, var(--dark)))" 
           strokeWidth="0.5"
         />
       </svg>
