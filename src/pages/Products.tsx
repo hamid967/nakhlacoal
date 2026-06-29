@@ -7,6 +7,7 @@ import { ScrollReveal } from '@/components/ScrollReveal';
 import { PageIntro } from '@/components/ui-lux';
 import { products, type ProductCategory, type ProductUseCase } from '@/data/products';
 import { CompareToggle } from '@/components/CompareToggle';
+import { ProductRecommender } from '@/components/ProductRecommender';
 
 const CATEGORIES: { value: ProductCategory | 'all'; ar: string; en: string }[] = [
   { value: 'all', ar: 'الكل', en: 'All' },
