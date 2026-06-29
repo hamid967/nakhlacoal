@@ -126,12 +126,18 @@ Deno.serve(async (req) => {
     if (!upstream.ok) {
       const t = await upstream.text();
       console.error("[chat-assistant] upstream error:", upstream.status, t);
-      const status = upstream.status === 429 ? 429 : upstream.status === 402 ? 402 : 500;
-      const msg = status === 429 ? "Rate limited" : status === 402 ? "AI credits exhausted" : "Upstream error";
-      return new Response(JSON.stringify({ error: msg }), {
-        status, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      // Return 200 with a fallback signal so the widget can switch to offline mode
+      // without showing a blank screen. The client reads `fallback` to trigger local intent parsing.
+      const reason =
+        upstream.status === 402 ? "credits_exhausted" :
+        upstream.status === 429 ? "rate_limited" :
+        "upstream_error";
+      return new Response(JSON.stringify({ fallback: true, reason }), {
+        status: 200,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+
 
     const reader = upstream.body!.getReader();
     const decoder = new TextDecoder();
