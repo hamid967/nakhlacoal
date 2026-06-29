@@ -54,7 +54,7 @@ export default function App() {
       <TooltipProvider>
         <AuthProvider>
           <CompareProvider>
-            <SplashScreen />
+            {/* SplashScreen removed — HomeIntro is the primary intro */}
             <AnalyticsTracker />
 
             <Toaster />
