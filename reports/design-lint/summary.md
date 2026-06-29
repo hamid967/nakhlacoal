@@ -1,6 +1,6 @@
 # Design-System Lint — Net-New Violations
 
-**New:** 4  •  **Grandfathered:** 167
+**New:** 4  •  **Grandfathered:** 171
 
 | File | Rule | Count | Sample |
 |---|---|---:|---|

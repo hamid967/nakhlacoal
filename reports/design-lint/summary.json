@@ -1,6 +1,6 @@
 {
   "total": 4,
-  "baseline": 167,
+  "baseline": 171,
   "groups": [
     {
       "file": "src/features/auth/OAuthButtons.tsx",
