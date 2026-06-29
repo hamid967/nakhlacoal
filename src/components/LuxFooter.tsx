@@ -13,7 +13,8 @@ export function LuxFooter() {
       {/* Ember glow */}
       <div className="absolute inset-x-0 -top-32 h-64 ember-glow pointer-events-none animate-ember" />
 
-      <div className="container relative grid grid-cols-1 lg:grid-cols-12 gap-12">
+      <div className="container relative">
+        <div className="glass-card rounded-3xl p-8 md:p-12 grid grid-cols-1 lg:grid-cols-12 gap-12">
         {/* Brand block */}
         <div className="lg:col-span-5">
           <Link to="/" className="inline-flex items-center gap-3 mb-6" aria-label="Palm Charcoal">
@@ -27,7 +28,7 @@ export function LuxFooter() {
               <input
                 type="email"
                 placeholder={t('footer.newsletterPlaceholder')}
-                className="flex-1 bg-surface-3 border-luxe rounded-full px-5 py-3 text-sm placeholder:text-foreground/40 focus:outline-none focus:border-gold/50"
+                className="flex-1 glass-strip rounded-full px-5 py-3 text-sm placeholder:text-foreground/40 focus:outline-none focus:border-gold/50"
               />
               <button className="btn-gold !px-5 !py-3 text-xs">{t('footer.subscribe')}</button>
             </form>
@@ -53,6 +54,7 @@ export function LuxFooter() {
             <FooterLink to="#">{t('footer.terms')}</FooterLink>
             <FooterLink to="#">{t('footer.shipping')}</FooterLink>
           </FooterCol>
+        </div>
         </div>
       </div>
 
