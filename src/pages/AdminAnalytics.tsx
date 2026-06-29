@@ -221,7 +221,7 @@ export default function AdminAnalytics() {
           </>
         )}
       </div>
-    </main>
+    </section>
   );
 }
 
