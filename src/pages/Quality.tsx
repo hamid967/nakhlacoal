@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, useInView, useMotionValue, useTransform, animate } from 'framer-motion';
 import {
@@ -6,75 +6,16 @@ import {
   Trees, Flame, Snowflake, Filter, Package, ClipboardCheck, Ship,
   Sparkles, Thermometer, Droplets, Wind, Mountain, Zap,
 } from 'lucide-react';
-import {
-  LineChart, Line, BarChart, Bar, RadarChart, Radar, PolarGrid, PolarAngleAxis,
-  PolarRadiusAxis, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend,
-} from 'recharts';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Link } from 'react-router-dom';
 import { SEO } from '@/components/SEO';
 import { SectionHeader, Stat } from '@/components/ui-lux';
+import { SectionSkeleton } from '@/components/SectionSkeleton';
 import { trademarks } from '@/data/trademarks';
-import emberImg from '@/assets/quality/ember-closeup.jpg';
-import labImg from '@/assets/quality/lab-measurement.jpg';
-import burnImg from '@/assets/quality/burn-test.jpg';
 
-/* ---------------- Cinematic Gallery ---------------- */
-function CinematicGallery() {
-  const shots = [
-    { src: emberImg, title: 'الجمر الحي', sub: 'حرارة موحدة 950°C', tag: 'EMBER' },
-    { src: labImg, title: 'القياس الدقيق', sub: 'تفاوت أقل من ±0.3mm', tag: 'LAB' },
-    { src: burnImg, title: 'اختبار الاحتراق', sub: 'ثبات 180 دقيقة', tag: 'BURN' },
-  ];
-  return (
-    <section className="py-28 bg-[#0c1410]">
-      <div className="container">
-        <SectionTitle eyebrow="معرض المختبر" title="لقطات حية من خط الجودة" />
-        <div className="grid md:grid-cols-3 gap-6">
-          {shots.map((s, i) => (
-            <motion.figure
-              key={s.tag}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-80px' }}
-              transition={{ duration: 0.9, delay: i * 0.12, ease: [0.16, 1, 0.3, 1] }}
-              whileHover={{ y: -8 }}
-              className="group relative overflow-hidden rounded-2xl border border-gold/20 hover:border-gold/60 shadow-luxe"
-            >
-              <div className="relative aspect-[4/5] overflow-hidden">
-                <img
-                  src={s.src}
-                  alt={s.title}
-                  width={1024}
-                  height={1280}
-                  loading="lazy"
-                  className="w-full h-full object-cover transition-all duration-[1400ms] ease-out group-hover:scale-110 group-hover:rotate-1"
-                  style={{ filter: 'contrast(1.08) saturate(1.05)' }}
-                />
-                {/* gold scan line */}
-                <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,transparent_0%,transparent_45%,hsl(var(--gold-hi)/0.35)_50%,transparent_55%,transparent_100%)] opacity-0 group-hover:opacity-100 group-hover:animate-[scan_2.4s_linear_infinite] mix-blend-overlay" />
-                {/* vignette */}
-                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(0,0,0,0.65)_100%)]" />
-                {/* grain */}
-                <div className="pointer-events-none absolute inset-0 opacity-[0.12] mix-blend-overlay"
-                  style={{ backgroundImage: "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.6'/></svg>\")" }}
-                />
-                {/* tag */}
-                <span className="absolute top-4 left-4 text-[10px] tracking-[0.3em] px-2 py-1 rounded bg-black/50 backdrop-blur text-gold-hi border border-gold/30">
-                  {s.tag} · 0{i + 1}
-                </span>
-              </div>
-              <figcaption className="absolute bottom-0 inset-x-0 p-5 bg-gradient-to-t from-black via-black/70 to-transparent">
-                <div className="font-arabic text-xl text-background font-bold">{s.title}</div>
-                <div className="font-arabic text-sm text-gold-hi/90 mt-1">{s.sub}</div>
-              </figcaption>
-            </motion.figure>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
+const CinematicGallery = lazy(() => import('./quality/CinematicGallery'));
+const QualityCharts = lazy(() => import('./quality/QualityCharts'));
+const InspectionCube = lazy(() => import('./quality/InspectionCube'));
 
 /* ---------------- Animated Counter ---------------- */
 function Counter({ to, suffix = '', duration = 2 }: { to: number; suffix?: string; duration?: number }) {
@@ -192,29 +133,6 @@ const gauges = [
   { label: 'المواد المتطايرة', value: 6, suffix: '%', max: 15, tip: 'مواد متطايرة منخفضة تعني دخاناً أقل ورائحة محايدة.', icon: Wind },
 ];
 
-const trend = [
-  { batch: '١', q: 92 }, { batch: '٢', q: 94 }, { batch: '٣', q: 93 },
-  { batch: '٤', q: 96 }, { batch: '٥', q: 97 }, { batch: '٦', q: 98 },
-  { batch: '٧', q: 97 }, { batch: '٨', q: 99 },
-];
-
-const comparison = [
-  { metric: 'الكربون', palm: 85, market: 68 },
-  { metric: 'الاحتراق', palm: 185, market: 110 },
-  { metric: 'الحرارة', palm: 95, market: 70 },
-  { metric: 'الرماد', palm: 97, market: 78 },
-  { metric: 'النقاء', palm: 99, market: 75 },
-];
-
-const radar = [
-  { k: 'الاحتراق', palm: 95, market: 65 },
-  { k: 'الحرارة', palm: 92, market: 70 },
-  { k: 'الرماد', palm: 97, market: 60 },
-  { k: 'الدخان', palm: 96, market: 55 },
-  { k: 'الرائحة', palm: 98, market: 62 },
-  { k: 'الكربون', palm: 94, market: 68 },
-];
-
 const timeline = [
   { icon: Trees, t: 'اختيار الخشب', d: 'انتقاء سعف وجذوع النخيل من مزارع مستدامة معتمدة.' },
   { icon: Flame, t: 'الكربنة', d: 'فرن مغلق بدرجات حرارة مضبوطة للحصول على كربون نقي.' },
@@ -257,219 +175,8 @@ const aiSteps = [
   { t: 'اعتماد الجودة', i: ShieldCheck },
 ];
 
-type Face = 'front' | 'back' | 'right' | 'left' | 'top' | 'bottom';
-const inspectionSpots: { face: Face; x: number; y: number; label: string; value: string; desc: string }[] = [
-  { face: 'front',  x: 30, y: 35, label: 'نسبة الكربون',    value: '٨٥٪',   desc: 'كربون ثابت عالي يمنح احتراقاً نظيفاً وطويلاً.' },
-  { face: 'front',  x: 70, y: 65, label: 'الكثافة',         value: '١٫١ غ/سم³', desc: 'بنية مضغوطة تضمن ثبات الجمرة وعدم التفتت.' },
-  { face: 'right',  x: 50, y: 40, label: 'السطح',           value: 'مصقول', desc: 'سطح ناعم مغلق يقلل الرماد المتطاير.' },
-  { face: 'top',    x: 55, y: 55, label: 'مقاومة الضغط',    value: '٤٢ MPa', desc: 'يتحمل الشحن والتكديس دون كسر.' },
-  { face: 'back',   x: 45, y: 50, label: 'المقاومة الحرارية', value: '٧٥٠°م', desc: 'يحافظ على الحرارة القصوى طوال جلسة الشواء.' },
-  { face: 'left',   x: 50, y: 50, label: 'الرماد',          value: '٣٪',    desc: 'رماد منخفض يعني نظافة أعلى وقيمة أكبر لكل كجم.' },
-];
-
-
-/* ---------------- Section primitives (unified via ui-lux) ---------------- */
 function SectionTitle({ eyebrow, title }: { eyebrow: string; title: string }) {
   return <SectionHeader eyebrow={eyebrow} title={title} />;
-}
-
-/* ---------------- 3D Inspection Cube ---------------- */
-const FACE_TRANSFORMS: Record<Face, string> = {
-  front:  'translateZ(120px)',
-  back:   'rotateY(180deg) translateZ(120px)',
-  right:  'rotateY(90deg) translateZ(120px)',
-  left:   'rotateY(-90deg) translateZ(120px)',
-  top:    'rotateX(90deg) translateZ(120px)',
-  bottom: 'rotateX(-90deg) translateZ(120px)',
-};
-const FACE_LABEL: Record<Face, string> = {
-  front: 'الأمام', back: 'الخلف', right: 'اليمين', left: 'اليسار', top: 'الأعلى', bottom: 'الأسفل',
-};
-const FACE_VIEW: Record<Face, { x: number; y: number }> = {
-  front: { x: 0, y: 0 }, back: { x: 0, y: 180 },
-  right: { x: 0, y: -90 }, left: { x: 0, y: 90 },
-  top: { x: -90, y: 0 }, bottom: { x: 90, y: 0 },
-};
-
-function InspectionCube() {
-  const [rot, setRot] = useState({ x: -18, y: 28, z: 0 });
-  const [auto, setAuto] = useState(true);
-  const [active, setActive] = useState<number | null>(null);
-  const pointers = useRef<Map<number, { x: number; y: number }>>(new Map());
-  const pinch = useRef<{ dist: number; angle: number } | null>(null);
-
-  // Auto-rotate
-  useEffect(() => {
-    if (!auto || active !== null) return;
-    let raf = 0;
-    const tick = () => { setRot((r) => ({ ...r, y: r.y + 0.25 })); raf = requestAnimationFrame(tick); };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [auto, active]);
-
-  const onPointerDown = (e: React.PointerEvent) => {
-    (e.target as HTMLElement).setPointerCapture(e.pointerId);
-    pointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
-    if (pointers.current.size === 2) {
-      const [a, b] = Array.from(pointers.current.values());
-      pinch.current = {
-        dist: Math.hypot(b.x - a.x, b.y - a.y),
-        angle: Math.atan2(b.y - a.y, b.x - a.x) * (180 / Math.PI),
-      };
-    }
-  };
-  const onPointerMove = (e: React.PointerEvent) => {
-    if (!pointers.current.has(e.pointerId)) return;
-    const prev = pointers.current.get(e.pointerId)!;
-    const cur = { x: e.clientX, y: e.clientY };
-    pointers.current.set(e.pointerId, cur);
-
-    if (pointers.current.size >= 2 && pinch.current) {
-      const [a, b] = Array.from(pointers.current.values());
-      const angle = Math.atan2(b.y - a.y, b.x - a.x) * (180 / Math.PI);
-      const dz = angle - pinch.current.angle;
-      pinch.current.angle = angle;
-      setRot((r) => ({ ...r, z: r.z + dz }));
-    } else if (pointers.current.size === 1) {
-      const dx = cur.x - prev.x;
-      const dy = cur.y - prev.y;
-      setRot((r) => ({ ...r, x: r.x - dy * 0.5, y: r.y + dx * 0.5 }));
-    }
-  };
-  const onPointerUp = (e: React.PointerEvent) => {
-    pointers.current.delete(e.pointerId);
-    if (pointers.current.size < 2) pinch.current = null;
-  };
-
-  const focusSpot = (i: number) => {
-    setActive(i);
-    setAuto(false);
-    const v = FACE_VIEW[inspectionSpots[i].face];
-    setRot({ x: v.x, y: v.y, z: 0 });
-  };
-  const reset = () => { setRot({ x: -18, y: 28, z: 0 }); setActive(null); setAuto(true); };
-
-  return (
-    <div className="grid lg:grid-cols-[1fr,1.1fr] gap-12 items-center">
-      <div className="relative">
-        <div
-          className="relative h-[440px] flex items-center justify-center cursor-grab active:cursor-grabbing select-none touch-none"
-          style={{ perspective: '1400px' }}
-          onPointerDown={onPointerDown}
-          onPointerMove={onPointerMove}
-          onPointerUp={onPointerUp}
-          onPointerCancel={onPointerUp}
-          onMouseEnter={() => setAuto(false)}
-          onMouseLeave={() => active === null && setAuto(true)}
-        >
-          <div
-            style={{
-              transformStyle: 'preserve-3d',
-              transform: `rotateX(${rot.x}deg) rotateY(${rot.y}deg) rotateZ(${rot.z}deg)`,
-              width: 240, height: 240, position: 'relative',
-              transition: pointers.current.size ? 'none' : 'transform 0.6s cubic-bezier(0.16,1,0.3,1)',
-            }}
-          >
-            {(Object.keys(FACE_TRANSFORMS) as Face[]).map((face) => (
-              <div key={face}
-                className="absolute inset-0 border border-gold/40"
-                style={{
-                  transform: FACE_TRANSFORMS[face],
-                  background: 'linear-gradient(135deg, #1a1410 0%, #0a0806 100%)',
-                  boxShadow: 'inset 0 0 40px hsl(var(--gold) / 0.15), 0 0 30px hsl(var(--gold) / 0.2)',
-                }}
-              >
-                <div className="absolute inset-2 opacity-40"
-                  style={{ backgroundImage: 'radial-gradient(circle at 30% 30%, hsl(var(--gold-hi) / 0.4), transparent 50%), radial-gradient(circle at 70% 70%, hsl(var(--jade) / 0.3), transparent 50%)' }} />
-                <span className="absolute top-1 left-2 text-[10px] font-mono uppercase tracking-widest text-gold-hi/40">
-                  {FACE_LABEL[face]}
-                </span>
-                {inspectionSpots.map((s, i) => s.face === face && (
-                  <button key={i}
-                    onClick={(e) => { e.stopPropagation(); focusSpot(i); }}
-                    onMouseEnter={() => setActive(i)}
-                    className="absolute -translate-x-1/2 -translate-y-1/2 group"
-                    style={{ left: `${s.x}%`, top: `${s.y}%` }}
-                  >
-                    <span className={`block w-3 h-3 rounded-full transition-all ${active === i ? 'bg-gold-hi scale-150' : 'bg-gold-hi/80'}`}
-                      style={{ boxShadow: '0 0 12px hsl(var(--gold-hi))' }} />
-                    <span className={`absolute inset-0 rounded-full bg-gold-hi/40 ${active === i ? 'animate-ping' : ''}`} />
-                  </button>
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Controls */}
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-2 font-arabic text-sm">
-          <button onClick={reset} className="px-4 py-2 rounded-lg bg-foreground text-background hover:bg-jade transition">إعادة ضبط</button>
-          <button onClick={() => setAuto((a) => !a)} className="px-4 py-2 rounded-lg border border-gold/40 hover:bg-gold/10 transition">
-            {auto ? 'إيقاف الدوران' : 'تشغيل الدوران'}
-          </button>
-          {(Object.keys(FACE_VIEW) as Face[]).map((f) => (
-            <button key={f} onClick={() => { setAuto(false); setRot({ ...FACE_VIEW[f], z: 0 }); }}
-              className="px-3 py-2 rounded-lg border border-gold/20 hover:border-gold/60 transition text-xs">
-              {FACE_LABEL[f]}
-            </button>
-          ))}
-        </div>
-        <p className="mt-3 text-center text-xs text-foreground/50 font-arabic">
-          اسحب لتدوير المكعب • إصبعان للتدوير المحوري • انقر النقاط للتركيز
-        </p>
-
-        {/* Debug Panel */}
-        <details className="mt-4 mx-auto max-w-md rounded-xl border border-gold/30 bg-rich-black/90 text-cream font-mono text-[11px] overflow-hidden">
-          <summary className="cursor-pointer select-none px-3 py-2 bg-gold/10 text-gold-hi flex justify-between items-center">
-            <span>🛠 Debug · InspectionCube</span>
-            <span className="text-cream/50">state monitor</span>
-          </summary>
-          <div className="p-3 space-y-1 leading-relaxed">
-            <div className="flex justify-between"><span className="text-cream/50">rot.x</span><span className="text-gold-hi tabular-nums">{rot.x.toFixed(2)}°</span></div>
-            <div className="flex justify-between"><span className="text-cream/50">rot.y</span><span className="text-gold-hi tabular-nums">{rot.y.toFixed(2)}°</span></div>
-            <div className="flex justify-between"><span className="text-cream/50">rot.z</span><span className="text-gold-hi tabular-nums">{rot.z.toFixed(2)}°</span></div>
-            <div className="flex justify-between"><span className="text-cream/50">auto-rotate</span><span className={auto ? 'text-jade' : 'text-ember-orange'}>{String(auto)}</span></div>
-            <div className="flex justify-between"><span className="text-cream/50">active hotspot</span><span className="text-gold-hi">{active === null ? 'null' : `#${active + 1} · ${inspectionSpots[active]?.label}`}</span></div>
-            <div className="flex justify-between"><span className="text-cream/50">dragRef pointers</span><span className="text-gold-hi tabular-nums">{pointers.current.size}</span></div>
-            <div className="flex justify-between"><span className="text-cream/50">pinch active</span><span className={pinch.current ? 'text-jade' : 'text-cream/40'}>{pinch.current ? `${pinch.current.angle.toFixed(1)}°` : 'idle'}</span></div>
-          </div>
-        </details>
-      </div>
-
-      {/* Hotspots panel */}
-      <ul className="space-y-3 font-arabic">
-        {inspectionSpots.map((s, i) => (
-          <motion.li key={i}
-            initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }} transition={{ delay: i * 0.08 }}
-            onMouseEnter={() => setActive(i)}
-            onMouseLeave={() => setActive(null)}
-            onClick={() => focusSpot(i)}
-            className={`group cursor-pointer p-5 rounded-2xl border backdrop-blur transition-all ${
-              active === i
-                ? 'bg-foreground text-background border-gold shadow-gold scale-[1.02]'
-                : 'glass-card hover:border-gold/50'
-            }`}
-          >
-            <div className="flex items-center gap-4">
-              <span className={`w-11 h-11 rounded-full flex items-center justify-center font-bold transition-colors ${
-                active === i ? 'bg-gold-hi text-foreground' : 'bg-gold/15 text-gold-hi'
-              }`}>{i + 1}</span>
-              <div className="flex-1">
-                <div className="flex items-baseline justify-between gap-3">
-                  <h4 className="font-bold">{s.label}</h4>
-                  <span className={`text-lg ${active === i ? 'text-gold-hi' : 'text-jade'}`}>{s.value}</span>
-                </div>
-                <p className={`text-sm leading-relaxed mt-1 ${active === i ? 'text-background/70' : 'text-foreground/60'}`}>
-                  {s.desc}
-                </p>
-              </div>
-            </div>
-          </motion.li>
-        ))}
-      </ul>
-    </div>
-  );
 }
 
 /* ---------------- Page ---------------- */
@@ -478,6 +185,31 @@ export default function Quality() {
   const isAr = i18n.language?.startsWith('ar');
   const [openCert, setOpenCert] = useState<number | null>(null);
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: isAr ? 'الجودة — فحم النخلة' : 'Quality — Palm Charcoal',
+    url: 'https://alnakhlacoal.com/quality',
+    inLanguage: isAr ? 'ar' : 'en',
+    about: {
+      '@type': 'Product',
+      name: 'Palm Charcoal',
+      brand: { '@type': 'Brand', name: 'فحم النخلة' },
+      additionalProperty: [
+        { '@type': 'PropertyValue', name: 'Fixed Carbon', value: '85%' },
+        { '@type': 'PropertyValue', name: 'Ash', value: '3%' },
+        { '@type': 'PropertyValue', name: 'Moisture', value: '6%' },
+        { '@type': 'PropertyValue', name: 'Burn Time', value: '185 min' },
+        { '@type': 'PropertyValue', name: 'Max Temperature', value: '750°C' },
+      ],
+    },
+    hasCredential: certificates.map((c) => ({
+      '@type': 'EducationalOccupationalCredential',
+      name: c.name,
+      identifier: c.code,
+      description: c.desc,
+    })),
+  };
 
   return (
     <>
@@ -485,6 +217,7 @@ export default function Quality() {
         title={isAr ? 'الجودة — فحم النخلة' : 'Quality — Palm Charcoal'}
         description="كل دفعة من فحم النخلة مقيسة ومعتمدة. مختبر متكامل، تحليلات حية، وشهادات دولية."
         path="/quality"
+        jsonLd={jsonLd}
       />
 
       {/* Cinematic Hero */}
@@ -518,7 +251,9 @@ export default function Quality() {
         </div>
       </section>
 
-      <CinematicGallery />
+      <Suspense fallback={<SectionSkeleton variant="grid" label="جارٍ تحميل معرض المختبر" />}>
+        <CinematicGallery />
+      </Suspense>
 
       {/* Lab Dashboard */}
       <section className="py-28">
@@ -534,61 +269,9 @@ export default function Quality() {
       <section className="py-28 bg-surface-2/40 border-y border-gold/10">
         <div className="container">
           <SectionTitle eyebrow="تحليلات حية" title="بيانات الجودة عبر دفعات الإنتاج" />
-          <div className="grid lg:grid-cols-2 gap-6">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }} transition={{ duration: 0.8 }}
-              className="glass-card rounded-2xl p-6 shadow-luxe"
-            >
-              <h3 className="font-arabic font-bold mb-4">اتجاه الجودة عبر الدفعات</h3>
-              <ResponsiveContainer width="100%" height={260}>
-                <LineChart data={trend}>
-                  <CartesianGrid stroke="hsl(var(--gold) / 0.1)" strokeDasharray="3 3" />
-                  <XAxis dataKey="batch" stroke="hsl(var(--foreground))" />
-                  <YAxis domain={[80, 100]} stroke="hsl(var(--foreground))" />
-                  <Tooltip contentStyle={{ background: 'hsl(var(--dark))', border: 'none', color: 'hsl(var(--background))' }} />
-                  <Line type="monotone" dataKey="q" stroke="hsl(var(--gold-hi))" strokeWidth={3} dot={{ r: 5, fill: 'hsl(var(--jade))' }} animationDuration={1800} />
-                </LineChart>
-              </ResponsiveContainer>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.1 }}
-              className="glass-card rounded-2xl p-6 shadow-luxe"
-            >
-              <h3 className="font-arabic font-bold mb-4">فحم النخلة مقابل متوسط السوق</h3>
-              <ResponsiveContainer width="100%" height={260}>
-                <BarChart data={comparison}>
-                  <CartesianGrid stroke="hsl(var(--gold) / 0.1)" strokeDasharray="3 3" />
-                  <XAxis dataKey="metric" stroke="hsl(var(--foreground))" />
-                  <YAxis stroke="hsl(var(--foreground))" />
-                  <Tooltip contentStyle={{ background: 'hsl(var(--dark))', border: 'none', color: 'hsl(var(--background))' }} />
-                  <Legend />
-                  <Bar dataKey="palm" name="فحم النخلة" fill="hsl(var(--gold-hi))" radius={[6, 6, 0, 0]} animationDuration={1500} />
-                  <Bar dataKey="market" name="السوق" fill="hsl(var(--jade))" radius={[6, 6, 0, 0]} animationDuration={1500} />
-                </BarChart>
-              </ResponsiveContainer>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.2 }}
-              className="lg:col-span-2 glass-card rounded-2xl p-6 shadow-luxe"
-            >
-              <h3 className="font-arabic font-bold mb-4">مقارنة الأداء متعدد المحاور</h3>
-              <ResponsiveContainer width="100%" height={360}>
-                <RadarChart data={radar}>
-                  <PolarGrid stroke="hsl(var(--gold) / 0.2)" />
-                  <PolarAngleAxis dataKey="k" stroke="hsl(var(--foreground))" />
-                  <PolarRadiusAxis angle={30} domain={[0, 100]} stroke="hsl(var(--foreground) / 0.4)" />
-                  <Radar name="فحم النخلة" dataKey="palm" stroke="hsl(var(--gold-hi))" fill="hsl(var(--gold-hi))" fillOpacity={0.5} animationDuration={1800} />
-                  <Radar name="السوق" dataKey="market" stroke="hsl(var(--jade))" fill="hsl(var(--jade))" fillOpacity={0.3} animationDuration={1800} />
-                  <Legend />
-                </RadarChart>
-              </ResponsiveContainer>
-            </motion.div>
-          </div>
+          <Suspense fallback={<SectionSkeleton variant="grid" label="جارٍ تحميل التحليلات" />}>
+            <QualityCharts />
+          </Suspense>
         </div>
       </section>
 
@@ -598,15 +281,10 @@ export default function Quality() {
           <SectionTitle eyebrow="المختبر الرقمي" title="تحت العدسة — لحظات من داخل المعمل" />
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {[
-              'مختبر حديث',
-              'اختبار حرارة الفحم',
-              'تحليل الكربون',
-              'اختبار الرطوبة',
-              'الفحص الصناعي',
-              'مراقبة الجودة',
+              'مختبر حديث', 'اختبار حرارة الفحم', 'تحليل الكربون',
+              'اختبار الرطوبة', 'الفحص الصناعي', 'مراقبة الجودة',
             ].map((label, i) => (
-              <motion.div
-                key={label}
+              <motion.div key={label}
                 initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }} transition={{ duration: 0.7, delay: i * 0.08 }}
                 whileHover={{ y: -6 }}
@@ -631,7 +309,9 @@ export default function Quality() {
       <section className="py-28 bg-gradient-to-b from-background via-surface-2/50 to-background">
         <div className="container">
           <SectionTitle eyebrow="فحص المنتج ثلاثي الأبعاد" title="اسحب لتدوير المكعب وفحص النقاط" />
-          <InspectionCube />
+          <Suspense fallback={<SectionSkeleton variant="timeline" label="جارٍ تحميل المكعب التفاعلي" />}>
+            <InspectionCube />
+          </Suspense>
         </div>
       </section>
 
@@ -647,7 +327,7 @@ export default function Quality() {
                 className="group rounded-2xl glass-card p-4 hover:shadow-gold transition"
               >
                 <div className="aspect-square bg-cream rounded-lg overflow-hidden mb-3">
-                  <img src={t.image} alt={t.nameAr} className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform" loading="lazy" />
+                  <img src={t.image} alt={t.nameAr} className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform" loading="lazy" decoding="async" />
                 </div>
                 <h4 className="font-arabic font-bold text-sm text-foreground">{t.nameAr}</h4>
                 <p className="text-[10px] text-muted-foreground font-mono mt-1">رقم {t.registrationNo}</p>
@@ -661,8 +341,6 @@ export default function Quality() {
           </div>
         </div>
       </section>
-
-
 
       {/* Timeline */}
       <section className="py-28">
