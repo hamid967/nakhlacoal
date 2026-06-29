@@ -227,6 +227,53 @@
     box-shadow: 0 12px 40px -18px hsl(158 78% 10% / 0.18);
   }
 
+  /* Unified glass card (feature cards, trust strips, testimonials) */
+  .glass-card {
+    background: hsl(0 0% 100% / 0.55);
+    backdrop-filter: blur(18px) saturate(1.35);
+    -webkit-backdrop-filter: blur(18px) saturate(1.35);
+    border: 1px solid hsl(0 0% 100% / 0.65);
+    box-shadow:
+      0 22px 50px -28px hsl(158 78% 10% / 0.22),
+      0 2px 6px -2px hsl(158 78% 10% / 0.06),
+      inset 0 1px 0 hsl(0 0% 100% / 0.6);
+    transition: transform 500ms var(--ease-luxe), box-shadow 500ms var(--ease-luxe), border-color 500ms var(--ease-luxe);
+  }
+  .glass-card:hover {
+    transform: translateY(-3px);
+    border-color: hsl(var(--gold) / 0.45);
+    box-shadow:
+      0 32px 70px -28px hsl(158 78% 10% / 0.32),
+      0 4px 14px -4px hsl(var(--gold) / 0.18),
+      inset 0 1px 0 hsl(0 0% 100% / 0.7);
+  }
+  /* Pinned bottom strip — same family, slightly stronger blur */
+  .glass-strip {
+    background: hsl(0 0% 100% / 0.6);
+    backdrop-filter: blur(22px) saturate(1.4);
+    -webkit-backdrop-filter: blur(22px) saturate(1.4);
+    border: 1px solid hsl(0 0% 100% / 0.7);
+    box-shadow:
+      0 24px 55px -28px hsl(158 78% 10% / 0.26),
+      inset 0 1px 0 hsl(0 0% 100% / 0.65);
+  }
+  /* Glass pill button (matches hero ghost CTA) */
+  .btn-glass {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-medium transition-all duration-500;
+    background: hsl(0 0% 100% / 0.6);
+    backdrop-filter: blur(14px) saturate(1.3);
+    -webkit-backdrop-filter: blur(14px) saturate(1.3);
+    border: 1px solid hsl(var(--gold) / 0.3);
+    color: hsl(var(--foreground) / 0.85);
+    box-shadow: 0 10px 24px -14px hsl(158 78% 10% / 0.25);
+  }
+  .btn-glass:hover {
+    transform: translateY(-2px);
+    border-color: hsl(var(--gold));
+    color: hsl(var(--gold-lo));
+    box-shadow: 0 16px 32px -14px hsl(var(--gold) / 0.4);
+  }
+
   /* Nav link pill */
   .nav-pill {
     @apply relative inline-flex items-center px-2.5 xl:px-4 py-2 rounded-full text-[13px] xl:text-sm font-medium transition-all duration-500 whitespace-nowrap;
