@@ -169,8 +169,8 @@ export function HomeIntro() {
           <div className="text-[10px] tracking-[0.5em] text-[hsl(var(--gold-ink))] mb-2 font-mono font-semibold">
             EST · 2010 — DOSSIER 2060
           </div>
-          <h1 className={`text-2xl sm:text-4xl md:text-5xl ${isAr ? 'font-arabic font-bold' : 'font-display font-bold'}`}
-              style={{ color: '#1A4A00' }}>
+          <h1 className={`text-2xl sm:text-4xl md:text-5xl text-primary ${isAr ? 'font-arabic font-bold' : 'font-display font-bold'}`}>
+
             {isAr ? 'علاماتنا التجارية المسجّلة' : 'Our Registered Trademarks'}
           </h1>
           <div className="flex items-center justify-center gap-3 mt-3">
@@ -242,7 +242,7 @@ export function HomeIntro() {
 
         {/* Brand name + slide pager */}
         <div className="opacity-0 animate-[introUp_0.7s_ease-out_0.6s_forwards] flex flex-col items-center gap-2">
-          <div className={`text-lg md:text-2xl font-bold ${isAr ? 'font-arabic' : 'font-display'}`} style={{ color: '#1A4A00' }}>
+          <div className={`text-lg md:text-2xl font-bold text-primary ${isAr ? 'font-arabic' : 'font-display'}`}>
             {isAr ? current.nameAr : current.nameEn}
             <span className="mx-2 text-[hsl(var(--gold-ink))]">·</span>
             <span className="text-[hsl(var(--gold-ink))] text-sm md:text-base font-mono font-semibold">#{current.registrationNo}</span>

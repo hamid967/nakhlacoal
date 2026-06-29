@@ -32,8 +32,8 @@ export function ImageWatermark({ variant = 'light', position = 'br' }: Props) {
         className="w-5 h-5 object-contain drop-shadow"
       />
       <span
-        className="text-[9px] md:text-[10px] tracking-[0.18em] font-semibold uppercase"
-        style={{ color: '#D4AF37', letterSpacing: '0.18em' }}
+        className="text-[9px] md:text-[10px] tracking-[0.18em] font-semibold uppercase text-gold-hi"
+        style={{ letterSpacing: '0.18em' }}
       >
         www.nakhlacoal.com
       </span>
