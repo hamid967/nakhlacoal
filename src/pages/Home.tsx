@@ -156,6 +156,9 @@ export default function Home() {
 
       <ProcessSection />
 
+      <JourneySection />
+
+
       {/* Testimonials */}
 
       <LuxSection tone="dark" className="py-20 md:py-28">
