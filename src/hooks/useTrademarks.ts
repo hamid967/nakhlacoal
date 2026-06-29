@@ -76,8 +76,10 @@ export function useTrademarks() {
 
   const load = useCallback(async () => {
     setSyncing(true);
-    const { data, error } = await supabase
-      .from('trademarks')
+    // Read from the public-safe view; sensitive owner/address fields are
+    // intentionally excluded for anonymous visitors (RLS-protected on base table).
+    const { data, error } = await (supabase as any)
+      .from('trademarks_public')
       .select('*')
       .order('sort_order', { ascending: true });
     setSyncing(false);
