@@ -156,7 +156,7 @@ export default function Home() {
 
       {/* Testimonials */}
 
-      <LuxSection className="py-20 md:py-28">
+      <LuxSection tone="dark" className="py-20 md:py-28">
         <SectionHeader
           eyebrow={isAr ? 'آراء عملائنا' : 'Customer voices'}
           title={isAr ? 'ثقة تتجدد مع كل تجربة' : 'Trusted with every order'}
