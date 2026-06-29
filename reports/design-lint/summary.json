@@ -1,25 +1,5 @@
 {
-  "total": 4,
-  "baseline": 171,
-  "groups": [
-    {
-      "file": "src/features/auth/OAuthButtons.tsx",
-      "rule": "no-raw-hex",
-      "count": 4,
-      "samples": [
-        {
-          "line": 71,
-          "snippet": "#4285F4"
-        },
-        {
-          "line": 72,
-          "snippet": "#34A853"
-        },
-        {
-          "line": 73,
-          "snippet": "#FBBC05"
-        }
-      ]
-    }
-  ]
+  "total": 0,
+  "baseline": 167,
+  "groups": []
 }
