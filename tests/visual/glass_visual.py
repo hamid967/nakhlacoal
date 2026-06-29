@@ -140,7 +140,35 @@ async def capture_modal(page, tag: str):
     await shoot(page, f"modal__{tag}")
 
 
+PROBE_JS = r"""
+() => {
+  const el = document.querySelector('.glass-card');
+  if (!el) return null;
+  const cs = getComputedStyle(el);
+  const after = getComputedStyle(el, '::after');
+  const filter = cs.backdropFilter || cs.webkitBackdropFilter || '';
+  const m = filter.match(/blur\(([\d.]+)px\)/i);
+  const blur = m ? parseFloat(m[1]) : 0;
+  const grainImg = after.backgroundImage || 'none';
+  const grainOpacity = parseFloat(after.opacity || '1');
+  const hasGrain = grainImg !== 'none' && grainOpacity > 0.001;
+  return { blur, grainImg, grainOpacity, hasGrain };
+}
+"""
+
+
+async def probe_glass(page):
+    # Ensure a .glass-card is in DOM (Home renders many)
+    await page.goto(f"{BASE}/", wait_until="domcontentloaded")
+    await page.evaluate(
+        "document.querySelectorAll('[data-intro-splash], .home-intro').forEach(n => n.remove())"
+    )
+    await page.wait_for_selector('.glass-card', timeout=5000)
+    return await page.evaluate(PROBE_JS)
+
+
 async def run():
+    metrics: dict[str, dict] = {}
     async with async_playwright() as pw:
         browser = await pw.chromium.launch(headless=True)
         for theme in THEMES:
@@ -151,7 +179,6 @@ async def run():
                     color_scheme="dark" if theme == "noir" else "light",
                 )
                 page = await ctx.new_page()
-                # Seed theme + skip intro splash before first paint
                 await page.add_init_script(
                     f"try {{ localStorage.setItem('pc-theme', {json.dumps(theme)});"
                     f" sessionStorage.setItem('palm-home-intro-played', '1'); }} catch (_) {{}}"
@@ -159,6 +186,9 @@ async def run():
                 tag = f"{theme}_{motion_name}"
                 print(f"\n== {tag} ==")
                 try:
+                    m = await probe_glass(page)
+                    metrics[tag] = m or {}
+                    print("  metrics:", m)
                     await capture_home(page, tag)
                     await capture_gallery(page, tag)
                     await capture_modal(page, tag)
@@ -167,6 +197,37 @@ async def run():
                 await ctx.close()
         await browser.close()
 
+    # ---- Programmatic assertions ----
+    print("\n== assertions ==")
+    failures: list[str] = []
+    for theme in THEMES:
+        normal = metrics.get(f"{theme}_normal") or {}
+        reduced = metrics.get(f"{theme}_reduced") or {}
+        b_n, b_r = normal.get("blur", 0), reduced.get("blur", 0)
+        g_n, g_r = normal.get("grainOpacity", 0), reduced.get("grainOpacity", 0)
+        has_n, has_r = normal.get("hasGrain", False), reduced.get("hasGrain", False)
+        print(f"  {theme}: blur {b_n} -> {b_r} | grainOpacity {g_n} -> {g_r}"
+              f" | hasGrain {has_n} -> {has_r}")
+        # 1) Blur must clearly decrease under reduced motion
+        if not (b_r < b_n and (b_n - b_r) >= 4):
+            failures.append(
+                f"[{theme}] expected reduced blur to drop ≥4px (was {b_n}->{b_r})"
+            )
+        # 2) Grain must be removed or visibly weakened
+        if has_n and has_r and g_r >= g_n * 0.6:
+            failures.append(
+                f"[{theme}] expected grain removed or <60% opacity"
+                f" (was {g_n}->{g_r})"
+            )
+
+    if failures:
+        print("\nFAILED:")
+        for f in failures:
+            print(" -", f)
+        raise SystemExit(1)
+    print("OK — reduced-motion blur/grain assertions passed.")
+
 
 if __name__ == "__main__":
     asyncio.run(run())
+
