@@ -112,14 +112,14 @@
   "about": {
     "eyebrow": "About Palm Charcoal",
     "title": "A Saudi house of fire",
-    "story": "Founded in the heart of Al-Ahsa, فحم النخلة was built on a single conviction: the world's finest charcoal is born from the world's most resilient tree. We work with over 200 Saudi palm farms, transforming pruned date-palm wood into export-grade charcoal trusted by chefs, exporters, and lounges from Riyadh to Tokyo.",
+    "story": "A Saudi brand specialized in producing, importing, and supplying premium natural charcoal — from Jeddah's Al-Balad Charcoal Souq to the world.",
     "mission": {
       "title": "Mission",
       "body": "Set the global benchmark for natural, traceable, premium charcoal."
     },
     "vision": {
       "title": "Vision",
-      "body": "A Saudi brand on every luxury grill, in every continent, by 2030."
+      "body": "To become one of the leading charcoal brands across the Middle East and global markets."
     },
     "values": {
       "title": "Values",
@@ -147,7 +147,16 @@
         "year": "2026",
         "label": "Shipping to 32 countries worldwide"
       }
-    ]
+    ],
+    "paragraphs": [
+      "Palm Charcoal is a Saudi brand specialized in producing, importing, and supplying premium natural charcoal — delivering consistent quality and superior performance to the Saudi market, the Gulf, and customers worldwide. Our solutions serve individuals, cafés, restaurants, hotels, distributors, and export companies.",
+      "We are headquartered in Jeddah's historic Al-Balad district, in the Charcoal Souq — one of the oldest and most renowned charcoal markets in the Kingdom — where we have built deep practical expertise and a precise understanding of customer needs across markets.",
+      "We carefully select the finest natural charcoal and raw materials, applying strict quality control across production, packaging, and storage to deliver long burn time, stable heat, low ash, and a clean, odor-free profile — ideal for hookah, incense, BBQ, and industrial use.",
+      "Beyond products, we build long-term strategic partnerships through wholesale, project supply, and regional and international export — committed to on-time delivery, consistent quality, and professional service.",
+      "We proudly represent Saudi quality in the charcoal industry, continuously developing our products and operations to meet the highest standards.",
+      "Our vision: to become one of the leading charcoal brands across the Middle East and global markets through innovation, quality, sustainability, and trust."
+    ],
+    "tagline": "Palm Charcoal — natural quality, lasting performance, trust from Jeddah to the world."
   },
   "quality": {
     "eyebrow": "Lab-Verified Purity",
