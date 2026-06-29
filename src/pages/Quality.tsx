@@ -388,7 +388,7 @@ function InspectionCube() {
             className={`group cursor-pointer p-5 rounded-2xl border backdrop-blur transition-all ${
               active === i
                 ? 'bg-foreground text-background border-gold shadow-gold scale-[1.02]'
-                : 'bg-white/60 border-gold/20 hover:border-gold/50'
+                : 'glass-card hover:border-gold/50'
             }`}
           >
             <div className="flex items-center gap-4">
@@ -476,7 +476,7 @@ export default function Quality() {
             <motion.div
               initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }} transition={{ duration: 0.8 }}
-              className="rounded-2xl bg-white/70 backdrop-blur p-6 border border-gold/20 shadow-luxe"
+              className="glass-card rounded-2xl p-6 shadow-luxe"
             >
               <h3 className="font-arabic font-bold mb-4">اتجاه الجودة عبر الدفعات</h3>
               <ResponsiveContainer width="100%" height={260}>
@@ -493,7 +493,7 @@ export default function Quality() {
             <motion.div
               initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.1 }}
-              className="rounded-2xl bg-white/70 backdrop-blur p-6 border border-gold/20 shadow-luxe"
+              className="glass-card rounded-2xl p-6 shadow-luxe"
             >
               <h3 className="font-arabic font-bold mb-4">فحم النخلة مقابل متوسط السوق</h3>
               <ResponsiveContainer width="100%" height={260}>
@@ -512,7 +512,7 @@ export default function Quality() {
             <motion.div
               initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.2 }}
-              className="lg:col-span-2 rounded-2xl bg-white/70 backdrop-blur p-6 border border-gold/20 shadow-luxe"
+              className="lg:col-span-2 glass-card rounded-2xl p-6 shadow-luxe"
             >
               <h3 className="font-arabic font-bold mb-4">مقارنة الأداء متعدد المحاور</h3>
               <ResponsiveContainer width="100%" height={360}>
@@ -642,7 +642,7 @@ export default function Quality() {
                 initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }} transition={{ delay: i * 0.08 }}
                 whileHover={{ y: -8 }}
-                className="text-start p-8 rounded-2xl bg-white/70 backdrop-blur border border-gold/20 hover:border-gold/60 hover:shadow-gold transition-all"
+                className="glass-card text-start p-8 rounded-2xl hover:border-gold/60 hover:shadow-gold transition-all"
               >
                 <c.icon className="w-10 h-10 text-gold-hi mb-5" />
                 <h3 className="font-arabic font-bold text-xl mb-2">{c.name}</h3>
@@ -738,7 +738,7 @@ export default function Quality() {
                 initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }} transition={{ delay: i * 0.08 }}
                 whileHover={{ y: -6 }}
-                className="group p-7 rounded-2xl bg-white/60 backdrop-blur-lg border border-gold/20 hover:border-gold/60 hover:shadow-gold transition-all flex items-start gap-4"
+                className="glass-card group p-7 rounded-2xl hover:border-gold/60 hover:shadow-gold transition-all flex items-start gap-4"
               >
                 <div className="w-12 h-12 rounded-xl bg-gold/15 text-gold-hi flex items-center justify-center shrink-0">
                   <f.icon className="w-6 h-6" />
