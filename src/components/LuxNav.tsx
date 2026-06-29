@@ -152,7 +152,7 @@ export function LuxNav() {
           <button onClick={() => { setOpen(false); setOrderOpen(true); }} className="btn-gold mt-10 w-full">
             {t('nav.order')}
           </button>
-        </div>
+        </aside>
       </div>
       <OrderModal open={orderOpen} onOpenChange={setOrderOpen} />
       <QuoteBuilder open={quoteOpen} onOpenChange={setQuoteOpen} />
