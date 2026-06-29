@@ -274,10 +274,18 @@ export function HomeIntro() {
       <style>{`
         @keyframes introUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes holoSweep { 0%,100% { transform: translateX(-30%); } 50% { transform: translateX(30%); } }
+        @keyframes holoFlicker {
+          0%   { opacity: 0; transform: translateY(-6px); }
+          20%  { opacity: 0.9; }
+          40%  { opacity: 0.35; }
+          60%  { opacity: 0.75; }
+          100% { opacity: 0; transform: translateY(0); }
+        }
         @media (prefers-reduced-motion: reduce) {
-          [style*="holoSweep"] { animation: none !important; }
+          [style*="holoSweep"], [style*="holoFlicker"] { animation: none !important; }
         }
       `}</style>
+
     </div>
   );
 }
