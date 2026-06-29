@@ -149,6 +149,20 @@ export default function Home() {
         </div>
       </LuxSection>
 
+      <SectionDivider />
+
+      {/* Services — Neo Glass wrapper around legacy darkroom showcase */}
+      <section className="relative py-4 md:py-8">
+        <div className="container">
+          <div className="glass-card glass-dark glass-grain rounded-[2rem] overflow-hidden shadow-2xl">
+            <Suspense fallback={<SectionSkeleton variant="grid" />}>
+              <Services />
+            </Suspense>
+          </div>
+        </div>
+      </section>
+
+
       <Suspense fallback={<SectionSkeleton variant="timeline" />}>
         <ProcessSection />
         <JourneySection />
