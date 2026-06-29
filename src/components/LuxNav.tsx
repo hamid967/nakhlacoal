@@ -117,12 +117,10 @@ export function LuxNav() {
         }`}
       >
         <div className="absolute inset-0 bg-background/90 backdrop-blur-2xl" onClick={() => setOpen(false)} />
-        <div
-          className={`absolute top-0 ${isAr ? 'left-0' : 'right-0'} h-full w-[85vw] max-w-sm bg-surface border-luxe ${
-            isAr ? 'border-r' : 'border-l'
-          } p-8 transition-transform duration-700 ${
+        <aside
+          className={`absolute top-0 ${isAr ? 'left-0' : 'right-0'} h-full w-[85vw] max-w-sm glass-card rounded-none ${
             open ? 'translate-x-0' : isAr ? '-translate-x-full' : 'translate-x-full'
-          }`}
+          } transition-transform duration-500 ease-out p-8`}
         >
           <div className="flex items-center justify-between mb-12">
             <img src={logo} alt="Palm Charcoal" width={48} height={48} className="h-12 w-auto"  />
