@@ -129,18 +129,51 @@ try {
 
 const newViolations = violations.filter((v) => !baseline.has(keyOf(v)));
 
+// Always emit machine + human summaries for CI artifact upload.
+const { writeFileSync, mkdirSync, appendFileSync } = await import("node:fs");
+const REPORT_DIR = join(ROOT, "reports/design-lint");
+mkdirSync(REPORT_DIR, { recursive: true });
+
+// Group by (file, rule) → count
+const grouped = {};
+for (const v of newViolations) {
+  const k = `${v.file}::${v.rule}`;
+  (grouped[k] ??= { file: v.file, rule: v.rule, count: 0, samples: [] }).count++;
+  if (grouped[k].samples.length < 3) grouped[k].samples.push({ line: v.line, snippet: v.snippet });
+}
+const groups = Object.values(grouped).sort((a, b) => b.count - a.count || a.file.localeCompare(b.file));
+
+writeFileSync(join(REPORT_DIR, "summary.json"),
+  JSON.stringify({ total: newViolations.length, baseline: baseline.size, groups }, null, 2) + "\n");
+
+let md = `# Design-System Lint — Net-New Violations\n\n`;
+md += `**New:** ${newViolations.length}  •  **Grandfathered:** ${baseline.size}\n\n`;
+if (groups.length === 0) {
+  md += `_No new violations._\n`;
+} else {
+  md += `| File | Rule | Count | Sample |\n|---|---|---:|---|\n`;
+  for (const g of groups) {
+    const s = g.samples[0];
+    md += `| \`${g.file}\` | \`${g.rule}\` | ${g.count} | L${s.line}: \`${s.snippet.replace(/\|/g, "\\|")}\` |\n`;
+  }
+}
+writeFileSync(join(REPORT_DIR, "summary.md"), md);
+
+// Mirror to GitHub Actions step summary when available.
+if (process.env.GITHUB_STEP_SUMMARY) {
+  appendFileSync(process.env.GITHUB_STEP_SUMMARY, md);
+}
+
 if (newViolations.length === 0) {
   console.log(`✓ design-system lint passed — ${violations.length} grandfathered, 0 new.`);
   process.exit(0);
 }
 
 console.error(`\n✗ design-system lint failed — ${newViolations.length} NEW violation(s) (baseline: ${baseline.size}):\n`);
-for (const v of newViolations) {
-  console.error(`  ${v.file}:${v.line}  [${v.rule}]  ${v.snippet}`);
-  console.error(`    → ${v.msg}`);
-}
-console.error(
-  `\nSee .lovable/design-system.md for allowed tokens. If you genuinely need a new token, add it there + src/index.css + tailwind.config.ts in the same PR.`
-);
+console.error(`Grouped summary (file · rule · count):`);
+for (const g of groups) console.error(`  ${g.count.toString().padStart(4)}  ${g.rule.padEnd(26)}  ${g.file}`);
+console.error(`\nFull report: reports/design-lint/summary.{json,md}`);
+console.error(`See .lovable/design-system.md for allowed tokens.`);
 process.exit(1);
+
 
