@@ -40,11 +40,14 @@ export default function AdminDashboard() {
 
   const stats = useMemo(() => {
     const today = new Date().toISOString().slice(0, 10);
+    const yest = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
     const todays = orders.filter((o) => o.created_at?.startsWith(today));
+    const yesterdays = orders.filter((o) => o.created_at?.startsWith(yest));
     const pending = orders.filter((o) => ['new', 'contacted'].includes(o.status));
     const wholesale = orders.filter((o) => /جمل|whole/i.test(o.business_type || ''));
     const exportO = orders.filter((o) => /export|تصدير/i.test(o.business_type || ''));
-    const revenue = orders.reduce((s, o) => {
+
+    const revenueOf = (list: any[]) => list.reduce((s, o) => {
       const kg = toKg(Number(o.quantity) || 0, o.unit);
       const item = inv.find((it) => {
         try { return new RegExp(it.match_pattern || it.slug, 'i').test(o.product_type || ''); } catch { return false; }
@@ -53,6 +56,18 @@ export default function AdminDashboard() {
       const price = tiers.length ? Math.min(...tiers.map((t: any) => Number(t.pricePerKg ?? t.price_sar) || 0).filter(Boolean)) : 0;
       return s + kg * price;
     }, 0);
+    const revenue = revenueOf(orders);
+    const revToday = revenueOf(todays);
+    const revYest = revenueOf(yesterdays);
+
+    const pct = (cur: number, prev: number) => {
+      if (!prev) return cur ? '+100%' : '';
+      const d = ((cur - prev) / prev) * 100;
+      return `${d >= 0 ? '+' : ''}${d.toFixed(0)}%`;
+    };
+    const ordersDelta = pct(todays.length, yesterdays.length);
+    const revenueDelta = pct(revToday, revYest);
+
     const stockKg = inv.reduce((s, i) => s + (Number(i.in_stock_kg) || 0), 0);
 
     const byDay: Record<string, { date: string; orders: number; revenue: number }> = {};
@@ -76,12 +91,13 @@ export default function AdminDashboard() {
     return {
       todays: todays.length, pending: pending.length, wholesale: wholesale.length, exportO: exportO.length,
       revenue, stockKg, timeline: Object.values(byDay), topProducts, statusData,
+      ordersDelta, revenueDelta,
     };
   }, [orders, inv]);
 
   const cards = [
-    { label: 'طلبات اليوم', value: stats.todays.toLocaleString('ar-SA'), icon: ShoppingBag, tint: 'green', delta: '+12%' },
-    { label: 'الإيرادات', value: `${Math.round(stats.revenue).toLocaleString('ar-SA')} ر.س`, icon: DollarSign, tint: 'gold', delta: '+8%' },
+    { label: 'طلبات اليوم', value: stats.todays.toLocaleString('ar-SA'), icon: ShoppingBag, tint: 'green', delta: stats.ordersDelta },
+    { label: 'الإيرادات', value: `${Math.round(stats.revenue).toLocaleString('ar-SA')} ر.س`, icon: DollarSign, tint: 'gold', delta: stats.revenueDelta },
     { label: 'طلبات معلقة', value: stats.pending, icon: Clock, tint: 'amber', delta: '' },
     { label: 'طلبات الجملة', value: stats.wholesale, icon: Building2, tint: 'blue', delta: '' },
     { label: 'طلبات التصدير', value: stats.exportO, icon: Globe2, tint: 'violet', delta: '' },
@@ -89,6 +105,7 @@ export default function AdminDashboard() {
     { label: 'المنتجات', value: inv.length, icon: Package, tint: 'gold', delta: '' },
     { label: 'المخزون (كجم)', value: stats.stockKg.toLocaleString('ar-SA'), icon: Warehouse, tint: 'rose', delta: '' },
   ];
+
 
   return (
     <div className="space-y-6">
