@@ -22,6 +22,7 @@ export default function Profile() {
   const { user, loading: authLoading } = useAuth();
   const { i18n } = useTranslation();
   const isAr = i18n.language?.startsWith('ar');
+  useParallax();
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
