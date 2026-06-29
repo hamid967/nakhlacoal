@@ -75,6 +75,9 @@ export default function Home() {
         title={isAr ? 'فحم النخلة | الفحم السعودي الفاخر' : 'Palm Charcoal | Premium Saudi Charcoal'}
         description={isAr ? 'فحم طبيعي ١٠٠٪ — احتراق أطول، حرارة أعلى، ورماد أقل.' : '100% natural charcoal — longer burn, higher heat, less ash.'}
         path="/"
+        preloadImages={[
+          { href: heroTrademark, type: 'image/png', fetchPriority: 'high' },
+        ]}
       />
 
       {/* HERO — first impression (lazy-loaded WebGL) */}
