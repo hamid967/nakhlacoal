@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Send, Loader2, Sparkles, X, Maximize2, CheckCircle2, MessageCircle, FileText } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { QuoteBuilder } from './QuoteBuilder';
+import { quoteFor, formatSAR } from '@/data/inventory';
 
 
 const mdComponents = {
@@ -267,6 +268,10 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
     }
   };
 
+  const liveQuote = pendingOrder
+    ? quoteFor(pendingOrder.product_type, Number(pendingOrder.quantity) || 0, pendingOrder.unit || 'kg')
+    : null;
+
   const confirmOrder = () => {
     const errs: Record<string, string> = {};
     if (formData.contact_name.trim().length < 2) errs.contact_name = 'الاسم مطلوب';
@@ -275,6 +280,10 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
     if (!formData.delivery_method) errs.delivery_method = 'اختر طريقة الاستلام';
     setFormErrors(errs);
     if (Object.keys(errs).length || !pendingOrder) return;
+    if (liveQuote && !liveQuote.ok) {
+      toast.error(liveQuote.issues[0] || 'تعذّر تأكيد الكمية، يرجى المراجعة.');
+      return;
+    }
     setReviewMode(true);
   };
 
@@ -287,7 +296,11 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
       phone: formData.phone.trim(),
       address: formData.address.trim(),
       delivery_method: formData.delivery_method,
-      notes: [pendingOrder.notes, `طريقة الاستلام: ${formData.delivery_method}`].filter(Boolean).join(' · '),
+      notes: [
+        pendingOrder.notes,
+        `طريقة الاستلام: ${formData.delivery_method}`,
+        liveQuote?.ok ? `سعر لحظي: ${liveQuote.pricePerKg} ر.س/كجم · إجمالي ${liveQuote.total} ر.س شامل الضريبة · تجهيز ${liveQuote.leadDays} يوم` : null,
+      ].filter(Boolean).join(' · '),
     };
     setPendingOrder(null);
     setReviewMode(false);
@@ -500,6 +513,30 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
               <dt className="text-muted-foreground">طريقة الاستلام</dt>
               <dd className="font-semibold text-foreground">{formData.delivery_method}</dd>
             </div>
+            {liveQuote?.ok && (
+              <>
+                <div className="flex justify-between gap-2 border-t border-gold/15 pt-1">
+                  <dt className="text-muted-foreground">السعر / كجم</dt>
+                  <dd className="font-semibold text-foreground">{formatSAR(liveQuote.pricePerKg)}</dd>
+                </div>
+                <div className="flex justify-between gap-2">
+                  <dt className="text-muted-foreground">الإجمالي قبل الضريبة</dt>
+                  <dd className="font-semibold text-foreground">{formatSAR(liveQuote.subtotal)}</dd>
+                </div>
+                <div className="flex justify-between gap-2">
+                  <dt className="text-muted-foreground">ضريبة القيمة المضافة (15%)</dt>
+                  <dd className="font-semibold text-foreground">{formatSAR(liveQuote.vat)}</dd>
+                </div>
+                <div className="flex justify-between gap-2 border-t border-gold/30 pt-1 text-[12px]">
+                  <dt className="text-foreground font-bold">الإجمالي شامل الضريبة</dt>
+                  <dd className="font-bold text-emerald-700">{formatSAR(liveQuote.total)}</dd>
+                </div>
+                <div className="flex justify-between gap-2 text-[10px]">
+                  <dt className="text-muted-foreground">مدة التجهيز المتوقعة</dt>
+                  <dd className="text-foreground">{liveQuote.leadDays} يوم عمل</dd>
+                </div>
+              </>
+            )}
             {pendingOrder.ai_summary && (
               <div className="border-t border-gold/15 pt-1 text-[10px] italic text-muted-foreground">
                 {pendingOrder.ai_summary}
@@ -556,6 +593,35 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
             <span className="font-semibold text-foreground">{pendingOrder.product_type}</span> · {pendingOrder.quantity} {pendingOrder.unit}
             {pendingOrder.ai_summary && <span className="block mt-0.5 italic">{pendingOrder.ai_summary}</span>}
           </p>
+          {liveQuote && (
+            <div className={`rounded-lg border p-2 text-[10.5px] space-y-1 ${liveQuote.ok ? 'border-emerald-500/40 bg-emerald-500/5' : 'border-destructive/50 bg-destructive/5'}`} aria-live="polite">
+              <div className="flex items-center justify-between">
+                <span className="font-semibold text-foreground flex items-center gap-1">
+                  {liveQuote.ok ? '✅ متوفر' : '⚠️ تحقق الكمية'}
+                </span>
+                {liveQuote.item && (
+                  <span className="text-muted-foreground">
+                    المخزون: {liveQuote.item.inStockKg.toLocaleString('ar-SA')} كجم · تجهيز {liveQuote.leadDays} يوم
+                  </span>
+                )}
+              </div>
+              {liveQuote.ok && (
+                <div className="flex items-center justify-between font-arabic">
+                  <span className="text-muted-foreground">السعر اللحظي</span>
+                  <span className="font-semibold text-foreground">
+                    {formatSAR(liveQuote.pricePerKg)} / كجم · إجمالي <span className="text-emerald-700">{formatSAR(liveQuote.total)}</span>
+                    <span className="block text-[9px] text-muted-foreground text-end">شامل ضريبة القيمة المضافة</span>
+                  </span>
+                </div>
+              )}
+              {liveQuote.issues.map((i, idx) => (
+                <p key={idx} className="text-destructive">• {i}</p>
+              ))}
+              {liveQuote.notes.map((n, idx) => (
+                <p key={idx} className="text-[10px] text-emerald-700">💡 {n}</p>
+              ))}
+            </div>
+          )}
           <div className="space-y-1.5">
             <div>
               <input
