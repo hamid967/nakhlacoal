@@ -47,6 +47,15 @@ async function testGtm(id: string): Promise<TestState> {
     : { status: 'fail', message: 'تعذّر تحميل حاوية GTM (تحقّق من المعرّف أو مانع الإعلانات).' };
 }
 
+function StatusBadge({ state }: { state: TestState }) {
+  if (state.status === 'idle') return null;
+  if (state.status === 'testing')
+    return <span className="inline-flex items-center gap-1 text-[10px]"><Loader2 className="w-3 h-3 animate-spin" /> اختبار…</span>;
+  if (state.status === 'ok')
+    return <span className="inline-flex items-center gap-1 text-[10px] text-emerald-600"><CheckCircle2 className="w-3 h-3" /> صالح</span>;
+  return <span className="inline-flex items-center gap-1 text-[10px] text-red-600"><XCircle className="w-3 h-3" /> فشل</span>;
+}
+
 export default function AdminTracking() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
