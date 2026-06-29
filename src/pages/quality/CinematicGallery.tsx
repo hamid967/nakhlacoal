@@ -7,9 +7,9 @@ import burnImg from '@/assets/quality/burn-test.jpg?picture';
 
 export default function CinematicGallery() {
   const shots = [
-    { src: emberImg, title: 'الجمر الحي', sub: 'حرارة موحدة 950°C', tag: 'EMBER' },
-    { src: labImg, title: 'القياس الدقيق', sub: 'تفاوت أقل من ±0.3mm', tag: 'LAB' },
-    { src: burnImg, title: 'اختبار الاحتراق', sub: 'ثبات 180 دقيقة', tag: 'BURN' },
+    { src: emberImg, title: 'الجمر الحي', sub: 'حرارة موحدة 950°C', tag: 'EMBER', pos: '50% 45%' },
+    { src: labImg, title: 'القياس الدقيق', sub: 'تفاوت أقل من ±0.3mm', tag: 'LAB', pos: '50% 35%' },
+    { src: burnImg, title: 'اختبار الاحتراق', sub: 'ثبات 180 دقيقة', tag: 'BURN', pos: '50% 50%' },
   ];
   return (
     <section className="py-28 bg-[#0c1410]">
@@ -30,8 +30,15 @@ export default function CinematicGallery() {
                   source={s.src as any}
                   alt={s.title}
                   sizes="(min-width: 1280px) 420px, (min-width: 768px) 33vw, 100vw"
-                  imgClassName="w-full h-full object-cover transition-all duration-[1400ms] ease-out group-hover:scale-110 group-hover:rotate-1"
-                  imgStyle={{ filter: 'contrast(1.08) saturate(1.05)' }}
+                  imgClassName="absolute inset-0 w-full h-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.06]"
+                  imgStyle={{
+                    objectFit: 'cover',
+                    objectPosition: s.pos,
+                    filter: 'contrast(1.08) saturate(1.05)',
+                    transformOrigin: 'center center',
+                    willChange: 'transform',
+                    backfaceVisibility: 'hidden',
+                  }}
                 />
                 <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,transparent_0%,transparent_45%,hsl(var(--gold-hi)/0.35)_50%,transparent_55%,transparent_100%)] opacity-0 group-hover:opacity-100 group-hover:animate-[scan_2.4s_linear_infinite] mix-blend-overlay" />
                 <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(0,0,0,0.65)_100%)]" />
