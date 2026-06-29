@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Hash, Tag, Calendar, CalendarOff, User, Package, FileText } from 'lucide-react';
-import { trademarks } from '@/data/trademarks';
+import { useTrademarks } from '@/hooks/useTrademarks';
 import { Flame, Clock, Sun, Leaf, Globe2 } from 'lucide-react';
 import { useDir, SectionHeader } from '@/components/ui-lux';
 
@@ -11,8 +11,10 @@ import { useDir, SectionHeader } from '@/components/ui-lux';
  */
 export function TrademarksShowcase() {
   const { isAr } = useDir();
+  const { trademarks, loading } = useTrademarks();
   const [active, setActive] = useState(0);
   const total = trademarks.length;
+
 
   const go = useCallback((dir: 1 | -1) => {
     setActive((a) => (a + dir + total) % total);
