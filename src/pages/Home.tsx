@@ -5,7 +5,7 @@ import { SEO } from '@/components/SEO';
 import { ScrollReveal } from '@/components/ScrollReveal';
 
 // Heavy WebGL/3D hero — code-split so it doesn't block first paint
-const BrandHero = lazy(() => import('@/components/BrandHero').then((m) => ({ default: m.BrandHero })));
+const ProductsHero = lazy(() => import('@/components/ProductsHero').then((m) => ({ default: m.ProductsHero })));
 const ProcessSection = lazy(() => import('@/components/ProcessSection').then((m) => ({ default: m.ProcessSection })));
 const JourneySection = lazy(() => import('@/components/JourneySection').then((m) => ({ default: m.JourneySection })));
 const LocationSection = lazy(() => import('@/components/LocationSection').then((m) => ({ default: m.LocationSection })));
@@ -80,10 +80,10 @@ export default function Home() {
         ]}
       />
 
-      {/* HERO — first impression (lazy-loaded WebGL) */}
+      {/* HERO — editorial products + stacked headline */}
       <div className="pt-24 md:pt-28">
         <Suspense fallback={<SectionSkeleton variant="hero" label={isAr ? 'جارٍ تحميل الواجهة' : 'Loading hero'} />}>
-          <BrandHero />
+          <ProductsHero />
         </Suspense>
       </div>
 
