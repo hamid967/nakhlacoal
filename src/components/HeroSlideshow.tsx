@@ -124,10 +124,10 @@ export function HeroSlideshow() {
       <ImageWatermark variant="light" position="br" />
 
       {/* Caption */}
-      <div className="absolute bottom-8 inset-x-6 text-background pointer-events-none">
+      <div className="absolute bottom-8 inset-x-6 text-background pointer-events-none flex justify-center">
         <div
           key={i}
-          className="text-sm md:text-base font-arabic font-medium animate-[fade-in_0.8s_ease-out] drop-shadow-[0_2px_10px_rgba(0,0,0,0.6)]"
+          className="glass-strip glass-dark inline-block rounded-full px-5 py-2 text-sm md:text-base font-arabic font-medium animate-[fade-in_0.8s_ease-out]"
         >
           {isAr ? slides[i].ar : slides[i].en}
         </div>
