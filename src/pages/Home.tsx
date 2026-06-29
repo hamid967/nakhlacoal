@@ -121,7 +121,7 @@ export default function Home() {
           </ScrollReveal>
 
           <ScrollReveal delay={150} className="lg:col-span-5">
-            <div className="rounded-3xl border-luxe bg-surface p-8 md:p-10">
+            <div className="rounded-3xl glass-card p-8 md:p-10">
               <Stat value="+5" label={isAr ? 'سنوات من الخبرة' : 'years of expertise'} size="lg" />
               <div className="divider-luxe my-8" />
               <div className="grid grid-cols-2 gap-6">
