@@ -8,7 +8,7 @@ import { initAnalytics, trackPageView } from '@/lib/analytics';
 
 
 import { Layout } from '@/components/Layout';
-import { SplashScreen } from '@/components/SplashScreen';
+
 import { CompareBar } from '@/components/CompareBar';
 import { CompareProvider } from '@/contexts/CompareContext';
 import { AuthProvider } from '@/contexts/AuthContext';
