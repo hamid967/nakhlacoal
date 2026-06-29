@@ -149,8 +149,11 @@ export default function Home() {
       </Suspense>
 
 
+      <SectionDivider flip />
+
       {/* About band — story after the user has seen products & process */}
       <LuxSection className="py-20 md:py-28">
+        <div className="container"><SectionNumber index={5} align="end" /></div>
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           <ScrollReveal className="lg:col-span-7">
             <Eyebrow>{isAr ? 'من نحن' : 'Our story'}</Eyebrow>
@@ -194,8 +197,11 @@ export default function Home() {
       {/* Certifications */}
       <Certifications />
 
+      <SectionDivider />
+
       {/* Testimonials */}
       <LuxSection tone="dark" className="py-20 md:py-28">
+        <div className="container"><SectionNumber index={6} /></div>
         <SectionHeader
           eyebrow={isAr ? 'آراء عملائنا' : 'Customer voices'}
           title={isAr ? 'ثقة تتجدد مع كل تجربة' : 'Trusted with every order'}
