@@ -5,6 +5,8 @@ import { ScrollReveal } from '@/components/ScrollReveal';
 
 import { BrandHero } from '@/components/BrandHero';
 import { ProcessSection } from '@/components/ProcessSection';
+import { JourneySection } from '@/components/JourneySection';
+
 import { LocationSection } from '@/components/LocationSection';
 import { FaqSection } from '@/components/FaqSection';
 import { Certifications } from '@/components/Certifications';
