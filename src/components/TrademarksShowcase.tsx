@@ -11,7 +11,7 @@ import { useDir, SectionHeader } from '@/components/ui-lux';
  */
 export function TrademarksShowcase() {
   const { isAr } = useDir();
-  const { trademarks, loading } = useTrademarks();
+  const { trademarks, loading, syncing, status, error } = useTrademarks();
   const [active, setActive] = useState(0);
   const total = trademarks.length;
 
@@ -58,11 +58,48 @@ export function TrademarksShowcase() {
           eyebrow={isAr ? 'علاماتنا التجارية' : 'Our Trademarks'}
           title={isAr ? 'شركة فحم النخلة' : 'Palm Charcoal Group'}
         />
-        <p className="text-center max-w-2xl mx-auto -mt-4 mb-12 text-sm md:text-base text-foreground/70 font-arabic leading-relaxed">
+        <p className="text-center max-w-2xl mx-auto -mt-4 mb-6 text-sm md:text-base text-foreground/70 font-arabic leading-relaxed">
           {isAr
             ? 'مجموعة علامات تجارية سعودية مسجلة بجودة عالية، نقدمها لكم بفخر من المملكة إلى العالم.'
             : 'A registered Saudi trademark family — proudly crafted and delivered worldwide.'}
         </p>
+
+        {/* Sync / loading / error status — accessible live region */}
+        <div
+          aria-live="polite"
+          aria-busy={loading || syncing}
+          className="flex justify-center mb-8 min-h-[28px]"
+        >
+          {loading ? (
+            <span className="inline-flex items-center gap-2 text-xs text-foreground/60">
+              <span className="w-2 h-2 rounded-full bg-gold/70 animate-pulse" />
+              {isAr ? 'جاري تحميل العلامات…' : 'Loading trademarks…'}
+            </span>
+          ) : error ? (
+            <span className="inline-flex items-center gap-2 text-xs text-destructive">
+              <span className="w-2 h-2 rounded-full bg-destructive" />
+              {error}
+            </span>
+          ) : (
+            <span className="inline-flex items-center gap-2 text-[11px] text-foreground/55">
+              <span
+                className={`w-2 h-2 rounded-full ${
+                  status === 'live'
+                    ? 'bg-emerald-500 animate-pulse'
+                    : status === 'reconnecting'
+                    ? 'bg-amber-500 animate-pulse'
+                    : 'bg-foreground/30'
+                }`}
+              />
+              {status === 'live'
+                ? isAr ? 'متزامن مباشرة' : 'Live sync'
+                : status === 'reconnecting'
+                ? isAr ? 'إعادة الاتصال…' : 'Reconnecting…'
+                : isAr ? 'غير متصل' : 'Offline'}
+              {syncing && (isAr ? ' • تحديث…' : ' • refreshing…')}
+            </span>
+          )}
+        </div>
 
         {/* Coverflow stage */}
         <div className="relative" style={{ perspective: '1400px' }}>
