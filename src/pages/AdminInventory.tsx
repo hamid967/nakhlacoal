@@ -74,7 +74,7 @@ export default function AdminInventory() {
 
   return (
     <div className="min-h-screen bg-background pt-24 pb-16">
-      <SEO title="إدارة المخزون | فحم النخلة" description="لوحة إدارة المخزون والأسعار" />
+      <SEO title="إدارة المخزون | فحم النخلة" description="لوحة إدارة المخزون والأسعار" path="/admin/inventory" />
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-3xl font-bold text-foreground">إدارة المخزون والأسعار</h1>
