@@ -10,6 +10,8 @@ import { JourneySection } from '@/components/JourneySection';
 import { LocationSection } from '@/components/LocationSection';
 import { FaqSection } from '@/components/FaqSection';
 import { Certifications } from '@/components/Certifications';
+import { StickyMobileCTA } from '@/components/StickyMobileCTA';
+import { useLiveOrderCount } from '@/hooks/useLiveOrderCount';
 import {
   useDir,
   LuxSection,
@@ -29,8 +31,11 @@ import productHookah from '@/assets/product-hookah.jpg';
 import productCoconut from '@/assets/product-coconut.jpg';
 import productLump from '@/assets/product-lump.jpg';
 
+
 export default function Home() {
   const { isAr, Arrow } = useDir();
+  const liveOrders = useLiveOrderCount(50000);
+
 
   const features = [
     { icon: Flame, title: isAr ? 'حرارة عالية' : 'High Heat', body: isAr ? 'حرارة مرتفعة بأداء ثابت تناسب جميع أنواع الشواء.' : 'Consistent high heat ideal for every grill.' },
