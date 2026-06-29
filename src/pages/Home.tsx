@@ -57,7 +57,7 @@ export default function Home() {
 
   return (
     <>
-      <HomeIntro />
+      
       <SEO
         title={isAr ? 'فحم النخلة | الفحم السعودي الفاخر' : 'Palm Charcoal | Premium Saudi Charcoal'}
         description={isAr ? 'فحم طبيعي ١٠٠٪ — احتراق أطول، حرارة أعلى، ورماد أقل.' : '100% natural charcoal — longer burn, higher heat, less ash.'}
