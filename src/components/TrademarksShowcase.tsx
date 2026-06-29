@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Hash, Tag, Calendar, CalendarOff, User, Package, FileText } from 'lucide-react';
-import { trademarks } from '@/data/trademarks';
+import { useTrademarks } from '@/hooks/useTrademarks';
 import { Flame, Clock, Sun, Leaf, Globe2 } from 'lucide-react';
 import { useDir, SectionHeader } from '@/components/ui-lux';
 
@@ -11,8 +11,10 @@ import { useDir, SectionHeader } from '@/components/ui-lux';
  */
 export function TrademarksShowcase() {
   const { isAr } = useDir();
+  const { trademarks, loading } = useTrademarks();
   const [active, setActive] = useState(0);
   const total = trademarks.length;
+
 
   const go = useCallback((dir: 1 | -1) => {
     setActive((a) => (a + dir + total) % total);
@@ -34,7 +36,9 @@ export function TrademarksShowcase() {
     return () => window.removeEventListener('keydown', onKey);
   }, [go, isAr]);
 
-  const current = trademarks[active];
+  const current = trademarks[Math.min(active, total - 1)] ?? trademarks[0];
+  if (!current) return null;
+
 
   const features = [
     { icon: Leaf, title: isAr ? 'جودة طبيعية' : 'Natural Quality', desc: isAr ? '100% مواد طبيعية' : '100% natural' },
