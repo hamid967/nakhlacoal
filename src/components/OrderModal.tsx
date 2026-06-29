@@ -83,13 +83,22 @@ export function OrderModal({ open, onOpenChange }: { open: boolean; onOpenChange
       : `🌴 *New Order — Palm Charcoal*\n\n👤 Customer: ${cust?.en}\n\n📦 Items:\n${lines}\n\n📊 Total: ${totalKg} kg\n\n☎️ Contact:\n• Name: ${contact.name}\n• Phone: ${contact.phone}\n• City: ${contact.city}\n${contact.notes ? `\nNotes: ${contact.notes}` : ''}`;
   };
 
-  const submit = async () => {
+  const submit = () => {
     if (!validateContact()) return;
     setSubmitting(true);
     const summary = buildSummary();
-    // Best-effort save to backend (does not block WhatsApp)
-    try {
-      await supabase.functions.invoke('submit-order', {
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(summary)}`;
+
+    // 1) Open WhatsApp SYNCHRONOUSLY inside the click gesture (avoids popup blockers).
+    const win = window.open(url, '_blank');
+    // Fallback for blockers / in-app browsers: same-tab navigation.
+    if (!win || win.closed || typeof win.closed === 'undefined') {
+      window.location.href = url;
+    }
+
+    // 2) Fire-and-forget backend save — never blocks the user.
+    supabase.functions
+      .invoke('submit-order', {
         body: {
           customer_type: customer,
           items,
@@ -100,9 +109,9 @@ export function OrderModal({ open, onOpenChange }: { open: boolean; onOpenChange
           notes: contact.notes || null,
           source: 'wizard',
         },
-      });
-    } catch { /* ignore — still send via WhatsApp */ }
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(summary)}`, '_blank');
+      })
+      .catch((e) => console.warn('submit-order failed (non-blocking):', e));
+
     setSubmitting(false);
     handleOpenChange(false);
   };
