@@ -420,8 +420,25 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
             </p>
             <button onClick={() => setPendingOrder(null)} className="text-[10px] text-muted-foreground hover:text-foreground">إلغاء</button>
           </div>
-          <p className="text-[10px] text-muted-foreground">
-            {pendingOrder.product_type} · {pendingOrder.quantity} {pendingOrder.unit}
+          {/* Progress stepper */}
+          <ol className="flex items-center gap-1 text-[9px] text-muted-foreground">
+            {[
+              { k: 'منتج', done: !!pendingOrder.product_type },
+              { k: 'كمية', done: !!pendingOrder.quantity },
+              { k: 'بيانات', done: formData.contact_name.length > 1 && PHONE_RE.test(formData.phone) },
+              { k: 'عنوان', done: formData.address.length > 4 },
+              { k: 'تأكيد', done: false },
+            ].map((s, i, arr) => (
+              <li key={s.k} className="flex items-center gap-1 flex-1">
+                <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-bold ${s.done ? 'bg-emerald-500 text-white' : 'bg-muted text-muted-foreground border border-border'}`}>{s.done ? '✓' : i + 1}</span>
+                <span className={s.done ? 'text-foreground font-medium' : ''}>{s.k}</span>
+                {i < arr.length - 1 && <span className={`flex-1 h-px ${s.done ? 'bg-emerald-500/50' : 'bg-border'}`} />}
+              </li>
+            ))}
+          </ol>
+          <p className="text-[10px] text-muted-foreground border-t border-gold/15 pt-1.5">
+            <span className="font-semibold text-foreground">{pendingOrder.product_type}</span> · {pendingOrder.quantity} {pendingOrder.unit}
+            {pendingOrder.ai_summary && <span className="block mt-0.5 italic">{pendingOrder.ai_summary}</span>}
           </p>
           <div className="space-y-1.5">
             <div>
