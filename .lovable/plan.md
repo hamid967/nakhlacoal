@@ -1,106 +1,81 @@
+## Goal
+Rebuild `/auth` as a luxury split-screen experience that feels native to Palm Charcoal — keeping the existing tokens, fonts, glass system, and `AuthContext` — and route users to the right dashboard based on their role.
 
-# Customer Portal — بوابة العميل المتميزة
+## Scope: ship now vs. needs your input
 
-نسخة موجّهة للعميل من لوحة الإدارة الحالية. تعيد استخدام **نفس** نظام التصميم (admin.css، الـSidebar/Topbar، البطاقات `a-card`، الـpills، الـcharts، حركات Framer Motion، الزجاجية، الزوايا، الخطوط، الألوان)، مع تغيير **المحتوى والصلاحيات والتنقّل** فقط.
+I can ship the full UI/UX, animations, RTL/LTR, dark/light, accessibility, and role-based routing immediately on top of the current Lovable Cloud auth. A few methods need a one-time configuration step from you before they can actually authenticate users — I'll wire the UI and backend gates now and flip them on the moment the prerequisites are in place.
 
-## النطاق
+### ✅ Ship in this pass (no extra config)
+- Split-screen layout: left cinematic brand canvas (palm/charcoal hero, gold rim glass, parallax), right glass auth card.
+- Tabs: **Email + Password**, **Magic Link**, **Phone OTP** *(UI + flow; activates once SMS provider is enabled)*.
+- **Google Sign-In** (managed OAuth — already supported).
+- **Remember Me** (persist vs. session storage toggle).
+- **Forgot Password** dialog → `/reset-password` page.
+- RTL/LTR via existing i18n, dark/light via existing `ThemeToggle`, Framer Motion entrance + tab transitions, WCAG AA contrast using design tokens.
+- Responsive: split on ≥lg, stacked hero header on mobile.
+- Role-based post-login redirect with a sanitized `?from=` fallback.
 
-- مسار جذر جديد: `/portal/*` محمي بدور `user` (أو أعلى) عبر `ProtectedRoute`.
-- لا يصل العميل لأي مسار `/admin/*` نهائياً (محمي بالفعل بـ`requireRole="admin"`).
-- لا تُعرض بيانات عملاء آخرين، تقارير مالية للشركة، إدارة المخزون، إدارة المستخدمين، الجودة، التحليلات الداخلية، أو إعدادات الموقع.
+### ⚙️ Needs your confirmation before they work end-to-end
+1. **Apple Sign-In** — managed Apple auth is available; I'll enable the provider via `configure_social_auth` if you confirm. The UI button ships either way.
+2. **Phone OTP** — needs SMS provider (Twilio/MessageBird) configured in Cloud → Auth. UI ships now; flow goes live as soon as it's set.
+3. **2FA (TOTP)** — I'll add an "Enable 2FA" flow on `/profile/security` using Supabase MFA (`enroll` → QR → `verify`) and a challenge step on login when the user has a factor. No external secret needed.
+4. **Invisible reCAPTCHA** — requires a Google reCAPTCHA v3 site key + secret key. I'll wire the client widget and pass the token to a `verify-captcha` edge function; tell me to proceed and I'll request both keys via `add_secret`.
 
-## القطع المُعاد استخدامها (بدون تكرار)
-
-- `src/admin/admin.css` — كل التوكنات والمكوّنات (`a-card`, `a-btn`, `a-pill-*`, `a-display`).
-- `AdminTopbar` (نسخة مُعاد تسميتها سيمانتيكاً `PortalTopbar` تستورد نفس CSS وتوفّر theme toggle + ابحث + بروفايل).
-- نفس بنية `AdminLayout` (Sidebar + Topbar + AnimatePresence main).
-- `framer-motion`, `recharts`, `lucide-react`, `sonner`.
-
-## الملفات الجديدة
-
+### 🗄️ Role model migration (required for the 7 roles)
+Current enum is `admin | wholesale | user`. Plan:
+```sql
+ALTER TYPE public.app_role ADD VALUE 'super_admin';
+ALTER TYPE public.app_role ADD VALUE 'sales';
+ALTER TYPE public.app_role ADD VALUE 'warehouse';
+ALTER TYPE public.app_role ADD VALUE 'accountant';
+ALTER TYPE public.app_role ADD VALUE 'distributor';
+-- keep 'admin' and 'user'; map legacy 'wholesale' → 'distributor' via data migration
 ```
-src/portal/
-  PortalLayout.tsx          # نسخة من AdminLayout، يستورد admin.css
-  PortalSidebar.tsx         # نفس بنية AdminSidebar، عناصر العميل فقط
-  PortalTopbar.tsx          # مطابق لـ AdminTopbar (theme/search/profile)
-  pages/
-    Dashboard.tsx           # ترحيب + 8 بطاقات + رسم طلباتي + آخر الطلبات + توصيات
-    Orders.tsx              # جدول طلباتي مع فلتر/بحث (RLS: user_id = auth.uid())
-    NewOrder.tsx            # غلاف لـ pages/NewOrder الحالي داخل الـshell
-    Tracking.tsx            # تايملاين الطلب (يعيد منطق OrderTracking)
-    Invoices.tsx            # قائمة فواتير (placeholder + جدول)
-    Payments.tsx            # سجل مدفوعات (placeholder)
-    Quotes.tsx              # عروض سعرية
-    Catalog.tsx             # بطاقات منتجات من src/data/products + بحث/فلتر/مفضلة
-    Trademarks.tsx          # عرض من src/data/trademarks (قراءة فقط)
-    Favorites.tsx           # localStorage wishlist
-    Notifications.tsx
-    Messages.tsx            # placeholder chat UI
-    Support.tsx             # واتساب/بريد/هاتف + روابط
-    Addresses.tsx
-    Profile.tsx             # غلاف Profile الحالي
-    Settings.tsx            # لغة + ثيم + إشعارات + 2FA placeholder
-    Placeholder.tsx
-```
+Then update `AuthContext` `AppRole` type and `ProtectedRoute` to know all 7.
 
-## التنقّل (Sidebar — RTL، 18 عنصر)
-
-لوحة التحكم · طلباتي · إنشاء طلب · تتبع الطلبات · الفواتير · المدفوعات · العروض السعرية · المنتجات · العلامات التجارية · الكتالوج · الشهادات · المفضلة · الإشعارات · الدعم · الرسائل · العناوين · الملف الشخصي · الإعدادات · تسجيل الخروج
-
-مجموعات: **عام** (Dashboard) · **الطلبات** (طلباتي/جديد/تتبع/عروض) · **المالية** (فواتير/مدفوعات) · **المنتجات** (كتالوج/علامات/شهادات/مفضلة) · **التواصل** (إشعارات/رسائل/دعم) · **الحساب** (عناوين/بروفايل/إعدادات/خروج).
-
-## مصادر البيانات
-
-- `orders` — مفلتر بـ `eq('user_id', user.id)` (RLS موجود).
-- `inventory_items` — قراءة عامة للكتالوج/التسعير.
-- `profiles` — صف العميل فقط.
-- بدون جداول جديدة في هذه المرحلة. الفواتير/المدفوعات/العروض/الرسائل/الإشعارات تظهر كبطاقات "قريباً" مع UI كامل ومُحاكاة من الطلبات حيث يصحّ.
-
-## التوجيه
-
-في `src/App.tsx`:
-
-```tsx
-<Route path="/portal" element={<ProtectedRoute><PortalLayout /></ProtectedRoute>}>
-  <Route index element={<PortalDashboard />} />
-  <Route path="orders" element={<PortalOrders />} />
-  <Route path="orders/new" element={<PortalNewOrder />} />
-  <Route path="orders/:id" element={<PortalTracking />} />
-  ... (باقي المسارات)
-</Route>
+Redirect table after sign-in (first matching role wins):
+```text
+super_admin / admin          → /admin
+sales                        → /admin/orders
+warehouse                    → /admin/inventory
+accountant                   → /admin/reports
+distributor                  → /portal/wholesale
+customer (default 'user')    → /portal
 ```
 
-- زر "حسابي" في `LuxNav` يربط لـ `/portal` للعملاء المسجّلين.
-- بعد تسجيل دخول غير-admin من `/auth` بدون `from`، نوجّه إلى `/portal`.
+## Files
 
-## الصفحة الرئيسية (Dashboard Home)
+```text
+src/pages/Auth.tsx                 (rebuilt — split-screen shell)
+src/pages/ResetPassword.tsx        (new — recovery handler)
+src/features/auth/
+  ├─ AuthCard.tsx                  (glass card + tabs)
+  ├─ EmailPasswordForm.tsx
+  ├─ MagicLinkForm.tsx
+  ├─ PhoneOtpForm.tsx
+  ├─ OAuthButtons.tsx              (Google + Apple)
+  ├─ TwoFactorChallenge.tsx
+  ├─ BrandCanvas.tsx               (left cinematic panel)
+  ├─ useRoleRedirect.ts            (post-login routing)
+  └─ schemas.ts                    (zod validators, length caps)
+src/contexts/AuthContext.tsx       (expand AppRole union)
+supabase/migrations/<ts>_roles_expand.sql
+.lovable/design-lint-baseline.json (regenerated if needed)
+tests/visual/auth_visual.py        (light/dark × LTR/RTL × mobile/desktop)
+src/features/auth/__tests__/       (vitest: schema validation, role redirect map)
+```
 
-نفس شبكة `grid-cols-2 md:grid-cols-4` ببطاقات `a-card a-card-hover`:
+## Technical notes
+- Reuse `lovable.auth.signInWithOAuth` (Google/Apple) — never call `supabase.auth.signInWithOAuth` directly.
+- Validate every input with zod (`trim`, length caps) before calling Supabase.
+- All inputs labelled; icon-only buttons get `aria-label`; status messages in `aria-live="polite"`; honor `prefers-reduced-motion`.
+- Use only design tokens (`bg-background`, `text-foreground`, glass utilities) — design-lint will gate this.
+- `redirect_uri: window.location.origin` for OAuth; intended path stored separately and consumed after `onAuthStateChange` confirms a session.
+- Tests: unit tests for role→route mapping and zod schemas; Playwright smoke that `/auth` renders both panels and the `from=` redirect survives an unauth `/admin` hit.
 
-1. إجمالي الطلبات · 2. قيد التنفيذ · 3. مكتملة · 4. الفواتير المستحقة · 5. نقاط الولاء (مُحاكاة = طلبات×10) · 6. رصيد المحفظة (0 ر.س placeholder) · 7. منتجات مفضّلة · 8. آخر عرض ساري.
+## Two questions before I start
 
-رسومات:
-- AreaChart: طلباتي آخر 14 يوم (نفس gradient `#1A4A00`).
-- PieChart: حالات طلباتي.
-- قائمة "آخر الطلبات" (نفس قائمة Activity في AdminDashboard).
-- شريط "منتجات مُوصى بها" يعيد استخدام `ProductRecommender`.
-- اختصارات سريعة: طلب جديد · تتبع · فواتير · دعم.
+1. **Apple + reCAPTCHA setup** — proceed with `configure_social_auth(['apple'])` now, and request the reCAPTCHA v3 keys via `add_secret`? (Yes / Skip Apple / Skip reCAPTCHA / Skip both)
+2. **Role migration** — OK to add `super_admin / sales / warehouse / accountant / distributor` to `app_role` and map legacy `wholesale → distributor`? (Yes / Keep current 3 roles / Different mapping)
 
-## مطابقة الحركة والثيم
-
-- نفس `motion.div initial/animate/transition` المستخدمة في `AdminDashboard`.
-- نفس `AnimatePresence mode="wait"` للانتقال بين الصفحات.
-- `data-theme` (light/dark) يُحفظ في `localStorage` بمفتاح `portal-theme` (مستقل عن admin).
-
-## ملاحظات تقنية
-
-- إعادة الاستخدام تكون عبر **استيراد نفس CSS والمكوّنات**، ليس نسخ الأنماط. أي تعديل مستقبلي على `admin.css` ينعكس على البوابتين تلقائياً.
-- `PortalSidebar` و`PortalTopbar` يُبنيان كنسخ مبسّطة من الأصل (نفس JSX/classes) لكن بقائمة عناصر مختلفة وبدون أدوات إدارية.
-- التحقق من الدور: `ProtectedRoute` بدون `requireRole` يكفي (أي مستخدم مسجّل). الـRLS على `orders/profiles` يضمن عزل البيانات على مستوى قاعدة البيانات.
-- المسارات الفرعية الموجودة فعلاً (`/orders/new`, `/orders/:id`, `/profile`, `/catalog`) تبقى كما هي للتوافق، والبوابة تستضيف نسخاً مغلّفة بنفس الـshell.
-
-## خارج النطاق (يمكن لاحقاً)
-
-- جداول `invoices`, `payments`, `quotes`, `notifications`, `messages`, `addresses`, `favorites` مع RLS — تُضاف عند تفعيلها فعلياً.
-- بوابة دفع (Mada/Apple Pay) و2FA.
-- خرائط شحن حيّة.
+Reply with answers (or "go with defaults: yes to both") and I'll build it in one pass.
