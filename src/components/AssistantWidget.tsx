@@ -452,7 +452,7 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
 
 
       {/* Composer */}
-      <div className="border-t border-border p-2 bg-background">
+      <div className="border-t border-gold/20 p-2 glass-strip">
         {streaming && (
           <div className="flex items-center gap-1.5 px-1 pb-1.5 text-[11px] text-muted-foreground font-arabic">
             <Loader2 className="w-3 h-3 animate-spin text-gold" />
