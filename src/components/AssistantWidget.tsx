@@ -246,7 +246,7 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
       {/* Last-message preview pill (shown when widget is closed) */}
       {!open && preview && preview !== greet.content.replace(/[#*`_>\-]/g, '').replace(/\s+/g, ' ').trim().slice(0, 90) && (
         <div
-          className="fixed bottom-24 end-6 z-40 max-w-[280px] rounded-2xl rounded-br-sm border border-gold/30 bg-background shadow-gold px-3 py-2 text-xs text-foreground animate-fade-in font-arabic"
+          className="fixed bottom-24 end-6 z-40 max-w-[280px] rounded-2xl rounded-br-sm glass-strip !border-gold/30 px-3 py-2 text-xs text-foreground animate-fade-in font-arabic"
           role="status"
           aria-label="آخر رسالة من المساعد"
         >
