@@ -161,7 +161,7 @@ export function BrandHero() {
             </Link>
             <Link
               to="/trademarks"
-              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-white/70 backdrop-blur border border-[hsl(var(--gold))]/30 text-sm font-arabic text-foreground/80 hover:border-[hsl(var(--gold))] hover:text-[hsl(var(--gold-hi))] transition-all"
+              className="btn-glass inline-flex items-center gap-2 px-6 py-3.5 rounded-full text-sm font-arabic"
             >
               {isAr ? 'علاماتنا' : 'Our Brands'}
             </Link>
