@@ -425,8 +425,69 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
       <QuoteBuilder open={quoteOpen} onOpenChange={setQuoteOpen} />
 
 
+      {/* Final review screen */}
+      {pendingOrder && reviewMode && (
+        <div className="border-t border-gold/30 bg-gradient-to-b from-gold/10 to-gold/5 p-3 space-y-3 font-arabic max-h-[55%] overflow-y-auto">
+          <div className="flex items-center justify-between">
+            <p className="text-xs font-semibold text-foreground flex items-center gap-1.5">
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> مراجعة نهائية للطلب
+            </p>
+            <button onClick={() => setReviewMode(false)} className="text-[10px] text-muted-foreground hover:text-foreground underline">تعديل</button>
+          </div>
+          <dl className="rounded-xl border border-gold/30 bg-background/60 backdrop-blur p-2.5 text-[11px] space-y-1.5">
+            <div className="flex justify-between gap-2 border-b border-gold/15 pb-1">
+              <dt className="text-muted-foreground">المنتج</dt>
+              <dd className="font-semibold text-foreground text-end">{pendingOrder.product_type}</dd>
+            </div>
+            <div className="flex justify-between gap-2 border-b border-gold/15 pb-1">
+              <dt className="text-muted-foreground">الكمية</dt>
+              <dd className="font-semibold text-foreground">{pendingOrder.quantity} {pendingOrder.unit}</dd>
+            </div>
+            <div className="flex justify-between gap-2 border-b border-gold/15 pb-1">
+              <dt className="text-muted-foreground">الاسم</dt>
+              <dd className="font-semibold text-foreground text-end">{formData.contact_name}</dd>
+            </div>
+            <div className="flex justify-between gap-2 border-b border-gold/15 pb-1">
+              <dt className="text-muted-foreground">الجوال</dt>
+              <dd dir="ltr" className="font-semibold text-foreground">{formData.phone}</dd>
+            </div>
+            <div className="flex justify-between gap-2 border-b border-gold/15 pb-1">
+              <dt className="text-muted-foreground">العنوان</dt>
+              <dd className="font-semibold text-foreground text-end max-w-[60%]">{formData.address}</dd>
+            </div>
+            <div className="flex justify-between gap-2">
+              <dt className="text-muted-foreground">طريقة الاستلام</dt>
+              <dd className="font-semibold text-foreground">{formData.delivery_method}</dd>
+            </div>
+            {pendingOrder.ai_summary && (
+              <div className="border-t border-gold/15 pt-1 text-[10px] italic text-muted-foreground">
+                {pendingOrder.ai_summary}
+              </div>
+            )}
+          </dl>
+          <p className="text-[10px] text-muted-foreground text-center">سيتم إرسال الطلب للنظام مباشرة وفتح واتساب للتأكيد مع المبيعات.</p>
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              onClick={() => setReviewMode(false)}
+              disabled={submitting}
+              className="py-2 rounded-lg border border-border bg-background text-xs font-semibold hover:bg-muted transition"
+            >
+              تعديل البيانات
+            </button>
+            <button
+              onClick={submitFinal}
+              disabled={submitting}
+              className="py-2 rounded-lg bg-emerald-600 text-white text-xs font-semibold hover:bg-emerald-700 disabled:opacity-50 transition flex items-center justify-center gap-1.5"
+            >
+              {submitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-3.5 h-3.5" />}
+              إرسال نهائي
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Order confirmation form */}
-      {pendingOrder && (
+      {pendingOrder && !reviewMode && (
         <div className="border-t border-gold/30 bg-gold/5 p-3 space-y-2 font-arabic max-h-[55%] overflow-y-auto">
           <div className="flex items-center justify-between">
             <p className="text-xs font-semibold text-foreground flex items-center gap-1.5">
