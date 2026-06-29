@@ -1,0 +1,27 @@
+name: Tests
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  vitest:
+    name: Vitest (jsdom)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: Install
+        run: bun install --frozen-lockfile
+      # Run via the same package script used locally, which reads vitest.config.ts
+      # (environment: jsdom, setupFiles: src/test/setup.ts, include: src/**/*.{test,spec}.{ts,tsx}).
+      # `--passWithNoTests=false` ensures the job FAILS if the suite is empty or filtered to zero —
+      # so admin tests (or any others) can't silently be skipped.
+      - name: Run unit tests
+        run: bun run test -- --reporter=verbose --passWithNoTests=false
