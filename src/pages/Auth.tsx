@@ -42,10 +42,13 @@ export default function Auth() {
   const stateFrom = (location.state as { from?: string } | null)?.from;
   const from = sanitizeFrom(queryFrom ?? stateFrom);
 
-  // Once Supabase confirms a session (sign-in or already-signed-in), bounce to `from`.
+  const hasExplicitFrom = Boolean(queryFrom ?? stateFrom);
+  // Auto-redirect only when the user was sent here from a protected route.
+  // Otherwise keep them on /auth so the Sign-out panel stays accessible.
   useEffect(() => {
-    if (user) navigate(from, { replace: true });
-  }, [user, from, navigate]);
+    if (user && hasExplicitFrom) navigate(from, { replace: true });
+  }, [user, hasExplicitFrom, from, navigate]);
+
 
 
   const t = (ar: string, en: string) => (isAr ? ar : en);
