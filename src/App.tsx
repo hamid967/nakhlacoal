@@ -35,6 +35,8 @@ import Profile from '@/pages/Profile';
 import Assistant from '@/pages/Assistant';
 import AdminOrders from '@/pages/AdminOrders';
 import AdminInventory from '@/pages/AdminInventory';
+import AdminAnalytics from '@/pages/AdminAnalytics';
+
 import NewOrder from '@/pages/NewOrder';
 import OrderTracking from '@/pages/OrderTracking';
 
@@ -85,6 +87,8 @@ export default function App() {
                 <Route path="/assistant/:threadId" element={<Assistant />} />
                 <Route path="/admin/orders" element={<ProtectedRoute requireRole="admin"><AdminOrders /></ProtectedRoute>} />
                <Route path="/admin/inventory" element={<ProtectedRoute requireRole="admin"><AdminInventory /></ProtectedRoute>} />
+               <Route path="/admin/analytics" element={<ProtectedRoute requireRole="admin"><AdminAnalytics /></ProtectedRoute>} />
+
                <Route path="/orders/new" element={<ProtectedRoute><NewOrder /></ProtectedRoute>} />
                <Route path="/orders/:id" element={<ProtectedRoute><OrderTracking /></ProtectedRoute>} />
                <Route path="/catalog" element={<Catalog />} />
