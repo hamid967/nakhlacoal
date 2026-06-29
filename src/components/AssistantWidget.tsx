@@ -237,6 +237,19 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
         triggerOfflineOrder('تعذّر الاتصال بالمساعد، إليك ملخص طلبك السريع.');
         return;
       }
+      // Edge function may return 200 + JSON fallback signal when AI gateway is down
+      const ctype = resp.headers.get('content-type') ?? '';
+      if (ctype.includes('application/json')) {
+        const data = await resp.json().catch(() => ({}));
+        if (data?.fallback) {
+          const reasonMsg =
+            data.reason === 'credits_exhausted' ? '💬 المساعد الذكي غير متاح مؤقتاً — لكن طلبك جاهز للإرسال الآن.' :
+            data.reason === 'rate_limited' ? '⚡ المساعد مشغول حالياً، لكن يمكنك إكمال طلبك الآن مباشرة.' :
+            'تعذّر الاتصال بالمساعد، إليك ملخص طلبك السريع.';
+          triggerOfflineOrder(reasonMsg);
+          return;
+        }
+      }
       if (!resp.body) throw new Error('استجابة فارغة');
       const reader = resp.body.getReader();
       const dec = new TextDecoder();
