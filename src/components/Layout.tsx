@@ -3,6 +3,7 @@ import { useEffect, lazy, Suspense } from 'react';
 import { LuxNav } from './LuxNav';
 import { LuxFooter } from './LuxFooter';
 import { PromoBanner } from './PromoBanner';
+import { ImageDiagnostics } from './ImageDiagnostics';
 
 // Lazy-load the floating AI/WhatsApp widget — heavy and not LCP-critical.
 const WhatsAppFab = lazy(() =>
