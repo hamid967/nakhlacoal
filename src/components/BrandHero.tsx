@@ -79,7 +79,7 @@ export function BrandHero() {
         style={{
           opacity: bgOpacity,
           background:
-            'radial-gradient(900px 600px at 85% 15%, rgba(232,200,140,0.45), transparent 60%), radial-gradient(700px 500px at 10% 90%, rgba(26,74,0,0.08), transparent 65%), linear-gradient(180deg, #FAF5EB 0%, #F2E9D4 100%)',
+            'radial-gradient(900px 600px at 85% 15%, hsl(var(--gold-hi) / 0.35), transparent 60%), radial-gradient(700px 500px at 10% 90%, hsl(var(--primary) / 0.08), transparent 65%), linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--surface-2)) 100%)',
         }}
       />
       {/* Palm leaf shadow top-left */}
@@ -124,22 +124,21 @@ export function BrandHero() {
             </span>
           </div>
           <h1
-            className={`text-[clamp(2.5rem,6vw,5rem)] leading-[1.05] tracking-tight ${
+            className={`text-[clamp(2.5rem,6vw,5rem)] leading-[1.05] tracking-tight text-foreground ${
               isAr ? 'font-arabic font-bold' : 'font-display font-bold'
             }`}
-            style={{ color: '#1A1A1A' }}
           >
             {isAr ? (
               <>
                 نقاء.<br />
                 استدامة.<br />
-                <span style={{ color: '#1A4A00' }}>تميّز.</span>
+                <span className="text-primary">تميّز.</span>
               </>
             ) : (
               <>
                 Pure.<br />
                 Sustainable.<br />
-                <span style={{ color: '#1A4A00' }}>Excellence.</span>
+                <span className="text-primary">Excellence.</span>
               </>
             )}
           </h1>
@@ -156,7 +155,7 @@ export function BrandHero() {
           <div className="mt-9 flex flex-wrap items-center gap-3 justify-center lg:justify-start">
             <Link
               to="/products"
-              className="group inline-flex items-center gap-3 px-7 py-3.5 rounded-full bg-[hsl(var(--gold-hi))] text-white text-sm uppercase tracking-[0.2em] font-medium shadow-[0_14px_36px_-12px_rgba(201,168,76,0.65)] hover:shadow-[0_20px_44px_-12px_rgba(201,168,76,0.85)] hover:-translate-y-0.5 transition-all"
+              className="group inline-flex items-center gap-3 px-7 py-3.5 rounded-full bg-[hsl(var(--gold-hi))] text-[hsl(var(--dark))] text-sm uppercase tracking-[0.2em] font-medium shadow-[var(--shadow-gold)] hover:shadow-[0_20px_44px_-12px_hsl(var(--gold)/0.85)] hover:-translate-y-0.5 transition-all"
             >
               {isAr ? 'استكشف المنتجات' : 'Explore Products'}
               <ArrowRight className={`w-4 h-4 transition-transform group-hover:translate-x-1 ${isAr ? 'rotate-180 group-hover:-translate-x-1' : ''}`} />
@@ -227,7 +226,7 @@ export function BrandHero() {
                       setActive(i);
                     }
                   }}
-                  className={`block rounded-md transition-all outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--gold-hi))] focus-visible:ring-offset-2 focus-visible:ring-offset-[#FAF5EB] ${
+                  className={`block rounded-md transition-all outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--gold-hi))] focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
                     i === active ? 'w-[140px] h-[200px]' : 'w-[110px] h-[160px] opacity-0'
                   }`}
                   style={{ background: 'transparent' }}
@@ -256,7 +255,7 @@ export function BrandHero() {
                 aria-label={isAr ? `${t.nameAr}` : `${t.nameEn}`}
                 tabIndex={i === active ? 0 : -1}
                 onClick={() => setActive(i)}
-                className={`h-1.5 rounded-full transition-all outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--gold-hi))] focus-visible:ring-offset-2 focus-visible:ring-offset-[#FAF5EB] ${
+                className={`h-1.5 rounded-full transition-all outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--gold-hi))] focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
                   i === active ? 'w-8 bg-[hsl(var(--gold-hi))]' : 'w-2 bg-foreground/20 hover:bg-foreground/40'
                 }`}
               />
@@ -274,7 +273,7 @@ export function BrandHero() {
               transition={{ duration: 0.4 }}
               className="absolute -bottom-12 left-1/2 -translate-x-1/2 text-center"
             >
-              <div className={`text-base md:text-lg ${isAr ? 'font-arabic font-bold' : 'font-display font-semibold'}`} style={{ color: '#1A4A00' }}>
+              <div className={`text-base md:text-lg text-primary ${isAr ? 'font-arabic font-bold' : 'font-display font-semibold'}`}>
                 {current.nameAr} <span className="text-foreground/40 mx-2">·</span> <span className="text-foreground/60 font-normal text-sm">{current.nameEn}</span>
               </div>
             </motion.div>
