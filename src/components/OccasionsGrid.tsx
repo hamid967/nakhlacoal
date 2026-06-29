@@ -32,7 +32,7 @@ export function OccasionsGrid() {
   return (
     <LuxSection className="py-20 md:py-28 relative overflow-hidden">
       {/* Cinematic ambient glow */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
+      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 motion-reduce:hidden">
         <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[60rem] h-[60rem] rounded-full bg-[hsl(var(--gold))]/[0.05] blur-3xl" />
       </div>
 
@@ -59,7 +59,7 @@ export function OccasionsGrid() {
                 {/* Cinematic shimmer sweep on hover */}
                 <span
                   aria-hidden
-                  className="pointer-events-none absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-[1400ms] ease-out bg-gradient-to-r from-transparent via-[hsl(var(--gold))]/10 to-transparent"
+                  className="pointer-events-none absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-[1400ms] ease-out bg-gradient-to-r from-transparent via-[hsl(var(--gold))]/10 to-transparent motion-reduce:hidden"
                 />
 
                 {/* Icon — start side */}
