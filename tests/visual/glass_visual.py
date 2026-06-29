@@ -101,9 +101,10 @@ async def run():
                     color_scheme="dark" if theme == "noir" else "light",
                 )
                 page = await ctx.new_page()
-                # Seed theme before first paint
+                # Seed theme + skip intro splash before first paint
                 await page.add_init_script(
-                    f"try {{ localStorage.setItem('pc-theme', {json.dumps(theme)}); }} catch (_) {{}}"
+                    f"try {{ localStorage.setItem('pc-theme', {json.dumps(theme)});"
+                    f" sessionStorage.setItem('palm-home-intro-played', '1'); }} catch (_) {{}}"
                 )
                 tag = f"{theme}_{motion_name}"
                 print(f"\n== {tag} ==")
