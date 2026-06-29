@@ -174,7 +174,7 @@ export function LuxNav() {
           onMouseLeave={scheduleClose}
         >
           <div className="container pt-3">
-            <div className="glass-card rounded-2xl p-6 shadow-xl border border-gold/15">
+            <div className="glass-card glass-dark glass-grain rounded-3xl p-6 shadow-2xl">
               {navItems.map((item) => {
                 if (item.type !== 'mega' || activeMega !== item.key) return null;
                 return (
