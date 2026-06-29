@@ -333,6 +333,8 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
         {messages.map((m, idx) => {
           const isLastAssistant = m.role === 'assistant' && idx === messages.length - 1;
           const showTyping = isLastAssistant && streaming && !m.content;
+          const { chips, clean } = m.role === 'assistant' ? extractQuickReplies(m.content) : { chips: [], clean: m.content };
+          const showChips = isLastAssistant && !streaming && chips.length > 0 && !pendingOrder;
           return (
           <div key={m.id} className={`flex gap-2 ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
             {m.role === 'assistant' && (
@@ -353,10 +355,23 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
                 </div>
               ) : (
                 <div className="prose prose-sm max-w-none text-foreground text-sm leading-relaxed prose-strong:text-foreground prose-p:my-1">
-                  {m.content && <ReactMarkdown components={mdComponents}>{m.content}</ReactMarkdown>}
-                  {isLastAssistant && streaming && m.content && (
+                  {clean && <ReactMarkdown components={mdComponents}>{clean}</ReactMarkdown>}
+                  {isLastAssistant && streaming && clean && (
                     <span className="inline-block w-1.5 h-3.5 align-middle bg-gold/80 ms-0.5 animate-pulse" aria-hidden />
                   )}
+                </div>
+              )}
+              {showChips && (
+                <div className="flex flex-wrap gap-1.5 mt-2 font-arabic">
+                  {chips.map((c) => (
+                    <button
+                      key={c}
+                      onClick={() => { setInput(c); setTimeout(() => send(), 30); }}
+                      className="px-2.5 py-1 rounded-full text-[11px] bg-gold/10 hover:bg-gold/20 border border-gold/40 text-foreground transition"
+                    >
+                      {c}
+                    </button>
+                  ))}
                 </div>
               )}
             </div>
