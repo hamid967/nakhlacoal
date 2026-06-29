@@ -34,6 +34,11 @@ export default function Catalog() {
 
   return (
     <div dir={dir} className="catalog-root bg-white text-stone-900 min-h-dvh">
+      <SEO
+        title={isAr ? 'كتالوج المنتجات | فحم النخلة' : 'Product Catalog | Palm Charcoal'}
+        description={isAr ? 'كتالوج فحم النخلة الرسمي — فحم جوز الهند وفحم الشيشة الفاخر بمواصفات تصدير.' : 'Official Palm Charcoal catalog — premium coconut shisha charcoal and export-grade products.'}
+        path="/catalog"
+      />
       {/* Action bar (hidden on print) */}
       <div className="no-print sticky top-0 z-50 bg-stone-50 border-b border-stone-200 p-4 flex items-center justify-between gap-3">
         <p className="text-sm text-stone-600">
