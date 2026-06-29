@@ -1,54 +1,106 @@
-# Palm Charcoal — Enterprise Admin Dashboard
 
-This is a large enterprise build. I'll split it into 4 phases so each is shippable and reviewable. Phase 1 lays the foundation + the highest-value screens; later phases add depth.
+# Customer Portal — بوابة العميل المتميزة
 
-## Stack (kept consistent with this project)
-- React 18 + Vite + TypeScript + Tailwind + shadcn/ui (project is Vite, not Next.js 15)
-- Framer Motion for animation
-- Recharts for analytics
-- Lovable Cloud (Supabase) for data, RLS, Edge Functions
-- New admin shell mounted at `/admin/*`, protected by `ProtectedRoute requireRole="admin"`
+نسخة موجّهة للعميل من لوحة الإدارة الحالية. تعيد استخدام **نفس** نظام التصميم (admin.css، الـSidebar/Topbar، البطاقات `a-card`، الـpills، الـcharts، حركات Framer Motion، الزجاجية، الزوايا، الخطوط، الألوان)، مع تغيير **المحتوى والصلاحيات والتنقّل** فقط.
 
-## Design system (new admin-only tokens)
-- Palette: Ivory `#FAF8F3`, Palm Green `#1A4A00`, Luxury Gold `#C9A84C`, Charcoal `#0F0F0F`, Soft Gray `#E8E5DE`
-- Radius 20–24px, glass cards, soft shadow `0 8px 32px rgba(15,15,15,.06)`
-- Typography: Instrument Serif (display) + Inter (UI)
-- Dark + Light mode via `data-theme` on admin shell
-- Motion presets: hover-lift, fade-up, count-up, sidebar slide, page transition
+## النطاق
 
----
+- مسار جذر جديد: `/portal/*` محمي بدور `user` (أو أعلى) عبر `ProtectedRoute`.
+- لا يصل العميل لأي مسار `/admin/*` نهائياً (محمي بالفعل بـ`requireRole="admin"`).
+- لا تُعرض بيانات عملاء آخرين، تقارير مالية للشركة، إدارة المخزون، إدارة المستخدمين، الجودة، التحليلات الداخلية، أو إعدادات الموقع.
 
-## Phase 1 — Foundation + Core (this turn)
-1. **Admin shell**: `src/admin/AdminLayout.tsx` with collapsible glass sidebar (28 sections grouped), topbar (search, theme, notifications, profile), page transitions.
-2. **Routing**: nested `/admin` routes in `App.tsx`; gated by admin role.
-3. **Design tokens**: `src/admin/admin.css` scoped to `.admin-shell` so it won't affect the public site.
-4. **Dashboard Home** (`/admin`): 8 summary cards, revenue line chart, orders bar chart, sales by product pie, activity timeline, quick actions, notifications panel — wired to real `orders` + `inventory_items` tables.
-5. **Orders** (`/admin/orders`): redesigned premium table with filters, status pills, drawer detail (timeline, notes, attachments).
-6. **Products / Inventory** (`/admin/products`): redesigned grid + table from `inventory_items`, search, bulk actions UI, AI description generator (reuses Lovable AI).
-7. **Customers** (`/admin/customers`): from `profiles` + `user_roles` + aggregated `orders`; CRM drawer.
-8. **Reports** (`/admin/reports`): merges current `AdminAnalytics` into the new shell with PDF/CSV export.
-9. **Settings** (`/admin/settings`): general/company/theme/notifications scaffolding (local for now).
-10. Old admin routes (`/admin/orders`, `/admin/inventory`, `/admin/analytics`) redirect into new shell.
+## القطع المُعاد استخدامها (بدون تكرار)
 
-## Phase 2 — Catalog depth
-Categories, Brands (5 trademarks management), Suppliers, Media Library (Supabase Storage bucket + drag-drop + AI tagging), Quality Control (lab results table + batch approve/reject), Certificates.
+- `src/admin/admin.css` — كل التوكنات والمكوّنات (`a-card`, `a-btn`, `a-pill-*`, `a-display`).
+- `AdminTopbar` (نسخة مُعاد تسميتها سيمانتيكاً `PortalTopbar` تستورد نفس CSS وتوفّر theme toggle + ابحث + بروفايل).
+- نفس بنية `AdminLayout` (Sidebar + Topbar + AnimatePresence main).
+- `framer-motion`, `recharts`, `lucide-react`, `sonner`.
 
-## Phase 3 — Commerce & Ops
-Wholesale, Export (countries/containers/customs docs), Warehouse (locations, stock alerts, barcode/QR), Invoices, Payments, Refunds, VAT, Expenses.
+## الملفات الجديدة
 
-## Phase 4 — Growth & System
-Marketing (banners, coupons, email/WhatsApp campaigns), Website Builder (homepage section editor), AI Center (centralized generators), Blog/Knowledge admin, SEO panel, Users/Roles/Permissions + Activity Logs + 2FA, System Logs, Backup.
+```
+src/portal/
+  PortalLayout.tsx          # نسخة من AdminLayout، يستورد admin.css
+  PortalSidebar.tsx         # نفس بنية AdminSidebar، عناصر العميل فقط
+  PortalTopbar.tsx          # مطابق لـ AdminTopbar (theme/search/profile)
+  pages/
+    Dashboard.tsx           # ترحيب + 8 بطاقات + رسم طلباتي + آخر الطلبات + توصيات
+    Orders.tsx              # جدول طلباتي مع فلتر/بحث (RLS: user_id = auth.uid())
+    NewOrder.tsx            # غلاف لـ pages/NewOrder الحالي داخل الـshell
+    Tracking.tsx            # تايملاين الطلب (يعيد منطق OrderTracking)
+    Invoices.tsx            # قائمة فواتير (placeholder + جدول)
+    Payments.tsx            # سجل مدفوعات (placeholder)
+    Quotes.tsx              # عروض سعرية
+    Catalog.tsx             # بطاقات منتجات من src/data/products + بحث/فلتر/مفضلة
+    Trademarks.tsx          # عرض من src/data/trademarks (قراءة فقط)
+    Favorites.tsx           # localStorage wishlist
+    Notifications.tsx
+    Messages.tsx            # placeholder chat UI
+    Support.tsx             # واتساب/بريد/هاتف + روابط
+    Addresses.tsx
+    Profile.tsx             # غلاف Profile الحالي
+    Settings.tsx            # لغة + ثيم + إشعارات + 2FA placeholder
+    Placeholder.tsx
+```
 
----
+## التنقّل (Sidebar — RTL، 18 عنصر)
 
-## Database additions (added as needed per phase)
-Phase 1 needs no new tables — works on existing `orders`, `inventory_items`, `profiles`, `user_roles`.
+لوحة التحكم · طلباتي · إنشاء طلب · تتبع الطلبات · الفواتير · المدفوعات · العروض السعرية · المنتجات · العلامات التجارية · الكتالوج · الشهادات · المفضلة · الإشعارات · الدعم · الرسائل · العناوين · الملف الشخصي · الإعدادات · تسجيل الخروج
 
-Later phases will add (each with GRANTs + RLS admin-only):
-`categories`, `brands`, `suppliers`, `media_assets`, `lab_results`, `certificates`, `warehouses`, `stock_movements`, `invoices`, `payments`, `coupons`, `campaigns`, `homepage_sections`, `activity_logs`.
+مجموعات: **عام** (Dashboard) · **الطلبات** (طلباتي/جديد/تتبع/عروض) · **المالية** (فواتير/مدفوعات) · **المنتجات** (كتالوج/علامات/شهادات/مفضلة) · **التواصل** (إشعارات/رسائل/دعم) · **الحساب** (عناوين/بروفايل/إعدادات/خروج).
 
-## Auth note
-The credentials in the prompt (`abs005599@gmail.com`) — I will NOT hardcode them. After Phase 1 ships, sign up that email via `/auth`, then I'll grant it the `admin` role via a one-line `user_roles` insert so it can access `/admin`.
+## مصادر البيانات
 
-## Deliverable for this turn
-Phase 1 only — a working premium admin shell + Dashboard, Orders, Products, Customers, Reports, Settings. Confirm and I'll build it.
+- `orders` — مفلتر بـ `eq('user_id', user.id)` (RLS موجود).
+- `inventory_items` — قراءة عامة للكتالوج/التسعير.
+- `profiles` — صف العميل فقط.
+- بدون جداول جديدة في هذه المرحلة. الفواتير/المدفوعات/العروض/الرسائل/الإشعارات تظهر كبطاقات "قريباً" مع UI كامل ومُحاكاة من الطلبات حيث يصحّ.
+
+## التوجيه
+
+في `src/App.tsx`:
+
+```tsx
+<Route path="/portal" element={<ProtectedRoute><PortalLayout /></ProtectedRoute>}>
+  <Route index element={<PortalDashboard />} />
+  <Route path="orders" element={<PortalOrders />} />
+  <Route path="orders/new" element={<PortalNewOrder />} />
+  <Route path="orders/:id" element={<PortalTracking />} />
+  ... (باقي المسارات)
+</Route>
+```
+
+- زر "حسابي" في `LuxNav` يربط لـ `/portal` للعملاء المسجّلين.
+- بعد تسجيل دخول غير-admin من `/auth` بدون `from`، نوجّه إلى `/portal`.
+
+## الصفحة الرئيسية (Dashboard Home)
+
+نفس شبكة `grid-cols-2 md:grid-cols-4` ببطاقات `a-card a-card-hover`:
+
+1. إجمالي الطلبات · 2. قيد التنفيذ · 3. مكتملة · 4. الفواتير المستحقة · 5. نقاط الولاء (مُحاكاة = طلبات×10) · 6. رصيد المحفظة (0 ر.س placeholder) · 7. منتجات مفضّلة · 8. آخر عرض ساري.
+
+رسومات:
+- AreaChart: طلباتي آخر 14 يوم (نفس gradient `#1A4A00`).
+- PieChart: حالات طلباتي.
+- قائمة "آخر الطلبات" (نفس قائمة Activity في AdminDashboard).
+- شريط "منتجات مُوصى بها" يعيد استخدام `ProductRecommender`.
+- اختصارات سريعة: طلب جديد · تتبع · فواتير · دعم.
+
+## مطابقة الحركة والثيم
+
+- نفس `motion.div initial/animate/transition` المستخدمة في `AdminDashboard`.
+- نفس `AnimatePresence mode="wait"` للانتقال بين الصفحات.
+- `data-theme` (light/dark) يُحفظ في `localStorage` بمفتاح `portal-theme` (مستقل عن admin).
+
+## ملاحظات تقنية
+
+- إعادة الاستخدام تكون عبر **استيراد نفس CSS والمكوّنات**، ليس نسخ الأنماط. أي تعديل مستقبلي على `admin.css` ينعكس على البوابتين تلقائياً.
+- `PortalSidebar` و`PortalTopbar` يُبنيان كنسخ مبسّطة من الأصل (نفس JSX/classes) لكن بقائمة عناصر مختلفة وبدون أدوات إدارية.
+- التحقق من الدور: `ProtectedRoute` بدون `requireRole` يكفي (أي مستخدم مسجّل). الـRLS على `orders/profiles` يضمن عزل البيانات على مستوى قاعدة البيانات.
+- المسارات الفرعية الموجودة فعلاً (`/orders/new`, `/orders/:id`, `/profile`, `/catalog`) تبقى كما هي للتوافق، والبوابة تستضيف نسخاً مغلّفة بنفس الـshell.
+
+## خارج النطاق (يمكن لاحقاً)
+
+- جداول `invoices`, `payments`, `quotes`, `notifications`, `messages`, `addresses`, `favorites` مع RLS — تُضاف عند تفعيلها فعلياً.
+- بوابة دفع (Mada/Apple Pay) و2FA.
+- خرائط شحن حيّة.
