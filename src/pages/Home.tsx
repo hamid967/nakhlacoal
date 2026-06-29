@@ -13,6 +13,7 @@ const FaqSection = lazy(() => import('@/components/FaqSection').then((m) => ({ d
 
 import { Certifications } from '@/components/Certifications';
 import { StickyMobileCTA } from '@/components/StickyMobileCTA';
+import { SectionSkeleton } from '@/components/SectionSkeleton';
 import { useLiveOrderCount } from '@/hooks/useLiveOrderCount';
 import {
   useDir,
@@ -75,7 +76,7 @@ export default function Home() {
 
       {/* HERO — first impression (lazy-loaded WebGL) */}
       <div className="pt-24 md:pt-28">
-        <Suspense fallback={<div className="min-h-[60vh] grid place-items-center text-gold-ink/60 font-arabic text-sm">…</div>}>
+        <Suspense fallback={<SectionSkeleton variant="hero" label={isAr ? 'جارٍ تحميل الواجهة' : 'Loading hero'} />}>
           <BrandHero />
         </Suspense>
       </div>
@@ -134,7 +135,7 @@ export default function Home() {
         </div>
       </LuxSection>
 
-      <Suspense fallback={null}>
+      <Suspense fallback={<SectionSkeleton variant="timeline" />}>
         <ProcessSection />
         <JourneySection />
       </Suspense>
@@ -163,13 +164,17 @@ export default function Home() {
                 <Stat
                   value={`${liveOrders.toLocaleString(isAr ? 'ar-SA' : 'en-US')}+`}
                   label={
-                    <span className="inline-flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" aria-hidden />
-                      {isAr ? 'طلب مُنجز' : 'Orders fulfilled'}
+                    <span className="inline-flex items-center gap-2">
+                      <span className="relative inline-flex w-2 h-2" aria-hidden>
+                        <span className="absolute inset-0 rounded-full bg-emerald-500/60 animate-ping" />
+                        <span className="relative inline-flex w-2 h-2 rounded-full bg-emerald-500" />
+                      </span>
+                      <span aria-live="polite">{isAr ? 'طلب مُنجز' : 'Orders fulfilled'}</span>
                     </span>
                   }
                   size="sm"
                 />
+
                 <Stat value="24/7" label={isAr ? 'دعم' : 'Support'} size="sm" />
                 <Stat value="100%" label={isAr ? 'طبيعي' : 'Natural'} size="sm" />
               </div>
@@ -192,7 +197,7 @@ export default function Home() {
         </div>
       </LuxSection>
 
-      <Suspense fallback={null}>
+      <Suspense fallback={<SectionSkeleton variant="band" />}>
         <FaqSection />
         <LocationSection />
       </Suspense>
