@@ -164,7 +164,7 @@ export function HomeIntro() {
       <div className="relative h-full w-full flex flex-col items-center justify-center gap-5 md:gap-8 px-4 py-10 text-center">
         {/* Heading */}
         <div className="opacity-0 animate-[introUp_0.9s_ease-out_0.2s_forwards]">
-          <div className="text-[10px] tracking-[0.5em] text-[hsl(var(--gold-hi))] mb-2 font-mono">
+          <div className="text-[10px] tracking-[0.5em] text-[hsl(var(--gold-ink))] mb-2 font-mono font-semibold">
             EST · 2010 — DOSSIER 2060
           </div>
           <h1 className={`text-2xl sm:text-4xl md:text-5xl ${isAr ? 'font-arabic font-bold' : 'font-display font-bold'}`}
