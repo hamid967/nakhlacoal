@@ -1,10 +1,51 @@
 import { useEffect, useState } from 'react';
-import { Save, BarChart3, ExternalLink } from 'lucide-react';
+import { Save, BarChart3, ExternalLink, CheckCircle2, XCircle, Loader2, PlugZap } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 
 const GA4_RE = /^G-[A-Z0-9]{6,}$/;
 const GTM_RE = /^GTM-[A-Z0-9]{4,}$/;
+
+type TestState = { status: 'idle' | 'testing' | 'ok' | 'fail'; message?: string };
+
+/**
+ * Probes a tag URL by injecting a <script> tag. onload => network reachable + ID
+ * served by Google. onerror => blocked/invalid. Times out after 6s.
+ */
+function probeScript(url: string, timeoutMs = 6000): Promise<boolean> {
+  return new Promise((resolve) => {
+    const s = document.createElement('script');
+    let done = false;
+    const finish = (ok: boolean) => {
+      if (done) return;
+      done = true;
+      s.remove();
+      resolve(ok);
+    };
+    s.async = true;
+    s.src = url;
+    s.onload = () => finish(true);
+    s.onerror = () => finish(false);
+    document.head.appendChild(s);
+    setTimeout(() => finish(false), timeoutMs);
+  });
+}
+
+async function testGa4(id: string): Promise<TestState> {
+  if (!GA4_RE.test(id)) return { status: 'fail', message: 'صيغة GA4 غير صالحة (G-XXXXXXXXXX)' };
+  const ok = await probeScript(`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(id)}`);
+  return ok
+    ? { status: 'ok', message: 'GA4 يستجيب — المعرّف صالح ومحمّل من Google.' }
+    : { status: 'fail', message: 'تعذّر تحميل سكربت GA4 (تحقّق من المعرّف أو مانع الإعلانات).' };
+}
+
+async function testGtm(id: string): Promise<TestState> {
+  if (!GTM_RE.test(id)) return { status: 'fail', message: 'صيغة GTM غير صالحة (GTM-XXXXXXX)' };
+  const ok = await probeScript(`https://www.googletagmanager.com/gtm.js?id=${encodeURIComponent(id)}`);
+  return ok
+    ? { status: 'ok', message: 'GTM يستجيب — الحاوية محمّلة بنجاح.' }
+    : { status: 'fail', message: 'تعذّر تحميل حاوية GTM (تحقّق من المعرّف أو مانع الإعلانات).' };
+}
 
 export default function AdminTracking() {
   const [loading, setLoading] = useState(true);
