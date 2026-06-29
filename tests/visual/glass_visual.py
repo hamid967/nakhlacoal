@@ -142,29 +142,47 @@ async def capture_modal(page, tag: str):
 
 PROBE_JS = r"""
 () => {
-  const el = document.querySelector('.glass-card');
-  if (!el) return null;
-  const cs = getComputedStyle(el);
-  const after = getComputedStyle(el, '::after');
-  const filter = cs.backdropFilter || cs.webkitBackdropFilter || '';
-  const m = filter.match(/blur\(([\d.]+)px\)/i);
-  const blur = m ? parseFloat(m[1]) : 0;
-  const grainImg = after.backgroundImage || 'none';
-  const grainOpacity = parseFloat(after.opacity || '1');
-  const hasGrain = grainImg !== 'none' && grainOpacity > 0.001;
-  return { blur, grainImg, grainOpacity, hasGrain };
+  // Inject a guaranteed probe element so results don't depend on which
+  // page-level cards happen to be mounted at probe time.
+  let probe = document.getElementById('__glass_probe__');
+  if (!probe) {
+    probe = document.createElement('div');
+    probe.id = '__glass_probe__';
+    probe.className = 'glass-card glass-grain';
+    probe.style.cssText =
+      'position:fixed;left:-9999px;top:0;width:200px;height:200px;';
+    document.body.appendChild(probe);
+  }
+  const read = (el) => {
+    const cs = getComputedStyle(el);
+    const after = getComputedStyle(el, '::after');
+    const filter = cs.backdropFilter || cs.webkitBackdropFilter || '';
+    const m = filter.match(/blur\(([\d.]+)px\)/i);
+    return {
+      blur: m ? parseFloat(m[1]) : 0,
+      grainDisplay: after.display,
+      grainImage: after.backgroundImage || 'none',
+      grainOpacity: parseFloat(after.opacity || '1'),
+    };
+  };
+  const r = read(probe);
+  r.hasGrain =
+    r.grainDisplay !== 'none' &&
+    r.grainImage !== 'none' &&
+    r.grainOpacity > 0.001;
+  return r;
 }
 """
 
 
 async def probe_glass(page):
-    # Ensure a .glass-card is in DOM (Home renders many)
     await page.goto(f"{BASE}/", wait_until="domcontentloaded")
     await page.evaluate(
         "document.querySelectorAll('[data-intro-splash], .home-intro').forEach(n => n.remove())"
     )
     await page.wait_for_selector('.glass-card', timeout=5000)
     return await page.evaluate(PROBE_JS)
+
 
 
 async def run():
