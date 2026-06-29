@@ -14,6 +14,8 @@ const FaqSection = lazy(() => import('@/components/FaqSection').then((m) => ({ d
 import { Certifications } from '@/components/Certifications';
 import { StickyMobileCTA } from '@/components/StickyMobileCTA';
 import { SectionSkeleton } from '@/components/SectionSkeleton';
+import { SectionDivider } from '@/components/SectionDivider';
+import { SectionNumber } from '@/components/SectionNumber';
 import { useLiveOrderCount } from '@/hooks/useLiveOrderCount';
 import {
   useDir,
@@ -90,8 +92,11 @@ export default function Home() {
       </section>
 
 
+      <SectionDivider />
+
       {/* Features */}
       <LuxSection tone="surface">
+        <div className="container"><SectionNumber index={2} /></div>
         <SectionHeader
           eyebrow={isAr ? 'لماذا فحم النخلة' : 'Why Palm Charcoal'}
           title={isAr ? 'تفوّق ملموس في كل تفصيلة' : 'Excellence in every detail'}
@@ -118,8 +123,11 @@ export default function Home() {
         </ScrollReveal>
       </LuxSection>
 
+      <SectionDivider flip />
+
       {/* Products — move higher for conversion */}
       <LuxSection tone="surface" className="py-20 md:py-28">
+        <div className="container"><SectionNumber index={3} /></div>
         <SectionHeader
           align="between"
           eyebrow={isAr ? 'منتجاتنا' : 'Our products'}
@@ -141,8 +149,11 @@ export default function Home() {
       </Suspense>
 
 
+      <SectionDivider flip />
+
       {/* About band — story after the user has seen products & process */}
       <LuxSection className="py-20 md:py-28">
+        <div className="container"><SectionNumber index={5} align="end" /></div>
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           <ScrollReveal className="lg:col-span-7">
             <Eyebrow>{isAr ? 'من نحن' : 'Our story'}</Eyebrow>
@@ -186,8 +197,11 @@ export default function Home() {
       {/* Certifications */}
       <Certifications />
 
+      <SectionDivider />
+
       {/* Testimonials */}
       <LuxSection tone="dark" className="py-20 md:py-28">
+        <div className="container"><SectionNumber index={6} /></div>
         <SectionHeader
           eyebrow={isAr ? 'آراء عملائنا' : 'Customer voices'}
           title={isAr ? 'ثقة تتجدد مع كل تجربة' : 'Trusted with every order'}
