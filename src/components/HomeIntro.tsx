@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { trademarks, type Trademark } from '@/data/trademarks';
-import bg from '@/assets/intro-palm-bg.jpg';
+const IntroWebGL = lazy(() => import('./IntroWebGL'));
 
 const KEY = 'palm-home-intro-played';
 const SETTINGS_KEY = 'palm-intro-settings';
