@@ -123,7 +123,7 @@ export default function AdminAnalytics() {
   }, [filtered, inventory]);
 
   return (
-    <main dir="rtl" className="min-h-screen bg-gradient-to-b from-stone-50 to-emerald-50/30 py-12">
+    <main dir="rtl" className="min-h-dvh bg-gradient-to-b from-stone-50 to-emerald-50/30 py-12">
       <SEO title="لوحة التحليلات — فحم النخلة" description="إحصاءات الطلبات والإيرادات والمنتجات الأعلى طلباً." path="/admin/analytics" />
       <div className="container max-w-7xl">
         <header className="flex flex-wrap items-end justify-between gap-4 mb-8">

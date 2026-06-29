@@ -90,7 +90,7 @@ export function Hero() {
 
 
   return (
-    <div className="relative h-screen w-full overflow-hidden bg-black">
+    <div className="relative h-dvh w-full overflow-hidden bg-black">
       {/* MASSIVE VIDEO - Takes up 95% of space */}
       <video
         ref={videoRef}

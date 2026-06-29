@@ -5,9 +5,9 @@ import GlassCard from "@/components/GlassCard";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-dvh bg-background">
       {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
+      <section className="relative h-dvh flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-accent-blue/20 via-accent-purple/10 to-accent-emerald/20"></div>
         
         <div className="relative z-10 text-center space-y-8 max-w-4xl mx-auto px-4">

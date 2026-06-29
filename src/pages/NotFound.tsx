@@ -5,7 +5,7 @@ export default function NotFound() {
   const { t, i18n } = useTranslation();
   const isAr = i18n.language?.startsWith('ar');
   return (
-    <section className="min-h-screen flex items-center justify-center px-6">
+    <section className="min-h-dvh flex items-center justify-center px-6">
       <div className="text-center max-w-md">
         <p className="eyebrow justify-center mb-6">404</p>
         <h1 className={`text-5xl md:text-7xl mb-6 ${isAr ? 'font-arabic font-bold' : 'font-display'}`}>
