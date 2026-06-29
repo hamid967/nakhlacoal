@@ -103,7 +103,7 @@ export default function Trademarks() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-60px' }}
                 transition={{ duration: 0.5, delay: i * 0.05 }}
-                className="rounded-2xl border border-gold/20 bg-white/60 backdrop-blur-md overflow-hidden hover:border-gold/60 hover:shadow-gold transition"
+                className="glass-card rounded-2xl overflow-hidden hover:border-gold/60 hover:shadow-gold transition"
               >
                 <button
                   onClick={() => { setActive(i); setZoom(1); }}
