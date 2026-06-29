@@ -208,8 +208,6 @@ export default function Trademarks() {
                   <Row k="تاريخ الإيداع" v={current.filedHijri} />
                   <Row k="تاريخ التسجيل" v={current.registeredHijri} />
                   <Row k="انتهاء الحماية" v={current.expiresHijri} />
-                  <Row k="المالك" v={current.ownerAr} />
-                  <Row k="العنوان" v={current.addressAr} />
                   <Row k="الدولة" v={current.countryAr} />
                 </div>
                 <div>
