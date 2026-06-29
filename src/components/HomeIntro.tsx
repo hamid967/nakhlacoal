@@ -264,7 +264,7 @@ export function HomeIntro() {
         {/* 2060 terminal — live, per-slide */}
         <div className="opacity-0 animate-[introUp_0.9s_ease-out_0.9s_forwards] w-full max-w-2xl">
           <pre
-            className="text-start font-mono text-[10px] sm:text-[11px] md:text-xs leading-relaxed whitespace-pre-wrap bg-[#0c1108]/92 border border-[hsl(var(--gold-hi))]/50 rounded-lg p-3 sm:p-4 text-[hsl(var(--gold-hi))] shadow-[inset_0_0_30px_rgba(201,168,76,0.18)] min-h-[180px]"
+            className="text-start font-mono text-[10px] sm:text-[11px] md:text-xs leading-relaxed whitespace-pre-wrap bg-dark/90 border border-[hsl(var(--gold-hi))]/50 rounded-lg p-3 sm:p-4 text-[hsl(var(--gold-hi))] shadow-[inset_0_0_30px_rgba(201,168,76,0.18)] min-h-[180px]"
             dir="ltr"
             style={{ textAlign: isAr ? 'right' : 'left' }}
           >

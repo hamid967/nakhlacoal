@@ -96,7 +96,7 @@ export default function InspectionCube() {
               <div key={face} className="absolute inset-0 border border-gold/40"
                 style={{
                   transform: FACE_TRANSFORMS[face],
-                  background: 'linear-gradient(135deg, #1a1410 0%, #0a0806 100%)',
+                  background: 'linear-gradient(135deg, hsl(var(--dark-2, var(--dark))) 0%, hsl(var(--dark)) 100%)',
                   boxShadow: 'inset 0 0 40px hsl(var(--gold) / 0.15), 0 0 30px hsl(var(--gold) / 0.2)',
                 }}>
                 <div className="absolute inset-2 opacity-40"
