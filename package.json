@@ -9,6 +9,7 @@
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "lint:design": "node scripts/lint-design-system.mjs",
+    "audit:colors": "node scripts/audit-hex-colors.mjs",
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
