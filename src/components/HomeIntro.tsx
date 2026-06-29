@@ -130,18 +130,20 @@ export function HomeIntro() {
       className={`fixed inset-0 z-[100] overflow-hidden transition-opacity duration-700 ease-out ${
         phase === 'out' ? 'opacity-0 pointer-events-none' : 'opacity-100'
       }`}
-      style={{
-        backgroundImage: `linear-gradient(180deg, rgba(248,242,228,0.94), rgba(238,225,200,0.96)), url(${bg})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}
+      style={{ backgroundColor: '#f2e9d2' }}
       aria-hidden
     >
+      {/* WebGL cinematic backdrop (Three.js + R3F) */}
+      <Suspense fallback={null}>
+        <IntroWebGL />
+      </Suspense>
+
       {/* Classic paper grain + vignette */}
       <div className="absolute inset-0 pointer-events-none opacity-[0.15] mix-blend-multiply"
         style={{ backgroundImage: 'radial-gradient(rgba(60,40,10,0.5) 1px, transparent 1px)', backgroundSize: '3px 3px' }} />
       <div className="absolute inset-0 pointer-events-none"
         style={{ background: 'radial-gradient(ellipse at center, transparent 55%, rgba(60,40,10,0.35) 100%)' }} />
+
 
       {/* Skip */}
       <button
