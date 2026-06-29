@@ -106,13 +106,54 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [quoteOpen, setQuoteOpen] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
+  const hydratedFromCloud = useRef(false);
 
+  // Track auth + hydrate pending order from cloud (cross-device) for signed-in users
+  useEffect(() => {
+    let active = true;
+    supabase.auth.getUser().then(({ data }) => { if (active) setUserId(data.user?.id ?? null); });
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
+      setUserId(session?.user?.id ?? null);
+      if (!session?.user) hydratedFromCloud.current = false;
+    });
+    return () => { active = false; sub.subscription.unsubscribe(); };
+  }, []);
+
+  useEffect(() => {
+    if (!userId || hydratedFromCloud.current) return;
+    (async () => {
+      const { data } = await supabase
+        .from('pending_orders')
+        .select('data, form')
+        .eq('user_id', userId)
+        .maybeSingle();
+      hydratedFromCloud.current = true;
+      if (data?.data && Object.keys(data.data as object).length) {
+        setPendingOrder(data.data as Record<string, any>);
+      }
+      if (data?.form && Object.keys(data.form as object).length) {
+        setFormData(f => ({ ...f, ...(data.form as typeof f) }));
+      }
+    })();
+  }, [userId]);
 
   useEffect(() => { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(messages)); }, [messages]);
+
+  // Persist pending order: cloud when signed-in, sessionStorage otherwise
   useEffect(() => {
-    if (pendingOrder) sessionStorage.setItem(ORDER_STORAGE_KEY, JSON.stringify(pendingOrder));
-    else sessionStorage.removeItem(ORDER_STORAGE_KEY);
-  }, [pendingOrder]);
+    if (userId && hydratedFromCloud.current) {
+      if (pendingOrder) {
+        supabase.from('pending_orders').upsert({ user_id: userId, data: pendingOrder, form: formData }).then(() => {});
+      } else {
+        supabase.from('pending_orders').delete().eq('user_id', userId).then(() => {});
+      }
+      sessionStorage.removeItem(ORDER_STORAGE_KEY);
+    } else {
+      if (pendingOrder) sessionStorage.setItem(ORDER_STORAGE_KEY, JSON.stringify(pendingOrder));
+      else sessionStorage.removeItem(ORDER_STORAGE_KEY);
+    }
+  }, [pendingOrder, formData, userId]);
   useEffect(() => {
     if (open) {
       scrollRef.current?.scrollTo({ top: 9e9, behavior: 'smooth' });
