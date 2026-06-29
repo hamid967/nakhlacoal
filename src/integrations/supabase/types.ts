@@ -254,6 +254,69 @@ export type Database = {
         }
         Relationships: []
       }
+      trademarks: {
+        Row: {
+          address_ar: string | null
+          colors: string[]
+          country_ar: string | null
+          created_at: string
+          description_ar: string | null
+          expires_hijri: string | null
+          filed_hijri: string | null
+          goods_ar: string | null
+          id: string
+          is_active: boolean
+          name_ar: string
+          name_en: string
+          nice_class: string
+          owner_ar: string | null
+          registered_hijri: string | null
+          registration_no: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          address_ar?: string | null
+          colors?: string[]
+          country_ar?: string | null
+          created_at?: string
+          description_ar?: string | null
+          expires_hijri?: string | null
+          filed_hijri?: string | null
+          goods_ar?: string | null
+          id: string
+          is_active?: boolean
+          name_ar: string
+          name_en: string
+          nice_class: string
+          owner_ar?: string | null
+          registered_hijri?: string | null
+          registration_no: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          address_ar?: string | null
+          colors?: string[]
+          country_ar?: string | null
+          created_at?: string
+          description_ar?: string | null
+          expires_hijri?: string | null
+          filed_hijri?: string | null
+          goods_ar?: string | null
+          id?: string
+          is_active?: boolean
+          name_ar?: string
+          name_en?: string
+          nice_class?: string
+          owner_ar?: string | null
+          registered_hijri?: string | null
+          registration_no?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
