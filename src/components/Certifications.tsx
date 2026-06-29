@@ -36,7 +36,7 @@ export function Certifications() {
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4">
           {items.map((it, i) => (
             <ScrollReveal key={i} delay={i * 60}>
-              <div className="group h-full rounded-2xl border border-gold/20 bg-background/60 backdrop-blur-sm p-4 md:p-5 flex flex-col items-center text-center transition-all duration-500 hover:border-gold/50 hover:bg-background hover:-translate-y-0.5">
+              <div className="group h-full rounded-2xl glass-card p-4 md:p-5 flex flex-col items-center text-center">
                 <span className="w-11 h-11 md:w-12 md:h-12 rounded-full bg-gold/10 text-gold-hi flex items-center justify-center mb-3 transition-transform duration-500 group-hover:scale-110">
                   <it.icon className="w-5 h-5 md:w-6 md:h-6" />
                 </span>
