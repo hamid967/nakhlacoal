@@ -87,6 +87,7 @@ export default function App() {
                <Route path="/admin/inventory" element={<ProtectedRoute requireRole="admin"><AdminInventory /></ProtectedRoute>} />
                <Route path="/orders/new" element={<ProtectedRoute><NewOrder /></ProtectedRoute>} />
                <Route path="/orders/:id" element={<ProtectedRoute><OrderTracking /></ProtectedRoute>} />
+               <Route path="/catalog" element={<Catalog />} />
 
                 <Route path="*" element={<NotFound />} />
               </Route>
