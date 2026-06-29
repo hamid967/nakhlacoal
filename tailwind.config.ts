@@ -37,6 +37,7 @@ export default {
           DEFAULT: "hsl(var(--gold))",
           hi: "hsl(var(--gold-hi))",
           lo: "hsl(var(--gold-lo))",
+          ink: "hsl(var(--gold-ink))",
         },
         jade: "hsl(var(--jade))",
         primary: {
