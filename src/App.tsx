@@ -46,6 +46,8 @@ import AdminReports from '@/admin/pages/Reports';
 import AdminSettings from '@/admin/pages/Settings';
 import AdminPlaceholder from '@/admin/pages/Placeholder';
 import AdminTrademarks from '@/admin/pages/Trademarks';
+import AdminTracking from '@/admin/pages/Tracking';
+import TrackingLoader from '@/components/TrackingLoader';
 
 import PortalLayout from '@/portal/PortalLayout';
 import PortalDashboard from '@/portal/pages/Dashboard';
@@ -84,6 +86,7 @@ export default function App() {
           <CompareProvider>
             <HomeIntro />
             <AnalyticsTracker />
+            <TrackingLoader />
 
             <Toaster />
             <Sonner />
@@ -119,6 +122,7 @@ export default function App() {
                 <Route path="reports" element={<AdminReports />} />
                 <Route path="analytics" element={<AdminReports />} />
                 <Route path="settings" element={<AdminSettings />} />
+                <Route path="tracking" element={<AdminTracking />} />
                 <Route path="trademarks" element={<AdminTrademarks />} />
                 <Route path="*" element={<AdminPlaceholder />} />
 

@@ -52,6 +52,7 @@ const groups: Group[] = [
     { to: '/admin/roles', label: 'الأدوار والصلاحيات', icon: KeyRound, badge: 'قريباً' },
     { to: '/admin/logs', label: 'سجل النظام', icon: ScrollText, badge: 'قريباً' },
     { to: '/admin/security', label: 'الأمان', icon: ShieldCheck, badge: 'قريباً' },
+    { to: '/admin/tracking', label: 'التتبع والتحليلات', icon: BarChart3 },
     { to: '/admin/settings', label: 'الإعدادات', icon: SettingsIcon },
   ]},
 ];
