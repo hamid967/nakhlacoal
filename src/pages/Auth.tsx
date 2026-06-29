@@ -25,7 +25,28 @@ export default function Auth() {
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
-  const from = (location.state as { from?: string } | null)?.from ?? '/';
+  const sanitizeFrom = (raw?: string | null) => {
+    if (!raw) return '/';
+    try {
+      // Only allow internal, relative paths — reject //, http(s)://, javascript:, etc.
+      if (!raw.startsWith('/') || raw.startsWith('//')) return '/';
+      const u = new URL(raw, window.location.origin);
+      if (u.origin !== window.location.origin) return '/';
+      if (u.pathname === '/auth') return '/';
+      return u.pathname + u.search + u.hash;
+    } catch {
+      return '/';
+    }
+  };
+  const queryFrom = new URLSearchParams(location.search).get('from');
+  const stateFrom = (location.state as { from?: string } | null)?.from;
+  const from = sanitizeFrom(queryFrom ?? stateFrom);
+
+  // Once Supabase confirms a session (sign-in or already-signed-in), bounce to `from`.
+  useEffect(() => {
+    if (user) navigate(from, { replace: true });
+  }, [user, from, navigate]);
+
 
   const t = (ar: string, en: string) => (isAr ? ar : en);
 
