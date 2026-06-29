@@ -138,7 +138,7 @@ export function HeroSlideshow() {
         type="button"
         onClick={() => go(isAr ? 1 : -1)}
         aria-label={isAr ? 'التالي' : 'Previous'}
-        className="absolute top-1/2 -translate-y-1/2 start-3 grid place-items-center h-10 w-10 rounded-full bg-dark/40 backdrop-blur-md text-background/90 border border-background/15 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity duration-300 hover:bg-dark/60"
+        className="glass-strip glass-dark absolute top-1/2 -translate-y-1/2 start-3 grid place-items-center h-11 w-11 rounded-full text-background/95 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity duration-300"
       >
         <ChevronLeft className="h-5 w-5" />
       </button>
