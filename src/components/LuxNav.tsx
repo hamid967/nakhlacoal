@@ -169,7 +169,7 @@ function AccountButton() {
       <Link
         to="/auth"
         aria-label={isAr ? 'تسجيل الدخول' : 'Sign in'}
-        className="hidden md:inline-flex w-10 h-10 rounded-full items-center justify-center text-foreground/70 hover:text-gold-hi transition-colors"
+        className="hidden md:inline-flex w-10 h-10 rounded-full items-center justify-center text-foreground/70 hover:text-gold-ink focus-visible:text-gold-ink transition-colors"
       >
         <User className="w-4 h-4" />
       </Link>
@@ -181,14 +181,14 @@ function AccountButton() {
         to="/profile"
         aria-label={isAr ? 'الملف الشخصي' : 'Profile'}
         title={user.email ?? ''}
-        className="w-10 h-10 rounded-full inline-flex items-center justify-center text-foreground/70 hover:text-gold-hi transition-colors"
+        className="w-10 h-10 rounded-full inline-flex items-center justify-center text-foreground/70 hover:text-gold-ink focus-visible:text-gold-ink transition-colors"
       >
         <User className="w-4 h-4" />
       </Link>
       <button
         onClick={signOut}
         aria-label={isAr ? 'تسجيل الخروج' : 'Sign out'}
-        className="w-10 h-10 rounded-full inline-flex items-center justify-center text-foreground/70 hover:text-gold-hi transition-colors"
+        className="w-10 h-10 rounded-full inline-flex items-center justify-center text-foreground/70 hover:text-gold-ink focus-visible:text-gold-ink transition-colors"
       >
         <LogOut className="w-4 h-4" />
       </button>
