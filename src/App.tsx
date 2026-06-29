@@ -36,6 +36,14 @@ import Assistant from '@/pages/Assistant';
 import AdminOrders from '@/pages/AdminOrders';
 import AdminInventory from '@/pages/AdminInventory';
 import AdminAnalytics from '@/pages/AdminAnalytics';
+import AdminLayout from '@/admin/AdminLayout';
+import AdminDashboard from '@/admin/pages/Dashboard';
+import AdminOrdersNew from '@/admin/pages/Orders';
+import AdminProductsNew from '@/admin/pages/Products';
+import AdminCustomers from '@/admin/pages/Customers';
+import AdminReports from '@/admin/pages/Reports';
+import AdminSettings from '@/admin/pages/Settings';
+import AdminPlaceholder from '@/admin/pages/Placeholder';
 
 import NewOrder from '@/pages/NewOrder';
 import OrderTracking from '@/pages/OrderTracking';
@@ -85,9 +93,22 @@ export default function App() {
                 <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                 <Route path="/assistant" element={<Assistant />} />
                 <Route path="/assistant/:threadId" element={<Assistant />} />
-                <Route path="/admin/orders" element={<ProtectedRoute requireRole="admin"><AdminOrders /></ProtectedRoute>} />
-               <Route path="/admin/inventory" element={<ProtectedRoute requireRole="admin"><AdminInventory /></ProtectedRoute>} />
-               <Route path="/admin/analytics" element={<ProtectedRoute requireRole="admin"><AdminAnalytics /></ProtectedRoute>} />
+                <Route path="/admin/inventory" element={<ProtectedRoute requireRole="admin"><AdminInventory /></ProtectedRoute>} />
+              </Route>
+              <Route path="/admin" element={<ProtectedRoute requireRole="admin"><AdminLayout /></ProtectedRoute>}>
+                <Route index element={<AdminDashboard />} />
+                <Route path="orders" element={<AdminOrdersNew />} />
+                <Route path="products" element={<AdminProductsNew />} />
+                <Route path="customers" element={<AdminCustomers />} />
+                <Route path="reports" element={<AdminReports />} />
+                <Route path="analytics" element={<AdminReports />} />
+                <Route path="settings" element={<AdminSettings />} />
+                <Route path="*" element={<AdminPlaceholder />} />
+              </Route>
+              <Route element={<Layout />}>
+                {/* legacy admin routes preserved */}
+                <Route path="/admin/legacy/orders" element={<ProtectedRoute requireRole="admin"><AdminOrders /></ProtectedRoute>} />
+                <Route path="/admin/legacy/analytics" element={<ProtectedRoute requireRole="admin"><AdminAnalytics /></ProtectedRoute>} />
 
                <Route path="/orders/new" element={<ProtectedRoute><NewOrder /></ProtectedRoute>} />
                <Route path="/orders/:id" element={<ProtectedRoute><OrderTracking /></ProtectedRoute>} />
