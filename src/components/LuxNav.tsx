@@ -174,7 +174,7 @@ export function LuxNav() {
           onMouseLeave={scheduleClose}
         >
           <div className="container pt-3">
-            <div className="glass-card rounded-2xl p-6 shadow-xl border border-gold/15">
+            <div className="glass-card glass-dark glass-grain rounded-3xl p-6 shadow-2xl">
               {navItems.map((item) => {
                 if (item.type !== 'mega' || activeMega !== item.key) return null;
                 return (
@@ -219,11 +219,12 @@ export function LuxNav() {
           open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         }`}
       >
-        <div className="absolute inset-0 bg-background/90 backdrop-blur-2xl" onClick={() => setOpen(false)} />
+        <div className="absolute inset-0 bg-black/55 backdrop-blur-md" onClick={() => setOpen(false)} />
         <aside
-          className={`absolute top-0 ${isAr ? 'left-0' : 'right-0'} h-dvh w-[85vw] max-w-sm glass-card rounded-none ${
+          className={`absolute top-0 ${isAr ? 'left-0' : 'right-0'} h-dvh w-[85vw] max-w-sm glass-card glass-dark glass-grain rounded-none ${
             open ? 'translate-x-0' : isAr ? '-translate-x-full' : 'translate-x-full'
-          } transition-transform duration-500 ease-out p-8 overflow-y-auto`}
+          } transition-transform duration-500 ease-out p-8 overflow-y-auto shadow-2xl`}
+
         >
           <div className="flex items-center justify-between mb-10">
             <img src={logo} alt="Palm Charcoal" width={48} height={48} className="h-12 w-auto" />
