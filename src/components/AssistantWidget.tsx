@@ -268,6 +268,10 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
     }
   };
 
+  const liveQuote = pendingOrder
+    ? quoteFor(pendingOrder.product_type, Number(pendingOrder.quantity) || 0, pendingOrder.unit || 'kg')
+    : null;
+
   const confirmOrder = () => {
     const errs: Record<string, string> = {};
     if (formData.contact_name.trim().length < 2) errs.contact_name = 'الاسم مطلوب';
@@ -276,6 +280,10 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
     if (!formData.delivery_method) errs.delivery_method = 'اختر طريقة الاستلام';
     setFormErrors(errs);
     if (Object.keys(errs).length || !pendingOrder) return;
+    if (liveQuote && !liveQuote.ok) {
+      toast.error(liveQuote.issues[0] || 'تعذّر تأكيد الكمية، يرجى المراجعة.');
+      return;
+    }
     setReviewMode(true);
   };
 
