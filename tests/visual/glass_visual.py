@@ -231,12 +231,15 @@ async def run():
             failures.append(
                 f"[{theme}] expected reduced blur to drop ≥4px (was {b_n}->{b_r})"
             )
-        # 2) Grain must be removed or visibly weakened
-        if has_n and has_r and g_r >= g_n * 0.6:
+        # 2) Grain must be present in normal mode, then removed or weakened
+        if not has_n:
+            failures.append(f"[{theme}] grain missing in normal mode (probe broken)")
+        elif has_r and g_r >= g_n * 0.6:
             failures.append(
                 f"[{theme}] expected grain removed or <60% opacity"
                 f" (was {g_n}->{g_r})"
             )
+
 
     if failures:
         print("\nFAILED:")
