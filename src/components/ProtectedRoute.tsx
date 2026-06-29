@@ -20,8 +20,16 @@ export function ProtectedRoute({ children, requireRole }: Props) {
   }
 
   if (!user) {
-    return <Navigate to="/auth" state={{ from: location.pathname }} replace />;
+    const target = location.pathname + location.search + location.hash;
+    return (
+      <Navigate
+        to={`/auth?from=${encodeURIComponent(target)}`}
+        state={{ from: target }}
+        replace
+      />
+    );
   }
+
 
   if (requireRole && !roles.includes(requireRole) && !roles.includes('admin')) {
     return (

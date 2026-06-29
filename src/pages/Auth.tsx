@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet-async';
@@ -25,7 +25,31 @@ export default function Auth() {
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
-  const from = (location.state as { from?: string } | null)?.from ?? '/';
+  const sanitizeFrom = (raw?: string | null) => {
+    if (!raw) return '/';
+    try {
+      // Only allow internal, relative paths — reject //, http(s)://, javascript:, etc.
+      if (!raw.startsWith('/') || raw.startsWith('//')) return '/';
+      const u = new URL(raw, window.location.origin);
+      if (u.origin !== window.location.origin) return '/';
+      if (u.pathname === '/auth') return '/';
+      return u.pathname + u.search + u.hash;
+    } catch {
+      return '/';
+    }
+  };
+  const queryFrom = new URLSearchParams(location.search).get('from');
+  const stateFrom = (location.state as { from?: string } | null)?.from;
+  const from = sanitizeFrom(queryFrom ?? stateFrom);
+
+  const hasExplicitFrom = Boolean(queryFrom ?? stateFrom);
+  // Auto-redirect only when the user was sent here from a protected route.
+  // Otherwise keep them on /auth so the Sign-out panel stays accessible.
+  useEffect(() => {
+    if (user && hasExplicitFrom) navigate(from, { replace: true });
+  }, [user, hasExplicitFrom, from, navigate]);
+
+
 
   const t = (ar: string, en: string) => (isAr ? ar : en);
 
