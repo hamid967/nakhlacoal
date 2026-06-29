@@ -102,6 +102,11 @@ export default function Home() {
 
       <SectionDivider />
 
+      {/* Audience tracks — clear commercial paths: Individuals / Wholesale / Export */}
+      <AudienceTracks />
+
+
+
       {/* Features */}
       <LuxSection tone="surface">
         <div className="container"><SectionNumber index={2} /></div>
