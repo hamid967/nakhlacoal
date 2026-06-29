@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ShoppingBag, MessageCircle } from 'lucide-react';
 import { OrderModal } from './OrderModal';
+import { trackWhatsApp, trackConversion } from '@/lib/track';
 
 const WHATSAPP = 'https://wa.me/966540060095';
 
