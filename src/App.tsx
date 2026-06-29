@@ -38,6 +38,7 @@ import AdminInventory from '@/pages/AdminInventory';
 import NewOrder from '@/pages/NewOrder';
 import OrderTracking from '@/pages/OrderTracking';
 
+import Catalog from '@/pages/Catalog';
 import NotFound from '@/pages/NotFound';
 
 const queryClient = new QueryClient();
