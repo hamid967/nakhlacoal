@@ -218,6 +218,10 @@ export default function Home() {
       {/* Certifications */}
       <Certifications />
 
+      <Suspense fallback={<SectionSkeleton variant="grid" />}>
+        <TrademarksShowcase />
+      </Suspense>
+
       <SectionDivider />
 
       {/* Testimonials */}
