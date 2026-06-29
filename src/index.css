@@ -456,6 +456,109 @@
     -webkit-text-fill-color: transparent;
     animation: lux-shine 6s linear infinite;
   }
+
+  /* ============================================================
+     Premium Motion Presets — pages 10/11/12
+     ============================================================ */
+
+  /* Soft parallax: translateY driven by --pp (set by JS on scroll) */
+  .lux-parallax {
+    transform: translate3d(0, calc(var(--pp, 0) * 1px), 0);
+    will-change: transform;
+    transition: transform 120ms linear;
+  }
+  .lux-parallax-slow { --pp-speed: 0.04; }
+  .lux-parallax-med  { --pp-speed: 0.08; }
+  .lux-parallax-fast { --pp-speed: 0.14; }
+
+  /* Glassmorphism hover lift with gold sheen sweep */
+  .lux-glass-hover {
+    position: relative;
+    overflow: hidden;
+    transition:
+      transform 400ms cubic-bezier(.2,.7,.2,1),
+      box-shadow 400ms cubic-bezier(.2,.7,.2,1),
+      border-color 400ms ease,
+      backdrop-filter 400ms ease;
+  }
+  .lux-glass-hover::before {
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(
+      115deg,
+      transparent 30%,
+      hsl(var(--gold-hi) / 0.18) 50%,
+      transparent 70%
+    );
+    transform: translateX(-110%);
+    transition: transform 900ms cubic-bezier(.2,.7,.2,1);
+    pointer-events: none;
+  }
+  .lux-glass-hover:hover {
+    transform: translateY(-4px);
+    box-shadow:
+      0 24px 60px -24px hsl(var(--dark) / 0.35),
+      0 0 0 1px hsl(var(--gold) / 0.35) inset;
+  }
+  .lux-glass-hover:hover::before { transform: translateX(110%); }
+
+  /* Timeline micro-interactions (Order Tracking) */
+  .lux-timeline-dot {
+    position: relative;
+    transition: transform 300ms cubic-bezier(.2,.7,.2,1);
+  }
+  .lux-timeline-dot::after {
+    content: "";
+    position: absolute; inset: -6px;
+    border-radius: 9999px;
+    border: 1px solid hsl(var(--gold) / 0.6);
+    opacity: 0;
+    transform: scale(.6);
+    transition: opacity 400ms ease, transform 600ms cubic-bezier(.2,.7,.2,1);
+  }
+  .lux-timeline-dot[data-active="true"] { transform: scale(1.08); }
+  .lux-timeline-dot[data-active="true"]::after {
+    opacity: 1; transform: scale(1);
+    animation: lux-ping 2.4s cubic-bezier(.2,.7,.2,1) infinite;
+  }
+  @keyframes lux-ping {
+    0%   { opacity: .7; transform: scale(.85); }
+    80%  { opacity: 0;  transform: scale(1.6); }
+    100% { opacity: 0;  transform: scale(1.6); }
+  }
+
+  .lux-timeline-line {
+    background: linear-gradient(90deg,
+      hsl(var(--primary)) 0%,
+      hsl(var(--primary)) var(--progress, 0%),
+      hsl(var(--muted)) var(--progress, 0%),
+      hsl(var(--muted)) 100%);
+    transition: --progress 800ms cubic-bezier(.2,.7,.2,1);
+  }
+  @property --progress {
+    syntax: "<percentage>";
+    inherits: false;
+    initial-value: 0%;
+  }
+
+  /* Stat card count-in (used by dashboard tiles) */
+  @keyframes lux-rise {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .lux-rise { animation: lux-rise 600ms cubic-bezier(.2,.7,.2,1) both; }
+  .lux-rise-1 { animation-delay: 80ms; }
+  .lux-rise-2 { animation-delay: 160ms; }
+  .lux-rise-3 { animation-delay: 240ms; }
+  .lux-rise-4 { animation-delay: 320ms; }
+
+  /* Stepper segment fill (Order Flow) */
+  .lux-step-bar {
+    background: linear-gradient(90deg,
+      hsl(var(--primary)) var(--step, 0%),
+      hsl(var(--border)) var(--step, 0%));
+    transition: background 700ms cubic-bezier(.2,.7,.2,1);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
