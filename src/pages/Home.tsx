@@ -13,6 +13,7 @@ const FaqSection = lazy(() => import('@/components/FaqSection').then((m) => ({ d
 
 import { Certifications } from '@/components/Certifications';
 import { StickyMobileCTA } from '@/components/StickyMobileCTA';
+import { SectionSkeleton } from '@/components/SectionSkeleton';
 import { useLiveOrderCount } from '@/hooks/useLiveOrderCount';
 import {
   useDir,
@@ -75,7 +76,7 @@ export default function Home() {
 
       {/* HERO — first impression (lazy-loaded WebGL) */}
       <div className="pt-24 md:pt-28">
-        <Suspense fallback={<div className="min-h-[60vh] grid place-items-center text-gold-ink/60 font-arabic text-sm">…</div>}>
+        <Suspense fallback={<SectionSkeleton variant="hero" label={isAr ? 'جارٍ تحميل الواجهة' : 'Loading hero'} />}>
           <BrandHero />
         </Suspense>
       </div>
@@ -134,7 +135,7 @@ export default function Home() {
         </div>
       </LuxSection>
 
-      <Suspense fallback={null}>
+      <Suspense fallback={<SectionSkeleton variant="timeline" />}>
         <ProcessSection />
         <JourneySection />
       </Suspense>
@@ -192,7 +193,7 @@ export default function Home() {
         </div>
       </LuxSection>
 
-      <Suspense fallback={null}>
+      <Suspense fallback={<SectionSkeleton variant="band" />}>
         <FaqSection />
         <LocationSection />
       </Suspense>
