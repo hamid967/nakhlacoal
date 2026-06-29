@@ -34,6 +34,11 @@ export function OccasionsGrid() {
       <SectionHeader
         eyebrow={isAr ? 'المناسبات' : 'Occasions'}
         title={isAr ? 'فحم النخلة… مناسب لكل لحظة' : 'Palm Charcoal — for every moment'}
+        lead={
+          isAr
+            ? 'من مطابخ المطاعم الراقية إلى ليالي التخييم ودفء المدافئ وأصالة الضيافة العربية، يرافقك فحم النخلة في كل مناسبة بجودة ثابتة ورائحة نقيّة وأداء يدوم.'
+            : 'From fine-dining kitchens and desert campfires to cozy fireplaces, authentic Arabian hospitality, premium BBQ, and global export — Palm Charcoal delivers consistent quality, pure aroma, and long-lasting performance for every occasion.'
+        }
       />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
