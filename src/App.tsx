@@ -44,6 +44,17 @@ import AdminCustomers from '@/admin/pages/Customers';
 import AdminReports from '@/admin/pages/Reports';
 import AdminSettings from '@/admin/pages/Settings';
 import AdminPlaceholder from '@/admin/pages/Placeholder';
+import PortalLayout from '@/portal/PortalLayout';
+import PortalDashboard from '@/portal/pages/Dashboard';
+import PortalOrders from '@/portal/pages/Orders';
+import PortalCatalog from '@/portal/pages/Catalog';
+import PortalFavorites from '@/portal/pages/Favorites';
+import PortalTrademarks from '@/portal/pages/Trademarks';
+import PortalSupport from '@/portal/pages/Support';
+import PortalProfile from '@/portal/pages/Profile';
+import PortalSettings from '@/portal/pages/Settings';
+import PortalPlaceholder from '@/portal/pages/Placeholder';
+
 
 import NewOrder from '@/pages/NewOrder';
 import OrderTracking from '@/pages/OrderTracking';
@@ -105,6 +116,29 @@ export default function App() {
                 <Route path="settings" element={<AdminSettings />} />
                 <Route path="*" element={<AdminPlaceholder />} />
               </Route>
+              <Route path="/portal" element={<ProtectedRoute><PortalLayout /></ProtectedRoute>}>
+                <Route index element={<PortalDashboard />} />
+                <Route path="orders" element={<PortalOrders />} />
+                <Route path="orders/new" element={<NewOrder />} />
+                <Route path="orders/:id" element={<OrderTracking />} />
+                <Route path="tracking" element={<PortalPlaceholder title="تتبع الطلبات" />} />
+                <Route path="quotes" element={<PortalPlaceholder title="العروض السعرية" />} />
+                <Route path="invoices" element={<PortalPlaceholder title="الفواتير" />} />
+                <Route path="payments" element={<PortalPlaceholder title="المدفوعات" />} />
+                <Route path="catalog" element={<PortalCatalog />} />
+                <Route path="products" element={<PortalCatalog />} />
+                <Route path="trademarks" element={<PortalTrademarks />} />
+                <Route path="certificates" element={<PortalPlaceholder title="الشهادات" />} />
+                <Route path="favorites" element={<PortalFavorites />} />
+                <Route path="notifications" element={<PortalPlaceholder title="الإشعارات" />} />
+                <Route path="messages" element={<PortalPlaceholder title="الرسائل" />} />
+                <Route path="support" element={<PortalSupport />} />
+                <Route path="addresses" element={<PortalPlaceholder title="العناوين" />} />
+                <Route path="profile" element={<PortalProfile />} />
+                <Route path="settings" element={<PortalSettings />} />
+                <Route path="*" element={<PortalPlaceholder />} />
+              </Route>
+
               <Route element={<Layout />}>
                 {/* legacy admin routes preserved */}
                 <Route path="/admin/legacy/orders" element={<ProtectedRoute requireRole="admin"><AdminOrders /></ProtectedRoute>} />
