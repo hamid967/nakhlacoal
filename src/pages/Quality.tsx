@@ -12,6 +12,7 @@ import { SEO } from '@/components/SEO';
 import { SectionHeader, Stat } from '@/components/ui-lux';
 import { SectionSkeleton } from '@/components/SectionSkeleton';
 import { trademarks } from '@/data/trademarks';
+import { useLiveLabReport } from '@/hooks/useLiveLabReport';
 
 const CinematicGallery = lazy(() => import('./quality/CinematicGallery'));
 const QualityCharts = lazy(() => import('./quality/QualityCharts'));
