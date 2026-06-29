@@ -178,24 +178,48 @@ export function HomeIntro() {
           </div>
         </div>
 
-        {/* Slide stage — single classic framed card cross-fading */}
-        <div className="relative w-full max-w-md" style={{ height: 'clamp(200px, 34vw, 320px)' }}>
+        {/* Slide stage — cinematic 2060 cross-fade with 3D depth + holo flicker */}
+        <div
+          className="relative w-full max-w-md"
+          style={{ height: 'clamp(200px, 34vw, 320px)', perspective: '1400px' }}
+        >
           {SLIDES.map((tm, i) => {
             const isActive = i === active;
+            // Direction: previous slide exits left/back, next enters from right/front.
+            const delta = (i - active + SLIDES.length) % SLIDES.length;
+            const isNext = delta === 1;
+            const xOff = isActive ? 0 : isNext ? 60 : -60;
+            const ry = isActive ? 0 : isNext ? -18 : 18;
             return (
               <div
                 key={tm.id}
-                className="absolute inset-0 flex items-center justify-center transition-all duration-700 ease-out"
+                className="absolute inset-0 flex items-center justify-center"
                 style={{
                   opacity: isActive ? 1 : 0,
-                  transform: isActive ? 'scale(1)' : 'scale(0.94)',
+                  transform: `translate3d(${xOff}px,0,${isActive ? 0 : -120}px) rotateY(${ry}deg) scale(${isActive ? 1 : 0.9})`,
+                  filter: isActive ? 'blur(0) saturate(1.05)' : 'blur(6px) saturate(0.85)',
+                  transformStyle: 'preserve-3d',
+                  transition: `opacity ${transitionMs}ms cubic-bezier(0.22,1,0.36,1), transform ${transitionMs}ms cubic-bezier(0.22,1,0.36,1), filter ${transitionMs}ms ease-out`,
                   pointerEvents: isActive ? 'auto' : 'none',
+                  willChange: 'transform, opacity, filter',
                 }}
               >
                 <div className="relative w-full h-full rounded-2xl bg-white/95 border border-[hsl(var(--gold))] shadow-[0_20px_60px_-10px_rgba(160,120,40,0.5)] p-5 overflow-hidden">
                   {/* inner classic frame */}
                   <div className="absolute inset-2 rounded-xl border border-[hsl(var(--gold))]/40 pointer-events-none" />
-                  {/* gold scan sweep (motion-safe via keyframe) */}
+                  {/* 2060 holo flicker on enter */}
+                  {isActive && (
+                    <div
+                      key={`flick-${active}`}
+                      className="absolute inset-0 pointer-events-none mix-blend-screen"
+                      style={{
+                        background:
+                          'repeating-linear-gradient(to bottom, rgba(201,168,76,0.10) 0 1px, transparent 1px 3px)',
+                        animation: `holoFlicker ${Math.max(420, transitionMs * 0.7)}ms ease-out 1`,
+                      }}
+                    />
+                  )}
+                  {/* gold scan sweep */}
                   <div className="absolute inset-0 pointer-events-none"
                     style={{
                       background: 'linear-gradient(115deg, transparent 42%, rgba(201,168,76,0.28) 50%, transparent 58%)',
@@ -212,6 +236,7 @@ export function HomeIntro() {
             );
           })}
         </div>
+
 
         {/* Brand name + slide pager */}
         <div className="opacity-0 animate-[introUp_0.7s_ease-out_0.6s_forwards] flex flex-col items-center gap-2">
