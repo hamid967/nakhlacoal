@@ -31,7 +31,7 @@ export function ProtectedRoute({ children, requireRole }: Props) {
   }
 
 
-  if (requireRole && !roles.includes(requireRole) && !roles.includes('admin')) {
+  if (requireRole && !roles.includes(requireRole) && !roles.includes('admin') && !roles.includes('super_admin')) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center gap-3 text-center px-4">
         <h2 className="font-serif text-2xl">صلاحيات غير كافية / Insufficient permissions</h2>
