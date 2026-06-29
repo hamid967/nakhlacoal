@@ -164,13 +164,17 @@ export default function Home() {
                 <Stat
                   value={`${liveOrders.toLocaleString(isAr ? 'ar-SA' : 'en-US')}+`}
                   label={
-                    <span className="inline-flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" aria-hidden />
-                      {isAr ? 'طلب مُنجز' : 'Orders fulfilled'}
+                    <span className="inline-flex items-center gap-2">
+                      <span className="relative inline-flex w-2 h-2" aria-hidden>
+                        <span className="absolute inset-0 rounded-full bg-emerald-500/60 animate-ping" />
+                        <span className="relative inline-flex w-2 h-2 rounded-full bg-emerald-500" />
+                      </span>
+                      <span aria-live="polite">{isAr ? 'طلب مُنجز' : 'Orders fulfilled'}</span>
                     </span>
                   }
                   size="sm"
                 />
+
                 <Stat value="24/7" label={isAr ? 'دعم' : 'Support'} size="sm" />
                 <Stat value="100%" label={isAr ? 'طبيعي' : 'Natural'} size="sm" />
               </div>
