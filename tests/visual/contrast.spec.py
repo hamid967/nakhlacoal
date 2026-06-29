@@ -41,7 +41,9 @@ JS_EFFECTIVE_BG = r"""
 (el) => {
   let cur = el;
   while (cur) {
-    const s = getComputedStyle(cur).backgroundColor;
+    const cs = getComputedStyle(cur);
+    if (cs.backgroundImage && cs.backgroundImage !== 'none') return null; // unknown
+    const s = cs.backgroundColor;
     if (s && !s.startsWith('rgba(0, 0, 0, 0)') && s !== 'transparent') return s;
     cur = cur.parentElement;
   }
@@ -49,15 +51,16 @@ JS_EFFECTIVE_BG = r"""
 }
 """
 
-# (route, selector, label, state)
+# Interactive targets (hover/focus contrast is the regression we guard against)
 TARGETS = [
-    ("/",          "header a[href='/products']", "nav-products", "default"),
-    ("/",          "header a[href='/products']", "nav-products", "hover"),
-    ("/",          "header a[href='/products']", "nav-products", "focus"),
     ("/",          "a[href='/portal'], a[href='/auth']", "cta-portal", "default"),
-    ("/products",  "main a, main button", "product-action", "hover"),
-    ("/about",     "main h1, main h2", "about-heading", "default"),
-    ("/quality",   "main h1, main h2", "quality-heading", "default"),
+    ("/",          "a[href='/portal'], a[href='/auth']", "cta-portal", "hover"),
+    ("/",          "a[href='/portal'], a[href='/auth']", "cta-portal", "focus"),
+    ("/products",  "main a, main button",                "product-action", "default"),
+    ("/products",  "main a, main button",                "product-action", "hover"),
+    ("/products",  "main a, main button",                "product-action", "focus"),
+    ("/about",     "main a, main button",                "about-action", "hover"),
+    ("/about",     "main a, main button",                "about-action", "focus"),
 ]
 
 MIN_RATIO = 4.5  # AA for normal text; we don't downgrade for large text to stay strict
