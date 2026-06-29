@@ -24,13 +24,14 @@ import logo from '@/assets/palm-charcoal-logo.png';
 type Msg = { id: string; role: 'user' | 'assistant'; content: string };
 
 const STORAGE_KEY = 'palm-assistant-widget-v1';
+const ORDER_STORAGE_KEY = 'palm-assistant-pending-order-v1';
 const WHATSAPP_NUMBER = '966540060095';
 const ORDER_EMAIL = 'mab355@gmail.com';
 
 const greet: Msg = {
   id: 'greet',
   role: 'assistant',
-  content: 'أهلاً بك في **مساعد فحم النخلة** 🌴\n\nسأساعدك بتجهيز طلبك خطوة بخطوة. ما نوع الفحم الذي تحتاجه؟ (شواء، جوز هند، شيشة، بخور…)',
+  content: 'أهلاً بك في **مساعد فحم النخلة** 🌴\n\nأنا هنا لأساعدك بتجهيز طلبك خطوة بخطوة وأرشّح لك المنتج الأنسب لاستخدامك. كيف تنوي استخدام الفحم؟\n\n[QR] شواء عائلي | مطعم/مقهى | شيشة/معسل | بخور | تصدير [/QR]',
 };
 
 const loadMsgs = (): Msg[] => {
@@ -39,7 +40,21 @@ const loadMsgs = (): Msg[] => {
     return raw ? JSON.parse(raw) : [greet];
   } catch { return [greet]; }
 };
+const loadPendingOrder = (): Record<string, any> | null => {
+  try {
+    const raw = sessionStorage.getItem(ORDER_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch { return null; }
+};
 const makeId = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+
+// Parse [QR] a | b | c [/QR] markers and strip them from displayed text
+function extractQuickReplies(text: string): { chips: string[]; clean: string } {
+  const m = text.match(/\[QR\]([\s\S]*?)\[\/QR\]/i);
+  if (!m) return { chips: [], clean: text };
+  const chips = m[1].split('|').map(s => s.trim()).filter(Boolean).slice(0, 5);
+  return { chips, clean: text.replace(m[0], '').trim() };
+}
 
 function extractOrder(text: string): { order: Record<string, any> | null; clean: string } {
   const m = text.match(/<<ORDER_READY>>\s*([\s\S]*?)\s*<<END>>/);
@@ -84,7 +99,7 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
   const [input, setInput] = useState('');
   const [streaming, setStreaming] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [pendingOrder, setPendingOrder] = useState<Record<string, any> | null>(null);
+  const [pendingOrder, setPendingOrder] = useState<Record<string, any> | null>(() => loadPendingOrder());
   const [formData, setFormData] = useState({ contact_name: '', phone: '', address: '', delivery_method: 'توصيل' as 'توصيل' | 'استلام من المستودع' });
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -93,6 +108,10 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
 
 
   useEffect(() => { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(messages)); }, [messages]);
+  useEffect(() => {
+    if (pendingOrder) sessionStorage.setItem(ORDER_STORAGE_KEY, JSON.stringify(pendingOrder));
+    else sessionStorage.removeItem(ORDER_STORAGE_KEY);
+  }, [pendingOrder]);
   useEffect(() => {
     if (open) {
       scrollRef.current?.scrollTo({ top: 9e9, behavior: 'smooth' });
@@ -296,6 +315,14 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
           <MessageCircle className="w-4 h-4" />
         </a>
         <button
+          onClick={() => { setMessages([greet]); setPendingOrder(null); setInput(''); inputRef.current?.focus(); }}
+          className="p-1.5 rounded-lg hover:bg-white/10 transition"
+          aria-label="محادثة جديدة"
+          title="بدء محادثة جديدة"
+        >
+          <Sparkles className="w-4 h-4 text-gold-hi" />
+        </button>
+        <button
           onClick={() => { onClose(); navigate('/assistant'); }}
           className="p-1.5 rounded-lg hover:bg-white/10 transition"
           aria-label="تكبير"
@@ -314,6 +341,8 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
         {messages.map((m, idx) => {
           const isLastAssistant = m.role === 'assistant' && idx === messages.length - 1;
           const showTyping = isLastAssistant && streaming && !m.content;
+          const { chips, clean } = m.role === 'assistant' ? extractQuickReplies(m.content) : { chips: [], clean: m.content };
+          const showChips = isLastAssistant && !streaming && chips.length > 0 && !pendingOrder;
           return (
           <div key={m.id} className={`flex gap-2 ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
             {m.role === 'assistant' && (
@@ -334,10 +363,23 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
                 </div>
               ) : (
                 <div className="prose prose-sm max-w-none text-foreground text-sm leading-relaxed prose-strong:text-foreground prose-p:my-1">
-                  {m.content && <ReactMarkdown components={mdComponents}>{m.content}</ReactMarkdown>}
-                  {isLastAssistant && streaming && m.content && (
+                  {clean && <ReactMarkdown components={mdComponents}>{clean}</ReactMarkdown>}
+                  {isLastAssistant && streaming && clean && (
                     <span className="inline-block w-1.5 h-3.5 align-middle bg-gold/80 ms-0.5 animate-pulse" aria-hidden />
                   )}
+                </div>
+              )}
+              {showChips && (
+                <div className="flex flex-wrap gap-1.5 mt-2 font-arabic">
+                  {chips.map((c) => (
+                    <button
+                      key={c}
+                      onClick={() => { setInput(c); setTimeout(() => send(), 30); }}
+                      className="px-2.5 py-1 rounded-full text-[11px] bg-gold/10 hover:bg-gold/20 border border-gold/40 text-foreground transition"
+                    >
+                      {c}
+                    </button>
+                  ))}
                 </div>
               )}
             </div>
@@ -386,8 +428,25 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
             </p>
             <button onClick={() => setPendingOrder(null)} className="text-[10px] text-muted-foreground hover:text-foreground">إلغاء</button>
           </div>
-          <p className="text-[10px] text-muted-foreground">
-            {pendingOrder.product_type} · {pendingOrder.quantity} {pendingOrder.unit}
+          {/* Progress stepper */}
+          <ol className="flex items-center gap-1 text-[9px] text-muted-foreground">
+            {[
+              { k: 'منتج', done: !!pendingOrder.product_type },
+              { k: 'كمية', done: !!pendingOrder.quantity },
+              { k: 'بيانات', done: formData.contact_name.length > 1 && PHONE_RE.test(formData.phone) },
+              { k: 'عنوان', done: formData.address.length > 4 },
+              { k: 'تأكيد', done: false },
+            ].map((s, i, arr) => (
+              <li key={s.k} className="flex items-center gap-1 flex-1">
+                <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-bold ${s.done ? 'bg-emerald-500 text-white' : 'bg-muted text-muted-foreground border border-border'}`}>{s.done ? '✓' : i + 1}</span>
+                <span className={s.done ? 'text-foreground font-medium' : ''}>{s.k}</span>
+                {i < arr.length - 1 && <span className={`flex-1 h-px ${s.done ? 'bg-emerald-500/50' : 'bg-border'}`} />}
+              </li>
+            ))}
+          </ol>
+          <p className="text-[10px] text-muted-foreground border-t border-gold/15 pt-1.5">
+            <span className="font-semibold text-foreground">{pendingOrder.product_type}</span> · {pendingOrder.quantity} {pendingOrder.unit}
+            {pendingOrder.ai_summary && <span className="block mt-0.5 italic">{pendingOrder.ai_summary}</span>}
           </p>
           <div className="space-y-1.5">
             <div>
