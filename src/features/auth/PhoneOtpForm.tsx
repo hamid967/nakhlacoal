@@ -3,6 +3,7 @@ import { Phone, Loader2, KeyRound } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { phoneSchema, otpSchema } from './schemas';
+import { useRecaptcha } from '@/hooks/useRecaptcha';
 
 interface Props {
   isAr: boolean;
@@ -11,6 +12,7 @@ interface Props {
 
 export function PhoneOtpForm({ isAr, onSuccess }: Props) {
   const t = (ar: string, en: string) => (isAr ? ar : en);
+  const { execute: getCaptcha } = useRecaptcha();
   const [step, setStep] = useState<'phone' | 'otp'>('phone');
   const [phone, setPhone] = useState('+966');
   const [code, setCode] = useState('');

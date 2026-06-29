@@ -3,11 +3,13 @@ import { Mail, Loader2, CheckCircle2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { emailSchema } from './schemas';
+import { useRecaptcha } from '@/hooks/useRecaptcha';
 
 interface Props { isAr: boolean }
 
 export function MagicLinkForm({ isAr }: Props) {
   const t = (ar: string, en: string) => (isAr ? ar : en);
+  const { execute: getCaptcha } = useRecaptcha();
   const [email, setEmail] = useState('');
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState(false);
@@ -20,6 +22,13 @@ export function MagicLinkForm({ isAr }: Props) {
     if (!parsed.success) { setErr(t('بريد إلكتروني غير صالح', 'Invalid email')); return; }
     setBusy(true);
     try {
+      const token = await getCaptcha('magic_link');
+      if (token) {
+        const { data: v, error: vErr } = await supabase.functions.invoke('verify-captcha', {
+          body: { token, action: 'magic_link' },
+        });
+        if (vErr || !v?.success) throw new Error(t('فشل التحقق من الحماية', 'Bot check failed'));
+      }
       const { error } = await supabase.auth.signInWithOtp({
         email: parsed.data,
         options: { emailRedirectTo: window.location.origin },
