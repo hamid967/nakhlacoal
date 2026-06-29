@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
-  <!-- Public, indexable routes only. Excluded: /auth /studio /compare /profile /admin (internal or protected) -->
+  <!-- Public, indexable routes. Excluded: /profile /admin (protected). Note: /auth pages use noindex but listed for discovery. -->
   <url>
     <loc>https://alnakhlacoal.com/</loc>
     <xhtml:link rel="alternate" hreflang="ar" href="https://alnakhlacoal.com/?lang=ar"/>
