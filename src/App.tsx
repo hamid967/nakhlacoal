@@ -8,6 +8,8 @@ import { initAnalytics, trackPageView } from '@/lib/analytics';
 
 
 import { Layout } from '@/components/Layout';
+import { HomeIntro } from '@/components/HomeIntro';
+
 
 import { CompareBar } from '@/components/CompareBar';
 import { CompareProvider } from '@/contexts/CompareContext';
