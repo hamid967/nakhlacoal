@@ -191,6 +191,7 @@ export default function App() {
               </Routes>
             </Suspense>
             <CompareBar />
+            </CartProvider>
           </CompareProvider>
         </AuthProvider>
       </TooltipProvider>
