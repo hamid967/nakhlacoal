@@ -46,6 +46,7 @@ const AdminAnalytics = lazy(() => import('@/pages/AdminAnalytics'));
 const NewOrder = lazy(() => import('@/pages/NewOrder'));
 const OrderTracking = lazy(() => import('@/pages/OrderTracking'));
 const Catalog = lazy(() => import('@/pages/Catalog'));
+const CampaignLanding = lazy(() => import('@/pages/CampaignLanding'));
 
 const AdminLayout = lazy(() => import('@/admin/AdminLayout'));
 const AdminDashboard = lazy(() => import('@/admin/pages/Dashboard'));
