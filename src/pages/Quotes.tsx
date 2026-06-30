@@ -142,6 +142,22 @@ export default function Quotes() {
                     <Button size="sm" variant="outline" onClick={() => resend(q, 'email')}>
                       <Mail className="size-4 ms-1" /> بريد
                     </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="border-gold/40 text-gold hover:bg-gold/10"
+                      onClick={async () => {
+                        try {
+                          toast.loading('جارٍ إنشاء PDF…', { id: q.id });
+                          await exportQuoteToPdf({ ...q, quoteId: q.id });
+                          toast.success('تم التنزيل', { id: q.id });
+                        } catch {
+                          toast.error('تعذّر إنشاء الملف', { id: q.id });
+                        }
+                      }}
+                    >
+                      <Download className="size-4 ms-1" /> PDF
+                    </Button>
                     <Button size="sm" variant="ghost" onClick={() => onDelete(q.id)} className="text-destructive ms-auto">
                       <Trash2 className="size-4 ms-1" /> حذف
                     </Button>
