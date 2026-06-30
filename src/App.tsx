@@ -138,6 +138,7 @@ export default function App() {
                   <Route path="customers" element={<AdminCustomers />} />
                   <Route path="reports" element={<AdminReports />} />
                   <Route path="invoices" element={<AdminInvoices />} />
+                  <Route path="shipments" element={<AdminShipments />} />
                   <Route path="analytics" element={<AdminReports />} />
                   <Route path="settings" element={<AdminSettings />} />
                   <Route path="tracking" element={<AdminTracking />} />
