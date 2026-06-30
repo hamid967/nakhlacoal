@@ -46,6 +46,7 @@ const AdminAnalytics = lazy(() => import('@/pages/AdminAnalytics'));
 const NewOrder = lazy(() => import('@/pages/NewOrder'));
 const OrderTracking = lazy(() => import('@/pages/OrderTracking'));
 const Catalog = lazy(() => import('@/pages/Catalog'));
+const CampaignLanding = lazy(() => import('@/pages/CampaignLanding'));
 
 const AdminLayout = lazy(() => import('@/admin/AdminLayout'));
 const AdminDashboard = lazy(() => import('@/admin/pages/Dashboard'));
@@ -117,6 +118,7 @@ export default function App() {
                   <Route path="/articles" element={<Articles />} />
                   <Route path="/articles/:slug" element={<ArticleDetail />} />
                   <Route path="/for/:slug" element={<AudienceLanding />} />
+                  <Route path="/lp/:slug" element={<CampaignLanding />} />
                   <Route path="/studio" element={<ProtectedRoute><Studio /></ProtectedRoute>} />
                   <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                   <Route path="/assistant" element={<Assistant />} />
