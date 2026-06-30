@@ -10,6 +10,7 @@
     "lint": "eslint .",
     "lint:design": "node scripts/lint-design-system.mjs",
     "audit:colors": "node scripts/audit-hex-colors.mjs",
+    "audit:admin-tokens": "node scripts/audit-admin-tokens.mjs",
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
