@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -6,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Trash2, Plus, MessageCircle, Mail, FileText } from 'lucide-react';
 import { products } from '@/data/products';
 import { PRICING, VAT_RATE, bestPrice, availableUnits } from '@/data/pricing';
+import { saveQuote } from '@/lib/quoteStore';
 import { toast } from 'sonner';
 
 const WHATSAPP_NUMBER = '966540060095';
@@ -84,14 +86,33 @@ export function QuoteForm({ initialSlug, compact = false }: { initialSlug?: stri
     return true;
   };
 
-  const sendWhatsApp = () => {
-    if (!validate()) return;
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(summaryText())}`, '_blank', 'noopener');
-    toast.success('تم فتح واتساب لإرسال عرض السعر');
+  const persist = async (channel: 'whatsapp' | 'email') => {
+    try {
+      await saveQuote({
+        channel,
+        customer: { ...customer },
+        items: computed.items.map((i) => ({ slug: i.slug, qty: i.qty, unit: i.unit, unitPrice: i.unitPrice, lineTotal: i.lineTotal })),
+        subtotal: computed.subtotal,
+        vat: computed.vat,
+        total: computed.total,
+      });
+      toast.success('تم حفظ عرض السعر — يمكنك مراجعته من صفحة عروضي', {
+        action: { label: 'عروضي', onClick: () => (window.location.href = '/quotes') },
+      });
+    } catch {
+      /* noop */
+    }
   };
 
-  const sendEmail = () => {
+  const sendWhatsApp = async () => {
     if (!validate()) return;
+    await persist('whatsapp');
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(summaryText())}`, '_blank', 'noopener');
+  };
+
+  const sendEmail = async () => {
+    if (!validate()) return;
+    await persist('email');
     const subject = `طلب عرض سعر — ${customer.name}`;
     window.location.href = `mailto:${ORDER_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(summaryText())}`;
   };
