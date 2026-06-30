@@ -91,7 +91,7 @@ export default function About() {
       <LuxSection>
         <div className="max-w-4xl mx-auto text-center">
           <span className="eyebrow mb-5">{isAr ? 'المؤسس' : 'The Founder'}</span>
-          <h2 className={`text-3xl md:text-5xl mt-4 mb-6 ${isAr ? 'font-arabic font-bold' : 'font-display'}`}>
+          <h2 className={`mt-4 mb-6 ${isAr ? 'font-arabic font-bold' : 'font-display'}`}>
             <span className="text-gold-metal">{isAr ? 'محمد عبدالله باعشن' : 'Mohammed A. Baashen'}</span>
           </h2>
           <p className="text-base md:text-lg text-foreground/75 leading-loose">
