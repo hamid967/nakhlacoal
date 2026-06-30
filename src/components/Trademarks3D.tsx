@@ -77,7 +77,7 @@ function Card({
     };
   }, [offset]);
 
-  useFrame((_, dt) => {
+  useFrame(({ invalidate }, dt) => {
     const g = group.current;
     if (!g) return;
     const k = 1 - Math.exp(-dt * 6);
@@ -87,6 +87,13 @@ function Card({
     g.rotation.y = lerp(g.rotation.y, target.rotY, k);
     const s = lerp(g.scale.x, target.scale, k);
     g.scale.set(s, s, s);
+    // In demand mode, keep ticking until we've effectively reached the target.
+    const dist =
+      Math.abs(g.position.x - target.x) +
+      Math.abs(g.position.z - target.z) +
+      Math.abs(g.rotation.y - target.rotY) +
+      Math.abs(g.scale.x - target.scale);
+    if (dist > 0.002) invalidate();
   });
 
   const isCenter = offset === 0;
