@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { trademarks, type Trademark } from '@/data/trademarks';
 const IntroWebGL = lazy(() => import('./IntroWebGL'));
+import { hasWebGL } from '@/lib/hasWebGL';
 
 const KEY = 'palm-home-intro-played';
 const SETTINGS_KEY = 'palm-intro-settings';
@@ -133,10 +134,12 @@ export function HomeIntro() {
       style={{ backgroundColor: 'hsl(var(--background))' }}
       aria-hidden
     >
-      {/* WebGL cinematic backdrop (Three.js + R3F) */}
-      <Suspense fallback={null}>
-        <IntroWebGL />
-      </Suspense>
+      {/* WebGL cinematic backdrop (Three.js + R3F) — skipped on browsers without WebGL */}
+      {hasWebGL() && (
+        <Suspense fallback={null}>
+          <IntroWebGL />
+        </Suspense>
+      )}
 
       {/* Classic paper grain + vignette */}
       <div className="absolute inset-0 pointer-events-none opacity-[0.15] mix-blend-multiply"
