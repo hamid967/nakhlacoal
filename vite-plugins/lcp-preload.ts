@@ -1,17 +1,14 @@
 import type { Plugin } from 'vite';
+import { readFileSync, writeFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 
 type Options = {
   /**
-   * Source filename basenames (without extension) of LCP image candidates.
-   * The first one resolved in the bundle is preloaded.
-   * Examples: 'product-coconut' for `product-coconut.jpg`,
-   *           'slide-coconut-trees' for `slide-coconut-trees.jpg?picture`.
+   * Source filename basenames (without extension) of LCP image candidates,
+   * in priority order. First one resolved in the emitted bundle wins.
    */
   candidates: string[];
-  /**
-   * Preferred format priority. Picks the first format that exists for the
-   * matched candidate. Default: ['avif','webp','jpg','png'].
-   */
+  /** Format priority. Default: ['avif','webp','jpg','png']. */
   formats?: Array<'avif' | 'webp' | 'jpg' | 'png'>;
 };
 
@@ -23,49 +20,52 @@ const MIME: Record<string, string> = {
 };
 
 /**
- * Build-only Vite plugin: injects
+ * Build-only Vite plugin that injects
  *   <link rel="preload" as="image" type="..." fetchpriority="high" href="...">
- * for the highest-priority LCP candidate it can find in the emitted bundle.
- * Works with both raw `?import` jpg/png and `vite-imagetools` (?picture) outputs.
+ * into the emitted `dist/index.html`.
+ *
+ * Implementation note: Vite calls `transformIndexHtml` BEFORE `generateBundle`,
+ * so we can't observe hashed asset names there. Instead we patch the file in
+ * `writeBundle`, after both the HTML and the assets exist on disk.
  */
 export function lcpPreload(opts: Options): Plugin {
   const formats = opts.formats ?? ['avif', 'webp', 'jpg', 'png'];
-  let injection: string | null = null;
+  let outDir = 'dist';
+  let base = '/';
 
   return {
     name: 'lcp-preload',
     apply: 'build',
-    enforce: 'post',
-    generateBundle(_, bundle) {
+    configResolved(cfg) {
+      outDir = cfg.build.outDir;
+      base = cfg.base || '/';
+    },
+    writeBundle(_, bundle) {
       const files = Object.keys(bundle);
-      // eslint-disable-next-line no-console
-      console.log('[lcp-preload] scanning', files.length, 'bundle entries');
-      for (const name of opts.candidates) {
-        for (const fmt of formats) {
-          const match = files.find(
-            (f) => f.includes(name) && f.endsWith(`.${fmt}`),
-          );
+      let href: string | null = null;
+      let fmt: string | null = null;
+      outer: for (const name of opts.candidates) {
+        for (const f of formats) {
+          const match = files.find((p) => p.includes(name) && p.endsWith(`.${f}`));
           if (match) {
-            injection = `<link rel="preload" as="image" type="${MIME[fmt]}" href="/${match.startsWith('assets/') ? match : 'assets/' + match.split('/').pop()}" fetchpriority="high" />`;
-            // eslint-disable-next-line no-console
-            console.log('[lcp-preload] matched', match, '->', injection);
-            return;
+            href = base.replace(/\/$/, '') + '/' + match;
+            fmt = f;
+            break outer;
           }
         }
       }
-      // eslint-disable-next-line no-console
-      console.warn('[lcp-preload] no candidate matched', opts.candidates);
-    },
-    transformIndexHtml: {
-      order: 'post',
-      handler(html) {
-        if (!injection) {
-          // eslint-disable-next-line no-console
-          console.warn('[lcp-preload] transformIndexHtml ran but injection is empty');
-          return html;
-        }
-        return html.replace('</head>', `  ${injection}\n  </head>`);
-      },
+      if (!href || !fmt) return;
+
+      const indexPath = resolve(outDir, 'index.html');
+      let html: string;
+      try {
+        html = readFileSync(indexPath, 'utf8');
+      } catch {
+        return;
+      }
+      const tag = `<link rel="preload" as="image" type="${MIME[fmt]}" href="${href}" fetchpriority="high" />`;
+      if (html.includes(tag)) return;
+      writeFileSync(indexPath, html.replace('</head>', `  ${tag}\n  </head>`));
     },
   };
 }
