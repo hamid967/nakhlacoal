@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-import { FileText, Trash2, MessageCircle, Mail, Plus, Archive } from 'lucide-react';
+import { FileText, Trash2, MessageCircle, Mail, Plus, Archive, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { listQuotes, deleteQuote, clearQuotes, type SavedQuote } from '@/lib/quoteStore';
+import { exportQuoteToPdf } from '@/lib/exportQuotePdf';
 import { products } from '@/data/products';
 import { toast } from 'sonner';
 
@@ -140,6 +141,22 @@ export default function Quotes() {
                     </Button>
                     <Button size="sm" variant="outline" onClick={() => resend(q, 'email')}>
                       <Mail className="size-4 ms-1" /> بريد
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="border-gold/40 text-gold hover:bg-gold/10"
+                      onClick={async () => {
+                        try {
+                          toast.loading('جارٍ إنشاء PDF…', { id: q.id });
+                          await exportQuoteToPdf({ ...q, quoteId: q.id });
+                          toast.success('تم التنزيل', { id: q.id });
+                        } catch {
+                          toast.error('تعذّر إنشاء الملف', { id: q.id });
+                        }
+                      }}
+                    >
+                      <Download className="size-4 ms-1" /> PDF
                     </Button>
                     <Button size="sm" variant="ghost" onClick={() => onDelete(q.id)} className="text-destructive ms-auto">
                       <Trash2 className="size-4 ms-1" /> حذف
