@@ -1,8 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Filter, Download, Eye, Phone, Mail, Calendar, MapPin, X, RefreshCw } from 'lucide-react';
+import { Search, Download, Eye, Phone, Mail, Calendar, MapPin, X, RefreshCw, ChevronUp, ChevronLeft, ChevronRight } from 'lucide-react';
 import { toast } from 'sonner';
+
+type SortKey = 'id' | 'company_name' | 'product_type' | 'quantity' | 'status' | 'created_at';
+type SortDir = 'asc' | 'desc';
+const PAGE_SIZE = 10;
 
 const STATUSES = ['new', 'contacted', 'confirmed', 'shipped', 'completed', 'cancelled'] as const;
 const LABEL: Record<string, string> = {
@@ -18,8 +22,15 @@ export default function AdminOrders() {
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [q, setQ] = useState('');
+  const [qDebounced, setQDebounced] = useState('');
   const [status, setStatus] = useState<string>('all');
   const [active, setActive] = useState<any | null>(null);
+  const [sortKey, setSortKey] = useState<SortKey>('created_at');
+  const [sortDir, setSortDir] = useState<SortDir>('desc');
+  const [page, setPage] = useState(1);
+
+  useEffect(() => { const t = setTimeout(() => setQDebounced(q), 250); return () => clearTimeout(t); }, [q]);
+  useEffect(() => { setPage(1); }, [qDebounced, status, sortKey, sortDir]);
 
   async function load() {
     setLoading(true);
@@ -29,13 +40,42 @@ export default function AdminOrders() {
   }
   useEffect(() => { load(); }, []);
 
-  const filtered = useMemo(() => orders.filter((o) => {
-    if (status !== 'all' && o.status !== status) return false;
-    if (!q) return true;
-    const s = q.toLowerCase();
-    return [o.company_name, o.contact_name, o.phone, o.email, o.product_type, o.city]
-      .filter(Boolean).some((v: string) => v.toLowerCase().includes(s));
-  }), [orders, q, status]);
+  const filtered = useMemo(() => {
+    const s = qDebounced.toLowerCase().trim();
+    const list = orders.filter((o) => {
+      if (status !== 'all' && o.status !== status) return false;
+      if (!s) return true;
+      return [o.company_name, o.contact_name, o.phone, o.email, o.product_type, o.city]
+        .filter(Boolean).some((v: string) => v.toLowerCase().includes(s));
+    });
+    const dir = sortDir === 'asc' ? 1 : -1;
+    return [...list].sort((a, b) => {
+      const av = a[sortKey] ?? ''; const bv = b[sortKey] ?? '';
+      if (typeof av === 'number' && typeof bv === 'number') return (av - bv) * dir;
+      return String(av).localeCompare(String(bv), 'ar') * dir;
+    });
+  }, [orders, qDebounced, status, sortKey, sortDir]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const pageRows = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
+  function toggleSort(k: SortKey) {
+    if (sortKey === k) setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'));
+    else { setSortKey(k); setSortDir('asc'); }
+  }
+
+  function exportCsv() {
+    const headers = ['id','company_name','contact_name','phone','email','product_type','quantity','unit','status','city','created_at'];
+    const escape = (v: any) => `"${String(v ?? '').replace(/"/g, '""')}"`;
+    const csv = [headers.join(','), ...filtered.map(r => headers.map(h => escape(r[h])).join(','))].join('\n');
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = `orders-${new Date().toISOString().slice(0,10)}.csv`; a.click();
+    URL.revokeObjectURL(url);
+    toast.success('تم تصدير CSV');
+  }
+
 
   async function update(id: string, patch: any) {
     const { error } = await supabase.from('orders').update(patch).eq('id', id);
@@ -61,7 +101,7 @@ export default function AdminOrders() {
         </div>
         <div className="flex gap-2">
           <button onClick={load} className="a-btn a-btn-ghost"><RefreshCw className="w-4 h-4" /> تحديث</button>
-          <button className="a-btn a-btn-gold"><Download className="w-4 h-4" /> تصدير CSV</button>
+          <button onClick={exportCsv} className="a-btn a-btn-gold"><Download className="w-4 h-4" /> تصدير CSV</button>
         </div>
       </header>
 
@@ -73,8 +113,8 @@ export default function AdminOrders() {
         <div className="flex items-center gap-1 p-1 rounded-full" style={{ background: 'var(--a-surface-2)' }}>
           {['all', ...STATUSES].map((s) => (
             <button key={s} onClick={() => setStatus(s)}
-              className={`px-3 py-1.5 rounded-full text-xs transition ${status === s ? 'bg-white shadow font-semibold' : 'opacity-70 hover:opacity-100'}`}
-              style={status === s ? { color: 'var(--a-palm)' } : undefined}>
+              className={`px-3 py-1.5 rounded-full text-xs transition ${status === s ? 'shadow font-semibold' : 'opacity-70 hover:opacity-100'}`}
+              style={status === s ? { background: 'var(--a-surface)', color: 'var(--a-palm)' } : undefined}>
               {s === 'all' ? 'الكل' : LABEL[s]}
             </button>
           ))}
@@ -86,15 +126,20 @@ export default function AdminOrders() {
           <table className="a-table">
             <thead>
               <tr>
-                <th>الطلب</th><th>العميل</th><th>المنتج</th><th>الكمية</th>
-                <th>الحالة</th><th>التاريخ</th><th></th>
+                <th><SortTh label="الطلب" k="id" sortKey={sortKey} sortDir={sortDir} onSort={toggleSort} /></th>
+                <th><SortTh label="العميل" k="company_name" sortKey={sortKey} sortDir={sortDir} onSort={toggleSort} /></th>
+                <th><SortTh label="المنتج" k="product_type" sortKey={sortKey} sortDir={sortDir} onSort={toggleSort} /></th>
+                <th><SortTh label="الكمية" k="quantity" sortKey={sortKey} sortDir={sortDir} onSort={toggleSort} /></th>
+                <th><SortTh label="الحالة" k="status" sortKey={sortKey} sortDir={sortDir} onSort={toggleSort} /></th>
+                <th><SortTh label="التاريخ" k="created_at" sortKey={sortKey} sortDir={sortDir} onSort={toggleSort} /></th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
               {loading && <tr><td colSpan={7} className="text-center py-10" style={{ color: 'var(--a-text-muted)' }}>جاري التحميل…</td></tr>}
               {!loading && !filtered.length && <tr><td colSpan={7} className="text-center py-10" style={{ color: 'var(--a-text-muted)' }}>لا توجد نتائج</td></tr>}
-              {filtered.map((o) => (
-                <tr key={o.id}>
+              {pageRows.map((o) => (
+                <tr key={o.id} className="a-fade-up">
                   <td>
                     <div className="font-semibold">#{o.id.slice(0, 8)}</div>
                     <div className="text-[11px]" style={{ color: 'var(--a-text-muted)' }}>{o.business_type || '—'}</div>
@@ -124,7 +169,17 @@ export default function AdminOrders() {
             </tbody>
           </table>
         </div>
+
+        {!loading && filtered.length > 0 && (
+          <div className="flex items-center justify-between gap-3 px-4 py-3 border-t" style={{ borderColor: 'var(--a-border)' }}>
+            <div className="text-xs" style={{ color: 'var(--a-text-muted)' }}>
+              عرض {(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, filtered.length)} من {filtered.length}
+            </div>
+            <Pagination page={page} totalPages={totalPages} onChange={setPage} />
+          </div>
+        )}
       </div>
+
 
       <AnimatePresence>
         {active && (
@@ -180,6 +235,47 @@ function Section({ title, children }: { title: string; children: React.ReactNode
     <div className="a-card p-4" style={{ background: 'var(--a-surface-2)' }}>
       <div className="text-[10px] tracking-widest mb-1.5" style={{ color: 'var(--a-text-muted)' }}>{title.toUpperCase()}</div>
       {children}
+    </div>
+  );
+}
+
+function SortTh({ label, k, sortKey, sortDir, onSort }: {
+  label: string; k: SortKey; sortKey: SortKey; sortDir: SortDir; onSort: (k: SortKey) => void;
+}) {
+  const active = sortKey === k;
+  return (
+    <button type="button" className="a-th-sort" data-active={active} data-dir={active ? sortDir : undefined} onClick={() => onSort(k)}>
+      {label}
+      <ChevronUp />
+    </button>
+  );
+}
+
+function Pagination({ page, totalPages, onChange }: { page: number; totalPages: number; onChange: (p: number) => void }) {
+  const pages: (number | '…')[] = [];
+  const push = (v: number | '…') => pages.push(v);
+  if (totalPages <= 7) {
+    for (let i = 1; i <= totalPages; i++) push(i);
+  } else {
+    push(1);
+    if (page > 3) push('…');
+    for (let i = Math.max(2, page - 1); i <= Math.min(totalPages - 1, page + 1); i++) push(i);
+    if (page < totalPages - 2) push('…');
+    push(totalPages);
+  }
+  return (
+    <div className="flex items-center gap-1">
+      <button className="a-page-btn" disabled={page === 1} onClick={() => onChange(page - 1)} aria-label="السابق">
+        <ChevronRight className="w-4 h-4" />
+      </button>
+      {pages.map((p, i) => p === '…' ? (
+        <span key={`e${i}`} className="px-1 text-sm" style={{ color: 'var(--a-text-muted)' }}>…</span>
+      ) : (
+        <button key={p} className="a-page-btn" data-active={p === page} onClick={() => onChange(p)}>{p}</button>
+      ))}
+      <button className="a-page-btn" disabled={page === totalPages} onClick={() => onChange(page + 1)} aria-label="التالي">
+        <ChevronLeft className="w-4 h-4" />
+      </button>
     </div>
   );
 }
