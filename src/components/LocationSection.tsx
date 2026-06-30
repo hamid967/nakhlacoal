@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { MapPin, Clock, Phone, Navigation, Mail } from 'lucide-react';
 import { ScrollReveal } from '@/components/ScrollReveal';
 import { LuxSection, SectionHeader, Eyebrow, useDir } from '@/components/ui-lux';
+import { useTilt } from '@/hooks/useTilt';
 
 const QUERY = 'سوق الفحم البلد جدة';
 const MAPS_LINK = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(QUERY)}`;
@@ -11,6 +12,8 @@ export function LocationSection() {
   const { t, i18n } = useTranslation();
   const isAr = i18n.language?.startsWith('ar');
   const { Arrow } = useDir();
+  const tiltA = useTilt<HTMLDivElement>(4);
+  const tiltB = useTilt<HTMLDivElement>(3);
 
   const rows = [
     { icon: MapPin, label: isAr ? 'العنوان' : 'Address', value: isAr ? 'سوق الفحم، البلد، جدة 21433' : 'Charcoal Souq, Al-Balad, Jeddah 21433' },
@@ -31,7 +34,7 @@ export function LocationSection() {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-10 items-stretch">
         <ScrollReveal className="lg:col-span-5">
-          <div className="clay-card h-full p-5 sm:p-8 md:p-10 flex flex-col">
+          <div ref={tiltA.ref} onPointerMove={tiltA.onPointerMove} onPointerLeave={tiltA.onPointerLeave} className="clay-card h-full p-5 sm:p-8 md:p-10 flex flex-col">
             <Eyebrow>{isAr ? 'تفاصيل التواصل' : 'Contact details'}</Eyebrow>
 
             <ul className="mt-6 sm:mt-8 space-y-4 sm:space-y-6 flex-1">
@@ -63,7 +66,7 @@ export function LocationSection() {
         </ScrollReveal>
 
         <ScrollReveal delay={150} className="lg:col-span-7">
-          <div className="clay-card relative h-[300px] sm:h-[380px] lg:h-full lg:min-h-[420px] overflow-hidden p-0">
+          <div ref={tiltB.ref} onPointerMove={tiltB.onPointerMove} onPointerLeave={tiltB.onPointerLeave} className="clay-card relative h-[300px] sm:h-[380px] lg:h-full lg:min-h-[420px] overflow-hidden p-0">
             <iframe
               title={isAr ? 'موقع فحم النخلة' : 'Palm Charcoal location'}
               src={EMBED}
