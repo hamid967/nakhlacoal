@@ -6,7 +6,13 @@ import { supabase } from '@/integrations/supabase/client';
 const GA4_RE = /^G-[A-Z0-9]{6,}$/;
 const GTM_RE = /^GTM-[A-Z0-9]{4,}$/;
 
-type TestState = { status: 'idle' | 'testing' | 'ok' | 'fail'; message?: string };
+type FailReason = 'format' | 'timeout' | 'offline' | 'blocked' | 'network';
+type TestState = {
+  status: 'idle' | 'testing' | 'ok' | 'fail';
+  message?: string;
+  reason?: FailReason;
+  hints?: string[];
+};
 
 /**
  * Probes a tag URL by injecting a <script> tag. onload => network reachable + ID
@@ -34,23 +40,70 @@ function probeScript(url: string, timeoutMs = 7000): Promise<ProbeResult> {
   });
 }
 
-function resultToState(label: string, r: ProbeResult): TestState {
+async function detectFailReason(): Promise<FailReason> {
+  if (typeof navigator !== 'undefined' && navigator.onLine === false) return 'offline';
+  // Try to reach Google's tag endpoint via no-cors; if it throws → likely blocked by ad-blocker / extension.
+  try {
+    await fetch('https://www.googletagmanager.com/gtag/js?id=G-PROBE', {
+      mode: 'no-cors',
+      cache: 'no-store',
+    });
+    return 'network';
+  } catch {
+    return 'blocked';
+  }
+}
+
+const FAIL_COPY: Record<FailReason, { msg: (l: string) => string; hints: string[] }> = {
+  format: {
+    msg: (l) => `صيغة ${l} غير صالحة`,
+    hints: ['تأكّد من النسخ الكامل للمعرّف من Google', 'GA4 يبدأ بـ G- وGTM يبدأ بـ GTM-'],
+  },
+  timeout: {
+    msg: (l) => `انتهت مهلة الاختبار أثناء تحميل ${l}`,
+    hints: ['الشبكة بطيئة — أعد المحاولة', 'جرّب من شبكة أخرى أو عطّل VPN'],
+  },
+  offline: {
+    msg: () => 'لا يوجد اتصال بالإنترنت',
+    hints: ['تحقّق من اتصال الشبكة وأعد المحاولة'],
+  },
+  blocked: {
+    msg: (l) => `تم حظر تحميل ${l} (يبدو أنّ مانع إعلانات/امتداداً يحظر googletagmanager.com)`,
+    hints: [
+      'عطّل مانع الإعلانات على هذه الصفحة',
+      'أو افتح الموقع في نافذة خاصة بدون امتدادات',
+      'تأكّد أنّ جدار الحماية لا يحجب googletagmanager.com',
+    ],
+  },
+  network: {
+    msg: (l) => `تعذّر تحميل ${l} رغم وصول الشبكة — قد يكون المعرّف غير مفعّل`,
+    hints: [
+      'تأكّد أنّ المعرّف منشور وفعّال في حساب Google',
+      'انتظر بضع دقائق بعد إنشاء معرّف جديد ثم أعد الاختبار',
+    ],
+  },
+};
+
+async function resultToState(label: string, r: ProbeResult): Promise<TestState> {
   if (r === 'ok') return { status: 'ok', message: `${label} يستجيب — المعرّف صالح ومحمّل من Google.` };
-  if (r === 'timeout')
-    return {
-      status: 'fail',
-      message: `انتهت مهلة الاختبار (الشبكة بطيئة أو محجوبة). جرّب «إعادة المحاولة».`,
-    };
-  return { status: 'fail', message: `تعذّر تحميل سكربت ${label} (تحقّق من المعرّف أو مانع الإعلانات).` };
+  const reason: FailReason = r === 'timeout' ? 'timeout' : await detectFailReason();
+  const c = FAIL_COPY[reason];
+  return { status: 'fail', reason, message: c.msg(label), hints: c.hints };
 }
 
 async function testGa4(id: string): Promise<TestState> {
-  if (!GA4_RE.test(id)) return { status: 'fail', message: 'صيغة GA4 غير صالحة (G-XXXXXXXXXX)' };
+  if (!GA4_RE.test(id)) {
+    const c = FAIL_COPY.format;
+    return { status: 'fail', reason: 'format', message: c.msg('GA4') + ' (G-XXXXXXXXXX)', hints: c.hints };
+  }
   return resultToState('GA4', await probeScript(`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(id)}`));
 }
 
 async function testGtm(id: string): Promise<TestState> {
-  if (!GTM_RE.test(id)) return { status: 'fail', message: 'صيغة GTM غير صالحة (GTM-XXXXXXX)' };
+  if (!GTM_RE.test(id)) {
+    const c = FAIL_COPY.format;
+    return { status: 'fail', reason: 'format', message: c.msg('GTM') + ' (GTM-XXXXXXX)', hints: c.hints };
+  }
   return resultToState('GTM', await probeScript(`https://www.googletagmanager.com/gtm.js?id=${encodeURIComponent(id)}`));
 }
 
@@ -61,6 +114,28 @@ function StatusBadge({ state }: { state: TestState }) {
   if (state.status === 'ok')
     return <span className="inline-flex items-center gap-1 text-[10px] text-emerald-600"><CheckCircle2 className="w-3 h-3" /> صالح</span>;
   return <span className="inline-flex items-center gap-1 text-[10px] text-red-600"><XCircle className="w-3 h-3" /> فشل</span>;
+}
+
+function TestFeedback({ state, onRetry }: { state: TestState; onRetry?: () => void }) {
+  const tone =
+    state.status === 'ok' ? 'text-emerald-700 bg-emerald-50 border-emerald-200'
+    : state.status === 'fail' ? 'text-red-700 bg-red-50 border-red-200'
+    : 'text-foreground bg-muted border-border';
+  return (
+    <div className={`text-xs mt-2 rounded-md border px-3 py-2 ${tone}`}>
+      <div className="flex items-start gap-2">
+        <span className="flex-1">{state.message}</span>
+        {state.status === 'fail' && onRetry && (
+          <button type="button" onClick={onRetry} className="underline shrink-0">إعادة المحاولة</button>
+        )}
+      </div>
+      {state.hints && state.hints.length > 0 && (
+        <ul className="list-disc ms-5 mt-1.5 space-y-0.5 opacity-90">
+          {state.hints.map((h, i) => <li key={i}>{h}</li>)}
+        </ul>
+      )}
+    </div>
+  );
 }
 
 export default function AdminTracking() {
@@ -182,18 +257,10 @@ export default function AdminTracking() {
             dir="ltr"
           />
           {ga4Test.message && (
-            <p className={`text-xs mt-1 flex items-center gap-2 ${ga4Test.status === 'ok' ? 'text-emerald-600' : ga4Test.status === 'fail' ? 'text-red-600' : ''}`}>
-              <span>{ga4Test.message}</span>
-              {ga4Test.status === 'fail' && ga4 && (
-                <button
-                  type="button"
-                  onClick={async () => { setGa4Test({ status: 'testing' }); setGa4Test(await testGa4(ga4)); }}
-                  className="underline shrink-0"
-                >
-                  إعادة المحاولة
-                </button>
-              )}
-            </p>
+            <TestFeedback
+              state={ga4Test}
+              onRetry={ga4 ? async () => { setGa4Test({ status: 'testing' }); setGa4Test(await testGa4(ga4)); } : undefined}
+            />
           )}
           <a
             href="https://analytics.google.com/analytics/web/#/p0/admin/streams/table/"
@@ -219,18 +286,10 @@ export default function AdminTracking() {
             dir="ltr"
           />
           {gtmTest.message && (
-            <p className={`text-xs mt-1 flex items-center gap-2 ${gtmTest.status === 'ok' ? 'text-emerald-600' : gtmTest.status === 'fail' ? 'text-red-600' : ''}`}>
-              <span>{gtmTest.message}</span>
-              {gtmTest.status === 'fail' && gtm && (
-                <button
-                  type="button"
-                  onClick={async () => { setGtmTest({ status: 'testing' }); setGtmTest(await testGtm(gtm)); }}
-                  className="underline shrink-0"
-                >
-                  إعادة المحاولة
-                </button>
-              )}
-            </p>
+            <TestFeedback
+              state={gtmTest}
+              onRetry={gtm ? async () => { setGtmTest({ status: 'testing' }); setGtmTest(await testGtm(gtm)); } : undefined}
+            />
           )}
         </div>
 
