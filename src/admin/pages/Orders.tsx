@@ -22,8 +22,15 @@ export default function AdminOrders() {
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [q, setQ] = useState('');
+  const [qDebounced, setQDebounced] = useState('');
   const [status, setStatus] = useState<string>('all');
   const [active, setActive] = useState<any | null>(null);
+  const [sortKey, setSortKey] = useState<SortKey>('created_at');
+  const [sortDir, setSortDir] = useState<SortDir>('desc');
+  const [page, setPage] = useState(1);
+
+  useEffect(() => { const t = setTimeout(() => setQDebounced(q), 250); return () => clearTimeout(t); }, [q]);
+  useEffect(() => { setPage(1); }, [qDebounced, status, sortKey, sortDir]);
 
   async function load() {
     setLoading(true);
@@ -33,13 +40,42 @@ export default function AdminOrders() {
   }
   useEffect(() => { load(); }, []);
 
-  const filtered = useMemo(() => orders.filter((o) => {
-    if (status !== 'all' && o.status !== status) return false;
-    if (!q) return true;
-    const s = q.toLowerCase();
-    return [o.company_name, o.contact_name, o.phone, o.email, o.product_type, o.city]
-      .filter(Boolean).some((v: string) => v.toLowerCase().includes(s));
-  }), [orders, q, status]);
+  const filtered = useMemo(() => {
+    const s = qDebounced.toLowerCase().trim();
+    const list = orders.filter((o) => {
+      if (status !== 'all' && o.status !== status) return false;
+      if (!s) return true;
+      return [o.company_name, o.contact_name, o.phone, o.email, o.product_type, o.city]
+        .filter(Boolean).some((v: string) => v.toLowerCase().includes(s));
+    });
+    const dir = sortDir === 'asc' ? 1 : -1;
+    return [...list].sort((a, b) => {
+      const av = a[sortKey] ?? ''; const bv = b[sortKey] ?? '';
+      if (typeof av === 'number' && typeof bv === 'number') return (av - bv) * dir;
+      return String(av).localeCompare(String(bv), 'ar') * dir;
+    });
+  }, [orders, qDebounced, status, sortKey, sortDir]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const pageRows = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
+  function toggleSort(k: SortKey) {
+    if (sortKey === k) setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'));
+    else { setSortKey(k); setSortDir('asc'); }
+  }
+
+  function exportCsv() {
+    const headers = ['id','company_name','contact_name','phone','email','product_type','quantity','unit','status','city','created_at'];
+    const escape = (v: any) => `"${String(v ?? '').replace(/"/g, '""')}"`;
+    const csv = [headers.join(','), ...filtered.map(r => headers.map(h => escape(r[h])).join(','))].join('\n');
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = `orders-${new Date().toISOString().slice(0,10)}.csv`; a.click();
+    URL.revokeObjectURL(url);
+    toast.success('تم تصدير CSV');
+  }
+
 
   async function update(id: string, patch: any) {
     const { error } = await supabase.from('orders').update(patch).eq('id', id);
