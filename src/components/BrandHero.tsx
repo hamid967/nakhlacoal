@@ -5,7 +5,7 @@ import { ArrowRight, ShieldCheck, Flame, Leaf, Award } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { trademarks } from '@/data/trademarks';
 const Trademarks3D = lazy(() => import('./Trademarks3D'));
-import { Trademarks3DSkeleton } from './Trademarks3D';
+import { Trademarks3DSkeleton } from './Trademarks3DSkeleton';
 
 const AUTOPLAY_MS = 5500;
 
