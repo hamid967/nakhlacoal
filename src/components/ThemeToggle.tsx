@@ -24,8 +24,8 @@ const THEMES: Record<Exclude<ThemeKey, 'auto'>, { name: string; swatches: string
 
 const FONTS: Record<FontKey, { name: string; sample: string; cssFamily: string }> = {
   classic:   { name: 'كلاسيكي',  sample: 'فحم النخلة · Palm Charcoal',  cssFamily: "'Tajawal','Cormorant Garamond',serif" },
-  modern:    { name: 'عصري',     sample: 'فحم النخلة · Palm Charcoal',  cssFamily: "'IBM Plex Sans Arabic','IBM Plex Sans',sans-serif" },
-  editorial: { name: 'تحريري',   sample: 'فحم النخلة · Palm Charcoal',  cssFamily: "'Amiri','Playfair Display',serif" },
+  modern:    { name: 'عصري',     sample: 'فحم النخلة · Palm Charcoal',  cssFamily: "'IBM Plex Sans Arabic',system-ui,sans-serif" },
+  editorial: { name: 'تحريري',   sample: 'فحم النخلة · Palm Charcoal',  cssFamily: "'Cormorant Garamond',serif" },
 };
 
 const STORAGE_KEY = 'pc-theme';

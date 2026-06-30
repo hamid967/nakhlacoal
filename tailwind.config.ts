@@ -19,7 +19,7 @@ export default {
     extend: {
       fontFamily: {
         display: ['"Cormorant Garamond"', 'serif'],
-        body: ['Karla', 'sans-serif'],
+        body: ['"IBM Plex Sans Arabic"', 'system-ui', 'sans-serif'],
         arabic: ['Tajawal', 'serif'],
       },
       colors: {
