@@ -84,16 +84,27 @@ export default function AdminDashboard() {
     orders.forEach((o) => { byProd[o.product_type] = (byProd[o.product_type] || 0) + toKg(Number(o.quantity) || 0, o.unit); });
     const topProducts = Object.entries(byProd).sort((a, b) => b[1] - a[1]).slice(0, 6).map(([n, v]) => ({ name: n, kg: v }));
 
-    const byStatus: Record<string, number> = {};
-    orders.forEach((o) => { byStatus[o.status || 'new'] = (byStatus[o.status || 'new'] || 0) + 1; });
+    const STATUS_KEYS = ['new', 'contacted', 'confirmed', 'shipped', 'completed', 'cancelled'];
+    const byStatus: Record<string, number> = Object.fromEntries(STATUS_KEYS.map((k) => [k, 0]));
+    orders.forEach((o) => { const k = o.status || 'new'; byStatus[k] = (byStatus[k] || 0) + 1; });
     const statusData = Object.entries(byStatus).map(([k, v]) => ({ name: k, value: v }));
 
     return {
       todays: todays.length, pending: pending.length, wholesale: wholesale.length, exportO: exportO.length,
-      revenue, stockKg, timeline: Object.values(byDay), topProducts, statusData,
+      revenue, stockKg, timeline: Object.values(byDay), topProducts, statusData, byStatus,
+      totalOrders: orders.length,
       ordersDelta, revenueDelta,
     };
   }, [orders, inv]);
+
+  const STATUS_LABEL: Record<string, string> = {
+    new: 'جديد', contacted: 'تم التواصل', confirmed: 'مؤكد',
+    shipped: 'تم الشحن', completed: 'مكتمل', cancelled: 'ملغي',
+  };
+  const STATUS_DOT: Record<string, string> = {
+    new: 'slate', contacted: 'amber', confirmed: 'emerald',
+    shipped: 'emerald', completed: 'emerald', cancelled: 'rose',
+  };
 
   const cards = [
     { label: 'طلبات اليوم', value: stats.todays.toLocaleString('ar-SA'), icon: ShoppingBag, tint: 'green', delta: stats.ordersDelta },
