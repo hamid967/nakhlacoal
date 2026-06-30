@@ -1,7 +1,7 @@
 import { lazy, Suspense, useEffect, useRef, useState, useCallback } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ShieldCheck, Flame, Leaf, Award } from 'lucide-react';
+import { ArrowRight, ShieldCheck, Flame, Leaf, Award, ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { trademarks } from '@/data/trademarks';
 const Trademarks3D = lazy(() => import('./Trademarks3D'));
@@ -22,16 +22,25 @@ export function BrandHero() {
   const isAr = i18n.language?.startsWith('ar');
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
+  // Bump this to restart the autoplay timer (used after any manual interaction
+  // so the next auto-advance gives the user a full window to read the slide).
+  const [autoplayTick, setAutoplayTick] = useState(0);
 
   const go = useCallback((dir: 1 | -1) => {
     setActive((a) => (a + dir + trademarks.length) % trademarks.length);
+    setAutoplayTick((t) => t + 1);
+  }, []);
+
+  const jumpTo = useCallback((i: number) => {
+    setActive(i);
+    setAutoplayTick((t) => t + 1);
   }, []);
 
   useEffect(() => {
     if (paused) return;
     const t = setInterval(() => setActive((a) => (a + 1) % trademarks.length), AUTOPLAY_MS);
     return () => clearInterval(t);
-  }, [paused]);
+  }, [paused, autoplayTick]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -227,12 +236,12 @@ export function BrandHero() {
                   aria-current={i === active ? 'true' : undefined}
                   aria-label={isAr ? `${t.nameAr} — علامة ${i + 1} من ${trademarks.length}` : `${t.nameEn} — brand ${i + 1} of ${trademarks.length}`}
                   tabIndex={i === active ? 0 : -1}
-                  onClick={() => setActive(i)}
-                  onFocus={() => setActive(i)}
+                  onClick={() => jumpTo(i)}
+                  onFocus={() => jumpTo(i)}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
                       e.preventDefault();
-                      setActive(i);
+                      jumpTo(i);
                     }
                   }}
                   className={`block rounded-md transition-all outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--gold-hi))] focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
@@ -243,6 +252,36 @@ export function BrandHero() {
               </li>
             ))}
           </ul>
+
+          {/* Prev / Next arrows */}
+          <button
+            type="button"
+            aria-label={isAr ? 'السابق' : 'Previous'}
+            onClick={() => go(isAr ? 1 : -1)}
+            className="absolute start-3 top-1/2 -translate-y-1/2 z-[60] w-11 h-11 rounded-full flex items-center justify-center bg-[hsl(var(--background))]/70 backdrop-blur border border-[hsl(var(--gold))]/40 text-[hsl(var(--gold-hi))] hover:bg-[hsl(var(--background))]/90 hover:scale-105 transition-all shadow-[0_8px_24px_-12px_hsl(var(--gold)/0.5)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--gold-hi))]"
+          >
+            <ChevronLeft className={`w-5 h-5 ${isAr ? 'rotate-180' : ''}`} />
+          </button>
+          <button
+            type="button"
+            aria-label={isAr ? 'التالي' : 'Next'}
+            onClick={() => go(isAr ? -1 : 1)}
+            className="absolute end-3 top-1/2 -translate-y-1/2 z-[60] w-11 h-11 rounded-full flex items-center justify-center bg-[hsl(var(--background))]/70 backdrop-blur border border-[hsl(var(--gold))]/40 text-[hsl(var(--gold-hi))] hover:bg-[hsl(var(--background))]/90 hover:scale-105 transition-all shadow-[0_8px_24px_-12px_hsl(var(--gold)/0.5)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--gold-hi))]"
+          >
+            <ChevronRight className={`w-5 h-5 ${isAr ? 'rotate-180' : ''}`} />
+          </button>
+
+          {/* Play / Pause toggle */}
+          <button
+            type="button"
+            aria-label={paused ? (isAr ? 'تشغيل' : 'Play') : (isAr ? 'إيقاف مؤقت' : 'Pause')}
+            aria-pressed={paused}
+            onClick={() => setPaused((p) => !p)}
+            className="absolute top-3 end-3 z-[60] w-9 h-9 rounded-full flex items-center justify-center bg-[hsl(var(--background))]/70 backdrop-blur border border-[hsl(var(--gold))]/40 text-[hsl(var(--gold-hi))] hover:bg-[hsl(var(--background))]/90 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--gold-hi))]"
+          >
+            {paused ? <Play className="w-4 h-4" /> : <Pause className="w-4 h-4" />}
+          </button>
+
 
           <div className="sr-only" aria-live="polite" aria-atomic="true">
             {isAr
@@ -263,7 +302,7 @@ export function BrandHero() {
                 aria-selected={i === active}
                 aria-label={isAr ? `${t.nameAr}` : `${t.nameEn}`}
                 tabIndex={i === active ? 0 : -1}
-                onClick={() => setActive(i)}
+                onClick={() => jumpTo(i)}
                 className={`h-1.5 rounded-full transition-all outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--gold-hi))] focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
                   i === active ? 'w-8 bg-[hsl(var(--gold-hi))]' : 'w-2 bg-foreground/20 hover:bg-foreground/40'
                 }`}
