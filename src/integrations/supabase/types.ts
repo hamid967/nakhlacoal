@@ -38,6 +38,99 @@ export type Database = {
         }
         Relationships: []
       }
+      customers: {
+        Row: {
+          address: string | null
+          balance_sar: number
+          city: string | null
+          commercial_register: string | null
+          company_name: string
+          contact_name: string | null
+          created_at: string
+          credit_limit_sar: number
+          email: string | null
+          id: string
+          notes: string | null
+          owner_user_id: string | null
+          payment_terms_days: number
+          phone: string | null
+          updated_at: string
+          vat_number: string | null
+        }
+        Insert: {
+          address?: string | null
+          balance_sar?: number
+          city?: string | null
+          commercial_register?: string | null
+          company_name: string
+          contact_name?: string | null
+          created_at?: string
+          credit_limit_sar?: number
+          email?: string | null
+          id?: string
+          notes?: string | null
+          owner_user_id?: string | null
+          payment_terms_days?: number
+          phone?: string | null
+          updated_at?: string
+          vat_number?: string | null
+        }
+        Update: {
+          address?: string | null
+          balance_sar?: number
+          city?: string | null
+          commercial_register?: string | null
+          company_name?: string
+          contact_name?: string | null
+          created_at?: string
+          credit_limit_sar?: number
+          email?: string | null
+          id?: string
+          notes?: string | null
+          owner_user_id?: string | null
+          payment_terms_days?: number
+          phone?: string | null
+          updated_at?: string
+          vat_number?: string | null
+        }
+        Relationships: []
+      }
+      daily_reports: {
+        Row: {
+          created_at: string
+          grand_total_sar: number
+          low_stock_items: Json
+          new_customers: number
+          orders_count: number
+          report_date: string
+          sales_subtotal_sar: number
+          updated_at: string
+          vat_collected_sar: number
+        }
+        Insert: {
+          created_at?: string
+          grand_total_sar?: number
+          low_stock_items?: Json
+          new_customers?: number
+          orders_count?: number
+          report_date: string
+          sales_subtotal_sar?: number
+          updated_at?: string
+          vat_collected_sar?: number
+        }
+        Update: {
+          created_at?: string
+          grand_total_sar?: number
+          low_stock_items?: Json
+          new_customers?: number
+          orders_count?: number
+          report_date?: string
+          sales_subtotal_sar?: number
+          updated_at?: string
+          vat_collected_sar?: number
+        }
+        Relationships: []
+      }
       inventory_items: {
         Row: {
           active: boolean
@@ -82,6 +175,149 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      invoice_items: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          invoice_id: string
+          line_total_sar: number
+          quantity: number
+          unit: string
+          unit_price_sar: number
+          vat_rate: number
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          id?: string
+          invoice_id: string
+          line_total_sar?: number
+          quantity?: number
+          unit?: string
+          unit_price_sar?: number
+          vat_rate?: number
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          invoice_id?: string
+          line_total_sar?: number
+          quantity?: number
+          unit?: string
+          unit_price_sar?: number
+          vat_rate?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invoice_items_invoice_id_fkey"
+            columns: ["invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      invoices: {
+        Row: {
+          buyer_address: string | null
+          buyer_name: string
+          buyer_vat_number: string | null
+          created_at: string
+          created_by: string | null
+          currency: string
+          customer_id: string | null
+          customer_user_id: string | null
+          due_date: string | null
+          grand_total_sar: number
+          id: string
+          invoice_no: string
+          issue_date: string
+          notes: string | null
+          order_id: string | null
+          qr_payload: string | null
+          seller_address: string | null
+          seller_cr: string | null
+          seller_name: string
+          seller_vat_number: string
+          status: string
+          subtotal_sar: number
+          updated_at: string
+          vat_amount_sar: number
+          vat_rate: number
+        }
+        Insert: {
+          buyer_address?: string | null
+          buyer_name: string
+          buyer_vat_number?: string | null
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          customer_id?: string | null
+          customer_user_id?: string | null
+          due_date?: string | null
+          grand_total_sar?: number
+          id?: string
+          invoice_no?: string
+          issue_date?: string
+          notes?: string | null
+          order_id?: string | null
+          qr_payload?: string | null
+          seller_address?: string | null
+          seller_cr?: string | null
+          seller_name?: string
+          seller_vat_number?: string
+          status?: string
+          subtotal_sar?: number
+          updated_at?: string
+          vat_amount_sar?: number
+          vat_rate?: number
+        }
+        Update: {
+          buyer_address?: string | null
+          buyer_name?: string
+          buyer_vat_number?: string | null
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          customer_id?: string | null
+          customer_user_id?: string | null
+          due_date?: string | null
+          grand_total_sar?: number
+          id?: string
+          invoice_no?: string
+          issue_date?: string
+          notes?: string | null
+          order_id?: string | null
+          qr_payload?: string | null
+          seller_address?: string | null
+          seller_cr?: string | null
+          seller_name?: string
+          seller_vat_number?: string
+          status?: string
+          subtotal_sar?: number
+          updated_at?: string
+          vat_amount_sar?: number
+          vat_rate?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invoices_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "invoices_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       lab_reports: {
         Row: {
@@ -278,6 +514,80 @@ export type Database = {
         }
         Relationships: []
       }
+      shipments: {
+        Row: {
+          carrier: string
+          created_at: string
+          customer_user_id: string | null
+          delivered_at: string | null
+          destination_address: string | null
+          destination_city: string | null
+          id: string
+          notes: string | null
+          order_id: string | null
+          origin_city: string | null
+          recipient_name: string | null
+          recipient_phone: string | null
+          shipped_at: string | null
+          shipping_cost_sar: number | null
+          status: string
+          tracking_no: string | null
+          tracking_url: string | null
+          updated_at: string
+          weight_kg: number | null
+        }
+        Insert: {
+          carrier?: string
+          created_at?: string
+          customer_user_id?: string | null
+          delivered_at?: string | null
+          destination_address?: string | null
+          destination_city?: string | null
+          id?: string
+          notes?: string | null
+          order_id?: string | null
+          origin_city?: string | null
+          recipient_name?: string | null
+          recipient_phone?: string | null
+          shipped_at?: string | null
+          shipping_cost_sar?: number | null
+          status?: string
+          tracking_no?: string | null
+          tracking_url?: string | null
+          updated_at?: string
+          weight_kg?: number | null
+        }
+        Update: {
+          carrier?: string
+          created_at?: string
+          customer_user_id?: string | null
+          delivered_at?: string | null
+          destination_address?: string | null
+          destination_city?: string | null
+          id?: string
+          notes?: string | null
+          order_id?: string | null
+          origin_city?: string | null
+          recipient_name?: string | null
+          recipient_phone?: string | null
+          shipped_at?: string | null
+          shipping_cost_sar?: number | null
+          status?: string
+          tracking_no?: string | null
+          tracking_url?: string | null
+          updated_at?: string
+          weight_kg?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shipments_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       trademarks: {
         Row: {
           address_ar: string | null
@@ -433,6 +743,7 @@ export type Database = {
         | "accountant"
         | "distributor"
         | "customer"
+        | "manager"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -570,6 +881,7 @@ export const Constants = {
         "accountant",
         "distributor",
         "customer",
+        "manager",
       ],
     },
   },
