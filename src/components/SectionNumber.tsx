@@ -13,7 +13,7 @@ export function SectionNumber({ index, total = 7, align = 'start' }: Props) {
         align === 'end' ? 'justify-end' : ''
       }`}
     >
-      <span className="text-[hsl(var(--gold))] font-semibold">{pad(index)}</span>
+      <span className="text-[hsl(var(--gold-ink))] font-semibold">{pad(index)}</span>
       <span className="h-px w-10 bg-gold/30" />
       <span>{pad(total)}</span>
     </div>

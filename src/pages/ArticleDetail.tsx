@@ -87,7 +87,7 @@ export default function ArticleDetail() {
         <div className="flex items-center gap-4 text-xs text-muted-foreground mb-8 pb-6 border-b border-gold/20">
           <span className="flex items-center gap-1"><Calendar className="w-3 h-3" /> {article.date}</span>
           <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {article.readMin} {isAr ? 'دقائق قراءة' : 'min read'}</span>
-          <span className="px-2 py-0.5 rounded-full bg-[hsl(var(--gold))]/15 text-[hsl(var(--gold))]">{article.category}</span>
+          <span className="px-2 py-0.5 rounded-full bg-[hsl(var(--gold))]/15 text-[hsl(var(--gold-ink))]">{article.category}</span>
         </div>
 
         {content.length === 0 ? (
@@ -115,7 +115,7 @@ export default function ArticleDetail() {
           <Link to="/articles" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-gold transition">
             {isAr ? <><ArrowRight className="w-4 h-4" /> العودة للمقالات</> : <><ArrowLeft className="w-4 h-4" /> Back to articles</>}
           </Link>
-          <Link to="/products" className="ms-auto inline-flex items-center gap-2 text-sm font-semibold text-[hsl(var(--gold))] hover:underline">
+          <Link to="/products" className="ms-auto inline-flex items-center gap-2 text-sm font-semibold text-[hsl(var(--gold-ink))] hover:underline">
             {isAr ? 'تصفّح منتجاتنا' : 'Browse products'} <ArrowLeft className="w-4 h-4 rtl:hidden" />
           </Link>
         </div>
@@ -130,7 +130,7 @@ export default function ArticleDetail() {
               to={`/articles/${a.id}`}
               className="clay-card rounded-2xl p-5 hover:border-gold/60 hover:shadow-gold transition block"
             >
-              <span className="text-[11px] px-2 py-0.5 rounded-full bg-[hsl(var(--gold))]/15 text-[hsl(var(--gold))]">{a.category}</span>
+              <span className="text-[11px] px-2 py-0.5 rounded-full bg-[hsl(var(--gold))]/15 text-[hsl(var(--gold-ink))]">{a.category}</span>
               <h4 className="font-serif text-base text-emerald mt-3 leading-snug">{isAr ? a.titleAr : a.titleEn}</h4>
               <p className="mt-2 text-xs text-muted-foreground line-clamp-2">{isAr ? a.excerptAr : a.excerptEn}</p>
             </Link>
