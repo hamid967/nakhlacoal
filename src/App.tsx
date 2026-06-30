@@ -43,6 +43,7 @@ const Auth = lazy(() => import('@/pages/Auth'));
 const ResetPassword = lazy(() => import('@/pages/ResetPassword'));
 const Profile = lazy(() => import('@/pages/Profile'));
 const Assistant = lazy(() => import('@/pages/Assistant'));
+const Quote = lazy(() => import('@/pages/Quote'));
 const AdminOrders = lazy(() => import('@/pages/AdminOrders'));
 const AdminInventory = lazy(() => import('@/pages/AdminInventory'));
 const AdminAnalytics = lazy(() => import('@/pages/AdminAnalytics'));
@@ -123,6 +124,7 @@ export default function App() {
                   <Route path="/export/guide" element={<ExportGuide />} />
                   <Route path="/knowledge" element={<Knowledge />} />
                   <Route path="/contact" element={<Contact />} />
+                  <Route path="/quote" element={<Quote />} />
                   <Route path="/location" element={<Location />} />
                   <Route path="/trademarks" element={<Trademarks />} />
                   <Route path="/uses" element={<Uses />} />
