@@ -67,6 +67,12 @@ export default function AudienceLanding() {
         <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-4">{title}</h1>
         <p className="text-lg text-muted-foreground max-w-3xl">{sub}</p>
 
+        {import.meta.env.DEV && !waBase && (
+          <div className="mt-4 inline-block rounded border border-destructive/50 bg-destructive/10 px-3 py-1.5 text-xs text-destructive font-mono">
+            DEV: WhatsApp link missing — set brand.footer.whatsapp
+          </div>
+        )}
+
         <div className="mt-8 flex flex-wrap gap-3">
           {waHref && (
             <a
