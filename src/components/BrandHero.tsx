@@ -110,20 +110,21 @@ export function BrandHero() {
 
       <motion.div
         style={{ y: contentY, opacity: contentOpacity }}
-        className="relative container pt-24 md:pt-28 pb-32 md:pb-40 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center"
+        className="relative container pt-24 md:pt-28 pb-32 md:pb-40 flex flex-col items-center gap-10 md:gap-14"
       >
-        {/* LEFT — editorial title */}
+        {/* Centered editorial title */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9 }}
-          className="lg:col-span-5 text-center lg:text-start"
+          className="text-center max-w-3xl"
         >
           <div className="inline-flex items-center gap-3 mb-6">
             <span className="h-px w-8 bg-gradient-to-r from-transparent to-[hsl(var(--gold))]" />
             <span className="text-[10px] tracking-[0.35em] uppercase text-[hsl(var(--gold-hi))] font-arabic">
               {isAr ? 'علامات سعودية فاخرة' : 'Premium Saudi Brand'}
             </span>
+            <span className="h-px w-8 bg-gradient-to-l from-transparent to-[hsl(var(--gold))]" />
           </div>
           <h1
             className={`text-[clamp(2.5rem,6vw,5rem)] leading-[1.05] tracking-tight text-foreground ${
@@ -131,28 +132,29 @@ export function BrandHero() {
             }`}
           >
             {isAr ? (
-              <>
-                فحم النخلة<br />
-                <span className="text-primary">الفاخر.</span>
-              </>
+              <>شركة فحم النخلة<br /><span className="text-primary">الفاخر.</span></>
             ) : (
-              <>
-                Palm Charcoal<br />
-                <span className="text-primary">Premium.</span>
-              </>
+              <>Palm Charcoal<br /><span className="text-primary">Premium.</span></>
             )}
           </h1>
           <p
-            className={`mt-6 max-w-md mx-auto lg:mx-0 text-base leading-relaxed text-foreground/70 ${
-              isAr ? 'font-arabic' : ''
-            }`}
+            className={`mt-6 mx-auto max-w-2xl text-base md:text-lg leading-relaxed text-foreground/70 ${isAr ? 'font-arabic' : ''}`}
           >
             {isAr
-              ? 'فحم النخلة الفاخر، مصنوع بعناية من أجود المصادر الطبيعية ليمنحك أداءً نقيًا ومستقبلًا أنظف.'
-              : 'Premium coconut shell charcoal, meticulously crafted for purity, performance, and a better tomorrow.'}
+              ? 'مجموعة علامات تجارية سعودية مسجّلة بجودة عالية، نقدمها لكم بفخر من المملكة إلى العالم.'
+              : 'A collection of registered Saudi premium brands — proudly delivered from the Kingdom to the world.'}
           </p>
 
-          <div className="mt-9 flex flex-wrap items-center gap-3 justify-center lg:justify-start">
+          {/* Live status badge */}
+          <div className="mt-6 inline-flex items-center gap-2 text-xs text-foreground/60 font-arabic">
+            <span className="relative inline-flex w-2 h-2" aria-hidden>
+              <span className="absolute inset-0 rounded-full bg-emerald-500/60 animate-ping" />
+              <span className="relative inline-flex w-2 h-2 rounded-full bg-emerald-500" />
+            </span>
+            <span>{isAr ? 'متزامن مباشرة' : 'Live sync'}</span>
+          </div>
+
+          <div className="mt-8 flex flex-wrap items-center gap-3 justify-center">
             <Link
               to="/products"
               className="group inline-flex items-center gap-3 px-7 py-3.5 rounded-full bg-[hsl(var(--gold-hi))] text-[hsl(var(--dark))] text-sm uppercase tracking-[0.2em] font-medium shadow-[var(--shadow-gold)] hover:shadow-[0_20px_44px_-12px_hsl(var(--gold)/0.85)] hover:-translate-y-0.5 transition-all"
@@ -169,9 +171,10 @@ export function BrandHero() {
           </div>
         </motion.div>
 
-        {/* RIGHT — floating glass cards on podium */}
+
+        {/* Full-width prominent trademarks slider (replaces the previous small side cluster) */}
         <div
-          className="lg:col-span-7 relative h-[460px] sm:h-[520px] md:h-[560px]"
+          className="w-full max-w-5xl relative h-[420px] sm:h-[500px] md:h-[580px] rounded-3xl border border-[hsl(var(--gold))]/40 bg-[hsl(var(--background))]/40 backdrop-blur-sm shadow-[0_30px_80px_-30px_hsl(var(--gold)/0.35)]"
           style={{ perspective: '1800px' }}
           role="region"
           aria-roledescription={isAr ? 'دائرة عرض' : 'carousel'}
