@@ -54,6 +54,11 @@ export default function PortalShipments() {
   const [loading, setLoading] = useState(true);
   const [q, setQ] = useState('');
   const [filter, setFilter] = useState<string>('all');
+  const [carrier, setCarrier] = useState<string>('all');
+  const [createdFrom, setCreatedFrom] = useState('');
+  const [createdTo, setCreatedTo] = useState('');
+  const [deliveredFrom, setDeliveredFrom] = useState('');
+  const [deliveredTo, setDeliveredTo] = useState('');
 
   useEffect(() => {
     if (!user) return;
@@ -69,14 +74,31 @@ export default function PortalShipments() {
     })();
   }, [user]);
 
+  const carriers = useMemo(
+    () => Array.from(new Set(rows.map((r) => r.carrier).filter(Boolean))).sort(),
+    [rows],
+  );
+
+  const inRange = (val: string | null, from: string, to: string) => {
+    if (!from && !to) return true;
+    if (!val) return false;
+    const d = new Date(val).getTime();
+    if (from && d < new Date(from).getTime()) return false;
+    if (to && d > new Date(to).getTime() + 86400000 - 1) return false;
+    return true;
+  };
+
   const filtered = useMemo(
     () =>
       rows.filter((r) => {
         if (filter !== 'all' && r.status !== filter) return false;
+        if (carrier !== 'all' && r.carrier !== carrier) return false;
+        if (!inRange(r.created_at, createdFrom, createdTo)) return false;
+        if (!inRange(r.delivered_at, deliveredFrom, deliveredTo)) return false;
         if (!q) return true;
         return [r.tracking_no, r.carrier, r.destination_city].filter(Boolean).join(' ').toLowerCase().includes(q.toLowerCase());
       }),
-    [rows, q, filter],
+    [rows, q, filter, carrier, createdFrom, createdTo, deliveredFrom, deliveredTo],
   );
 
   const counts = useMemo(() => {
@@ -85,6 +107,14 @@ export default function PortalShipments() {
     rows.forEach((r) => (c[r.status] = (c[r.status] || 0) + 1));
     return c;
   }, [rows]);
+
+  const hasDateFilters = createdFrom || createdTo || deliveredFrom || deliveredTo || carrier !== 'all';
+  const resetFilters = () => {
+    setCarrier('all');
+    setCreatedFrom(''); setCreatedTo('');
+    setDeliveredFrom(''); setDeliveredTo('');
+  };
+
 
   return (
     <div className="space-y-6">
@@ -125,6 +155,47 @@ export default function PortalShipments() {
           className="w-full bg-transparent outline-none text-sm"
         />
       </div>
+
+      <div
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 rounded-xl border p-3"
+        style={{ borderColor: 'var(--a-border)', background: 'var(--a-surface)' }}
+      >
+        <FilterField label="الناقل">
+          <select
+            value={carrier}
+            onChange={(e) => setCarrier(e.target.value)}
+            className="w-full bg-transparent outline-none text-sm py-1"
+          >
+            <option value="all">الكل</option>
+            {carriers.map((c) => (
+              <option key={c} value={c}>{c}</option>
+            ))}
+          </select>
+        </FilterField>
+        <FilterField label="إنشاء من">
+          <input type="date" value={createdFrom} onChange={(e) => setCreatedFrom(e.target.value)}
+            className="w-full bg-transparent outline-none text-sm py-1" />
+        </FilterField>
+        <FilterField label="إنشاء إلى">
+          <input type="date" value={createdTo} onChange={(e) => setCreatedTo(e.target.value)}
+            className="w-full bg-transparent outline-none text-sm py-1" />
+        </FilterField>
+        <FilterField label="تسليم من">
+          <input type="date" value={deliveredFrom} onChange={(e) => setDeliveredFrom(e.target.value)}
+            className="w-full bg-transparent outline-none text-sm py-1" />
+        </FilterField>
+        <FilterField label="تسليم إلى">
+          <input type="date" value={deliveredTo} onChange={(e) => setDeliveredTo(e.target.value)}
+            className="w-full bg-transparent outline-none text-sm py-1" />
+        </FilterField>
+        {hasDateFilters && (
+          <button onClick={resetFilters} className="sm:col-span-2 lg:col-span-5 text-xs underline justify-self-end"
+            style={{ color: 'var(--a-text-muted)' }}>
+            مسح الفلاتر
+          </button>
+        )}
+      </div>
+
 
       {loading ? (
         <div className="p-10 text-center"><Loader2 className="h-5 w-5 animate-spin inline" /></div>
@@ -255,5 +326,14 @@ function Info({ label, value, icon }: { label: string; value: string; icon?: Rea
       </div>
       <div className="text-sm font-medium mt-0.5">{value}</div>
     </div>
+  );
+}
+
+function FilterField({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <label className="block rounded-lg border px-2 py-1" style={{ borderColor: 'var(--a-border)', background: 'var(--a-surface-2)' }}>
+      <span className="block text-[10px]" style={{ color: 'var(--a-text-muted)' }}>{label}</span>
+      {children}
+    </label>
   );
 }
