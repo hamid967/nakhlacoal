@@ -157,7 +157,7 @@ export default function CampaignLanding() {
             <p className="mb-4 text-xs font-semibold uppercase tracking-[0.3em] text-primary">
               فحم النخلة · {c.title}
             </p>
-            <h1 className="font-serif text-4xl leading-tight md:text-6xl">{c.headline}</h1>
+            <h1 className="font-serif">{c.headline}</h1>
             <p className="mt-6 max-w-2xl text-lg text-muted-foreground md:text-xl">{c.sub}</p>
 
             <div className="mt-10 flex flex-wrap gap-4">

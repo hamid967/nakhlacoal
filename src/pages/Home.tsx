@@ -174,7 +174,7 @@ export default function Home() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           <ScrollReveal className="lg:col-span-7">
             <Eyebrow>{isAr ? 'من نحن' : 'Our story'}</Eyebrow>
-            <h2 className={`text-3xl md:text-5xl leading-tight my-6 ${isAr ? 'font-arabic font-bold' : 'font-display font-bold'}`}>
+            <h2 className={`my-6 ${isAr ? 'font-arabic font-bold' : 'font-display font-bold'}`}>
               {isAr ? 'الخيار الأمثل لعشاق الجودة' : 'The first choice for quality lovers'}
             </h2>
             <p className="text-base md:text-lg leading-relaxed text-foreground/75 mb-8 font-arabic max-w-2xl">

@@ -107,7 +107,7 @@ export default function ExportGuide() {
           <ScrollReveal>
             <div className="text-center mb-12">
               <span className="eyebrow mb-3">Incoterms 2020</span>
-              <h2 className="text-3xl md:text-5xl mt-3 font-display">
+              <h2 className="mt-3 font-display">
                 <span className="text-gold-metal">Trade Terms We Quote</span>
               </h2>
               <p className="mt-4 text-sm text-foreground/65 max-w-2xl mx-auto">
@@ -143,7 +143,7 @@ export default function ExportGuide() {
           <ScrollReveal>
             <div className="text-center mb-12">
               <span className="eyebrow mb-3">Packaging</span>
-              <h2 className="text-3xl md:text-5xl mt-3 font-display">
+              <h2 className="mt-3 font-display">
                 <span className="text-gold-metal">From Inner Box to Pallet</span>
               </h2>
             </div>
@@ -168,7 +168,7 @@ export default function ExportGuide() {
           <ScrollReveal>
             <div className="text-center mb-12">
               <span className="eyebrow mb-3">Container Loads</span>
-              <h2 className="text-3xl md:text-5xl mt-3 font-display">
+              <h2 className="mt-3 font-display">
                 <span className="text-gold-metal">Ocean Freight Capacity</span>
               </h2>
             </div>
@@ -204,7 +204,7 @@ export default function ExportGuide() {
           <ScrollReveal>
             <div className="text-center mb-10">
               <span className="eyebrow mb-3">Customs Codes</span>
-              <h2 className="text-3xl md:text-5xl mt-3 font-display">
+              <h2 className="mt-3 font-display">
                 <span className="text-gold-metal">HS Tariff Reference</span>
               </h2>
               <p className="mt-4 text-sm text-foreground/65">
@@ -232,7 +232,7 @@ export default function ExportGuide() {
           <ScrollReveal>
             <div className="text-center mb-12">
               <span className="eyebrow mb-3">Documentation</span>
-              <h2 className="text-3xl md:text-5xl mt-3 font-display">
+              <h2 className="mt-3 font-display">
                 <span className="text-gold-metal">Shipping Documents We Issue</span>
               </h2>
             </div>
@@ -256,7 +256,7 @@ export default function ExportGuide() {
           <ScrollReveal>
             <div className="text-center mb-10">
               <span className="eyebrow mb-3">Payment Terms</span>
-              <h2 className="text-3xl md:text-5xl mt-3 font-display">
+              <h2 className="mt-3 font-display">
                 <span className="text-gold-metal">How We Get Paid</span>
               </h2>
             </div>

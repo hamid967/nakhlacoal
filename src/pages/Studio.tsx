@@ -198,7 +198,7 @@ export default function Studio() {
           {isAr ? "استوديو الذكاء" : "AI Studio"}
         </p>
       </div>
-      <h1 className="font-display text-5xl md:text-6xl text-gold-hi mb-6">
+      <h1 className="font-display text-gold-hi mb-6">
         {isAr ? "مَصهَر التسويق" : "Marketing Forge"}
       </h1>
       <p className="text-foreground/70 mb-10 max-w-2xl">
