@@ -24,11 +24,11 @@ export default function Catalog() {
       : 'Palm Charcoal — Product Catalog';
   }, [isAr]);
 
-  const priceFor = (slug: string) => {
-    const inv = INVENTORY.find((i) => i.match.test(slug) || i.match.test(products.find((p) => p.slug === slug)?.nameAr || ''));
-    if (!inv) return null;
-    return inv.tiers;
+  const inventoryFor = (slug: string) => {
+    const product = products.find((p) => p.slug === slug);
+    return INVENTORY.find((i) => i.match.test(slug) || (product && i.match.test(product.nameAr)));
   };
+  const priceFor = (slug: string) => inventoryFor(slug)?.tiers ?? null;
 
   const handlePrint = () => window.print();
 
@@ -84,7 +84,8 @@ export default function Catalog() {
 
         {/* Products */}
         {products.map((p, idx) => {
-          const tiers = priceFor(p.slug);
+          const inv = inventoryFor(p.slug);
+          const tiers = inv?.tiers ?? null;
           return (
             <article key={p.slug} className="product-card page-break py-8 border-t border-stone-200">
               <div className="flex items-start gap-2 mb-4">
@@ -127,6 +128,20 @@ export default function Catalog() {
                   </div>
                 ))}
               </div>
+
+              {inv && (
+                <div className="mt-3 flex flex-wrap gap-2 text-[11px]">
+                  <span className="bg-amber-50 border border-amber-200 text-amber-900 px-2 py-1 rounded">
+                    {isAr ? 'الحد الأدنى للطلب' : 'MOQ'}: {inv.minOrderKg} {isAr ? 'كجم' : 'kg'}
+                  </span>
+                  <span className="bg-emerald-50 border border-emerald-200 text-emerald-900 px-2 py-1 rounded">
+                    {isAr ? 'مدة التجهيز' : 'Lead time'}: {inv.leadDays} {isAr ? 'يوم' : 'days'}
+                  </span>
+                  <span className="bg-stone-50 border border-stone-200 text-stone-700 px-2 py-1 rounded">
+                    {isAr ? 'متوفر' : 'In stock'}: {inv.inStockKg.toLocaleString()} {isAr ? 'كجم' : 'kg'}
+                  </span>
+                </div>
+              )}
 
               {tiers && (
                 <div className="mt-4">

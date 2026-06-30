@@ -29,6 +29,7 @@ import Trademarks from '@/pages/Trademarks';
 import Uses from '@/pages/Uses';
 import Articles from '@/pages/Articles';
 import ArticleDetail from '@/pages/ArticleDetail';
+import AudienceLanding from '@/pages/AudienceLanding';
 import Studio from '@/pages/Studio';
 import Auth from '@/pages/Auth';
 import ResetPassword from '@/pages/ResetPassword';
@@ -108,6 +109,7 @@ export default function App() {
                 <Route path="/uses" element={<Uses />} />
                 <Route path="/articles" element={<Articles />} />
                 <Route path="/articles/:slug" element={<ArticleDetail />} />
+                <Route path="/for/:slug" element={<AudienceLanding />} />
                 <Route path="/studio" element={<ProtectedRoute><Studio /></ProtectedRoute>} />
                 <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                 <Route path="/assistant" element={<Assistant />} />
