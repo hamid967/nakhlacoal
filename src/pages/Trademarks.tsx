@@ -109,7 +109,7 @@ export default function Trademarks() {
                   onClick={() => { setActive(i); setZoom(1); }}
                   className="block w-full aspect-[4/3] bg-cream relative group"
                 >
-                  <img src={t.image} alt={t.nameAr} className="absolute inset-0 w-full h-full object-contain p-3" loading="lazy" />
+                  <img decoding="async" src={t.image} alt={t.nameAr} className="absolute inset-0 w-full h-full object-contain p-3" loading="lazy" />
                   <div className="absolute inset-0 bg-emerald/0 group-hover:bg-emerald/10 transition flex items-center justify-center">
                     <span className="opacity-0 group-hover:opacity-100 transition px-3 py-1.5 rounded-full bg-emerald text-cream text-xs flex items-center gap-1">
                       <ZoomIn className="w-3.5 h-3.5" /> تكبير
@@ -178,7 +178,7 @@ export default function Trademarks() {
             <div className="grid md:grid-cols-[1fr,300px]">
               {/* Viewer */}
               <div className="relative bg-cream min-h-[60vh] max-h-[80vh] overflow-auto flex items-center justify-center">
-                <img
+                <img decoding="async" loading="lazy"
                   src={current.image}
                   alt={current.nameAr}
                   style={{ transform: `scale(${zoom})`, transformOrigin: 'center center', transition: 'transform 0.25s' }}

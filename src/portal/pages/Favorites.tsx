@@ -30,7 +30,7 @@ export default function PortalFavorites() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {items.map((p) => (
             <div key={p.slug} className="a-card a-card-hover overflow-hidden">
-              <img src={p.image} alt={p.nameAr} className="w-full aspect-[4/3] object-cover" />
+              <img decoding="async" loading="lazy" src={p.image} alt={p.nameAr} className="w-full aspect-[4/3] object-cover" />
               <div className="p-5">
                 <h3 className="a-display text-xl">{p.nameAr}</h3>
                 <p className="text-sm mt-1" style={{ color: 'var(--a-text-muted)' }}>{p.taglineAr}</p>

@@ -133,7 +133,7 @@ export function ProductRecommender() {
                       </span>
                     )}
                   </div>
-                  <img src={product.image} alt={product.nameEn} className="w-full h-28 object-cover rounded-lg mb-3" />
+                  <img decoding="async" loading="lazy" src={product.image} alt={product.nameEn} className="w-full h-28 object-cover rounded-lg mb-3" />
                   <h3 className="text-base font-bold text-emerald-900 mb-1">
                     {isAr ? product.nameAr : product.nameEn}
                   </h3>

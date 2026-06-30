@@ -31,7 +31,7 @@ export default function Uses() {
               transition={{ duration: 0.5, delay: i * 0.06 }}
               className="group relative aspect-square overflow-hidden rounded-2xl border border-gold/20 bg-cream"
             >
-              <img src={u.img} alt={u.titleAr} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
+              <img decoding="async" src={u.img} alt={u.titleAr} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
               <div className="absolute inset-0 p-6 flex flex-col justify-end text-cream">
                 <h3 className="font-serif text-2xl text-[hsl(var(--gold))]">{u.titleAr}</h3>

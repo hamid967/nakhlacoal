@@ -16,7 +16,7 @@ export default function PortalTrademarks() {
           <div key={t.id} className="a-card a-card-hover p-5">
             <div className="aspect-square rounded-xl grid place-items-center mb-4"
                  style={{ background: 'var(--a-surface-2)' }}>
-              <img src={t.image} alt={t.nameAr} className="max-w-[70%] max-h-[70%] object-contain" />
+              <img decoding="async" loading="lazy" src={t.image} alt={t.nameAr} className="max-w-[70%] max-h-[70%] object-contain" />
             </div>
             <h3 className="a-display text-xl">{t.nameAr}</h3>
             <p className="text-xs" style={{ color: 'var(--a-text-muted)' }}>{t.nameEn}</p>
