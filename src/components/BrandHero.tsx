@@ -191,7 +191,7 @@ export function BrandHero() {
         {/* Full-width prominent trademarks slider (replaces the previous small side cluster) */}
         <div
           className="w-full max-w-5xl relative h-[420px] sm:h-[500px] md:h-[580px] rounded-3xl border border-[hsl(var(--gold))]/40 bg-[hsl(var(--background))]/40 backdrop-blur-sm shadow-[0_30px_80px_-30px_hsl(var(--gold)/0.35)]"
-          style={{ perspective: '1800px' }}
+          style={{ perspective: '1800px', contain: 'layout paint size' }}
           role="region"
           aria-roledescription={isAr ? 'دائرة عرض' : 'carousel'}
           aria-label={isAr ? 'علاماتنا التجارية' : 'Our trademarks'}
@@ -318,21 +318,22 @@ export function BrandHero() {
           </div>
 
 
-          {/* Floating brand name */}
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={current.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              transition={{ duration: 0.4 }}
-              className="absolute -bottom-12 left-1/2 -translate-x-1/2 text-center"
-            >
-              <div className={`text-base md:text-lg text-primary ${isAr ? 'font-arabic font-bold' : 'font-display font-semibold'}`}>
-                {current.nameAr} <span className="text-foreground/40 mx-2">·</span> <span className="text-foreground/60 font-normal text-sm">{current.nameEn}</span>
-              </div>
-            </motion.div>
-          </AnimatePresence>
+          {/* Floating brand name — fixed-height reservation prevents CLS on slide change */}
+          <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 text-center h-7 md:h-8 w-[min(90%,640px)] overflow-hidden">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={current.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.4 }}
+              >
+                <div className={`text-base md:text-lg leading-7 md:leading-8 text-primary ${isAr ? 'font-arabic font-bold' : 'font-display font-semibold'}`}>
+                  {current.nameAr} <span className="text-foreground/40 mx-2">·</span> <span className="text-foreground/60 font-normal text-sm">{current.nameEn}</span>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
         </div>
       </motion.div>
 
