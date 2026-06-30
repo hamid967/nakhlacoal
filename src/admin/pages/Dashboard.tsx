@@ -84,16 +84,27 @@ export default function AdminDashboard() {
     orders.forEach((o) => { byProd[o.product_type] = (byProd[o.product_type] || 0) + toKg(Number(o.quantity) || 0, o.unit); });
     const topProducts = Object.entries(byProd).sort((a, b) => b[1] - a[1]).slice(0, 6).map(([n, v]) => ({ name: n, kg: v }));
 
-    const byStatus: Record<string, number> = {};
-    orders.forEach((o) => { byStatus[o.status || 'new'] = (byStatus[o.status || 'new'] || 0) + 1; });
+    const STATUS_KEYS = ['new', 'contacted', 'confirmed', 'shipped', 'completed', 'cancelled'];
+    const byStatus: Record<string, number> = Object.fromEntries(STATUS_KEYS.map((k) => [k, 0]));
+    orders.forEach((o) => { const k = o.status || 'new'; byStatus[k] = (byStatus[k] || 0) + 1; });
     const statusData = Object.entries(byStatus).map(([k, v]) => ({ name: k, value: v }));
 
     return {
       todays: todays.length, pending: pending.length, wholesale: wholesale.length, exportO: exportO.length,
-      revenue, stockKg, timeline: Object.values(byDay), topProducts, statusData,
+      revenue, stockKg, timeline: Object.values(byDay), topProducts, statusData, byStatus,
+      totalOrders: orders.length,
       ordersDelta, revenueDelta,
     };
   }, [orders, inv]);
+
+  const STATUS_LABEL: Record<string, string> = {
+    new: 'جديد', contacted: 'تم التواصل', confirmed: 'مؤكد',
+    shipped: 'تم الشحن', completed: 'مكتمل', cancelled: 'ملغي',
+  };
+  const STATUS_DOT: Record<string, string> = {
+    new: 'slate', contacted: 'amber', confirmed: 'emerald',
+    shipped: 'emerald', completed: 'emerald', cancelled: 'rose',
+  };
 
   const cards = [
     { label: 'طلبات اليوم', value: stats.todays.toLocaleString('ar-SA'), icon: ShoppingBag, tint: 'green', delta: stats.ordersDelta },
@@ -121,6 +132,35 @@ export default function AdminDashboard() {
           <button className="a-btn a-btn-gold"><Download className="w-4 h-4" /> تقرير</button>
         </div>
       </header>
+
+
+
+
+      {/* KPI — Total orders + per-status breakdown (Untitled UI a-metric) */}
+      <section aria-label="نظرة عامة على الطلبات" className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
+        <div className="a-metric lg:col-span-1">
+          <div className="a-metric-label">إجمالي الطلبات</div>
+          <div className="a-metric-value">{stats.totalOrders.toLocaleString('ar-SA')}</div>
+          {stats.ordersDelta && (
+            <span className={`a-metric-trend ${stats.ordersDelta.startsWith('-') ? 'down' : 'up'}`}>
+              <ArrowUpRight className="w-3 h-3" /> {stats.ordersDelta} اليوم
+            </span>
+          )}
+        </div>
+        {(['new','contacted','confirmed','shipped','completed','cancelled'] as const).map((k) => {
+          const n = stats.byStatus[k] || 0;
+          const pct = stats.totalOrders ? Math.round((n / stats.totalOrders) * 100) : 0;
+          return (
+            <Link key={k} to={`/admin/orders?status=${k}`} className="a-metric block hover:border-[var(--a-border-strong)] transition-colors">
+              <div className="a-metric-label inline-flex items-center gap-1.5">
+                <span className={`a-dot ${STATUS_DOT[k]}`} /> {STATUS_LABEL[k]}
+              </div>
+              <div className="a-metric-value">{n.toLocaleString('ar-SA')}</div>
+              <div className="text-[11px]" style={{ color: 'var(--a-text-muted)' }}>{pct}% من الإجمالي</div>
+            </Link>
+          );
+        })}
+      </section>
 
       {/* Summary cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
