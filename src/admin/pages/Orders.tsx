@@ -187,49 +187,71 @@ export default function AdminOrders() {
 
 
       <AnimatePresence>
-        {active && (
-          <>
-            <motion.div className="fixed inset-0 bg-black/30 z-40"
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              onClick={() => setActive(null)} />
-            <motion.aside className="fixed inset-y-0 end-0 w-full max-w-md a-glass z-50 overflow-y-auto a-scroll p-6"
-              initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}
-              transition={{ type: 'spring', stiffness: 280, damping: 30 }}
-              style={{ background: 'var(--a-surface)' }}>
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <div className="text-[11px] tracking-widest" style={{ color: 'var(--a-text-muted)' }}>ORDER</div>
-                  <div className="a-display text-2xl">#{active.id.slice(0, 8)}</div>
+        {active && (() => {
+          const live = orders.find((o) => o.id === active.id) || active;
+          return (
+            <>
+              <motion.div className="fixed inset-0 bg-black/30 z-40"
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                onClick={() => setActive(null)} />
+              <motion.aside className="fixed inset-y-0 end-0 w-full max-w-md a-glass z-50 overflow-y-auto a-scroll p-6"
+                initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}
+                transition={{ type: 'spring', stiffness: 280, damping: 30 }}
+                style={{ background: 'var(--a-surface)' }}>
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <div className="text-[11px] tracking-widest" style={{ color: 'var(--a-text-muted)' }}>ORDER</div>
+                    <div className="a-display text-2xl">#{live.id.slice(0, 8)}</div>
+                  </div>
+                  <button onClick={() => setActive(null)} className="a-btn a-btn-ghost p-2" aria-label="إغلاق"><X className="w-4 h-4" /></button>
                 </div>
-                <button onClick={() => setActive(null)} className="a-btn a-btn-ghost p-2"><X className="w-4 h-4" /></button>
-              </div>
 
-              <div className="space-y-4 text-sm">
-                <Section title="العميل">
-                  <div className="font-semibold">{active.company_name}</div>
-                  <div>{active.contact_name}</div>
-                  <a href={`tel:${active.phone}`} className="flex items-center gap-2 text-[13px]" style={{ color: 'var(--a-palm)' }}>
-                    <Phone className="w-3.5 h-3.5" /> {active.phone}
-                  </a>
-                  {active.email && <a href={`mailto:${active.email}`} className="flex items-center gap-2 text-[13px]" style={{ color: 'var(--a-palm)' }}>
-                    <Mail className="w-3.5 h-3.5" /> {active.email}
-                  </a>}
-                </Section>
-                <Section title="المنتج">
-                  <div className="flex items-center justify-between"><span>{active.product_type}</span><b>{active.quantity} {active.unit}</b></div>
-                </Section>
-                {(active.city || active.address) && <Section title="الموقع">
-                  <div className="flex items-center gap-2"><MapPin className="w-3.5 h-3.5" /> {[active.city, active.address].filter(Boolean).join(' — ')}</div>
-                </Section>}
-                {active.delivery_date && <Section title="موعد التسليم">
-                  <div className="flex items-center gap-2"><Calendar className="w-3.5 h-3.5" /> {active.delivery_date}</div>
-                </Section>}
-                {active.notes && <Section title="ملاحظات"><p className="text-[13px]">{active.notes}</p></Section>}
-                {active.ai_summary && <Section title="ملخص AI"><p className="italic text-[13px]">"{active.ai_summary}"</p></Section>}
-              </div>
-            </motion.aside>
-          </>
-        )}
+                <div className="space-y-4 text-sm">
+                  <Section title="الحالة">
+                    <div className="flex flex-wrap gap-1.5">
+                      {STATUSES.map((s) => (
+                        <button key={s} onClick={() => update(live.id, { status: s })}
+                          className={`a-pill ${live.status === s ? TINT[s] : ''}`}
+                          style={live.status !== s ? { opacity: .6 } : undefined}>
+                          {LABEL[s]}
+                        </button>
+                      ))}
+                    </div>
+                  </Section>
+
+                  <Section title="العميل">
+                    <div className="font-semibold">{live.company_name}</div>
+                    <div>{live.contact_name}</div>
+                    <a href={`tel:${live.phone}`} className="flex items-center gap-2 text-[13px]" style={{ color: 'var(--a-palm)' }}>
+                      <Phone className="w-3.5 h-3.5" /> {live.phone}
+                    </a>
+                    {live.email && <a href={`mailto:${live.email}`} className="flex items-center gap-2 text-[13px]" style={{ color: 'var(--a-palm)' }}>
+                      <Mail className="w-3.5 h-3.5" /> {live.email}
+                    </a>}
+                  </Section>
+
+                  <Section title="المنتج">
+                    <div className="flex items-center justify-between"><span>{live.product_type}</span><b>{live.quantity} {live.unit}</b></div>
+                  </Section>
+
+                  {(live.city || live.address) && <Section title="الموقع">
+                    <div className="flex items-center gap-2"><MapPin className="w-3.5 h-3.5" /> {[live.city, live.address].filter(Boolean).join(' — ')}</div>
+                  </Section>}
+
+                  {live.delivery_date && <Section title="موعد التسليم">
+                    <div className="flex items-center gap-2"><Calendar className="w-3.5 h-3.5" /> {live.delivery_date}</div>
+                  </Section>}
+
+                  <Section title="ملاحظات داخلية">
+                    <NotesEditor key={live.id} initial={live.notes || ''} onSave={(v) => update(live.id, { notes: v })} />
+                  </Section>
+
+                  {live.ai_summary && <Section title="ملخص AI"><p className="italic text-[13px]">"{live.ai_summary}"</p></Section>}
+                </div>
+              </motion.aside>
+            </>
+          );
+        })()}
       </AnimatePresence>
     </div>
   );
