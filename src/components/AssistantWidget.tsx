@@ -117,6 +117,9 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
   const [quoteOpen, setQuoteOpen] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
   const hydratedFromCloud = useRef(false);
+  const abortRef = useRef<AbortController | null>(null);
+
+  useEffect(() => () => { abortRef.current?.abort(); }, []);
   const { items: inventoryItems } = useInventory();
 
 
