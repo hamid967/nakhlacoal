@@ -13,6 +13,7 @@ import { CompareProvider } from '@/contexts/CompareContext';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import TrackingLoader from '@/components/TrackingLoader';
+import { SmoothScroll } from '@/components/SmoothScroll';
 
 // Home is loaded eagerly because it's the LCP route.
 import Home from '@/pages/Home';
@@ -90,6 +91,7 @@ export default function App() {
       <TooltipProvider>
         <AuthProvider>
           <CompareProvider>
+            <SmoothScroll />
             <HomeIntro />
             <AnalyticsTracker />
             <TrackingLoader />

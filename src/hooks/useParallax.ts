@@ -1,45 +1,44 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from 'react';
 
 /**
- * Premium parallax preset.
- * Apply class `lux-parallax` and optionally `lux-parallax-slow|med|fast`
- * to any element. This hook updates a CSS variable `--pp` based on the
- * scroll position relative to the viewport center, multiplied by
- * `--pp-speed` (defaults set by the speed modifier classes).
- *
- * Respects prefers-reduced-motion.
+ * Lightweight parallax: translates the element on Y based on its position
+ * relative to the viewport center. `speed` 0 = static, 0.3 = subtle, 1 = strong.
  */
-export function useParallax(selector = ".lux-parallax") {
-  useEffect(() => {
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) return;
+export function useParallax<T extends HTMLElement = HTMLDivElement>(speed = 0.3) {
+  const ref = useRef<T | null>(null);
 
-    let frame = 0;
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) return;
+    const el = ref.current;
+    if (!el) return;
+
+    let raf = 0;
+    let visible = false;
+
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => (visible = e.isIntersecting)),
+      { rootMargin: '100px' }
+    );
+    io.observe(el);
+
     const update = () => {
-      frame = 0;
-      const vh = window.innerHeight;
-      document.querySelectorAll<HTMLElement>(selector).forEach((el) => {
+      if (visible) {
         const rect = el.getBoundingClientRect();
         const center = rect.top + rect.height / 2;
-        const delta = center - vh / 2;
-        const speed = parseFloat(
-          getComputedStyle(el).getPropertyValue("--pp-speed") || "0.06"
-        );
-        el.style.setProperty("--pp", String(-delta * speed));
-      });
+        const offset = (center - window.innerHeight / 2) * speed * -1;
+        el.style.transform = `translate3d(0, ${offset.toFixed(2)}px, 0)`;
+      }
+      raf = requestAnimationFrame(update);
     };
-    const onScroll = () => {
-      if (frame) return;
-      frame = requestAnimationFrame(update);
-    };
+    raf = requestAnimationFrame(update);
 
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
     return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      if (frame) cancelAnimationFrame(frame);
+      cancelAnimationFrame(raf);
+      io.disconnect();
     };
-  }, [selector]);
+  }, [speed]);
+
+  return ref;
 }
