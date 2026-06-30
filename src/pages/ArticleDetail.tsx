@@ -21,31 +21,56 @@ export default function ArticleDetail() {
   const content = (isAr ? article.contentAr : article.contentEn) ?? [];
   const featuredImage = article.image ?? heroFallback;
 
+  // Clamp title (~60) and description (~158) for SERP.
+  const brand = isAr ? 'فحم النخلة' : 'Palm Charcoal';
+  const seoTitle = `${title.length > 55 ? title.slice(0, 55).trim() + '…' : title} | ${brand}`;
+  const baseDesc = excerpt?.trim() || article.keywords.slice(0, 6).join(' · ');
+  const seoDesc = baseDesc.length > 158 ? baseDesc.slice(0, 155).trim() + '…' : baseDesc;
 
+  const wordCount = content.reduce((n, s) => n + (s.h?.split(/\s+/).length ?? 0) + (s.p?.split(/\s+/).length ?? 0), 0);
+  const absImage = featuredImage.startsWith('http') ? featuredImage : `https://alnakhlacoal.com${featuredImage}`;
+  const canonical = `/articles/${article.id}`;
 
-  const jsonLd = {
+  const articleLd = {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: title,
-    description: excerpt,
+    description: seoDesc,
     datePublished: article.date,
+    dateModified: article.date,
     inLanguage: isAr ? 'ar' : 'en',
     keywords: article.keywords.join(', '),
-    author: { '@type': 'Organization', name: 'فحم النخلة | Palm Charcoal' },
+    articleSection: article.category,
+    wordCount,
+    timeRequired: `PT${article.readMin}M`,
+    author: { '@type': 'Organization', name: 'فحم النخلة | Palm Charcoal', url: 'https://alnakhlacoal.com' },
     publisher: {
       '@type': 'Organization',
       name: 'Palm Charcoal',
       logo: { '@type': 'ImageObject', url: 'https://alnakhlacoal.com/palm-charcoal-logo.png' },
     },
-    mainEntityOfPage: { '@type': 'WebPage', '@id': `https://alnakhlacoal.com/articles/${article.id}` },
-    image: featuredImage.startsWith('http') ? featuredImage : `https://alnakhlacoal.com${featuredImage}`,
+    mainEntityOfPage: { '@type': 'WebPage', '@id': `https://alnakhlacoal.com${canonical}` },
+    image: [absImage],
   };
+
+  const breadcrumbLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: isAr ? 'الرئيسية' : 'Home', item: 'https://alnakhlacoal.com/' },
+      { '@type': 'ListItem', position: 2, name: isAr ? 'المقالات' : 'Articles', item: 'https://alnakhlacoal.com/articles' },
+      { '@type': 'ListItem', position: 3, name: title, item: `https://alnakhlacoal.com${canonical}` },
+    ],
+  };
+
+  const jsonLd = { '@context': 'https://schema.org', '@graph': [articleLd, breadcrumbLd] };
 
   const others = articles.filter((a) => a.id !== article.id).slice(0, 3);
 
   return (
     <>
-      <SEO title={`${title} | فحم النخلة`} description={excerpt} path={`/articles/${article.id}`} jsonLd={jsonLd} image={featuredImage} />
+      <SEO title={seoTitle} description={seoDesc} path={canonical} jsonLd={jsonLd} image={featuredImage} />
+
       <PageHero eyebrow={article.category} title={title} subtitle={excerpt} />
 
       <figure className="container mx-auto px-6 pt-8 max-w-4xl">
