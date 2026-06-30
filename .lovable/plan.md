@@ -1,52 +1,69 @@
-## الهدف
-رفع الموقع لمستوى استوديوهات عالمية (Awwwards) عبر دمج 4 توقيعات بصرية بدون كسر البنية الحالية.
+# مراجعة الصفحة الرئيسية + خطة التطوير
 
-## المراحل
+## مقارنة مع المرجع (sld.pdf)
 
-### المرحلة 1 — Locomotive: Smooth Scroll + Parallax
-- تثبيت `lenis` (الإصدار الحديث من `@studio-freight/lenis`).
-- إنشاء `src/components/SmoothScroll.tsx` يلفّ التطبيق ويُفعّل Lenis مع RAF.
-- إضافة hook `useParallax(speed)` يستخدم `requestAnimationFrame` + `transform: translate3d`.
-- تطبيق Parallax على:
-  - صور Hero في `HeroSlideshow.tsx` (speed 0.3).
-  - خلفية `LocationSection` و `ProcessSection` (speed 0.5).
-- تعطيل Lenis تلقائياً عند `prefers-reduced-motion`.
+الصفحة الحالية تطابق هيكل المرجع بنسبة ~85%. الأقسام الموجودة فعلياً:
+Hero + Trademarks → Trust Strip → Audience Tracks → Features + Metrics → Products → Process + Journey → About + Stats → Certifications → Trademarks Showcase → Testimonials → FAQ → Location → CTA.
 
-### المرحلة 2 — Clay: بطاقات منتجات 3D
-- إعادة بناء `ProductCard` (المستخدم في `/products` و `Home`) مع:
-  - `transform-style: preserve-3d` + tilt بالـ mouse (بدون مكتبة، حساب يدوي).
-  - إضاءة gold sheen تتحرك مع المؤشر (radial-gradient overlay).
-  - hover: ارتفاع 8px + ظل ذهبي أعمق + تكبير الصورة 1.05.
-  - حواف زجاجية رقيقة (border + backdrop-blur).
-- تطبيق نفس النمط على بطاقات `AdminOrders` و `AdminInventory` المختصرة.
+### فجوات مكتشفة بين المرجع والتنفيذ
 
-### المرحلة 3 — Basic: تبسيط الطباعة والمسافات
-- توحيد سلم الطباعة في `index.css`:
-  - H1: `clamp(3rem, 8vw, 7rem)` — تتبع `-0.04em`.
-  - H2: `clamp(2rem, 5vw, 4rem)`.
-  - body: 17px / line-height 1.7.
-- مضاعفة المسافات الرأسية بين الأقسام (`py-32` بدل `py-20`).
-- تقليل عدد الـ CTAs الظاهرة في كل قسم لواحد رئيسي.
-- تنظيف `Home.tsx` و `About.tsx` و `Quality.tsx` من الكتل الزائدة.
+| # | المرجع | الحالي | الحالة |
+|---|---|---|---|
+| 1 | Hero يحتوي شارة "متواجدون مباشرة" (نقطة خضراء نابضة) | غير موجودة | ناقص |
+| 2 | بطاقات Trademarks في الـHero بحجم كبير مع إطارات ذهبية | موجود لكن بدون اسم "علاماتنا" فوقها | ناقص بسيط |
+| 3 | كتل المقاييس (750°C، 90د، 85%، 3%) بخلفية خضراء داكنة | موجود — مطابق ✓ | OK |
+| 4 | شريط Certifications أفقي بـ 6 شارات (KSA, GCC 5081, +12 دولة...) | موجود لكن أقل بروزاً | تحسين |
+| 5 | بطاقات التقييمات تحتوي اسم العميل + ولاية + استخدام (شيشة/شواء) | موجود ✓ | OK |
+| 6 | بلوك "سجل تجاري 1431135825" مرئي في قسم الجودة | غير ظاهر | ناقص |
+| 7 | بطاقات FAQ بإطار accordion ذهبي على خلفية كريمية | موجود ✓ | OK |
+| 8 | قسم الموقع: بطاقة بيانات + خريطة جنباً إلى جنب | موجود ✓ | OK |
+| 9 | Footer بأعمدة: قانوني / المنتجات / المعرفة + اشتراك بريدي | يحتاج فحص | لاحقاً |
 
-### المرحلة 4 — Active Theory: WebGL على الانترو/Hero
-- استخدام `three` + `@react-three/fiber@^8.18` + `@react-three/drei@^9.122.0` (مثبّتة سابقاً).
-- إنشاء `src/components/webgl/GoldParticles.tsx`:
-  - 2000 جسيم ذهبي (Points + ShaderMaterial) ينجذبون للمؤشر.
-  - Bloom خفيف عبر `@react-three/postprocessing` (اختياري).
-- دمج في `SplashScreen.tsx` كطبقة خلف الشعار.
-- إنشاء `src/components/webgl/HeroOrb.tsx`: كرة Distort ذهبية شفافة خلف الـ Hero في `Home.tsx`.
-- Lazy load بالكامل عبر `React.lazy` + Suspense fallback شفاف.
+## خطة التطوير — 6 محاور قابلة للتنفيذ
 
-## ملفات التعديل الرئيسية
-- جديد: `SmoothScroll.tsx`, `useParallax.ts`, `webgl/GoldParticles.tsx`, `webgl/HeroOrb.tsx`.
-- تعديل: `App.tsx`, `index.css`, `HeroSlideshow.tsx`, `ProductCard` (داخل `Products.tsx` أو ملفه)، `Home.tsx`, `SplashScreen.tsx`.
+### المحور 1 — Hero polish (سريع)
+- إضافة شارة `LiveBadge`: نقطة خضراء نابضة + نص "متواجدون مباشرة الآن".
+- إضافة `Eyebrow` "علاماتنا" أعلى شريط Trademarks في الهيرو.
+- إضافة preload لأهم 3 صور trademarks لرفع LCP.
 
-## ضمانات الأداء
-- WebGL خلف `IntersectionObserver` — لا يعمل خارج الشاشة.
-- Lenis يحترم `prefers-reduced-motion`.
-- جميع مكونات WebGL lazy-loaded → لا تأثير على bundle الأساسي.
-- اختبار Lighthouse بعد كل مرحلة.
+### المحور 2 — Trust & Certifications block
+- ترقية `Certifications.tsx` ليصبح بانر داكن أفقي بـ 6 شارات بأيقونات + رقم السجل التجاري.
+- إضافة بادج "+50,000 عميل راضٍ" مرتبط بـ `useLiveOrderCount`.
 
-## التنفيذ
-أنفّذ المراحل بالترتيب (1 → 4) في رسائل متتابعة، كل مرحلة قابلة للتحقق بصرياً قبل الانتقال للتالية. هل أبدأ بالمرحلة 1 الآن؟
+### المحور 3 — Audience Tracks (تحسين CTA)
+- توحيد روابط: أفراد → /products، جملة → /wholesale، تصدير → /export.
+- إضافة أيقونة + ميزة محددة لكل بطاقة (توصيل / عقود شهرية / حاويات 20/40).
+- ربط زر "طلب عرض" بفتح `AssistantWidget` مسبقاً مع نوع العميل.
+
+### المحور 4 — Products grid
+- بطاقات أكثر سينمائية: hover-tilt + شارة سعر مبدئية من inventory.
+- زر سريع "أضف للمقارنة" مرئي عند الـhover.
+
+### المحور 5 — Process / Journey
+- ضغط القسمين في تايملاين واحد 6 خطوات (الحصاد → الفرز → الكور → الطحن → الكبس → التجفيف) — حالياً منفصلين.
+- لكل خطوة: صورة + رقم step + 20-30 كلمة وصف.
+
+### المحور 6 — أداء وSEO
+- نقل `GoldParticles` خلف فحص prefers-reduced-motion (موجود) + skip للموبايل.
+- إضافة JSON-LD `WebSite` + `Organization` + `Product` للمنتجات الأربعة في الـHome.
+- صور AVIF/WebP responsive srcset لكل صور المنتجات.
+
+## ملفات سيتم تعديلها
+
+- `src/pages/Home.tsx` — إدراج LiveBadge + Eyebrow + ترتيب
+- `src/components/BrandHero.tsx` — شارة "متواجدون"
+- `src/components/Certifications.tsx` — تحويل لبانر بـ 6 شارات + سجل تجاري
+- `src/components/AudienceTracks.tsx` — أيقونات وروابط
+- `src/components/ProcessSection.tsx` + `JourneySection.tsx` — دمج/توحيد
+- `src/components/ui-lux/index.tsx` — إضافة `LiveBadge` و `CertBadge`
+
+## ترتيب التنفيذ المقترح
+
+1. المحور 1 (Hero) — 15 دقيقة
+2. المحور 2 (Trust block) — 25 دقيقة
+3. المحور 5 (دمج التايملاين) — 30 دقيقة
+4. المحور 3 (Audience CTAs) — 15 دقيقة
+5. المحور 4 (Products) — 20 دقيقة
+6. المحور 6 (أداء/SEO) — 20 دقيقة
+
+أبدأ بالمحور 1 و 2 أولاً (الأثر البصري الأكبر)، أم تفضّل ترتيباً مختلفاً؟
