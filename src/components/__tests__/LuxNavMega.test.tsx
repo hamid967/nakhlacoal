@@ -64,10 +64,11 @@ describe('LuxNav mega menu active states', () => {
 
     const mega = container.querySelector('.lux-emerald-mega') as HTMLElement;
     expect(mega).toBeTruthy();
-    const compareLink = within(mega).getByRole('link', { name: /compare/i });
-    const productsLink = within(mega).getByRole('link', { name: /all products/i });
+    const compareLink = mega.querySelector('a[href="/compare"]') as HTMLElement;
+    const productsLink = mega.querySelector('.lux-emerald-mega-item[href="/products"]') as HTMLElement;
 
     expect(compareLink.className).toMatch(/is-active/);
+    expect(compareLink).toHaveAttribute('aria-current', 'page');
     expect(productsLink.className).not.toMatch(/is-active/);
   });
 
@@ -78,9 +79,8 @@ describe('LuxNav mega menu active states', () => {
     });
 
     const mega = container.querySelector('.lux-emerald-mega') as HTMLElement;
-    console.log('MEGA2:', mega?.innerHTML);
-    const wholesale = within(mega).getByRole('link', { name: /wholesale/i });
-    const compare = within(mega).getByRole('link', { name: /compare/i });
+    const wholesale = mega.querySelector('a[href="/wholesale"]') as HTMLElement;
+    const compare = mega.querySelector('a[href="/compare"]') as HTMLElement;
 
     expect(wholesale.className).toMatch(/is-active/);
     expect(compare.className).not.toMatch(/is-active/);
