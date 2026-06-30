@@ -39,13 +39,13 @@ export function trackConversion(event: string, props: Props = {}): void {
   const debug = debugFlag;
 
   if (debug) {
-    /* eslint-disable no-console */
+     
     console.groupCollapsed(`%c[track] → ${event}`, 'color:#b8860b;font-weight:bold');
     console.log('payload:', payload);
     console.log('props:', props);
     console.log('GTM available:', typeof (window as any).google_tag_manager !== 'undefined');
     console.log('Plausible available:', typeof window.plausible === 'function');
-    /* eslint-enable no-console */
+     
   }
 
   try {
@@ -65,19 +65,19 @@ export function trackConversion(event: string, props: Props = {}): void {
     } catch { /* noop */ }
 
     if (debug) {
-      // eslint-disable-next-line no-console
+       
       console.log(
         `%c✓ dataLayer push ${pushedOk ? 'OK' : 'FAILED'} (len ${beforeLen} → ${window.dataLayer.length})${plausibleOk ? ' | plausible OK' : ''}`,
         `color:${pushedOk ? '#0a7a3b' : '#b00020'};font-weight:bold`,
       );
-      // eslint-disable-next-line no-console
+       
       console.groupEnd();
     }
   } catch (err) {
     if (debug) {
-      // eslint-disable-next-line no-console
+       
       console.error('[track] push failed', err);
-      // eslint-disable-next-line no-console
+       
       console.groupEnd();
     }
     /* swallow — tracking must never break UX */

@@ -22,7 +22,7 @@ export class WebGLBoundary extends React.Component<Props, State> {
 
   componentDidCatch(error: Error) {
     if (import.meta.env.DEV) {
-      // eslint-disable-next-line no-console
+       
       console.warn('[WebGLBoundary] suppressed render error:', error);
     }
     this.props.onError?.(error);
