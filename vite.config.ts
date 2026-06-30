@@ -28,6 +28,48 @@ export default defineConfig(({ mode }) => ({
     }),
     // Inject <link rel="preload" fetchpriority="high"> for the most likely LCP image
     lcpPreload({ candidates: ['slide-coconut-trees', 'product-coconut', 'hero-charcoal'] }),
+    VitePWA({
+      registerType: 'autoUpdate',
+      includeAssets: ['favicon.png', 'cursor-logo.png', 'cursor-lux.png', 'robots.txt'],
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,svg,png,jpg,jpeg,webp,avif,woff,woff2}'],
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
+        navigateFallbackDenylist: [/^\/admin/, /^\/portal/, /^\/api/],
+        runtimeCaching: [
+          {
+            urlPattern: ({ url }) => url.origin === 'https://fonts.gstatic.com',
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'google-fonts',
+              expiration: { maxEntries: 30, maxAgeSeconds: 60 * 60 * 24 * 365 },
+            },
+          },
+          {
+            urlPattern: ({ request }) => request.destination === 'image',
+            handler: 'StaleWhileRevalidate',
+            options: {
+              cacheName: 'images',
+              expiration: { maxEntries: 200, maxAgeSeconds: 60 * 60 * 24 * 30 },
+            },
+          },
+        ],
+      },
+      manifest: {
+        name: 'فحم النخلة | Palm Charcoal',
+        short_name: 'Palm Charcoal',
+        description: 'Premium Saudi coconut charcoal — فحم جوز الهند الفاخر',
+        theme_color: '#0b3d2e',
+        background_color: '#f7f3ea',
+        display: 'standalone',
+        start_url: '/',
+        lang: 'ar',
+        dir: 'rtl',
+        icons: [
+          { src: '/favicon.png', sizes: '192x192', type: 'image/png' },
+          { src: '/favicon.png', sizes: '512x512', type: 'image/png', purpose: 'any maskable' },
+        ],
+      },
+    }),
     mode === "development" && componentTagger(),
   ].filter(Boolean),
   resolve: {
