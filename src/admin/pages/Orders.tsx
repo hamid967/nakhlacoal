@@ -101,7 +101,7 @@ export default function AdminOrders() {
         </div>
         <div className="flex gap-2">
           <button onClick={load} className="a-btn a-btn-ghost"><RefreshCw className="w-4 h-4" /> تحديث</button>
-          <button className="a-btn a-btn-gold"><Download className="w-4 h-4" /> تصدير CSV</button>
+          <button onClick={exportCsv} className="a-btn a-btn-gold"><Download className="w-4 h-4" /> تصدير CSV</button>
         </div>
       </header>
 
@@ -113,8 +113,8 @@ export default function AdminOrders() {
         <div className="flex items-center gap-1 p-1 rounded-full" style={{ background: 'var(--a-surface-2)' }}>
           {['all', ...STATUSES].map((s) => (
             <button key={s} onClick={() => setStatus(s)}
-              className={`px-3 py-1.5 rounded-full text-xs transition ${status === s ? 'bg-white shadow font-semibold' : 'opacity-70 hover:opacity-100'}`}
-              style={status === s ? { color: 'var(--a-palm)' } : undefined}>
+              className={`px-3 py-1.5 rounded-full text-xs transition ${status === s ? 'shadow font-semibold' : 'opacity-70 hover:opacity-100'}`}
+              style={status === s ? { background: 'var(--a-surface)', color: 'var(--a-palm)' } : undefined}>
               {s === 'all' ? 'الكل' : LABEL[s]}
             </button>
           ))}
@@ -126,15 +126,20 @@ export default function AdminOrders() {
           <table className="a-table">
             <thead>
               <tr>
-                <th>الطلب</th><th>العميل</th><th>المنتج</th><th>الكمية</th>
-                <th>الحالة</th><th>التاريخ</th><th></th>
+                <th><SortTh label="الطلب" k="id" sortKey={sortKey} sortDir={sortDir} onSort={toggleSort} /></th>
+                <th><SortTh label="العميل" k="company_name" sortKey={sortKey} sortDir={sortDir} onSort={toggleSort} /></th>
+                <th><SortTh label="المنتج" k="product_type" sortKey={sortKey} sortDir={sortDir} onSort={toggleSort} /></th>
+                <th><SortTh label="الكمية" k="quantity" sortKey={sortKey} sortDir={sortDir} onSort={toggleSort} /></th>
+                <th><SortTh label="الحالة" k="status" sortKey={sortKey} sortDir={sortDir} onSort={toggleSort} /></th>
+                <th><SortTh label="التاريخ" k="created_at" sortKey={sortKey} sortDir={sortDir} onSort={toggleSort} /></th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
               {loading && <tr><td colSpan={7} className="text-center py-10" style={{ color: 'var(--a-text-muted)' }}>جاري التحميل…</td></tr>}
               {!loading && !filtered.length && <tr><td colSpan={7} className="text-center py-10" style={{ color: 'var(--a-text-muted)' }}>لا توجد نتائج</td></tr>}
-              {filtered.map((o) => (
-                <tr key={o.id}>
+              {pageRows.map((o) => (
+                <tr key={o.id} className="a-fade-up">
                   <td>
                     <div className="font-semibold">#{o.id.slice(0, 8)}</div>
                     <div className="text-[11px]" style={{ color: 'var(--a-text-muted)' }}>{o.business_type || '—'}</div>
@@ -164,7 +169,17 @@ export default function AdminOrders() {
             </tbody>
           </table>
         </div>
+
+        {!loading && filtered.length > 0 && (
+          <div className="flex items-center justify-between gap-3 px-4 py-3 border-t" style={{ borderColor: 'var(--a-border)' }}>
+            <div className="text-xs" style={{ color: 'var(--a-text-muted)' }}>
+              عرض {(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, filtered.length)} من {filtered.length}
+            </div>
+            <Pagination page={page} totalPages={totalPages} onChange={setPage} />
+          </div>
+        )}
       </div>
+
 
       <AnimatePresence>
         {active && (
