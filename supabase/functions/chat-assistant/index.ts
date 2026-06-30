@@ -127,6 +127,10 @@ Deno.serve(async (req) => {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+
+    const userId = await resolveUserId(req);
+    if (userId) console.log("[chat-assistant] user:", userId);
+
     const raw = Array.isArray(body?.messages) ? body.messages : [];
     const ALLOWED_ROLES = ["user", "assistant", "system"] as const;
     const MAX_CONTENT_CHARS = 4000;
