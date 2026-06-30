@@ -29,7 +29,7 @@ export const AUDIENCES: Audience[] = [
     titleEn: 'Professional BBQ charcoal for steakhouses and grills',
     subAr: 'عيار ثابت، اشتعال نظيف بدون شرر، رماد أقل من 4٪ — مناسب للمطابخ المفتوحة وغرف الشواء.',
     subEn: 'Consistent caliber, clean ignition with no sparks, ash under 4% — built for open kitchens and grill rooms.',
-    productSlugs: ['restaurant-grade-bbq', 'premium-lump-charcoal'],
+    productSlugs: ['bbq', 'compressed'],
     bulletsAr: [
       'توريد أسبوعي مجدول إلى مطبخك',
       'فاتورة ضريبية معتمدة + شهادة منشأ',
@@ -63,7 +63,7 @@ export const AUDIENCES: Audience[] = [
     titleEn: 'Coconut shisha charcoal — quiet heat, zero odor',
     subAr: 'مكعبات 25×25 و26×26 ملم، اشتعال خلال 8 دقائق، يدوم 90 دقيقة على رأس واحدة، رماد أبيض ناعم.',
     subEn: '25×25 and 26×26 mm cubes, ignites in 8 minutes, lasts 90 minutes per head, fine white ash.',
-    productSlugs: ['coconut-shisha-cubes', 'premium-hookah-charcoal'],
+    productSlugs: ['coconut', 'hookah'],
     bulletsAr: [
       'بدون رائحة، بدون شرر',
       'مكعبات متجانسة لتشغيل أسرع',
@@ -97,7 +97,7 @@ export const AUDIENCES: Audience[] = [
     titleEn: 'Bulk charcoal at factory-floor pricing',
     subAr: 'أسعار طبقات تبدأ من 1,000 كجم — تسليم على شاحنتك من مستودع جدة، فاتورة ضريبية مفصّلة.',
     subEn: 'Tiered pricing starting at 1,000 kg — pickup from our Jeddah warehouse, itemized VAT invoice.',
-    productSlugs: ['restaurant-grade-bbq', 'coconut-shisha-cubes', 'premium-lump-charcoal'],
+    productSlugs: ['bbq', 'coconut', 'compressed'],
     bulletsAr: [
       'سعر تفضيلي بدءاً من 1,000 كجم',
       'تحميل خلال 24 ساعة',
@@ -131,7 +131,7 @@ export const AUDIENCES: Audience[] = [
     titleEn: 'Saudi charcoal exports on FOB / CIF terms',
     subAr: 'حاويات 20 و40 قدم من ميناء جدة الإسلامي، وثائق كاملة (CO, Phytosanitary, MSDS)، تعبئة بحرية معتمدة.',
     subEn: '20ft and 40ft containers from Jeddah Islamic Port, full docs (CO, Phytosanitary, MSDS), sea-ready packing.',
-    productSlugs: ['coconut-shisha-cubes', 'restaurant-grade-bbq'],
+    productSlugs: ['coconut', 'bbq'],
     bulletsAr: [
       'إنتاج 20 طن أسبوعياً',
       'شروط FOB Jeddah أو CIF حسب الميناء',
