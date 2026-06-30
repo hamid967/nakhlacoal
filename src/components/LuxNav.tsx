@@ -183,37 +183,64 @@ export function LuxNav() {
           onMouseLeave={scheduleClose}
         >
           <div className="container pt-3">
-            <div className="glass-card glass-dark glass-grain rounded-3xl p-6 shadow-2xl">
+            <div className="lux-emerald-mega rounded-2xl p-6 shadow-2xl">
               {navItems.map((item) => {
                 if (item.type !== 'mega' || activeMega !== item.key) return null;
                 return (
-                  <div key={item.key} className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                    {item.columns.map((col) => (
+                  <div key={item.key} className="grid grid-cols-[1fr_2fr] gap-6">
+                    {/* Eyebrow column */}
+                    <div className="hidden md:flex flex-col justify-between border-e border-gold/25 pe-6">
+                      <div>
+                        <div className="text-[10px] uppercase tracking-[0.32em] text-gold-hi/70 font-arabic mb-3">
+                          {isAr ? 'القائمة' : 'Menu'}
+                        </div>
+                        <div className="lux-emerald-wordmark text-3xl xl:text-4xl">
+                          {t(item.key)}
+                        </div>
+                        <div className="mt-3 text-xs text-background/65 font-arabic leading-relaxed max-w-[22ch]">
+                          {isAr
+                            ? 'استكشف تشكيلتنا الفاخرة وخدمات الجملة والتصدير من فحم النخلة.'
+                            : 'Explore our premium range, wholesale and export services from Palm Charcoal.'}
+                        </div>
+                      </div>
                       <Link
-                        key={col.to}
-                        to={col.to}
+                        to={item.to}
                         onClick={() => setActiveMega(null)}
-                        className="group rounded-xl p-4 hover:bg-gold/5 border border-transparent hover:border-gold/20 transition-all"
+                        className="mt-6 inline-flex items-center gap-2 text-xs tracking-[0.22em] uppercase text-gold-hi hover:text-gold transition-colors font-arabic"
                       >
-                        <div className="text-sm font-semibold text-dark group-hover:text-gold-ink font-arabic">
-                          {isAr ? col.titleAr : col.titleEn}
-                        </div>
-                        <div className="text-xs text-foreground/60 mt-1 font-arabic">
-                          {isAr ? col.descAr : col.descEn}
-                        </div>
+                        {isAr ? 'عرض الكل ←' : 'View all →'}
                       </Link>
-                    ))}
-                    <button
-                      onClick={() => { setActiveMega(null); setQuoteOpen(true); }}
-                      className="group rounded-xl p-4 text-start hover:bg-gold/5 border border-dashed border-gold/30 hover:border-gold/60 transition-all"
-                    >
-                      <div className="text-sm font-semibold text-gold-ink font-arabic">
-                        {isAr ? 'طلب عرض سعر' : 'Request a quote'}
-                      </div>
-                      <div className="text-xs text-foreground/60 mt-1 font-arabic">
-                        {isAr ? 'مخصّص للجملة والتصدير' : 'Tailored for B2B & export'}
-                      </div>
-                    </button>
+                    </div>
+
+                    {/* Items grid */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      {item.columns.map((col) => (
+                        <Link
+                          key={col.to}
+                          to={col.to}
+                          onClick={() => setActiveMega(null)}
+                          className="lux-emerald-mega-item group"
+                        >
+                          <div className="text-sm font-semibold text-background group-hover:text-gold-hi font-arabic transition-colors">
+                            {isAr ? col.titleAr : col.titleEn}
+                          </div>
+                          <div className="text-xs text-background/55 mt-1 font-arabic">
+                            {isAr ? col.descAr : col.descEn}
+                          </div>
+                        </Link>
+                      ))}
+                      <button
+                        onClick={() => { setActiveMega(null); setQuoteOpen(true); }}
+                        className="lux-emerald-mega-item lux-emerald-mega-cta group text-start"
+                      >
+                        <div className="text-sm font-semibold text-gold-hi font-arabic">
+                          {isAr ? 'طلب عرض سعر' : 'Request a quote'}
+                        </div>
+                        <div className="text-xs text-background/60 mt-1 font-arabic">
+                          {isAr ? 'مخصّص للجملة والتصدير' : 'Tailored for B2B & export'}
+                        </div>
+                      </button>
+                    </div>
                   </div>
                 );
               })}
