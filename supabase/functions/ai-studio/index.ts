@@ -40,15 +40,21 @@ Deno.serve(async (req) => {
     const userPrompt = (prompt ?? "").toString().slice(0, 1000);
 
     if (mode === "image") {
-      const r = await fetch("https://ai.gateway.lovable.dev/v1/images/generations", {
+      const r = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${LOVABLE_API_KEY}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "google/gemini-2.5-flash-image",
-          prompt: `Cinematic luxury marketing image for Palm Charcoal — premium Saudi date-palm charcoal brand. Matte black + warm gold ember tones, dramatic lighting, editorial composition. Concept: ${userPrompt}`,
+          model: "google/gemini-2.5-flash-image-preview",
+          messages: [
+            {
+              role: "user",
+              content: `Cinematic luxury marketing image for Palm Charcoal — premium Saudi date-palm charcoal brand. Matte black + warm gold ember tones, dramatic lighting, editorial composition. Concept: ${userPrompt}`,
+            },
+          ],
+          modalities: ["image", "text"],
         }),
       });
       if (!r.ok) {
@@ -59,8 +65,11 @@ Deno.serve(async (req) => {
         });
       }
       const data = await r.json();
-      const b64 = data?.data?.[0]?.b64_json;
-      return new Response(JSON.stringify({ image: b64 ? `data:image/png;base64,${b64}` : null }), {
+      // Lovable AI returns image as data URL in choices[0].message.images[0].image_url.url
+      const url =
+        data?.choices?.[0]?.message?.images?.[0]?.image_url?.url ??
+        (data?.data?.[0]?.b64_json ? `data:image/png;base64,${data.data[0].b64_json}` : null);
+      return new Response(JSON.stringify({ image: url }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
