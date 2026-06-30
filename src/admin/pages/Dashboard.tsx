@@ -142,6 +142,43 @@ export default function AdminDashboard() {
             className="a-card a-card-hover p-5"
           >
             <div className="flex items-start justify-between">
+      </header>
+
+      {/* KPI — Total orders + per-status breakdown (Untitled UI a-metric) */}
+      <section aria-label="نظرة عامة على الطلبات" className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
+        <div className="a-metric lg:col-span-1">
+          <div className="a-metric-label">إجمالي الطلبات</div>
+          <div className="a-metric-value">{stats.totalOrders.toLocaleString('ar-SA')}</div>
+          {stats.ordersDelta && (
+            <span className={`a-metric-trend ${stats.ordersDelta.startsWith('-') ? 'down' : 'up'}`}>
+              <ArrowUpRight className="w-3 h-3" /> {stats.ordersDelta} اليوم
+            </span>
+          )}
+        </div>
+        {(['new','contacted','confirmed','shipped','completed','cancelled'] as const).map((k) => {
+          const n = stats.byStatus[k] || 0;
+          const pct = stats.totalOrders ? Math.round((n / stats.totalOrders) * 100) : 0;
+          return (
+            <Link key={k} to={`/admin/orders?status=${k}`} className="a-metric block hover:border-[var(--a-border-strong)] transition-colors">
+              <div className="a-metric-label inline-flex items-center gap-1.5">
+                <span className={`a-dot ${STATUS_DOT[k]}`} /> {STATUS_LABEL[k]}
+              </div>
+              <div className="a-metric-value">{n.toLocaleString('ar-SA')}</div>
+              <div className="text-[11px]" style={{ color: 'var(--a-text-muted)' }}>{pct}% من الإجمالي</div>
+            </Link>
+          );
+        })}
+      </section>
+
+      {/* Summary cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {cards.map((c, i) => (
+          <motion.div
+            key={c.label}
+            initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}
+            className="a-card a-card-hover p-5"
+          >
+            <div className="flex items-start justify-between">
               <div>
                 <div className="text-[11px]" style={{ color: 'var(--a-text-muted)' }}>{c.label}</div>
                 <div className="a-display text-3xl mt-1.5">{c.value}</div>
