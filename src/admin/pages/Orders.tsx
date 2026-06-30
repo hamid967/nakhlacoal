@@ -139,7 +139,12 @@ export default function AdminOrders() {
               {loading && <tr><td colSpan={7} className="text-center py-10" style={{ color: 'var(--a-text-muted)' }}>جاري التحميل…</td></tr>}
               {!loading && !filtered.length && <tr><td colSpan={7} className="text-center py-10" style={{ color: 'var(--a-text-muted)' }}>لا توجد نتائج</td></tr>}
               {pageRows.map((o) => (
-                <tr key={o.id} className="a-fade-up">
+                <tr
+                  key={o.id}
+                  className="a-fade-up cursor-pointer"
+                  onClick={() => setActive(o)}
+                  data-active={active?.id === o.id}
+                >
                   <td>
                     <div className="font-semibold">#{o.id.slice(0, 8)}</div>
                     <div className="text-[11px]" style={{ color: 'var(--a-text-muted)' }}>{o.business_type || '—'}</div>
@@ -150,7 +155,7 @@ export default function AdminOrders() {
                   </td>
                   <td>{o.product_type}</td>
                   <td>{o.quantity} {o.unit}</td>
-                  <td>
+                  <td onClick={(e) => e.stopPropagation()}>
                     <select value={o.status} onChange={(e) => update(o.id, { status: e.target.value })}
                       className={`a-pill ${TINT[o.status] || ''}`} style={{ paddingInlineEnd: 20 }}>
                       {STATUSES.map((s) => <option key={s} value={s}>{LABEL[s]}</option>)}
@@ -159,8 +164,8 @@ export default function AdminOrders() {
                   <td className="text-xs" style={{ color: 'var(--a-text-muted)' }}>
                     {new Date(o.created_at).toLocaleDateString('ar-SA', { dateStyle: 'medium' })}
                   </td>
-                  <td>
-                    <button onClick={() => setActive(o)} className="a-btn a-btn-ghost py-1 px-2">
+                  <td onClick={(e) => e.stopPropagation()}>
+                    <button onClick={() => setActive(o)} className="a-btn a-btn-ghost py-1 px-2" aria-label="عرض التفاصيل">
                       <Eye className="w-4 h-4" />
                     </button>
                   </td>
