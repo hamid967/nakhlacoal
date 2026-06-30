@@ -74,6 +74,7 @@ const PortalSettings = lazy(() => import('@/portal/pages/Settings'));
 const PortalPlaceholder = lazy(() => import('@/portal/pages/Placeholder'));
 const PortalNewOrder = lazy(() => import('@/portal/pages/NewOrder'));
 const PortalShipments = lazy(() => import('@/portal/pages/Shipments'));
+const PortalShipmentDetail = lazy(() => import('@/portal/pages/ShipmentDetail'));
 
 const queryClient = new QueryClient();
 
