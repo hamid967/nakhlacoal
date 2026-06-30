@@ -285,10 +285,12 @@ export default function Studio() {
         </div>
       </div>
 
-      {loading && !text && !image && (
-        <div className="mt-12 grid md:grid-cols-2 gap-4">
-          <div className="h-48 rounded-md bg-surface/60 border-luxe animate-pulse" />
-          <div className="h-48 rounded-md bg-surface/60 border-luxe animate-pulse" />
+      {/* Text skeleton while intro/both is loading and we don't have copy yet */}
+      {(loading === "intro" || loading === "both") && !sections.headline && !text && (
+        <div className="mt-12 grid md:grid-cols-2 gap-4" aria-busy="true" aria-live="polite">
+          <div className="h-32 rounded-md bg-surface/60 border-luxe animate-pulse" />
+          <div className="h-32 rounded-md bg-surface/60 border-luxe animate-pulse" />
+          <div className="md:col-span-2 h-40 rounded-md bg-surface/60 border-luxe animate-pulse" />
         </div>
       )}
 
@@ -307,9 +309,31 @@ export default function Studio() {
         </div>
       )}
 
-      {image && (
+      {/* Image skeleton — only while image/both is loading AND no image yet */}
+      {(loading === "image" || loading === "both") && !image && (
+        <div className="mt-6 aspect-[16/10] rounded-md bg-surface/60 border-luxe animate-pulse relative overflow-hidden" aria-busy="true" aria-live="polite">
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-gold/10 to-transparent animate-[shimmer_1.8s_infinite]" />
+          <div className="absolute inset-0 flex items-center justify-center text-[10px] uppercase tracking-[0.35em] text-gold/70">
+            <Loader2 className="w-4 h-4 animate-spin mr-2" />
+            {isAr ? "جارٍ توليد الصورة…" : "Rendering visual…"}
+          </div>
+        </div>
+      )}
+
+      {/* Only render once image is fully present and not currently regenerating */}
+      {image && loading !== "image" && loading !== "both" && (
         <figure className="mt-6 relative group border-luxe rounded-md overflow-hidden">
-          <img src={image} alt="Generated marketing visual" className="w-full block"  loading="lazy" decoding="async" />
+          <img
+            src={image}
+            alt="Generated marketing visual"
+            className="w-full block"
+            loading="lazy"
+            decoding="async"
+            onError={() => {
+              setImage(null);
+              toast.error(isAr ? "فشل عرض الصورة" : "Image failed to load");
+            }}
+          />
           <button
             onClick={() => downloadImage(image)}
             className="absolute top-3 right-3 px-3 py-2 rounded-md bg-background/70 backdrop-blur border-luxe text-xs text-gold-hi opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-2"
