@@ -29,6 +29,7 @@ import Trademarks from '@/pages/Trademarks';
 import Uses from '@/pages/Uses';
 import Articles from '@/pages/Articles';
 import ArticleDetail from '@/pages/ArticleDetail';
+import AudienceLanding from '@/pages/AudienceLanding';
 import Studio from '@/pages/Studio';
 import Auth from '@/pages/Auth';
 import ResetPassword from '@/pages/ResetPassword';
