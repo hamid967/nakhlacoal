@@ -41,7 +41,12 @@ window.addEventListener("load", () => sessionStorage.removeItem(RELOAD_KEY));
 
 createRoot(document.getElementById("root")!).render(
   <HelmetProvider>
-    <BrowserRouter>
+    <BrowserRouter
+      future={{
+        v7_startTransition: true,
+        v7_relativeSplatPath: true,
+      }}
+    >
       <App />
     </BrowserRouter>
   </HelmetProvider>
