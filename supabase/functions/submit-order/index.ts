@@ -23,6 +23,17 @@ function buildCors(req: Request) {
 }
 const MAX_BODY_BYTES = 32_000;
 
+// Ad-hoc in-memory rate limit (per isolate). 5 req / 60s per key.
+const RL_WINDOW_MS = 60_000;
+const RL_MAX = 5;
+const rlBuckets = new Map<string, number[]>();
+function rateLimited(key: string): boolean {
+  const now = Date.now();
+  const arr = (rlBuckets.get(key) ?? []).filter((t) => now - t < RL_WINDOW_MS);
+  if (arr.length >= RL_MAX) { rlBuckets.set(key, arr); return true; }
+  arr.push(now); rlBuckets.set(key, arr); return false;
+}
+
 const OrderSchema = z.object({
   product_type: z.string().trim().min(2).max(80),
   quantity: z.coerce.number().positive().max(100000),
