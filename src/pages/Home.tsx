@@ -1,14 +1,11 @@
 import { lazy, Suspense } from 'react';
-import { WebGLBoundary } from '@/components/WebGLBoundary';
-import { hasWebGL } from '@/lib/hasWebGL';
 import { Link } from 'react-router-dom';
 import { Flame, Clock, Leaf, Wind, ShieldCheck, Award } from 'lucide-react';
 import { SEO } from '@/components/SEO';
 import { ScrollReveal } from '@/components/ScrollReveal';
 
-// Heavy WebGL/3D hero — code-split so it doesn't block first paint
+// Heavy 3D hero — code-split so it doesn't block first paint
 const BrandHero = lazy(() => import('@/components/BrandHero').then((m) => ({ default: m.BrandHero })));
-const GoldParticles = lazy(() => import('@/components/GoldParticles').then((m) => ({ default: m.GoldParticles })));
 const BrandTimeline = lazy(() => import('@/components/BrandTimeline').then((m) => ({ default: m.BrandTimeline })));
 const LocationSection = lazy(() => import('@/components/LocationSection').then((m) => ({ default: m.LocationSection })));
 const FaqSection = lazy(() => import('@/components/FaqSection').then((m) => ({ default: m.FaqSection })));
