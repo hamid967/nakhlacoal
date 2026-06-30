@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Palette, Check, RotateCcw, Monitor } from 'lucide-react';
+import { Palette, Check, RotateCcw, Monitor, Zap } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,6 +7,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
+import { useReducedMotion, setReducedMotion } from '@/hooks/useReducedMotion';
+
 
 type ThemeKey = 'auto' | 'emerald' | 'noir' | 'sand';
 type FontKey = 'classic' | 'modern' | 'editorial';
@@ -43,6 +45,8 @@ function applyFont(f: FontKey) {
 export function ThemeToggle() {
   const [theme, setTheme] = useState<ThemeKey>(DEFAULT_THEME);
   const [font, setFont] = useState<FontKey>(DEFAULT_FONT);
+  const reduceMotion = useReducedMotion();
+
 
   useEffect(() => {
     const t = (localStorage.getItem(STORAGE_KEY) as ThemeKey) || DEFAULT_THEME;
@@ -135,8 +139,31 @@ export function ThemeToggle() {
         ))}
 
         <DropdownMenuSeparator className="my-2" />
+        <DropdownMenuLabel className="text-xs">الحركة</DropdownMenuLabel>
+        <button
+          onClick={() => setReducedMotion(reduceMotion ? false : true)}
+          className="w-full flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-muted text-right cursor-pointer"
+          aria-pressed={reduceMotion}
+        >
+          <Zap className="w-3.5 h-3.5 text-muted-foreground" />
+          <span className="flex-1 text-sm">تقليل الحركة والتأثيرات</span>
+          <span
+            className={`inline-flex h-4 w-7 items-center rounded-full transition-colors ${
+              reduceMotion ? 'bg-gold' : 'bg-muted'
+            }`}
+          >
+            <span
+              className={`inline-block h-3 w-3 transform rounded-full bg-background transition-transform ${
+                reduceMotion ? 'translate-x-3.5' : 'translate-x-0.5'
+              }`}
+            />
+          </span>
+        </button>
+
+        <DropdownMenuSeparator className="my-2" />
         <div className="px-2 py-2 rounded-md bg-muted/40 border border-border">
           <div className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">معاينة فورية</div>
+
           <div className="text-sm text-foreground">فحم النخلة — جودة فاخرة</div>
           <div className="flex items-center gap-1.5 mt-2">
             <span className="px-2 py-0.5 rounded-full text-[10px] bg-gold text-dark font-semibold">CTA</span>
