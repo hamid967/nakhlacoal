@@ -14,6 +14,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
+    "test:nav": "vitest run src/components/__tests__/NavLinkActive.test.tsx src/components/__tests__/LuxNavMega.test.tsx src/components/__tests__/LuxNavMobile.test.tsx src/components/__tests__/LuxNavRTL.test.tsx",
+    "test:nav:watch": "vitest src/components/__tests__/NavLinkActive.test.tsx src/components/__tests__/LuxNavMega.test.tsx src/components/__tests__/LuxNavMobile.test.tsx src/components/__tests__/LuxNavRTL.test.tsx",
     "test:visual": "node tests/visual/intro.spec.mjs",
     "test:intro": "python tests/visual/intro_visual_test.py",
     "test:intro:update": "UPDATE_SNAPSHOTS=1 python tests/visual/intro_visual_test.py"
