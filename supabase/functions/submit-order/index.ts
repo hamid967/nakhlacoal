@@ -2,16 +2,31 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { z } from "npm:zod@3.23.8";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-};
+const ALLOWED_ORIGINS = new Set<string>([
+  "https://nakhlacoal.lovable.app",
+  "https://www.alnakhlacoal.com",
+  "https://alnakhlacoal.com",
+  "https://id-preview--06513aac-9ddf-458b-8161-595178079007.lovable.app",
+  "http://localhost:8080",
+  "http://localhost:5173",
+]);
+
+function buildCors(req: Request) {
+  const origin = req.headers.get("Origin") ?? "";
+  const allow = ALLOWED_ORIGINS.has(origin) ? origin : "";
+  return {
+    "Access-Control-Allow-Origin": allow,
+    "Vary": "Origin",
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+  } as Record<string, string>;
+}
+const MAX_BODY_BYTES = 32_000;
 
 const OrderSchema = z.object({
   product_type: z.string().trim().min(2).max(80),
   quantity: z.coerce.number().positive().max(100000),
-  unit: z.enum(["kg", "carton", "ton"]).default("kg"),
+  unit: z.enum(["kg", "carton", "ton", "box"]).default("kg"),
   company_name: z.string().trim().min(2).max(120),
   contact_name: z.string().trim().min(2).max(80),
   phone: z.string().trim().regex(/^(\+?966|0)?5\d{8}$/, "phone_invalid"),
@@ -26,9 +41,17 @@ const OrderSchema = z.object({
 });
 
 Deno.serve(async (req) => {
+  const corsHeaders = buildCors(req);
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
   if (req.method !== "POST") {
     return new Response("Method not allowed", { status: 405, headers: corsHeaders });
+  }
+  // C3: reject cross-origin POSTs from non-allowlisted origins
+  const origin = req.headers.get("Origin") ?? "";
+  if (origin && !ALLOWED_ORIGINS.has(origin)) {
+    return new Response(JSON.stringify({ error: "origin_not_allowed" }), {
+      status: 403, headers: { "Content-Type": "application/json" },
+    });
   }
 
   try {
@@ -36,7 +59,20 @@ Deno.serve(async (req) => {
     const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY")!;
 
-    const body = await req.json();
+    // C4: read body as bytes and enforce real size (header is spoofable)
+    const raw = new Uint8Array(await req.arrayBuffer());
+    if (raw.byteLength === 0 || raw.byteLength > MAX_BODY_BYTES) {
+      return new Response(JSON.stringify({ error: "payload_too_large" }), {
+        status: 413, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    let body: unknown;
+    try { body = JSON.parse(new TextDecoder().decode(raw)); }
+    catch {
+      return new Response(JSON.stringify({ error: "invalid_json" }), {
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
     const parsed = OrderSchema.safeParse(body);
     if (!parsed.success) {
       return new Response(
@@ -45,13 +81,13 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Optional: capture user_id if signed-in
+    // C1: capture user_id via getUser(jwt) — supported on supabase-js v2
     let userId: string | null = null;
     const authHeader = req.headers.get("Authorization");
     if (authHeader?.startsWith("Bearer ")) {
       const anon = createClient(SUPABASE_URL, ANON_KEY);
-      const { data } = await anon.auth.getClaims(authHeader.slice(7));
-      userId = data?.claims?.sub ?? null;
+      const { data, error } = await anon.auth.getUser(authHeader.slice(7));
+      if (!error) userId = data.user?.id ?? null;
     }
 
     const admin = createClient(SUPABASE_URL, SERVICE_KEY);
