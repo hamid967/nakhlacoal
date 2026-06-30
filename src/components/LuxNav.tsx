@@ -123,6 +123,7 @@ export function LuxNav() {
                 );
               }
               const expanded = activeMega === item.key;
+              const childActive = item.columns.some((c) => location.pathname === c.to || location.pathname.startsWith(c.to + '/'));
               return (
                 <li
                   key={item.key}
@@ -139,7 +140,7 @@ export function LuxNav() {
                   >
                     <span
                       className="lux-emerald-link font-arabic inline-flex items-center gap-1"
-                      data-active={location.pathname.startsWith(item.to) || expanded}
+                      data-active={childActive || expanded}
                     >
                       {t(item.key)}
                       <ChevronDown className={`w-3 h-3 transition-transform ${expanded ? 'rotate-180' : ''}`} />
