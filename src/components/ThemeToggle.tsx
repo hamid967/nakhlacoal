@@ -45,6 +45,8 @@ function applyFont(f: FontKey) {
 export function ThemeToggle() {
   const [theme, setTheme] = useState<ThemeKey>(DEFAULT_THEME);
   const [font, setFont] = useState<FontKey>(DEFAULT_FONT);
+  const reduceMotion = useReducedMotion();
+
 
   useEffect(() => {
     const t = (localStorage.getItem(STORAGE_KEY) as ThemeKey) || DEFAULT_THEME;
