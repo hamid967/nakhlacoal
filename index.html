@@ -50,22 +50,9 @@
         rel="stylesheet"
       />
     </noscript>
-    <!-- Preload primary Arabic display font file (woff2) used by Reem Kufi 600 weight in the hero -->
-    <link
-      rel="preload"
-      as="font"
-      type="font/woff2"
-      href="https://fonts.gstatic.com/s/reemkufi/v28/2sDPZGJLip7W2J7v7wQDb0-AHg.woff2"
-      crossorigin
-    />
-    <!-- Preload IBM Plex Sans Arabic 400 for body copy above the fold -->
-    <link
-      rel="preload"
-      as="font"
-      type="font/woff2"
-      href="https://fonts.gstatic.com/s/ibmplexsansarabic/v12/Qw3CZRtWPQCuHme67tEYUIx3Kh0PHR9N6bs61vSbfdlA.woff2"
-      crossorigin
-    />
+    <!-- Font files are referenced from the CSS above; Google rotates hashed URLs so we no longer
+         preload specific .woff2 files (caused ERR_ABORTED + wasted preload warnings). -->
+
 
     <script type="application/ld+json">
       {
