@@ -25,8 +25,8 @@ export default defineConfig(({ mode }) => ({
         return new URLSearchParams();
       },
     }),
-    // Inject <link rel="preload" fetchpriority="high"> for the first hero slide (LCP)
-    lcpPreload({ match: 'slide-coconut-trees', format: 'avif', width: 1280 }),
+    // Inject <link rel="preload" fetchpriority="high"> for the most likely LCP image
+    lcpPreload({ candidates: ['slide-coconut-trees', 'product-coconut', 'hero-charcoal'] }),
     mode === "development" && componentTagger(),
   ].filter(Boolean),
   resolve: {

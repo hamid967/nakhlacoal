@@ -2,53 +2,57 @@ import type { Plugin } from 'vite';
 
 type Options = {
   /**
-   * Base name (without extension) of the LCP image to preload.
-   * Matches the source filename used with `?picture`.
-   * Example: 'slide-coconut-trees' for `slide-coconut-trees.jpg?picture`.
+   * Source filename basenames (without extension) of LCP image candidates.
+   * The first one resolved in the bundle is preloaded.
+   * Examples: 'product-coconut' for `product-coconut.jpg`,
+   *           'slide-coconut-trees' for `slide-coconut-trees.jpg?picture`.
    */
-  match: string;
-  /** Preferred format. Default: 'avif'. */
-  format?: 'avif' | 'webp' | 'jpg';
+  candidates: string[];
   /**
-   * Preferred width bucket (must exist in imagetools `w=` list).
-   * Default: 1280 (closest to typical desktop hero).
+   * Preferred format priority. Picks the first format that exists for the
+   * matched candidate. Default: ['avif','webp','jpg','png'].
    */
-  width?: number;
+  formats?: Array<'avif' | 'webp' | 'jpg' | 'png'>;
+};
+
+const MIME: Record<string, string> = {
+  avif: 'image/avif',
+  webp: 'image/webp',
+  jpg: 'image/jpeg',
+  png: 'image/png',
 };
 
 /**
- * Vite plugin that injects a `<link rel="preload" as="image" fetchpriority="high">`
- * into index.html pointing at the hashed asset emitted by `vite-imagetools`
- * for the configured LCP image. Build-only — dev gets no preload tag.
+ * Build-only Vite plugin: injects
+ *   <link rel="preload" as="image" type="..." fetchpriority="high" href="...">
+ * for the highest-priority LCP candidate it can find in the emitted bundle.
+ * Works with both raw `?import` jpg/png and `vite-imagetools` (?picture) outputs.
  */
 export function lcpPreload(opts: Options): Plugin {
-  const format = opts.format ?? 'avif';
-  const width = opts.width ?? 1280;
-  let href: string | null = null;
+  const formats = opts.formats ?? ['avif', 'webp', 'jpg', 'png'];
+  let injection: string | null = null;
 
   return {
     name: 'lcp-preload',
     apply: 'build',
     enforce: 'post',
     generateBundle(_, bundle) {
-      // Filenames look like: `assets/slide-coconut-trees-1280-HASH.avif`
-      const re = new RegExp(
-        `${opts.match}[-_].*${width}.*\\.${format}$|${opts.match}[-_].*\\.${format}$`,
-      );
-      const candidates = Object.keys(bundle).filter(
-        (f) => f.endsWith(`.${format}`) && f.includes(opts.match),
-      );
-      if (!candidates.length) return;
-      // Prefer one that contains the exact width bucket; fall back to first.
-      const exact = candidates.find((f) => f.includes(String(width)));
-      href = '/' + (exact ?? candidates[0]);
-      void re;
+      const files = Object.keys(bundle);
+      for (const name of opts.candidates) {
+        for (const fmt of formats) {
+          const match = files.find(
+            (f) => f.includes(name) && f.endsWith(`.${fmt}`),
+          );
+          if (match) {
+            injection = `<link rel="preload" as="image" type="${MIME[fmt]}" href="/${match}" fetchpriority="high" />`;
+            return;
+          }
+        }
+      }
     },
     transformIndexHtml(html) {
-      if (!href) return html;
-      const mime = format === 'jpg' ? 'image/jpeg' : `image/${format}`;
-      const tag = `<link rel="preload" as="image" type="${mime}" href="${href}" fetchpriority="high" />`;
-      return html.replace('</head>', `  ${tag}\n  </head>`);
+      if (!injection) return html;
+      return html.replace('</head>', `  ${injection}\n  </head>`);
     },
   };
 }
