@@ -20,7 +20,7 @@ export default {
       fontFamily: {
         display: ['"Cormorant Garamond"', 'serif'],
         body: ['"IBM Plex Sans Arabic"', 'system-ui', 'sans-serif'],
-        arabic: ['Tajawal', 'serif'],
+        arabic: ['"Reem Kufi"', '"IBM Plex Sans Arabic"', 'serif'],
       },
       colors: {
         border: "hsl(var(--border))",
