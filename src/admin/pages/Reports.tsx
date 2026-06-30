@@ -60,6 +60,71 @@ export default function AdminReports() {
   const [inventory, setInventory] = useState<InventoryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [days, setDays] = useState(30);
+  const [exporting, setExporting] = useState<'idle' | 'pdf' | 'share'>('idle');
+  const reportRef = useRef<HTMLDivElement>(null);
+  const { toast } = useToast();
+
+  const generatePdf = async () => {
+    if (!reportRef.current) return null;
+    const [{ default: html2canvas }, { default: jsPDF }] = await Promise.all([
+      import('html2canvas'),
+      import('jspdf'),
+    ]);
+    const canvas = await html2canvas(reportRef.current, {
+      scale: 2,
+      backgroundColor: getComputedStyle(document.body).getPropertyValue('--a-ivory') || '#fff',
+      useCORS: true,
+    });
+    const img = canvas.toDataURL('image/png');
+    const pdf = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
+    const pageW = pdf.internal.pageSize.getWidth();
+    const pageH = pdf.internal.pageSize.getHeight();
+    const imgH = (canvas.height * pageW) / canvas.width;
+    let remaining = imgH;
+    let position = 0;
+    pdf.addImage(img, 'PNG', 0, position, pageW, imgH);
+    remaining -= pageH;
+    while (remaining > 0) {
+      position -= pageH;
+      pdf.addPage();
+      pdf.addImage(img, 'PNG', 0, position, pageW, imgH);
+      remaining -= pageH;
+    }
+    return pdf;
+  };
+
+  const handleDownload = async () => {
+    try {
+      setExporting('pdf');
+      const pdf = await generatePdf();
+      if (!pdf) return;
+      pdf.save(`palm-charcoal-report-${new Date().toISOString().slice(0, 10)}.pdf`);
+      toast({ title: 'تم التصدير', description: 'تم تحميل ملف PDF.' });
+    } catch (e) {
+      toast({ title: 'تعذر التصدير', description: String(e), variant: 'destructive' });
+    } finally { setExporting('idle'); }
+  };
+
+  const handleShare = async () => {
+    try {
+      setExporting('share');
+      const pdf = await generatePdf();
+      if (!pdf) return;
+      const blob = pdf.output('blob');
+      const file = new File([blob], `palm-charcoal-report.pdf`, { type: 'application/pdf' });
+      const nav = navigator as Navigator & { canShare?: (d: ShareData) => boolean };
+      if (nav.canShare?.({ files: [file] })) {
+        await nav.share({ files: [file], title: 'تقرير فحم النخلة' });
+      } else {
+        const url = URL.createObjectURL(blob);
+        window.open(url, '_blank');
+        toast({ title: 'فُتح التقرير', description: 'المتصفح لا يدعم المشاركة المباشرة — يمكنك التحميل وإرساله يدويًا.' });
+      }
+    } catch (e) {
+      toast({ title: 'تعذرت المشاركة', description: String(e), variant: 'destructive' });
+    } finally { setExporting('idle'); }
+  };
+
 
   useEffect(() => {
     (async () => {
