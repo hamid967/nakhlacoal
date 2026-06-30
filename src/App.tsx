@@ -26,6 +26,7 @@ const About = lazy(() => import('@/pages/About'));
 const Quality = lazy(() => import('@/pages/Quality'));
 const Wholesale = lazy(() => import('@/pages/Wholesale'));
 const ExportPage = lazy(() => import('@/pages/Export'));
+const ExportGuide = lazy(() => import('@/pages/ExportGuide'));
 const Knowledge = lazy(() => import('@/pages/Knowledge'));
 const Contact = lazy(() => import('@/pages/Contact'));
 const Trademarks = lazy(() => import('@/pages/Trademarks'));
@@ -106,6 +107,7 @@ export default function App() {
                   <Route path="/quality" element={<Quality />} />
                   <Route path="/wholesale" element={<ProtectedRoute requireRole="wholesale"><Wholesale /></ProtectedRoute>} />
                   <Route path="/export" element={<ExportPage />} />
+                  <Route path="/export/guide" element={<ExportGuide />} />
                   <Route path="/knowledge" element={<Knowledge />} />
                   <Route path="/contact" element={<Contact />} />
                   <Route path="/trademarks" element={<Trademarks />} />
