@@ -216,19 +216,26 @@ export function LuxNav() {
                     {/* Items grid */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       {item.columns.map((col) => (
-                        <Link
+                        <NavLink
                           key={col.to}
                           to={col.to}
+                          end
                           onClick={() => setActiveMega(null)}
-                          className="lux-emerald-mega-item group"
+                          className={({ isActive }) =>
+                            `lux-emerald-mega-item group ${isActive ? 'is-active' : ''}`
+                          }
                         >
-                          <div className="text-sm font-semibold text-background group-hover:text-gold-hi font-arabic transition-colors">
-                            {isAr ? col.titleAr : col.titleEn}
-                          </div>
-                          <div className="text-xs text-background/55 mt-1 font-arabic">
-                            {isAr ? col.descAr : col.descEn}
-                          </div>
-                        </Link>
+                          {({ isActive }) => (
+                            <>
+                              <div className={`text-sm font-semibold font-arabic transition-colors ${isActive ? 'text-gold-hi' : 'text-background group-hover:text-gold-hi'}`}>
+                                {isAr ? col.titleAr : col.titleEn}
+                              </div>
+                              <div className="text-xs text-background/55 mt-1 font-arabic">
+                                {isAr ? col.descAr : col.descEn}
+                              </div>
+                            </>
+                          )}
+                        </NavLink>
                       ))}
                       <button
                         onClick={() => { setActiveMega(null); setQuoteOpen(true); }}
