@@ -55,7 +55,7 @@ export default function Location() {
         number="16"
         eyebrow={isAr ? 'الموقع' : 'Location'}
         title={isAr ? 'زورونا في سوق الفحم — جدة' : 'Visit us at Charcoal Souq — Jeddah'}
-        lead={
+        subtitle={
           isAr
             ? 'مقرنا في قلب البلد التاريخي. العنوان الموحّد، ساعات العمل، والاتصال المباشر — كلها هنا.'
             : 'Our headquarters in the heart of historic Al-Balad. Unified NAP, hours, and direct contact — all in one place.'
