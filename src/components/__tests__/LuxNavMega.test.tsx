@@ -78,7 +78,7 @@ describe('LuxNav mega menu active states', () => {
     });
 
     const mega = container.querySelector('.lux-emerald-mega') as HTMLElement;
-    console.log('MEGA2:', mega?.innerHTML?.slice(0, 600));
+    console.log('MEGA2:', mega?.innerHTML);
     const wholesale = within(mega).getByRole('link', { name: /wholesale/i });
     const compare = within(mega).getByRole('link', { name: /compare/i });
 
