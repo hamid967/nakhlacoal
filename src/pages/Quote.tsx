@@ -117,14 +117,69 @@ export default function Quote() {
               <p className="text-sm text-muted-foreground mb-4">
                 مستشار ذكي يرشّح لك المنتج المناسب، يحسب الكميات، ويجهّز الطلب نيابةً عنك بأسلوب احترافي.
               </p>
-              <Button onClick={openAssistant} className="w-full bg-gold text-dark hover:bg-gold-hi font-semibold">
+              <Button onClick={() => openAssistant()} className="w-full bg-gold text-dark hover:bg-gold-hi font-semibold">
                 <MessageCircle className="size-4 ms-1" /> ابدأ المحادثة الآن
               </Button>
+
+              {/* Quick prompt suggestions */}
+              <div className="mt-4">
+                <div className="text-[11px] font-semibold text-muted-foreground mb-2">اقتراحات جاهزة</div>
+                <div className="flex flex-wrap gap-1.5">
+                  {PRESETS.map((p) => (
+                    <button
+                      key={p.label}
+                      type="button"
+                      onClick={() => openAssistant(p.text)}
+                      className="text-[11px] px-2.5 py-1 rounded-full border border-gold/30 bg-background/50 hover:bg-gold/10 hover:border-gold/60 transition"
+                    >
+                      {p.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               <ul className="mt-4 space-y-2 text-xs text-muted-foreground">
                 <li className="flex items-start gap-2"><span className="text-gold mt-0.5">●</span> توصية فورية حسب الاستخدام</li>
                 <li className="flex items-start gap-2"><span className="text-gold mt-0.5">●</span> أسعار الجملة والتدرّج الكمّي</li>
                 <li className="flex items-start gap-2"><span className="text-gold mt-0.5">●</span> تحويل المحادثة إلى طلب جاهز</li>
               </ul>
+            </div>
+
+            {/* Live price summary */}
+            <div className="glass-card rounded-2xl border border-gold/20 p-5">
+              <h3 className="font-bold flex items-center gap-2 mb-3">
+                <Calculator className="size-4 text-gold" /> ملخص السعر المباشر
+              </h3>
+              {live && live.count > 0 ? (
+                <>
+                  <ul className="space-y-1.5 text-xs max-h-40 overflow-auto pe-1">
+                    {live.items.map((i, idx) => (
+                      <li key={idx} className="flex justify-between gap-2 border-b border-border/40 pb-1">
+                        <span className="truncate">{i.label} <span className="text-muted-foreground">× {i.qty} {unitAr(i.unit)}</span></span>
+                        <span className="font-semibold tabular-nums">{fmt(i.lineTotal)}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="mt-3 space-y-1 text-xs">
+                    <div className="flex justify-between"><span className="text-muted-foreground">قبل الضريبة</span><span className="tabular-nums">{fmt(live.subtotal)} ر.س</span></div>
+                    <div className="flex justify-between"><span className="text-muted-foreground">ضريبة 15%</span><span className="tabular-nums">{fmt(live.vat)} ر.س</span></div>
+                    <div className="flex justify-between text-sm font-bold pt-1 border-t border-gold/30 mt-1">
+                      <span>الإجمالي</span><span className="text-gold tabular-nums">{fmt(live.total)} ر.س</span>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 mt-4">
+                    <Button onClick={copySummary} variant="outline" size="sm" className="text-xs">
+                      {copied ? <Check className="size-3.5 ms-1" /> : <Copy className="size-3.5 ms-1" />}
+                      {copied ? 'تم النسخ' : 'نسخ الملخص'}
+                    </Button>
+                    <Button onClick={sendSummaryWhatsApp} size="sm" className="text-xs bg-[#25D366] hover:bg-[#1ebe57] text-white">
+                      <MessageCircle className="size-3.5 ms-1" /> إرسال واتساب
+                    </Button>
+                  </div>
+                </>
+              ) : (
+                <p className="text-xs text-muted-foreground">أضف منتجاً في النموذج لعرض ملخص الأسعار هنا قبل الإرسال.</p>
+              )}
             </div>
 
             <div className="glass-card rounded-2xl border p-5 space-y-3">
