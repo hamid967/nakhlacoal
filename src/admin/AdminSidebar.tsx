@@ -71,7 +71,7 @@ export function AdminSidebar({ collapsed, onToggle }: { collapsed: boolean; onTo
             <div className="text-[10px] tracking-[0.2em]" style={{ color: 'var(--a-text-muted)' }}>ADMIN · OS</div>
           </div>
         )}
-        <button onClick={onToggle} className="ms-auto p-1.5 rounded-lg hover:bg-black/5" aria-label="toggle sidebar">
+        <button onClick={onToggle} className="ms-auto p-1.5 rounded-lg transition" style={{ background: 'transparent' }} onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--a-soft)')} onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')} aria-label="toggle sidebar">
           <ChevronLeft className={`w-4 h-4 transition-transform ${collapsed ? 'rotate-180' : ''}`} />
         </button>
       </div>
@@ -80,21 +80,37 @@ export function AdminSidebar({ collapsed, onToggle }: { collapsed: boolean; onTo
         {groups.map((g) => (
           <div key={g.title}>
             {!collapsed && <div className="a-nav-group">{g.title}</div>}
-            {g.items.map((it) => (
-              <NavLink
-                key={it.to}
-                to={it.to}
-                end={it.to === '/admin'}
-                className={({ isActive }) => `a-nav-item ${isActive ? 'active' : ''}`}
-                title={collapsed ? it.label : undefined}
-              >
-                <it.icon className="w-[18px] h-[18px] shrink-0" />
-                {!collapsed && <span className="truncate">{it.label}</span>}
-                {!collapsed && it.badge && (
-                  <span className="ms-auto a-pill" style={{ fontSize: 9, padding: '2px 6px' }}>{it.badge}</span>
-                )}
-              </NavLink>
-            ))}
+            {g.items.map((it) => {
+              const isComingSoon = it.badge === 'قريباً';
+              if (isComingSoon) {
+                return (
+                  <div
+                    key={it.to}
+                    className="a-nav-item pointer-events-none opacity-50 cursor-not-allowed"
+                    title={collapsed ? `${it.label} (قريباً)` : undefined}
+                    aria-disabled="true"
+                  >
+                    <it.icon className="w-[18px] h-[18px] shrink-0" />
+                    {!collapsed && <span className="truncate">{it.label}</span>}
+                    {!collapsed && (
+                      <span className="ms-auto a-pill" style={{ fontSize: 9, padding: '2px 6px' }}>{it.badge}</span>
+                    )}
+                  </div>
+                );
+              }
+              return (
+                <NavLink
+                  key={it.to}
+                  to={it.to}
+                  end={it.to === '/admin'}
+                  className={({ isActive }) => `a-nav-item ${isActive ? 'active' : ''}`}
+                  title={collapsed ? it.label : undefined}
+                >
+                  <it.icon className="w-[18px] h-[18px] shrink-0" />
+                  {!collapsed && <span className="truncate">{it.label}</span>}
+                </NavLink>
+              );
+            })}
           </div>
         ))}
         <div className="h-6" />

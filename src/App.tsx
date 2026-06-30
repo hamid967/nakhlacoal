@@ -127,12 +127,12 @@ export default function App() {
                   <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                   <Route path="/assistant" element={<Assistant />} />
                   <Route path="/assistant/:threadId" element={<Assistant />} />
-                  <Route path="/admin/inventory" element={<ProtectedRoute requireRole="admin"><AdminInventory /></ProtectedRoute>} />
                 </Route>
                 <Route path="/admin" element={<ProtectedRoute requireRole="admin"><AdminLayout /></ProtectedRoute>}>
                   <Route index element={<AdminDashboard />} />
                   <Route path="orders" element={<AdminOrdersNew />} />
                   <Route path="products" element={<AdminProductsNew />} />
+                  <Route path="inventory" element={<AdminInventory />} />
                   <Route path="customers" element={<AdminCustomers />} />
                   <Route path="reports" element={<AdminReports />} />
                   <Route path="analytics" element={<AdminReports />} />
