@@ -322,25 +322,17 @@ export default function Studio() {
 
       {/* Only render once image is fully present and not currently regenerating */}
       {image && loading !== "image" && loading !== "both" && (
-        <figure className="mt-6 relative group border-luxe rounded-md overflow-hidden">
-          <img
+        <div className="mt-6">
+          <ZoomableImage
             src={image}
             alt="Generated marketing visual"
-            className="w-full block"
-            loading="lazy"
-            decoding="async"
-            onError={() => {
-              setImage(null);
-              toast.error(isAr ? "فشل عرض الصورة" : "Image failed to load");
-            }}
+            isAr={isAr}
+            onDownload={() => downloadImage(image)}
           />
-          <button
-            onClick={() => downloadImage(image)}
-            className="absolute top-3 right-3 px-3 py-2 rounded-md bg-background/70 backdrop-blur border-luxe text-xs text-gold-hi opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-2"
-          >
-            <Download className="w-3.5 h-3.5" /> PNG
-          </button>
-        </figure>
+          <p className="mt-2 text-[11px] text-foreground/50 text-center">
+            {isAr ? "اسحب للتحريك • عجلة/قرص للتكبير • نقر مزدوج لإعادة الضبط" : "Drag to pan • wheel / pinch to zoom • double-click to reset"}
+          </p>
+        </div>
       )}
 
       {history.length > 0 && (
