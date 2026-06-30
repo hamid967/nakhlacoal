@@ -686,6 +686,43 @@
   }
   .lux-emerald-icon-btn:hover { color: hsl(var(--gold-hi)); background: hsl(var(--gold) / 0.1); }
 
+  /* Emerald mega menu panel */
+  .lux-emerald-mega {
+    background: hsl(var(--dark) / 0.97);
+    border: 1px solid hsl(var(--gold) / 0.35);
+    backdrop-filter: blur(18px) saturate(1.4);
+    -webkit-backdrop-filter: blur(18px) saturate(1.4);
+    box-shadow: 0 30px 80px -30px hsl(158 78% 4% / 0.7), 0 0 0 1px hsl(var(--gold) / 0.08) inset;
+    color: hsl(var(--background));
+    position: relative;
+    overflow: hidden;
+  }
+  .lux-emerald-mega::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(60% 80% at 50% 0%, hsl(var(--gold) / 0.08), transparent 70%);
+    pointer-events: none;
+  }
+  .lux-emerald-mega-item {
+    @apply relative block rounded-xl p-4 transition-all duration-300;
+    border: 1px solid transparent;
+  }
+  .lux-emerald-mega-item:hover {
+    background: hsl(var(--gold) / 0.06);
+    border-color: hsl(var(--gold) / 0.3);
+    transform: translateY(-1px);
+  }
+  .lux-emerald-mega-cta {
+    border: 1px dashed hsl(var(--gold) / 0.45) !important;
+    background: hsl(var(--gold) / 0.04);
+  }
+  .lux-emerald-mega-cta:hover {
+    border-style: solid !important;
+    border-color: hsl(var(--gold)) !important;
+    background: hsl(var(--gold) / 0.1);
+  }
+
   /* Dark accent section (why-us, hero panel, about, footer) */
   .section-dark {
     background: hsl(var(--dark));
