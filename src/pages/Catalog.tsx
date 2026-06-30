@@ -84,7 +84,8 @@ export default function Catalog() {
 
         {/* Products */}
         {products.map((p, idx) => {
-          const tiers = priceFor(p.slug);
+          const inv = inventoryFor(p.slug);
+          const tiers = inv?.tiers ?? null;
           return (
             <article key={p.slug} className="product-card page-break py-8 border-t border-stone-200">
               <div className="flex items-start gap-2 mb-4">
