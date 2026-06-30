@@ -179,7 +179,7 @@
   }
 
   html[dir="rtl"] body {
-    font-family: 'Tajawal', system-ui, -apple-system, sans-serif;
+    font-family: 'IBM Plex Sans Arabic', system-ui, -apple-system, sans-serif;
     line-height: 1.85;
   }
 
@@ -203,7 +203,7 @@
   html[dir="rtl"] h3,
   html[dir="rtl"] h4,
   html[dir="rtl"] h5 {
-    font-family: 'Tajawal', serif;
+    font-family: 'Reem Kufi', 'IBM Plex Sans Arabic', serif;
     font-weight: 700;
     letter-spacing: 0;
     line-height: 1.42;
@@ -264,7 +264,7 @@
     font-weight: 500;
     color: hsl(var(--foreground) / 0.55);
   }
-  html[dir="rtl"] .eyebrow { font-family: 'Tajawal', system-ui, sans-serif; letter-spacing: 0.18em; }
+  html[dir="rtl"] .eyebrow { font-family: 'IBM Plex Sans Arabic', system-ui, sans-serif; letter-spacing: 0.18em; }
 
   .lead {
     font-size: clamp(1.0625rem, 1.4vw, 1.25rem);
@@ -644,7 +644,7 @@
     color: hsl(var(--background));
   }
   .lux-emerald-wordmark {
-    font-family: 'Cormorant Garamond', 'Tajawal', serif;
+    font-family: 'Cormorant Garamond', 'Reem Kufi', 'IBM Plex Sans Arabic', serif;
     color: hsl(var(--gold-hi));
     letter-spacing: -0.01em;
     line-height: 1;
@@ -833,7 +833,7 @@
 
 @layer utilities {
   .font-display { font-family: 'Cormorant Garamond', serif; }
-  .font-display-ar { font-family: 'Tajawal', serif; }
+  .font-display-ar { font-family: 'Reem Kufi', 'IBM Plex Sans Arabic', serif; }
   .font-body { font-family: 'Inter Tight', sans-serif; }
 
   /* Logical-property helpers for RTL */
