@@ -41,7 +41,7 @@ const Index = () => {
       </section>
 
       {/* Animation Showcase */}
-      <section className="py-20 px-4">
+      <section className="section-tight px-4">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-4xl font-bold text-center mb-16 font-bagel">
             Анимации и Эффекты
@@ -51,7 +51,7 @@ const Index = () => {
       </section>
 
       {/* Glass Effects Section */}
-      <section className="py-20 px-4 bg-gradient-to-r from-accent-blue/5 via-accent-purple/5 to-accent-emerald/5">
+      <section className="section-tight px-4 bg-gradient-to-r from-accent-blue/5 via-accent-purple/5 to-accent-emerald/5">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-4xl font-bold text-center mb-16 font-bagel">
             Стеклянные Эффекты
@@ -78,7 +78,7 @@ const Index = () => {
       </section>
 
       {/* Typography Section */}
-      <section className="py-20 px-4">
+      <section className="section-tight px-4">
         <div className="max-w-4xl mx-auto text-center space-y-8">
           <h2 className="text-4xl font-bold font-bagel">Типографика</h2>
           
@@ -95,7 +95,7 @@ const Index = () => {
       </section>
 
       {/* Color Palette */}
-      <section className="py-20 px-4 bg-muted/30">
+      <section className="section-tight px-4 bg-muted/30">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-4xl font-bold text-center mb-16 font-bagel">
             Цветовая Палитра
