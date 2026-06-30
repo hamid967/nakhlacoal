@@ -32,8 +32,11 @@ export function PromoBanner() {
 
   return (
     <div
-      className="fixed top-0 inset-x-0 z-[70] text-[hsl(var(--background))] text-[11px] md:text-xs border-b border-[hsl(var(--gold))]/20"
-      style={{ background: 'hsl(var(--dark))' }}
+      className="fixed top-0 inset-x-0 z-[45] text-[hsl(var(--background))] text-[11px] md:text-xs border-b border-[hsl(var(--gold))]/20"
+      style={{ background: 'hsl(var(--dark))', ['--promo-h' as any]: '32px' }}
+      ref={(el) => {
+        if (el) document.documentElement.style.setProperty('--promo-h', `${el.offsetHeight}px`);
+      }}
     >
       <div className="relative overflow-hidden py-2">
         <div
