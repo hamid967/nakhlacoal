@@ -6,7 +6,13 @@ import { supabase } from '@/integrations/supabase/client';
 const GA4_RE = /^G-[A-Z0-9]{6,}$/;
 const GTM_RE = /^GTM-[A-Z0-9]{4,}$/;
 
-type TestState = { status: 'idle' | 'testing' | 'ok' | 'fail'; message?: string };
+type FailReason = 'format' | 'timeout' | 'offline' | 'blocked' | 'network';
+type TestState = {
+  status: 'idle' | 'testing' | 'ok' | 'fail';
+  message?: string;
+  reason?: FailReason;
+  hints?: string[];
+};
 
 /**
  * Probes a tag URL by injecting a <script> tag. onload => network reachable + ID
