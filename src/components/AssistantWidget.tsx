@@ -311,10 +311,13 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
         triggerOfflineOrder('لم يصل رد من المساعد، يمكنك إتمام الطلب مباشرة.');
       }
     } catch (e: any) {
+      if (e?.name === 'AbortError') return;
       const msg = e?.message ?? 'خطأ';
       announce(msg, 'error');
       setMessages(prev => prev.map(m => m.id === aId ? { ...m, content: `⚠️ ${msg}\n\n[تواصل عبر واتساب](${waHref})` } : m));
     } finally {
+      if (abortRef.current?.signal.aborted) return;
+      abortRef.current = null;
       setStreaming(false);
       inputRef.current?.focus();
     }
