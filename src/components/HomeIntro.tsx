@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { trademarks, type Trademark } from '@/data/trademarks';
 const IntroWebGL = lazy(() => import('./IntroWebGL'));
 import { hasWebGL } from '@/lib/hasWebGL';
+import { getReducedMotion } from '@/hooks/useReducedMotion';
 import { WebGLBoundary } from './WebGLBoundary';
 
 const KEY = 'palm-home-intro-played';
@@ -89,7 +90,7 @@ export function HomeIntro() {
   const { slideMs, transitionMs, typeMs } = settings.current;
 
   useEffect(() => {
-    reduce.current = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    reduce.current = getReducedMotion();
     try {
       if (sessionStorage.getItem(KEY) === '1') { setPhase('done'); return; }
       sessionStorage.setItem(KEY, '1');

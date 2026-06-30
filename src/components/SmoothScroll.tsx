@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import Lenis from 'lenis';
+import { getReducedMotion } from '@/hooks/useReducedMotion';
 
 let lenisInstance: Lenis | null = null;
 export const getLenis = () => lenisInstance;
@@ -7,11 +8,10 @@ export const getLenis = () => lenisInstance;
 export function SmoothScroll() {
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const coarse = window.matchMedia('(pointer: coarse)').matches;
     const lowCores = (navigator.hardwareConcurrency ?? 4) < 4;
-    // Skip smooth-scroll on touch devices and low-power CPUs — native scroll is far faster.
-    if (reduce || coarse || lowCores) return;
+    // Respect explicit user toggle + OS preference; skip on touch/low-power.
+    if (getReducedMotion() || coarse || lowCores) return;
 
     const lenis = new Lenis({
       duration: 0.85,

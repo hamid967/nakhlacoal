@@ -3,6 +3,7 @@ import { Canvas, useFrame, useLoader } from '@react-three/fiber';
 import { Environment, RoundedBox } from '@react-three/drei';
 import * as THREE from 'three';
 import type { Trademark } from '@/data/trademarks';
+import { getReducedMotion } from '@/hooks/useReducedMotion';
 
 /**
  * WebGL 3D carousel for trademarks (Three.js + R3F).
@@ -29,7 +30,7 @@ function detectTier(): 'low' | 'high' {
   const saveData = nav.connection?.saveData === true;
   const slowNet = ['slow-2g', '2g', '3g'].includes(nav.connection?.effectiveType ?? '');
   const smallScreen = Math.min(window.innerWidth, window.innerHeight) < 600;
-  const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  const reduced = getReducedMotion();
   if (saveData || slowNet || reduced) return 'low';
   if (cores <= 4 && memory <= 4) return 'low';
   if (smallScreen && cores <= 6) return 'low';
@@ -147,9 +148,7 @@ export function Trademarks3DSkeleton({ className = '' }: { className?: string })
 export default function Trademarks3D({ items, active, onChange, className = '' }: Props) {
   const tier = useMemo(detectTier, []);
   const lowTier = tier === 'low';
-  const reduced =
-    typeof window !== 'undefined' &&
-    window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  const reduced = typeof window !== 'undefined' && getReducedMotion();
 
   return (
     <div className={`relative ${className}`} style={{ touchAction: 'pan-y' }}>
