@@ -261,3 +261,28 @@ export default function ProductDetail() {
     </>
   );
 }
+
+function AddToCartButton({ product, isAr }: { product: ReturnType<typeof getProduct> & object; isAr: boolean }) {
+  const { add, setOpen } = useCart();
+  return (
+    <button
+      type="button"
+      onClick={() => {
+        add({
+          slug: product.slug,
+          nameAr: product.nameAr,
+          nameEn: product.nameEn,
+          unit: 'كرتون',
+          qty: 1,
+          image: product.image,
+        });
+        setOpen(true);
+        toast.success(isAr ? 'تمت الإضافة إلى السلة' : 'Added to cart');
+      }}
+      className="btn-gold"
+    >
+      <ShoppingCart className="w-4 h-4" /> {isAr ? 'أضف إلى السلة' : 'Add to cart'}
+    </button>
+  );
+}
+
