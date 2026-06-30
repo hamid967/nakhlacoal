@@ -98,15 +98,32 @@ export default function CampaignLanding() {
   const c = CAMPAIGNS[slug];
 
   useEffect(() => {
-    if (c) track('campaign_lp_view', { slug: c.slug });
+    if (!c) return;
+    // Generic + per-campaign named events for clean GA4/GTM reporting
+    track('campaign_lp_view', { campaign: c.slug, page_location: typeof window !== 'undefined' ? window.location.href : '' });
+    track(`lp_${c.slug}_view`, { campaign: c.slug });
   }, [c]);
 
   if (!c) return <Navigate to="/" replace />;
 
   const url = `https://alnakhlacoal.com/lp/${c.slug}`;
 
-  const onPrimary = () => track('campaign_cta_primary', { slug: c.slug });
-  const onSecondary = () => track('campaign_cta_secondary', { slug: c.slug });
+  const fireCta = (kind: 'primary' | 'secondary', label: string, href: string) => {
+    const channel = href.includes('wa.me') || href.includes('whatsapp')
+      ? 'whatsapp'
+      : href.startsWith('tel:') ? 'phone'
+      : href.startsWith('mailto:') ? 'email'
+      : 'internal';
+    const props = { campaign: c.slug, cta: kind, label, channel, destination: href };
+    // Generic event (one row per campaign in GA4 / GTM)
+    track('campaign_cta_click', props);
+    // Per-campaign named event, e.g. lp_grill_cta_whatsapp
+    track(`lp_${c.slug}_cta_${channel}`, props);
+    if (channel === 'whatsapp') track('whatsapp_click', { source: `lp_${c.slug}_${kind}` });
+  };
+
+  const onPrimary = () => fireCta('primary', c.primaryCta.label, c.primaryCta.href);
+  const onSecondary = () => fireCta('secondary', c.secondaryCta.label, c.secondaryCta.href);
 
   return (
     <>
