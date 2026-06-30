@@ -1,0 +1,21 @@
+name: Admin Token Audit
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  admin-tokens:
+    name: Verify var(--a-*) tokens defined in admin.css
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Run admin token audit
+        run: node scripts/audit-admin-tokens.mjs
