@@ -224,3 +224,76 @@
 
 @keyframes a-fade-up { from { opacity:0; transform: translateY(4px);} to { opacity:1; transform: none; } }
 .admin-shell .a-fade-up { animation: a-fade-up .25s ease both; }
+
+/* ============================================================
+   Untitled UI — extended primitives
+   ============================================================ */
+
+/* Page header (title + supporting text + actions) */
+.admin-shell .a-page-header { display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; padding-bottom:1rem; border-bottom:1px solid var(--a-border); margin-bottom:1.25rem; }
+.admin-shell .a-page-header h1 { font-size:22px; font-weight:600; letter-spacing:-.01em; color:var(--a-text); }
+.admin-shell .a-page-header p  { font-size:13.5px; color:var(--a-text-muted); margin-top:.25rem; }
+
+/* Breadcrumb */
+.admin-shell .a-crumbs { display:inline-flex; align-items:center; gap:.4rem; font-size:13px; color:var(--a-text-muted); }
+.admin-shell .a-crumbs a { color:var(--a-text-muted); transition:color .15s; }
+.admin-shell .a-crumbs a:hover { color:var(--a-text); }
+.admin-shell .a-crumbs [aria-current="page"] { color:var(--a-text); font-weight:500; }
+.admin-shell .a-crumbs svg { width:14px; height:14px; opacity:.55; }
+
+/* Metric / KPI card */
+.admin-shell .a-metric { background:var(--a-surface); border:1px solid var(--a-border); border-radius:var(--a-radius); padding:1rem 1.1rem; box-shadow:var(--a-shadow); }
+.admin-shell .a-metric .a-metric-label { font-size:12px; color:var(--a-text-muted); font-weight:500; letter-spacing:.01em; }
+.admin-shell .a-metric .a-metric-value { font-size:26px; font-weight:600; letter-spacing:-.02em; margin-top:.35rem; color:var(--a-text); }
+.admin-shell .a-metric .a-metric-trend { display:inline-flex; align-items:center; gap:.25rem; font-size:12px; font-weight:500; margin-top:.5rem; padding:.15rem .45rem; border-radius:6px; }
+.admin-shell .a-metric .a-metric-trend.up   { color:#047857; background:#ECFDF5; }
+.admin-shell .a-metric .a-metric-trend.down { color:#B91C1C; background:#FEF2F2; }
+.admin-shell[data-theme="dark"] .a-metric .a-metric-trend.up   { color:#34D399; background:rgba(16,185,129,.12); }
+.admin-shell[data-theme="dark"] .a-metric .a-metric-trend.down { color:#FCA5A5; background:rgba(239,68,68,.14); }
+
+/* Segmented control */
+.admin-shell .a-segmented { display:inline-flex; padding:3px; background:var(--a-surface-2); border:1px solid var(--a-border); border-radius:8px; }
+.admin-shell .a-segmented button { padding:.4rem .7rem; font-size:13px; font-weight:500; color:var(--a-text-muted); border-radius:6px; transition:background .15s,color .15s,box-shadow .15s; }
+.admin-shell .a-segmented button[aria-pressed="true"] { background:var(--a-surface); color:var(--a-text); box-shadow:var(--a-shadow); }
+
+/* Button sizes & variants (extends .a-btn) */
+.admin-shell .a-btn-sm { height:32px; padding:0 .65rem; font-size:12.5px; }
+.admin-shell .a-btn-lg { height:42px; padding:0 1rem; font-size:14.5px; }
+.admin-shell .a-btn-ghost { background:transparent; color:var(--a-text); border:1px solid transparent; }
+.admin-shell .a-btn-ghost:hover { background:var(--a-surface-2); }
+.admin-shell .a-btn-danger { background:#DC2626; color:#fff; border:1px solid #DC2626; }
+.admin-shell .a-btn-danger:hover { background:#B91C1C; border-color:#B91C1C; }
+.admin-shell .a-icon-btn { width:36px; height:36px; display:inline-flex; align-items:center; justify-content:center; border-radius:8px; border:1px solid var(--a-border); background:var(--a-surface); color:var(--a-text-muted); transition:background .15s,color .15s,border-color .15s; }
+.admin-shell .a-icon-btn:hover { background:var(--a-surface-2); color:var(--a-text); border-color:var(--a-border-strong); }
+
+/* Empty state */
+.admin-shell .a-empty { text-align:center; padding:3rem 1.25rem; border:1px dashed var(--a-border); border-radius:var(--a-radius); background:var(--a-surface); }
+.admin-shell .a-empty .a-empty-icon { width:44px; height:44px; margin:0 auto .75rem; display:flex; align-items:center; justify-content:center; border-radius:10px; background:var(--a-surface-2); color:var(--a-text-muted); border:1px solid var(--a-border); }
+.admin-shell .a-empty h3 { font-size:15px; font-weight:600; color:var(--a-text); }
+.admin-shell .a-empty p  { font-size:13px; color:var(--a-text-muted); max-width:380px; margin:.25rem auto 1rem; }
+
+/* Kbd, divider, dot badge, tooltip helper */
+.admin-shell .a-kbd { display:inline-flex; align-items:center; min-width:20px; padding:1px 6px; border:1px solid var(--a-border); border-bottom-width:2px; border-radius:5px; background:var(--a-surface); color:var(--a-text-muted); font-family:'JetBrains Mono', ui-monospace, monospace; font-size:11px; line-height:1.5; }
+.admin-shell .a-divider { height:1px; background:var(--a-border); margin:1rem 0; }
+.admin-shell .a-dot { width:6px; height:6px; border-radius:999px; display:inline-block; }
+.admin-shell .a-dot.emerald { background:#10B981; box-shadow:0 0 0 3px rgba(16,185,129,.16); }
+.admin-shell .a-dot.amber   { background:#F59E0B; box-shadow:0 0 0 3px rgba(245,158,11,.16); }
+.admin-shell .a-dot.rose    { background:#F43F5E; box-shadow:0 0 0 3px rgba(244,63,94,.16); }
+.admin-shell .a-dot.slate   { background:#94A3B8; box-shadow:0 0 0 3px rgba(148,163,184,.18); }
+
+/* Focus ring (Untitled UI emerald 4px ring) */
+.admin-shell .a-input:focus-visible,
+.admin-shell .a-btn:focus-visible,
+.admin-shell .a-icon-btn:focus-visible,
+.admin-shell .a-page-btn:focus-visible {
+  outline:none; box-shadow:0 0 0 4px rgba(4,120,87,.14); border-color:var(--a-palm);
+}
+
+/* Skeleton shimmer */
+@keyframes a-shimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
+.admin-shell .a-skeleton { background:linear-gradient(90deg, var(--a-surface-2) 25%, var(--a-border) 37%, var(--a-surface-2) 63%); background-size:200% 100%; animation:a-shimmer 1.4s ease-in-out infinite; border-radius:6px; }
+
+/* Tag (subtle filter chip) */
+.admin-shell .a-tag { display:inline-flex; align-items:center; gap:.35rem; padding:.2rem .55rem; border-radius:6px; font-size:12px; font-weight:500; background:var(--a-surface-2); color:var(--a-text); border:1px solid var(--a-border); }
+.admin-shell .a-tag button { color:var(--a-text-muted); display:inline-flex; }
+.admin-shell .a-tag button:hover { color:var(--a-text); }
