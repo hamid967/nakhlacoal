@@ -807,6 +807,11 @@
   }
   .shimmer-card:hover::after { transform: translateX(100%); }
 
+  @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+
   /* Vertical divider with gold pip */
   .divider-luxe {
     position: relative;
