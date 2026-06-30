@@ -1,14 +1,11 @@
 import { lazy, Suspense } from 'react';
-import { WebGLBoundary } from '@/components/WebGLBoundary';
-import { hasWebGL } from '@/lib/hasWebGL';
 import { Link } from 'react-router-dom';
 import { Flame, Clock, Leaf, Wind, ShieldCheck, Award } from 'lucide-react';
 import { SEO } from '@/components/SEO';
 import { ScrollReveal } from '@/components/ScrollReveal';
 
-// Heavy WebGL/3D hero — code-split so it doesn't block first paint
+// Heavy 3D hero — code-split so it doesn't block first paint
 const BrandHero = lazy(() => import('@/components/BrandHero').then((m) => ({ default: m.BrandHero })));
-const GoldParticles = lazy(() => import('@/components/GoldParticles').then((m) => ({ default: m.GoldParticles })));
 const BrandTimeline = lazy(() => import('@/components/BrandTimeline').then((m) => ({ default: m.BrandTimeline })));
 const LocationSection = lazy(() => import('@/components/LocationSection').then((m) => ({ default: m.LocationSection })));
 const FaqSection = lazy(() => import('@/components/FaqSection').then((m) => ({ default: m.FaqSection })));
@@ -109,22 +106,13 @@ export default function Home() {
       />
 
 
-      {/* 1 — HERO + trust strip merged */}
+      {/* 1 — HERO (single, 3D slider only — no particles overlay) + trust strip */}
       <div id="hero" className="relative pt-24 md:pt-28 scroll-mt-24">
-        {hasWebGL() && (
-          <WebGLBoundary fallback={null}>
-            <Suspense fallback={null}>
-              <GoldParticles className="z-0 opacity-70" />
-            </Suspense>
-          </WebGLBoundary>
-        )}
-        <div className="relative z-10">
-          <Suspense fallback={<SectionSkeleton variant="hero" label={isAr ? 'جارٍ تحميل الواجهة' : 'Loading hero'} />}>
-            <BrandHero />
-          </Suspense>
-          <div className="container mt-8 md:mt-10 grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
-            {topStrip.map((f, i) => <TrustItem key={i} icon={f.icon} text={f.text} index={i} />)}
-          </div>
+        <Suspense fallback={<SectionSkeleton variant="hero" label={isAr ? 'جارٍ تحميل الواجهة' : 'Loading hero'} />}>
+          <BrandHero />
+        </Suspense>
+        <div className="container mt-8 md:mt-10 grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
+          {topStrip.map((f, i) => <TrustItem key={i} icon={f.icon} text={f.text} index={i} />)}
         </div>
       </div>
 
