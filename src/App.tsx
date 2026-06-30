@@ -59,6 +59,7 @@ const AdminSettings = lazy(() => import('@/admin/pages/Settings'));
 const AdminPlaceholder = lazy(() => import('@/admin/pages/Placeholder'));
 const AdminTrademarks = lazy(() => import('@/admin/pages/Trademarks'));
 const AdminTracking = lazy(() => import('@/admin/pages/Tracking'));
+const AdminInvoices = lazy(() => import('@/admin/pages/Invoices'));
 
 const PortalLayout = lazy(() => import('@/portal/PortalLayout'));
 const PortalDashboard = lazy(() => import('@/portal/pages/Dashboard'));
@@ -135,6 +136,7 @@ export default function App() {
                   <Route path="inventory" element={<AdminInventory />} />
                   <Route path="customers" element={<AdminCustomers />} />
                   <Route path="reports" element={<AdminReports />} />
+                  <Route path="invoices" element={<AdminInvoices />} />
                   <Route path="analytics" element={<AdminReports />} />
                   <Route path="settings" element={<AdminSettings />} />
                   <Route path="tracking" element={<AdminTracking />} />
