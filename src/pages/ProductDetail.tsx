@@ -272,7 +272,7 @@ function AddToCartButton({ product, isAr }: { product: ReturnType<typeof getProd
           slug: product.slug,
           nameAr: product.nameAr,
           nameEn: product.nameEn,
-          unit: 'كرتون',
+          unit: 'carton',
           qty: 1,
           image: product.image,
         });
