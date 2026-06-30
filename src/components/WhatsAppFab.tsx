@@ -27,6 +27,13 @@ export function WhatsAppFab() {
     };
   }, [open]);
 
+  // Allow other pages (e.g. /quote) to open the assistant via custom event
+  useEffect(() => {
+    const onOpen = () => setOpen(true);
+    window.addEventListener('palm:open-assistant', onOpen);
+    return () => window.removeEventListener('palm:open-assistant', onOpen);
+  }, []);
+
   return (
     <div ref={wrapRef}>
       <AssistantWidget open={open} onClose={() => setOpen(false)} />
