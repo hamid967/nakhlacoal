@@ -139,7 +139,29 @@ export function ThemeToggle() {
         ))}
 
         <DropdownMenuSeparator className="my-2" />
-        <div className="px-2 py-2 rounded-md bg-muted/40 border border-border">
+        <DropdownMenuLabel className="text-xs">الحركة</DropdownMenuLabel>
+        <button
+          onClick={() => setReducedMotion(reduceMotion ? false : true)}
+          className="w-full flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-muted text-right cursor-pointer"
+          aria-pressed={reduceMotion}
+        >
+          <Zap className="w-3.5 h-3.5 text-muted-foreground" />
+          <span className="flex-1 text-sm">تقليل الحركة والتأثيرات</span>
+          <span
+            className={`inline-flex h-4 w-7 items-center rounded-full transition-colors ${
+              reduceMotion ? 'bg-gold' : 'bg-muted'
+            }`}
+          >
+            <span
+              className={`inline-block h-3 w-3 transform rounded-full bg-background transition-transform ${
+                reduceMotion ? 'translate-x-3.5' : 'translate-x-0.5'
+              }`}
+            />
+          </span>
+        </button>
+
+        <DropdownMenuSeparator className="my-2" />
+
           <div className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">معاينة فورية</div>
           <div className="text-sm text-foreground">فحم النخلة — جودة فاخرة</div>
           <div className="flex items-center gap-1.5 mt-2">
