@@ -1,17 +1,16 @@
 import { useCallback, useRef } from 'react';
+import { useReducedMotion } from './useReducedMotion';
 
 /**
  * Subtle 3D tilt for Clay cards. Active Theory–style without overdoing it.
  * Sets CSS vars --rx / --ry / --mx / --my on the element; CSS reads them.
- * Respects prefers-reduced-motion (no-op).
+ * Respects OS prefers-reduced-motion AND the user's in-app toggle.
  */
 export function useTilt<T extends HTMLElement = HTMLDivElement>(max = 6) {
   const ref = useRef<T | null>(null);
   const raf = useRef<number | null>(null);
+  const reduce = useReducedMotion();
 
-  const reduce =
-    typeof window !== 'undefined' &&
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const onMove = useCallback(
     (e: React.PointerEvent<T>) => {
