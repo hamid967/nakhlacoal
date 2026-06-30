@@ -133,16 +133,8 @@ export default function AdminDashboard() {
         </div>
       </header>
 
-      {/* Summary cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {cards.map((c, i) => (
-          <motion.div
-            key={c.label}
-            initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}
-            className="a-card a-card-hover p-5"
-          >
-            <div className="flex items-start justify-between">
-      </header>
+
+
 
       {/* KPI — Total orders + per-status breakdown (Untitled UI a-metric) */}
       <section aria-label="نظرة عامة على الطلبات" className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
