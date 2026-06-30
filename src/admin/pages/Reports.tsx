@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { Loader2, TrendingUp, Package, DollarSign, ShoppingCart } from 'lucide-react';
+import { Loader2, TrendingUp, Package, DollarSign, ShoppingCart, Download, Share2 } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 import {
   ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid,
   BarChart, Bar, PieChart, Pie, Cell, Legend,
@@ -59,6 +60,71 @@ export default function AdminReports() {
   const [inventory, setInventory] = useState<InventoryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [days, setDays] = useState(30);
+  const [exporting, setExporting] = useState<'idle' | 'pdf' | 'share'>('idle');
+  const reportRef = useRef<HTMLDivElement>(null);
+  const { toast } = useToast();
+
+  const generatePdf = async () => {
+    if (!reportRef.current) return null;
+    const [{ default: html2canvas }, { default: jsPDF }] = await Promise.all([
+      import('html2canvas'),
+      import('jspdf'),
+    ]);
+    const canvas = await html2canvas(reportRef.current, {
+      scale: 2,
+      backgroundColor: getComputedStyle(document.body).getPropertyValue('--a-ivory') || '#fff',
+      useCORS: true,
+    });
+    const img = canvas.toDataURL('image/png');
+    const pdf = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
+    const pageW = pdf.internal.pageSize.getWidth();
+    const pageH = pdf.internal.pageSize.getHeight();
+    const imgH = (canvas.height * pageW) / canvas.width;
+    let remaining = imgH;
+    let position = 0;
+    pdf.addImage(img, 'PNG', 0, position, pageW, imgH);
+    remaining -= pageH;
+    while (remaining > 0) {
+      position -= pageH;
+      pdf.addPage();
+      pdf.addImage(img, 'PNG', 0, position, pageW, imgH);
+      remaining -= pageH;
+    }
+    return pdf;
+  };
+
+  const handleDownload = async () => {
+    try {
+      setExporting('pdf');
+      const pdf = await generatePdf();
+      if (!pdf) return;
+      pdf.save(`palm-charcoal-report-${new Date().toISOString().slice(0, 10)}.pdf`);
+      toast({ title: 'تم التصدير', description: 'تم تحميل ملف PDF.' });
+    } catch (e) {
+      toast({ title: 'تعذر التصدير', description: String(e), variant: 'destructive' });
+    } finally { setExporting('idle'); }
+  };
+
+  const handleShare = async () => {
+    try {
+      setExporting('share');
+      const pdf = await generatePdf();
+      if (!pdf) return;
+      const blob = pdf.output('blob');
+      const file = new File([blob], `palm-charcoal-report.pdf`, { type: 'application/pdf' });
+      const nav = navigator as Navigator & { canShare?: (d: ShareData) => boolean };
+      if (nav.canShare?.({ files: [file] })) {
+        await nav.share({ files: [file], title: 'تقرير فحم النخلة' });
+      } else {
+        const url = URL.createObjectURL(blob);
+        window.open(url, '_blank');
+        toast({ title: 'فُتح التقرير', description: 'المتصفح لا يدعم المشاركة المباشرة — يمكنك التحميل وإرساله يدويًا.' });
+      }
+    } catch (e) {
+      toast({ title: 'تعذرت المشاركة', description: String(e), variant: 'destructive' });
+    } finally { setExporting('idle'); }
+  };
+
 
   useEffect(() => {
     (async () => {
@@ -112,23 +178,34 @@ export default function AdminReports() {
           <h1>التقارير والتحليلات</h1>
           <p>رحلة المستخدم مع تقارير فحم النخلة عبر الفترة المختارة.</p>
         </div>
-        <div className="a-segmented" role="tablist" aria-label="الفترة">
-          {PERIODS.map((p) => (
-            <button
-              key={p.value}
-              role="tab"
-              aria-selected={days === p.value}
-              onClick={() => setDays(p.value)}
-              className={days === p.value ? 'is-active' : ''}
-            >{p.label}</button>
-          ))}
+        <div className="flex items-center gap-2 flex-wrap">
+          <div className="a-segmented" role="tablist" aria-label="الفترة">
+            {PERIODS.map((p) => (
+              <button
+                key={p.value}
+                role="tab"
+                aria-selected={days === p.value}
+                onClick={() => setDays(p.value)}
+                className={days === p.value ? 'is-active' : ''}
+              >{p.label}</button>
+            ))}
+          </div>
+          <button className="a-btn a-btn-sm a-btn-ghost" onClick={handleDownload} disabled={loading || exporting !== 'idle'}>
+            {exporting === 'pdf' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
+            تحميل PDF
+          </button>
+          <button className="a-btn a-btn-sm" onClick={handleShare} disabled={loading || exporting !== 'idle'}>
+            {exporting === 'share' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Share2 className="w-3.5 h-3.5" />}
+            مشاركة
+          </button>
         </div>
       </header>
 
       {loading ? (
         <div className="flex items-center justify-center py-24"><Loader2 className="animate-spin" style={{ color: 'var(--a-palm)' }} /></div>
       ) : (
-        <>
+        <div ref={reportRef} className="space-y-5">
+
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <StatCard icon={ShoppingCart} label="إجمالي الطلبات" value={stats.totalOrders.toLocaleString('ar-SA')} />
             <StatCard icon={Package} label="الكمية (كجم)" value={stats.totalKg.toLocaleString('ar-SA', { maximumFractionDigits: 0 })} />
@@ -196,7 +273,7 @@ export default function AdminReports() {
           <p className="text-xs text-center" style={{ color: 'var(--a-text-muted)' }}>
             * الإيرادات تقديرية بناءً على أدنى سعر شريحة في المخزون مطابق لنوع المنتج.
           </p>
-        </>
+        </div>
       )}
     </div>
   );
