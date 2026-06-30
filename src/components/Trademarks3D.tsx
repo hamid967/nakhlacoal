@@ -3,6 +3,7 @@ import { Canvas, useFrame, useLoader } from '@react-three/fiber';
 import { Environment, RoundedBox } from '@react-three/drei';
 import * as THREE from 'three';
 import type { Trademark } from '@/data/trademarks';
+import { getReducedMotion } from '@/hooks/useReducedMotion';
 
 /**
  * WebGL 3D carousel for trademarks (Three.js + R3F).

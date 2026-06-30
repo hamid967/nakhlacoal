@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { trademarks, type Trademark } from '@/data/trademarks';
 const IntroWebGL = lazy(() => import('./IntroWebGL'));
 import { hasWebGL } from '@/lib/hasWebGL';
+import { getReducedMotion } from '@/hooks/useReducedMotion';
 import { WebGLBoundary } from './WebGLBoundary';
 
 const KEY = 'palm-home-intro-played';
