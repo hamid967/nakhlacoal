@@ -5,6 +5,7 @@ import { ScrollReveal } from './ScrollReveal';
 import { LuxSection, SectionHeader } from './ui-lux';
 import { ImageWatermark } from './ImageWatermark';
 import { Picture } from './Picture';
+import { useParallax } from '@/hooks/useParallax';
 import s1 from '@/assets/step-harvest.jpg?picture';
 import s2 from '@/assets/step-carbonize.jpg?picture';
 import s3 from '@/assets/step-grind.jpg?picture';
@@ -21,6 +22,8 @@ export function ProcessSection() {
   });
   const [playing, setPlaying] = useState(true);
   const [dragging, setDragging] = useState(false);
+  const bgRef = useParallax<HTMLDivElement>(0.18);
+  const grainRef = useParallax<HTMLDivElement>(0.32);
 
   // Auto-scroll loop (smooth, GPU-friendly via rAF)
   useEffect(() => {
@@ -80,7 +83,29 @@ export function ProcessSection() {
   const sprockets = Array.from({ length: 8 });
 
   return (
-    <LuxSection tone="surface" className="py-20 md:py-28 overflow-hidden">
+    <LuxSection tone="surface" className="relative py-20 md:py-28 overflow-hidden">
+      {/* Parallax background layers (motion-safe) */}
+      <div
+        ref={bgRef}
+        aria-hidden
+        className="motion-reduce:!transform-none pointer-events-none absolute -inset-y-32 inset-x-0 -z-10"
+        style={{
+          background:
+            'radial-gradient(60% 40% at 20% 30%, hsl(var(--gold) / 0.10), transparent 70%), radial-gradient(45% 35% at 80% 70%, hsl(var(--gold) / 0.08), transparent 70%)',
+          willChange: 'transform',
+        }}
+      />
+      <div
+        ref={grainRef}
+        aria-hidden
+        className="motion-reduce:!transform-none pointer-events-none absolute -inset-y-40 inset-x-0 -z-10 opacity-[0.06] mix-blend-overlay"
+        style={{
+          backgroundImage:
+            "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>\")",
+          willChange: 'transform',
+        }}
+      />
+
       <SectionHeader
         eyebrow={isAr ? 'طريقة الصنع' : 'How it’s made'}
         title={isAr ? 'رحلة فحم النخلة — مشهد بمشهد' : 'The Palm Charcoal journey — frame by frame'}
