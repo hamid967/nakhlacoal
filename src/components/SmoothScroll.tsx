@@ -14,22 +14,55 @@ export function SmoothScroll() {
     if (getReducedMotion() || coarse || lowCores) return;
 
     const lenis = new Lenis({
-      duration: 0.85,
+      duration: 0.6,                       // snappier, less CPU per frame
       easing: (t) => 1 - Math.pow(1 - t, 3),
       smoothWheel: true,
-      touchMultiplier: 1.1,
+      syncTouch: false,
+      touchMultiplier: 1,
     });
     lenisInstance = lenis;
 
     let raf = 0;
+    let running = false;
+    let idleTimer: number | undefined;
+
     const loop = (time: number) => {
       lenis.raf(time);
+      // Bail out if scrolling too fast — let the browser handle it natively to avoid jank.
+      if (Math.abs(lenis.velocity) > 80) {
+        stop();
+        return;
+      }
       raf = requestAnimationFrame(loop);
     };
-    raf = requestAnimationFrame(loop);
+
+    const start = () => {
+      if (running) return;
+      running = true;
+      raf = requestAnimationFrame(loop);
+    };
+    const stop = () => {
+      if (!running) return;
+      running = false;
+      cancelAnimationFrame(raf);
+    };
+
+    // Only run RAF while user is actively scrolling; idle for 250ms → pause.
+    const onScroll = () => {
+      start();
+      window.clearTimeout(idleTimer);
+      idleTimer = window.setTimeout(stop, 250);
+    };
+    lenis.on('scroll', onScroll);
+
+    // Pause completely when tab is hidden.
+    const onVisibility = () => { if (document.hidden) stop(); };
+    document.addEventListener('visibilitychange', onVisibility);
 
     return () => {
-      cancelAnimationFrame(raf);
+      stop();
+      window.clearTimeout(idleTimer);
+      document.removeEventListener('visibilitychange', onVisibility);
       lenis.destroy();
       lenisInstance = null;
     };
