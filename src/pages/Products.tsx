@@ -39,23 +39,39 @@ function ProductCard({ p, i, total, isAr, Arrow }: ProductCardProps) {
             className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
           />
         </div>
-        <div className="p-6">
-          <div className="text-[10px] uppercase tracking-[0.3em] text-gold mb-2">
+        <div className="p-5 sm:p-6 text-start">
+          <div
+            className={`text-[10px] uppercase text-gold mb-2 ${
+              isAr ? 'tracking-[0.12em]' : 'tracking-[0.3em]'
+            }`}
+          >
             0{i + 1} / 0{total}
           </div>
-          <h3 className={`mb-2 ${isAr ? 'font-arabic font-bold' : 'font-display'} text-gold-hi`}>
+          <h3
+            className={`mb-2 text-start break-words [overflow-wrap:anywhere] ${
+              isAr ? 'font-arabic font-bold leading-[1.4]' : 'font-display'
+            } text-gold-hi`}
+          >
             {name}
           </h3>
-          <p className="text-sm text-foreground/65 mb-5 leading-relaxed">{tagline}</p>
-          <div className="flex justify-between items-center pt-4 border-t border-gold/10 text-xs">
-            <span className="text-foreground/55">
-              {isAr ? 'كربون' : 'Carbon'} <span className="text-gold-hi font-bold">{p.specs.carbon}</span>
+          <p className="text-sm text-foreground/65 mb-5 leading-relaxed text-start [overflow-wrap:anywhere]">
+            {tagline}
+          </p>
+          <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 pt-4 border-t border-gold/10 text-xs">
+            <span className="text-foreground/55 min-w-0 truncate">
+              {isAr ? 'كربون' : 'Carbon'}{' '}
+              <span className="text-gold-hi font-bold">{p.specs.carbon}</span>
             </span>
-            <span className="inline-flex items-center gap-2 uppercase tracking-[0.2em] text-gold-hi">
+            <span
+              className={`inline-flex items-center gap-2 uppercase text-gold-hi shrink-0 ${
+                isAr ? 'tracking-[0.08em]' : 'tracking-[0.2em]'
+              }`}
+            >
               {isAr ? 'التفاصيل' : 'Details'} <Arrow className="w-3.5 h-3.5" />
             </span>
           </div>
         </div>
+
       </Link>
       <div className="px-6 pb-5 -mt-2">
         <CompareToggle slug={p.slug} className="w-full justify-center" />
