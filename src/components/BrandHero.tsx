@@ -22,16 +22,25 @@ export function BrandHero() {
   const isAr = i18n.language?.startsWith('ar');
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
+  // Bump this to restart the autoplay timer (used after any manual interaction
+  // so the next auto-advance gives the user a full window to read the slide).
+  const [autoplayTick, setAutoplayTick] = useState(0);
 
   const go = useCallback((dir: 1 | -1) => {
     setActive((a) => (a + dir + trademarks.length) % trademarks.length);
+    setAutoplayTick((t) => t + 1);
+  }, []);
+
+  const jumpTo = useCallback((i: number) => {
+    setActive(i);
+    setAutoplayTick((t) => t + 1);
   }, []);
 
   useEffect(() => {
     if (paused) return;
     const t = setInterval(() => setActive((a) => (a + 1) % trademarks.length), AUTOPLAY_MS);
     return () => clearInterval(t);
-  }, [paused]);
+  }, [paused, autoplayTick]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
