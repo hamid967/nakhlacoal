@@ -123,6 +123,7 @@ export function LuxNav() {
                 );
               }
               const expanded = activeMega === item.key;
+              const childActive = item.columns.some((c) => location.pathname === c.to || location.pathname.startsWith(c.to + '/'));
               return (
                 <li
                   key={item.key}
@@ -139,7 +140,7 @@ export function LuxNav() {
                   >
                     <span
                       className="lux-emerald-link font-arabic inline-flex items-center gap-1"
-                      data-active={location.pathname.startsWith(item.to) || expanded}
+                      data-active={childActive || expanded}
                     >
                       {t(item.key)}
                       <ChevronDown className={`w-3 h-3 transition-transform ${expanded ? 'rotate-180' : ''}`} />
@@ -215,19 +216,26 @@ export function LuxNav() {
                     {/* Items grid */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       {item.columns.map((col) => (
-                        <Link
+                        <NavLink
                           key={col.to}
                           to={col.to}
+                          end
                           onClick={() => setActiveMega(null)}
-                          className="lux-emerald-mega-item group"
+                          className={({ isActive }) =>
+                            `lux-emerald-mega-item group ${isActive ? 'is-active' : ''}`
+                          }
                         >
-                          <div className="text-sm font-semibold text-background group-hover:text-gold-hi font-arabic transition-colors">
-                            {isAr ? col.titleAr : col.titleEn}
-                          </div>
-                          <div className="text-xs text-background/55 mt-1 font-arabic">
-                            {isAr ? col.descAr : col.descEn}
-                          </div>
-                        </Link>
+                          {({ isActive }) => (
+                            <>
+                              <div className={`text-sm font-semibold font-arabic transition-colors ${isActive ? 'text-gold-hi' : 'text-background group-hover:text-gold-hi'}`}>
+                                {isAr ? col.titleAr : col.titleEn}
+                              </div>
+                              <div className="text-xs text-background/55 mt-1 font-arabic">
+                                {isAr ? col.descAr : col.descEn}
+                              </div>
+                            </>
+                          )}
+                        </NavLink>
                       ))}
                       <button
                         onClick={() => { setActiveMega(null); setQuoteOpen(true); }}
@@ -292,7 +300,10 @@ export function LuxNav() {
                       <li key={col.to}>
                         <NavLink
                           to={col.to}
-                          className="block py-2 text-xs text-foreground/60 hover:text-gold-ink font-arabic"
+                          end
+                          className={({ isActive }) =>
+                            `block py-2 text-xs font-arabic transition-colors ${isActive ? 'text-gold-hi' : 'text-foreground/60 hover:text-gold-ink'}`
+                          }
                         >
                           • {isAr ? col.titleAr : col.titleEn}
                         </NavLink>

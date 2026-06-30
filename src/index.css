@@ -713,6 +713,11 @@
     border-color: hsl(var(--gold) / 0.3);
     transform: translateY(-1px);
   }
+  .lux-emerald-mega-item.is-active {
+    background: hsl(var(--gold) / 0.12);
+    border-color: hsl(var(--gold) / 0.55);
+    box-shadow: inset 0 0 0 1px hsl(var(--gold) / 0.2);
+  }
   .lux-emerald-mega-cta {
     border: 1px dashed hsl(var(--gold) / 0.45) !important;
     background: hsl(var(--gold) / 0.04);
