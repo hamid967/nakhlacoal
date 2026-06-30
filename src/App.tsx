@@ -151,7 +151,8 @@ export default function App() {
                   <Route path="orders" element={<PortalOrders />} />
                   <Route path="orders/new" element={<PortalNewOrder />} />
                   <Route path="orders/:id" element={<OrderTracking />} />
-                  <Route path="tracking" element={<PortalPlaceholder title="تتبع الطلبات" />} />
+                  <Route path="tracking" element={<PortalShipments />} />
+                  <Route path="shipments" element={<PortalShipments />} />
                   <Route path="quotes" element={<PortalPlaceholder title="العروض السعرية" />} />
                   <Route path="invoices" element={<PortalPlaceholder title="الفواتير" />} />
                   <Route path="payments" element={<PortalPlaceholder title="المدفوعات" />} />
