@@ -154,13 +154,13 @@ export function BrandHero() {
               : 'A collection of registered Saudi premium brands — proudly delivered from the Kingdom to the world.'}
           </p>
 
-          {/* Live status badge */}
-          <div className="mt-6 inline-flex items-center gap-2 text-xs text-foreground/60 font-arabic">
+          {/* Live availability badge */}
+          <div className="mt-6 inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/5 text-xs text-emerald-700 dark:text-emerald-300 font-arabic">
             <span className="relative inline-flex w-2 h-2" aria-hidden>
               <span className="absolute inset-0 rounded-full bg-emerald-500/60 animate-ping" />
               <span className="relative inline-flex w-2 h-2 rounded-full bg-emerald-500" />
             </span>
-            <span>{isAr ? 'متزامن مباشرة' : 'Live sync'}</span>
+            <span>{isAr ? 'متواجدون مباشرة الآن' : 'Live & available now'}</span>
           </div>
 
           <div className="mt-8 flex flex-wrap items-center gap-3 justify-center">
@@ -180,6 +180,13 @@ export function BrandHero() {
           </div>
         </motion.div>
 
+
+        {/* Eyebrow above the trademark slider */}
+        <div className="text-center -mb-4 md:-mb-6">
+          <span className="text-[10px] tracking-[0.35em] uppercase text-[hsl(var(--gold-hi))] font-arabic">
+            {isAr ? '— علاماتنا —' : '— Our trademarks —'}
+          </span>
+        </div>
 
         {/* Full-width prominent trademarks slider (replaces the previous small side cluster) */}
         <div

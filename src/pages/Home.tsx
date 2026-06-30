@@ -74,6 +74,23 @@ export default function Home() {
     { name: isAr ? 'أحمد العتيبي' : 'Ahmed Al-Otaibi', role: isAr ? 'مكة المكرمة' : 'Makkah', meta: isAr ? 'شواء 🔥' : 'BBQ 🔥', body: isAr ? 'اللحم يطلع طعمه مختلف. الحرارة ثابتة من أول الشوية لآخرها بدون إعادة إشعال.' : 'Different flavor entirely. Stable heat from start to finish.' },
   ];
 
+  const productsLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: isAr ? 'منتجات فحم النخلة' : 'Palm Charcoal Products',
+    itemListElement: products.map((p, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      item: {
+        '@type': 'Product',
+        name: p.name,
+        category: p.tag,
+        brand: { '@type': 'Brand', name: 'Palm Charcoal' },
+        image: p.img,
+      },
+    })),
+  };
+
   return (
     <>
       
@@ -85,6 +102,7 @@ export default function Home() {
           { href: heroTrademark, type: 'image/png', fetchPriority: 'high' },
         ]}
       />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productsLd) }} />
 
       {/* HERO — first impression (lazy-loaded WebGL) */}
       <div className="relative pt-24 md:pt-28">
