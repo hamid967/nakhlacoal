@@ -249,12 +249,16 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
     };
 
     try {
+      abortRef.current?.abort();
+      const ac = new AbortController();
+      abortRef.current = ac;
       const baseUrl = (supabase as any).supabaseUrl ?? import.meta.env.VITE_SUPABASE_URL;
       const anon = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
       const resp = await fetch(`${baseUrl}/functions/v1/chat-assistant`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', apikey: anon, Authorization: `Bearer ${anon}` },
         body: JSON.stringify({ messages: [...messages, userMsg].map(m => ({ role: m.role, content: m.content })) }),
+        signal: ac.signal,
       });
       if (!resp.ok) {
         if (resp.status === 429) {
