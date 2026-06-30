@@ -7,6 +7,7 @@ import { ThemeToggle } from './ThemeToggle';
 import { OrderModal } from './OrderModal';
 import { QuoteBuilder } from './QuoteBuilder';
 import { useAuth } from '@/contexts/AuthContext';
+import { useCart } from '@/contexts/CartContext';
 import logo from '@/assets/palm-charcoal-logo.png';
 
 type MegaItem = { to: string; titleAr: string; titleEn: string; descAr?: string; descEn?: string };
@@ -153,9 +154,8 @@ export function LuxNav() {
 
           <div className="flex items-center gap-1.5 md:gap-2">
             <AccountButton />
-            <button aria-label="Cart" className="hidden xl:inline-flex lux-emerald-icon-btn">
-              <ShoppingCart className="w-4 h-4" />
-            </button>
+            <CartButton />
+
             <ThemeToggle />
             <LanguageToggle compact />
             <button
@@ -368,3 +368,23 @@ function AccountButton() {
     </div>
   );
 }
+
+function CartButton() {
+  const { count, setOpen } = useCart();
+  return (
+    <button
+      type="button"
+      onClick={() => setOpen(true)}
+      aria-label="Cart"
+      className="relative lux-emerald-icon-btn w-11 h-11"
+    >
+      <ShoppingCart className="w-4 h-4" />
+      {count > 0 && (
+        <span className="absolute -top-1 -end-1 min-w-5 h-5 px-1 rounded-full bg-[hsl(var(--gold-hi))] text-[10px] font-bold text-[hsl(var(--ink))] grid place-items-center">
+          {count}
+        </span>
+      )}
+    </button>
+  );
+}
+

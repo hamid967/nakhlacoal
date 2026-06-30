@@ -10,6 +10,8 @@ import { Layout } from '@/components/Layout';
 import { HomeIntro } from '@/components/HomeIntro';
 import { CompareBar } from '@/components/CompareBar';
 import { CompareProvider } from '@/contexts/CompareContext';
+import { CartProvider } from '@/contexts/CartContext';
+import { CartDrawer } from '@/components/CartDrawer';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import TrackingLoader from '@/components/TrackingLoader';
@@ -48,6 +50,7 @@ const NewOrder = lazy(() => import('@/pages/NewOrder'));
 const OrderTracking = lazy(() => import('@/pages/OrderTracking'));
 const Catalog = lazy(() => import('@/pages/Catalog'));
 const CampaignLanding = lazy(() => import('@/pages/CampaignLanding'));
+const Checkout = lazy(() => import('@/pages/Checkout'));
 
 const AdminLayout = lazy(() => import('@/admin/AdminLayout'));
 const AdminDashboard = lazy(() => import('@/admin/pages/Dashboard'));
@@ -95,6 +98,8 @@ export default function App() {
       <TooltipProvider>
         <AuthProvider>
           <CompareProvider>
+            <CartProvider>
+              <CartDrawer />
             <SmoothScroll />
             <HomeIntro />
             <AnalyticsTracker />
@@ -180,12 +185,15 @@ export default function App() {
                   <Route path="/orders/new" element={<ProtectedRoute><NewOrder /></ProtectedRoute>} />
                   <Route path="/orders/:id" element={<ProtectedRoute><OrderTracking /></ProtectedRoute>} />
                   <Route path="/catalog" element={<Catalog />} />
+                  <Route path="/checkout" element={<Checkout />} />
+                  <Route path="/track/:id" element={<OrderTracking />} />
 
                   <Route path="*" element={<NotFound />} />
                 </Route>
               </Routes>
             </Suspense>
             <CompareBar />
+            </CartProvider>
           </CompareProvider>
         </AuthProvider>
       </TooltipProvider>

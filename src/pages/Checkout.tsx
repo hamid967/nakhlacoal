@@ -1,0 +1,188 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { z } from 'zod';
+import { Loader2, CheckCircle2 } from 'lucide-react';
+import { useCart } from '@/contexts/CartContext';
+import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
+import { SeoHead } from '@/components/SeoHead';
+import { toast } from 'sonner';
+
+const Schema = z.object({
+  contact_name: z.string().trim().min(2).max(100),
+  phone: z.string().trim().min(8).max(20),
+  email: z.string().trim().email().max(255).optional().or(z.literal('')),
+  company_name: z.string().trim().min(2).max(120),
+  city: z.string().trim().min(2).max(80),
+  address: z.string().trim().min(5).max(300),
+  notes: z.string().trim().max(500).optional(),
+  payment_method: z.enum(['bank_transfer', 'cash_on_delivery']),
+});
+
+export default function Checkout() {
+  const { items, subtotal, vat, total, clear } = useCart();
+  const { user } = useAuth();
+  const { i18n } = useTranslation();
+  const isAr = i18n.language?.startsWith('ar');
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [step, setStep] = useState<1 | 2 | 3>(1);
+  const [form, setForm] = useState({
+    contact_name: '', phone: '', email: user?.email ?? '',
+    company_name: '', city: '', address: '', notes: '',
+    payment_method: 'bank_transfer' as 'bank_transfer' | 'cash_on_delivery',
+  });
+
+  const fmt = (n: number) => new Intl.NumberFormat(isAr ? 'ar-SA' : 'en-US', { maximumFractionDigits: 2 }).format(n);
+
+  if (items.length === 0) {
+    return (
+      <div className="min-h-[60vh] grid place-items-center px-4">
+        <SeoHead title={isAr ? 'إتمام الطلب' : 'Checkout'} noindex />
+        <div className="text-center">
+          <h1 className="text-2xl font-display mb-2">{isAr ? 'سلتك فارغة' : 'Your cart is empty'}</h1>
+          <button onClick={() => navigate('/products')} className="mt-4 px-6 py-3 rounded-xl bg-[hsl(var(--gold-hi))] text-[hsl(var(--ink))] font-bold">
+            {isAr ? 'تصفح المنتجات' : 'Browse products'}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  async function submit() {
+    const parsed = Schema.safeParse(form);
+    if (!parsed.success) {
+      toast.error(isAr ? 'تحقق من البيانات المدخلة' : 'Please check the form');
+      return;
+    }
+    setLoading(true);
+    try {
+      const first = items[0];
+      const totalQty = items.reduce((s, i) => s + i.qty, 0);
+      const unitPrice = subtotal / Math.max(totalQty, 1);
+      const { data, error } = await supabase.from('orders').insert({
+        user_id: user?.id ?? null,
+        status: 'new',
+        product_type: items.length === 1 ? first.slug : 'mixed',
+        quantity: totalQty,
+        unit: first.unit,
+        unit_price_sar: unitPrice,
+        contact_name: form.contact_name,
+        phone: form.phone,
+        email: form.email || null,
+        company_name: form.company_name,
+        city: form.city,
+        address: form.address,
+        notes: form.notes || null,
+        payment_method: form.payment_method,
+        country: 'SA',
+        items: items.map((i) => ({ slug: i.slug, nameAr: i.nameAr, nameEn: i.nameEn, qty: i.qty, unit: i.unit })),
+      } as never).select('id').single();
+      if (error) throw error;
+      clear();
+      setStep(3);
+      toast.success(isAr ? 'تم إنشاء الطلب بنجاح' : 'Order created');
+      setTimeout(() => navigate(`/orders/${(data as { id: string }).id}`), 1500);
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : 'Failed';
+      toast.error(msg);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="container max-w-5xl py-10 px-4" dir={isAr ? 'rtl' : 'ltr'}>
+      <SeoHead title={isAr ? 'إتمام الطلب | فحم النخلة' : 'Checkout | Palm Charcoal'} noindex />
+      <h1 className="text-3xl font-display mb-6">{isAr ? 'إتمام الطلب' : 'Checkout'}</h1>
+
+      {/* Stepper */}
+      <div className="flex items-center gap-2 mb-8">
+        {[1, 2, 3].map((s) => (
+          <div key={s} className={`flex-1 h-1 rounded-full ${s <= step ? 'bg-[hsl(var(--gold-hi))]' : 'bg-[hsl(var(--muted))]'}`} />
+        ))}
+      </div>
+
+      {step === 3 ? (
+        <div className="text-center py-16">
+          <CheckCircle2 className="w-16 h-16 text-[hsl(var(--gold-hi))] mx-auto mb-4" />
+          <h2 className="text-2xl font-display mb-2">{isAr ? 'تم استلام طلبك!' : 'Order received!'}</h2>
+          <p className="text-[hsl(var(--muted-foreground))]">{isAr ? 'سنتواصل معك خلال ساعات لتأكيد الطلب.' : 'We will contact you within hours to confirm.'}</p>
+        </div>
+      ) : (
+        <div className="grid md:grid-cols-[1fr,360px] gap-6">
+          <div className="space-y-4 p-6 rounded-2xl border border-[hsl(var(--gold-hi)/0.2)] bg-[hsl(var(--card))]">
+            {step === 1 && (
+              <>
+                <h2 className="font-display text-xl mb-2">{isAr ? 'بيانات التواصل' : 'Contact details'}</h2>
+                <Field label={isAr ? 'الاسم الكامل' : 'Full name'} value={form.contact_name} onChange={(v) => setForm({ ...form, contact_name: v })} required />
+                <Field label={isAr ? 'رقم الجوال' : 'Phone'} value={form.phone} onChange={(v) => setForm({ ...form, phone: v })} required />
+                <Field label={isAr ? 'البريد الإلكتروني' : 'Email'} value={form.email} onChange={(v) => setForm({ ...form, email: v })} type="email" />
+                <Field label={isAr ? 'اسم المنشأة' : 'Company'} value={form.company_name} onChange={(v) => setForm({ ...form, company_name: v })} required />
+                <button onClick={() => setStep(2)} className="w-full mt-4 py-3 rounded-xl bg-[hsl(var(--gold-hi))] text-[hsl(var(--ink))] font-bold">
+                  {isAr ? 'التالي: الشحن' : 'Next: Shipping'}
+                </button>
+              </>
+            )}
+            {step === 2 && (
+              <>
+                <h2 className="font-display text-xl mb-2">{isAr ? 'الشحن والدفع' : 'Shipping & payment'}</h2>
+                <Field label={isAr ? 'المدينة' : 'City'} value={form.city} onChange={(v) => setForm({ ...form, city: v })} required />
+                <Field label={isAr ? 'العنوان التفصيلي' : 'Address'} value={form.address} onChange={(v) => setForm({ ...form, address: v })} required />
+                <label className="block">
+                  <span className="text-sm mb-1 block">{isAr ? 'طريقة الدفع' : 'Payment method'}</span>
+                  <select
+                    value={form.payment_method}
+                    onChange={(e) => setForm({ ...form, payment_method: e.target.value as 'bank_transfer' | 'cash_on_delivery' })}
+                    className="w-full px-3 py-2 rounded-lg border border-[hsl(var(--input))] bg-[hsl(var(--background))]"
+                  >
+                    <option value="bank_transfer">{isAr ? 'تحويل بنكي' : 'Bank transfer'}</option>
+                    <option value="cash_on_delivery">{isAr ? 'الدفع عند الاستلام' : 'Cash on delivery'}</option>
+                  </select>
+                </label>
+                <Field label={isAr ? 'ملاحظات (اختياري)' : 'Notes (optional)'} value={form.notes} onChange={(v) => setForm({ ...form, notes: v })} textarea />
+                <div className="flex gap-2 mt-4">
+                  <button onClick={() => setStep(1)} className="flex-1 py-3 rounded-xl border border-[hsl(var(--border))]">{isAr ? 'السابق' : 'Back'}</button>
+                  <button onClick={submit} disabled={loading} className="flex-1 py-3 rounded-xl bg-[hsl(var(--gold-hi))] text-[hsl(var(--ink))] font-bold disabled:opacity-60 flex items-center justify-center gap-2">
+                    {loading && <Loader2 className="w-4 h-4 animate-spin" />}
+                    {isAr ? 'تأكيد الطلب' : 'Place order'}
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+
+          <aside className="p-6 rounded-2xl border border-[hsl(var(--gold-hi)/0.2)] bg-[hsl(var(--card))] h-fit space-y-3">
+            <h3 className="font-display text-lg">{isAr ? 'ملخص الطلب' : 'Order summary'}</h3>
+            <ul className="space-y-2 text-sm">
+              {items.map((i) => (
+                <li key={i.slug} className="flex justify-between">
+                  <span>{isAr ? i.nameAr : i.nameEn} × {i.qty} {i.unit}</span>
+                </li>
+              ))}
+            </ul>
+            <div className="pt-3 border-t border-[hsl(var(--border))] space-y-1 text-sm">
+              <div className="flex justify-between"><span>{isAr ? 'المجموع الفرعي' : 'Subtotal'}</span><span>{fmt(subtotal)}</span></div>
+              <div className="flex justify-between text-[hsl(var(--muted-foreground))]"><span>{isAr ? 'الضريبة 15%' : 'VAT 15%'}</span><span>{fmt(vat)}</span></div>
+              <div className="flex justify-between text-lg font-bold pt-2"><span>{isAr ? 'الإجمالي' : 'Total'}</span><span className="text-[hsl(var(--gold-hi))]">{fmt(total)} {isAr ? 'ر.س' : 'SAR'}</span></div>
+            </div>
+          </aside>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function Field({ label, value, onChange, required, type = 'text', textarea }: { label: string; value: string; onChange: (v: string) => void; required?: boolean; type?: string; textarea?: boolean }) {
+  return (
+    <label className="block">
+      <span className="text-sm mb-1 block">{label}{required && <span className="text-red-500"> *</span>}</span>
+      {textarea ? (
+        <textarea value={value} onChange={(e) => onChange(e.target.value)} rows={3} className="w-full px-3 py-2 rounded-lg border border-[hsl(var(--input))] bg-[hsl(var(--background))]" />
+      ) : (
+        <input type={type} value={value} onChange={(e) => onChange(e.target.value)} className="w-full px-3 py-2 rounded-lg border border-[hsl(var(--input))] bg-[hsl(var(--background))]" />
+      )}
+    </label>
+  );
+}

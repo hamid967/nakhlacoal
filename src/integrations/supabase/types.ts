@@ -376,6 +376,7 @@ export type Database = {
           email: string | null
           grand_total_sar: number | null
           id: string
+          items: Json | null
           notes: string | null
           payment_method: string | null
           phone: string
@@ -407,6 +408,7 @@ export type Database = {
           email?: string | null
           grand_total_sar?: number | null
           id?: string
+          items?: Json | null
           notes?: string | null
           payment_method?: string | null
           phone: string
@@ -438,6 +440,7 @@ export type Database = {
           email?: string | null
           grand_total_sar?: number | null
           id?: string
+          items?: Json | null
           notes?: string | null
           payment_method?: string | null
           phone?: string
