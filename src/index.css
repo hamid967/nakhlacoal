@@ -121,25 +121,25 @@
   /* Font variants */
   html[data-font="modern"] body,
   html[data-font="modern"][dir="rtl"] body {
-    font-family: 'IBM Plex Sans Arabic', 'IBM Plex Sans', system-ui, sans-serif;
+    font-family: 'IBM Plex Sans Arabic', system-ui, sans-serif;
   }
   html[data-font="modern"] h1,
   html[data-font="modern"] h2,
   html[data-font="modern"] h3,
   html[data-font="modern"] h4,
   html[data-font="modern"] h5 {
-    font-family: 'IBM Plex Sans Arabic', 'IBM Plex Sans', sans-serif;
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
     font-weight: 600;
   }
   html[data-font="editorial"] body {
-    font-family: 'Amiri', 'Karla', serif;
+    font-family: 'Cormorant Garamond', serif;
   }
   html[data-font="editorial"] h1,
   html[data-font="editorial"] h2,
   html[data-font="editorial"] h3,
   html[data-font="editorial"] h4,
   html[data-font="editorial"] h5 {
-    font-family: 'Amiri', 'Playfair Display', serif;
+    font-family: 'Cormorant Garamond', serif;
     font-weight: 700;
   }
 
@@ -155,7 +155,7 @@
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: 'Karla', system-ui, sans-serif;
+    font-family: system-ui, -apple-system, sans-serif;
     font-size: 17px;
     line-height: 1.72;
     font-weight: 400;
@@ -164,7 +164,7 @@
   }
 
   html[dir="rtl"] body {
-    font-family: 'Tajawal', 'Karla', system-ui, sans-serif;
+    font-family: 'Tajawal', system-ui, -apple-system, sans-serif;
     line-height: 1.85;
   }
 
@@ -242,7 +242,7 @@
 @layer components {
   /* Basic-style editorial primitives — unified across components */
   .eyebrow {
-    font-family: 'Karla', system-ui, sans-serif;
+    font-family: system-ui, -apple-system, sans-serif;
     font-size: 11px;
     letter-spacing: 0.28em;
     text-transform: uppercase;
