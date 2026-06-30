@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
 import { imagetools } from "vite-imagetools";
+import { lcpPreload } from "./vite-plugins/lcp-preload";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -24,6 +25,8 @@ export default defineConfig(({ mode }) => ({
         return new URLSearchParams();
       },
     }),
+    // Inject <link rel="preload" fetchpriority="high"> for the first hero slide (LCP)
+    lcpPreload({ match: 'slide-coconut-trees', format: 'avif', width: 1280 }),
     mode === "development" && componentTagger(),
   ].filter(Boolean),
   resolve: {
