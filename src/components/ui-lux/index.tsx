@@ -33,7 +33,7 @@ export function LuxSection({
       ? 'section-dark'
       : '';
   return (
-    <section id={id} className={cx('py-16 md:py-24', toneCls, className)}>
+    <section id={id} className={cx('section-tight', toneCls, className)}>
       <div className="container">{children}</div>
     </section>
   );

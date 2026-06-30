@@ -41,7 +41,7 @@ export default function Wholesale() {
         </div>
       </section>
 
-      <section className="py-32 bg-surface border-y border-gold/10">
+      <section className="section bg-surface border-y border-gold/10">
         <div className="container">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <ScrollReveal>
