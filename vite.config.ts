@@ -31,4 +31,20 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    chunkSizeWarningLimit: 800,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'three': ['three', '@react-three/fiber', '@react-three/drei'],
+          'charts': ['recharts'],
+          'swiper': ['swiper'],
+          'supabase': ['@supabase/supabase-js'],
+          'i18n': ['i18next', 'react-i18next', 'i18next-browser-languagedetector'],
+          'forms': ['react-hook-form', '@hookform/resolvers', 'zod'],
+        },
+      },
+    },
+  },
 }));
