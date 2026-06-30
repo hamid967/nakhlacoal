@@ -221,6 +221,7 @@ export default function PortalShipments() {
                 style={{ borderColor: 'var(--a-border)', background: 'var(--a-surface)' }}
               >
                 <div className="flex flex-wrap items-start justify-between gap-3 mb-4">
+                  <Link to={`/portal/shipments/${s.id}`} className="contents" />
                   <div className="flex items-center gap-3">
                     <div
                       className="w-10 h-10 rounded-xl grid place-items-center text-white"
