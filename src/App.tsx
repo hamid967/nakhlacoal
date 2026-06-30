@@ -98,6 +98,8 @@ export default function App() {
       <TooltipProvider>
         <AuthProvider>
           <CompareProvider>
+            <CartProvider>
+              <CartDrawer />
             <SmoothScroll />
             <HomeIntro />
             <AnalyticsTracker />
