@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { getReducedMotion } from '@/hooks/useReducedMotion';
 
 /**
  * Lightweight parallax: translates the element on Y based on its position
@@ -9,8 +10,7 @@ export function useParallax<T extends HTMLElement = HTMLDivElement>(speed = 0.3)
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduce) return;
+    if (getReducedMotion()) return;
     const el = ref.current;
     if (!el) return;
 
