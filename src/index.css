@@ -537,16 +537,15 @@
       inset 0 -1px 0 hsl(var(--gold) / 0.12);
   }
 
-  /* Pinned bottom strip — heavier frost */
+  /* Pinned bottom strip — solid tint (no backdrop-filter) for smooth scroll */
   .glass-strip {
     background:
-      linear-gradient(180deg, hsl(0 0% 100% / 0.65), hsl(0 0% 100% / 0.45));
-    backdrop-filter: blur(32px) saturate(1.6);
-    -webkit-backdrop-filter: blur(32px) saturate(1.6);
+      linear-gradient(180deg, hsl(var(--background) / 0.96), hsl(var(--surface-2) / 0.94));
     border: 1px solid hsl(0 0% 100% / 0.6);
     box-shadow:
       0 28px 60px -28px hsl(158 78% 10% / 0.3),
       inset 0 1px 0 hsl(0 0% 100% / 0.75);
+    text-shadow: 0 1px 1px hsl(0 0% 100% / 0.6);
   }
   /* Glass pill button — Neo 2.0 */
   .btn-glass {
@@ -592,11 +591,12 @@
   }
   .section-dark .glass-strip,
   .glass-strip.glass-dark {
-    background: hsl(158 30% 8% / 0.65);
+    background: hsl(158 30% 8% / 0.94);
     border: 1px solid hsl(var(--gold) / 0.22);
     box-shadow:
       0 24px 55px -28px hsl(0 0% 0% / 0.55),
       inset 0 1px 0 hsl(var(--gold) / 0.14);
+    text-shadow: 0 1px 2px hsl(0 0% 0% / 0.55);
   }
   .section-dark .glass-strip input,
   .section-dark .glass-strip input::placeholder {
@@ -1040,12 +1040,12 @@ html[data-reduce-motion="1"] .lux-rise { animation: none !important; opacity: 1 
   .glass-grain-strong::after { display: none !important; }
 }
 
-/* Touch / low-power hint: lighter blur on coarse pointers (mobile) */
+/* Touch / low-power hint: drop blur on coarse pointers (mobile) entirely */
 @media (pointer: coarse) {
   .glass-card,
-  .glass-strip { backdrop-filter: blur(16px) saturate(1.3); -webkit-backdrop-filter: blur(16px) saturate(1.3); }
+  .glass-strip,
   .glass-luxe,
-  .glass-luxe-solid { backdrop-filter: blur(18px) saturate(1.4); -webkit-backdrop-filter: blur(18px) saturate(1.4); }
+  .glass-luxe-solid { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
 }
 
 /* Respect data-saver */

@@ -263,7 +263,7 @@ export function LuxNav() {
           open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         }`}
       >
-        <div className="absolute inset-0 bg-black/55 backdrop-blur-md" onClick={() => setOpen(false)} />
+        <div className="absolute inset-0 bg-black/75" onClick={() => setOpen(false)} />
         <aside
           className={`absolute top-0 ${isAr ? 'left-0' : 'right-0'} h-dvh w-[85vw] max-w-sm glass-card glass-dark glass-grain rounded-none ${
             open ? 'translate-x-0' : isAr ? '-translate-x-full' : 'translate-x-full'
