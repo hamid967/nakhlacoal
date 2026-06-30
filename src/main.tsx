@@ -16,8 +16,14 @@ import "./i18n";
 import App from "./App.tsx";
 import "./index.css";
 import { initWebVitals } from "./lib/webVitals";
+import { registerSW } from "virtual:pwa-register";
 
 initWebVitals();
+
+// Service worker for offline caching + instant repeat-visit loads.
+if (import.meta.env.PROD) {
+  registerSW({ immediate: true });
+}
 
 // Auto-recover from stale chunk references after a new deploy.
 // When index.html points to a chunk hash that no longer exists on the CDN,
