@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { trademarks } from '@/data/trademarks';
 const Trademarks3D = lazy(() => import('./Trademarks3D'));
 import { Trademarks3DSkeleton } from './Trademarks3DSkeleton';
+import { hasWebGL } from '@/lib/hasWebGL';
 
 const AUTOPLAY_MS = 5500;
 
@@ -194,15 +195,19 @@ export function BrandHero() {
             }}
           />
 
-          {/* WebGL 3D trademarks carousel */}
-          <Suspense fallback={<Trademarks3DSkeleton className="absolute inset-0" />}>
-            <Trademarks3D
-              items={trademarks}
-              active={active}
-              onChange={setActive}
-              className="absolute inset-0"
-            />
-          </Suspense>
+          {/* WebGL 3D trademarks carousel — falls back to a static skeleton when WebGL is unavailable */}
+          {hasWebGL() ? (
+            <Suspense fallback={<Trademarks3DSkeleton className="absolute inset-0" />}>
+              <Trademarks3D
+                items={trademarks}
+                active={active}
+                onChange={setActive}
+                className="absolute inset-0"
+              />
+            </Suspense>
+          ) : (
+            <Trademarks3DSkeleton className="absolute inset-0" />
+          )}
 
           {/* Accessible focusable layer for each card (WebGL has no DOM nodes) */}
           <ul
