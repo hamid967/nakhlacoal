@@ -73,6 +73,8 @@ export default function Home() {
     { name: isAr ? 'أحمد العتيبي' : 'Ahmed Al-Otaibi', role: isAr ? 'مكة المكرمة' : 'Makkah', meta: isAr ? 'شواء 🔥' : 'BBQ 🔥', body: isAr ? 'اللحم يطلع طعمه مختلف. الحرارة ثابتة من أول الشوية لآخرها بدون إعادة إشعال.' : 'Different flavor entirely. Stable heat from start to finish.' },
   ];
 
+  const SITE = 'https://alnakhlacoal.com';
+  const absUrl = (u: string) => (u?.startsWith('http') ? u : `${SITE}${u?.startsWith('/') ? '' : '/'}${u || ''}`);
   const productsLd = {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
@@ -80,12 +82,14 @@ export default function Home() {
     itemListElement: products.map((p, i) => ({
       '@type': 'ListItem',
       position: i + 1,
+      url: `${SITE}/products`,
       item: {
         '@type': 'Product',
         name: p.name,
         category: p.tag,
         brand: { '@type': 'Brand', name: 'Palm Charcoal' },
-        image: p.img,
+        image: absUrl(p.img),
+        url: `${SITE}/products`,
       },
     })),
   };
@@ -97,11 +101,12 @@ export default function Home() {
         title={isAr ? 'فحم النخلة | الفحم السعودي الفاخر' : 'Palm Charcoal | Premium Saudi Charcoal'}
         description={isAr ? 'فحم طبيعي ١٠٠٪ — احتراق أطول، حرارة أعلى، ورماد أقل.' : '100% natural charcoal — longer burn, higher heat, less ash.'}
         path="/"
+        jsonLd={productsLd}
         preloadImages={[
           { href: heroTrademark, type: 'image/png', fetchPriority: 'high' },
         ]}
       />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productsLd) }} />
+
 
       {/* HERO — first impression (lazy-loaded WebGL) */}
       <div id="hero" className="relative pt-24 md:pt-28 scroll-mt-24">
