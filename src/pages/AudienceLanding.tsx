@@ -64,7 +64,7 @@ export default function AudienceLanding() {
         <span className="inline-block text-[11px] tracking-[0.3em] uppercase text-primary mb-4 border-b border-primary/40 pb-1">
           {isAr ? a.badgeAr : a.badgeEn}
         </span>
-        <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-4">{title}</h1>
+        <h1 className="font-bold mb-4">{title}</h1>
         <p className="text-lg text-muted-foreground max-w-3xl">{sub}</p>
 
         {import.meta.env.DEV && !waBase && (
