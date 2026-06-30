@@ -1,5 +1,5 @@
-import { Suspense, useMemo, useRef } from 'react';
-import { Canvas, useFrame, useLoader } from '@react-three/fiber';
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import { Canvas, useFrame, useLoader, useThree } from '@react-three/fiber';
 import { Environment, RoundedBox } from '@react-three/drei';
 import * as THREE from 'three';
 import type { Trademark } from '@/data/trademarks';
@@ -77,7 +77,7 @@ function Card({
     };
   }, [offset]);
 
-  useFrame((_, dt) => {
+  useFrame(({ invalidate }, dt) => {
     const g = group.current;
     if (!g) return;
     const k = 1 - Math.exp(-dt * 6);
@@ -87,6 +87,13 @@ function Card({
     g.rotation.y = lerp(g.rotation.y, target.rotY, k);
     const s = lerp(g.scale.x, target.scale, k);
     g.scale.set(s, s, s);
+    // In demand mode, keep ticking until we've effectively reached the target.
+    const dist =
+      Math.abs(g.position.x - target.x) +
+      Math.abs(g.position.z - target.z) +
+      Math.abs(g.rotation.y - target.rotY) +
+      Math.abs(g.scale.x - target.scale);
+    if (dist > 0.002) invalidate();
   });
 
   const isCenter = offset === 0;
@@ -145,13 +152,33 @@ export function Trademarks3DSkeleton({ className = '' }: { className?: string })
   );
 }
 
+/** Re-renders the scene whenever `active` changes (demand mode requires explicit invalidation). */
+function InvalidateOnActive({ active }: { active: number }) {
+  const { invalidate } = useThree();
+  useEffect(() => { invalidate(); }, [active, invalidate]);
+  return null;
+}
+
 export default function Trademarks3D({ items, active, onChange, className = '' }: Props) {
   const tier = useMemo(detectTier, []);
   const lowTier = tier === 'low';
-  const reduced = typeof window !== 'undefined' && getReducedMotion();
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(true);
+
+  // Pause the loop entirely when the slider scrolls off-screen.
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el || typeof IntersectionObserver === 'undefined') return;
+    const io = new IntersectionObserver(
+      ([entry]) => setVisible(entry.isIntersecting),
+      { rootMargin: '120px' }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   return (
-    <div className={`relative ${className}`} style={{ touchAction: 'pan-y' }}>
+    <div ref={wrapRef} className={`relative ${className}`} style={{ touchAction: 'pan-y' }}>
       <Canvas
         dpr={lowTier ? [1, 1.25] : [1, 2]}
         camera={{ position: [0, 0.05, 3.4], fov: 38 }}
@@ -160,8 +187,9 @@ export default function Trademarks3D({ items, active, onChange, className = '' }
           alpha: true,
           powerPreference: lowTier ? 'low-power' : 'high-performance',
         }}
-        frameloop={reduced ? 'demand' : 'always'}
+        frameloop={visible ? 'demand' : 'never'}
       >
+        <InvalidateOnActive active={active} />
         <ambientLight intensity={lowTier ? 0.85 : 0.65} />
         <directionalLight position={[3, 4, 5]} intensity={1.1} color="#fff3d2" />
         {!lowTier && <pointLight position={[-3, -1, 2]} intensity={0.55} color="#c9a84c" />}
