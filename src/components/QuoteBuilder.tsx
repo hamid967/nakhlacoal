@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -43,6 +43,28 @@ export function QuoteForm({ initialSlug, compact = false }: { initialSlug?: stri
     const vat = subtotal * VAT_RATE;
     return { items, subtotal, vat, total: subtotal + vat };
   }, [lines]);
+
+  // Broadcast live totals so side panels (e.g. /quote assistant) can show a summary
+  useEffect(() => {
+    window.dispatchEvent(
+      new CustomEvent('palm:quote-update', {
+        detail: {
+          count: computed.items.length,
+          subtotal: computed.subtotal,
+          vat: computed.vat,
+          total: computed.total,
+          items: computed.items.map((i) => ({
+            slug: i.slug,
+            label: labelOf(i.slug),
+            qty: i.qty,
+            unit: i.unit,
+            unitPrice: i.unitPrice,
+            lineTotal: i.lineTotal,
+          })),
+        },
+      })
+    );
+  }, [computed]);
 
   const updateLine = (i: number, patch: Partial<Line>) =>
     setLines((ls) => ls.map((l, idx) => (idx === i ? { ...l, ...patch, ...(patch.slug ? { unit: availableUnits(patch.slug)[0] } : {}) } : l)));

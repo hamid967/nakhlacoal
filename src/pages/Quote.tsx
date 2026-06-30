@@ -1,25 +1,72 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useSearchParams } from 'react-router-dom';
-import { FileText, Sparkles, MessageCircle, Phone, Mail, Clock } from 'lucide-react';
+import { FileText, Sparkles, MessageCircle, Phone, Mail, Clock, Calculator, Copy, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { QuoteForm } from '@/components/QuoteBuilder';
 import { PRICING } from '@/data/pricing';
+import { toast } from 'sonner';
 
 const WHATSAPP_NUMBER = '966540060095';
 const ORDER_EMAIL = 'mab355@gmail.com';
+
+const PRESETS: { label: string; text: string }[] = [
+  { label: 'مطعم/مشواة', text: 'مرحباً، أحتاج عرض سعر لفحم مطاعم بكميات شهرية منتظمة. ما الأنسب لي؟' },
+  { label: 'مقهى شيشة', text: 'أبحث عن فحم شيشة فاخر (كيوبس) — أحتاج توصية وسعر جملة لكميات شهرية.' },
+  { label: 'تصدير/جملة', text: 'لدي طلب تصدير بكميات كبيرة (طن فأكثر). أرجو إرسال عرض سعر تنافسي وشروط الشحن.' },
+  { label: 'مناسبات', text: 'أحتاج فحم لمناسبة واحدة (~50–100 كجم). ما الخيار الأفضل سعراً وجودة؟' },
+];
+
+type LiveQuote = {
+  count: number; subtotal: number; vat: number; total: number;
+  items: { label: string; qty: number; unit: string; lineTotal: number }[];
+};
+
+const fmt = (n: number) => new Intl.NumberFormat('ar-SA', { maximumFractionDigits: 2 }).format(n);
+const unitAr = (u: string) => ({ kg: 'كجم', carton: 'كرتون', ton: 'طن' } as Record<string, string>)[u] || u;
 
 export default function Quote() {
   const [sp] = useSearchParams();
   const initialSlug = sp.get('product') || undefined;
   const validSlug = initialSlug && PRICING[initialSlug] ? initialSlug : undefined;
+  const [live, setLive] = useState<LiveQuote | null>(null);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'auto' });
   }, []);
 
-  const openAssistant = () => {
-    window.dispatchEvent(new CustomEvent('palm:open-assistant'));
+  useEffect(() => {
+    const onUpdate = (e: Event) => setLive((e as CustomEvent<LiveQuote>).detail);
+    window.addEventListener('palm:quote-update', onUpdate);
+    return () => window.removeEventListener('palm:quote-update', onUpdate);
+  }, []);
+
+  const openAssistant = (prefill?: string) => {
+    window.dispatchEvent(new CustomEvent('palm:open-assistant', { detail: { prefill } }));
+  };
+
+  const summaryText = () => {
+    if (!live || !live.count) return '';
+    const lines = live.items
+      .map((i, idx) => `${idx + 1}) ${i.label} — ${i.qty} ${unitAr(i.unit)} = ${fmt(i.lineTotal)} ر.س`)
+      .join('\n');
+    return `🌴 ملخص عرض السعر — فحم النخلة\n${lines}\n— عدد البنود: ${live.count}\n— الإجمالي شامل الضريبة: ${fmt(live.total)} ر.س`;
+  };
+
+  const copySummary = async () => {
+    const t = summaryText();
+    if (!t) return toast.error('أضف منتجاً أولاً لتوليد الملخص');
+    await navigator.clipboard.writeText(t);
+    setCopied(true);
+    toast.success('تم نسخ ملخص السعر');
+    setTimeout(() => setCopied(false), 1800);
+  };
+
+  const sendSummaryWhatsApp = () => {
+    const t = summaryText();
+    if (!t) return toast.error('أضف منتجاً أولاً لتوليد الملخص');
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(t)}`, '_blank', 'noopener');
   };
 
   return (
@@ -70,14 +117,69 @@ export default function Quote() {
               <p className="text-sm text-muted-foreground mb-4">
                 مستشار ذكي يرشّح لك المنتج المناسب، يحسب الكميات، ويجهّز الطلب نيابةً عنك بأسلوب احترافي.
               </p>
-              <Button onClick={openAssistant} className="w-full bg-gold text-dark hover:bg-gold-hi font-semibold">
+              <Button onClick={() => openAssistant()} className="w-full bg-gold text-dark hover:bg-gold-hi font-semibold">
                 <MessageCircle className="size-4 ms-1" /> ابدأ المحادثة الآن
               </Button>
+
+              {/* Quick prompt suggestions */}
+              <div className="mt-4">
+                <div className="text-[11px] font-semibold text-muted-foreground mb-2">اقتراحات جاهزة</div>
+                <div className="flex flex-wrap gap-1.5">
+                  {PRESETS.map((p) => (
+                    <button
+                      key={p.label}
+                      type="button"
+                      onClick={() => openAssistant(p.text)}
+                      className="text-[11px] px-2.5 py-1 rounded-full border border-gold/30 bg-background/50 hover:bg-gold/10 hover:border-gold/60 transition"
+                    >
+                      {p.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               <ul className="mt-4 space-y-2 text-xs text-muted-foreground">
                 <li className="flex items-start gap-2"><span className="text-gold mt-0.5">●</span> توصية فورية حسب الاستخدام</li>
                 <li className="flex items-start gap-2"><span className="text-gold mt-0.5">●</span> أسعار الجملة والتدرّج الكمّي</li>
                 <li className="flex items-start gap-2"><span className="text-gold mt-0.5">●</span> تحويل المحادثة إلى طلب جاهز</li>
               </ul>
+            </div>
+
+            {/* Live price summary */}
+            <div className="glass-card rounded-2xl border border-gold/20 p-5">
+              <h3 className="font-bold flex items-center gap-2 mb-3">
+                <Calculator className="size-4 text-gold" /> ملخص السعر المباشر
+              </h3>
+              {live && live.count > 0 ? (
+                <>
+                  <ul className="space-y-1.5 text-xs max-h-40 overflow-auto pe-1">
+                    {live.items.map((i, idx) => (
+                      <li key={idx} className="flex justify-between gap-2 border-b border-border/40 pb-1">
+                        <span className="truncate">{i.label} <span className="text-muted-foreground">× {i.qty} {unitAr(i.unit)}</span></span>
+                        <span className="font-semibold tabular-nums">{fmt(i.lineTotal)}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="mt-3 space-y-1 text-xs">
+                    <div className="flex justify-between"><span className="text-muted-foreground">قبل الضريبة</span><span className="tabular-nums">{fmt(live.subtotal)} ر.س</span></div>
+                    <div className="flex justify-between"><span className="text-muted-foreground">ضريبة 15%</span><span className="tabular-nums">{fmt(live.vat)} ر.س</span></div>
+                    <div className="flex justify-between text-sm font-bold pt-1 border-t border-gold/30 mt-1">
+                      <span>الإجمالي</span><span className="text-gold tabular-nums">{fmt(live.total)} ر.س</span>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 mt-4">
+                    <Button onClick={copySummary} variant="outline" size="sm" className="text-xs">
+                      {copied ? <Check className="size-3.5 ms-1" /> : <Copy className="size-3.5 ms-1" />}
+                      {copied ? 'تم النسخ' : 'نسخ الملخص'}
+                    </Button>
+                    <Button onClick={sendSummaryWhatsApp} size="sm" className="text-xs bg-[#25D366] hover:bg-[#1ebe57] text-white">
+                      <MessageCircle className="size-3.5 ms-1" /> إرسال واتساب
+                    </Button>
+                  </div>
+                </>
+              ) : (
+                <p className="text-xs text-muted-foreground">أضف منتجاً في النموذج لعرض ملخص الأسعار هنا قبل الإرسال.</p>
+              )}
             </div>
 
             <div className="glass-card rounded-2xl border p-5 space-y-3">
