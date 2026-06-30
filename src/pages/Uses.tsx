@@ -20,7 +20,7 @@ export default function Uses() {
     <>
       <SEO title="الاستخدامات | فحم النخلة" description="استخدامات فحم النخلة: معسل، بخور، شواء، قهوة، ضيافة." path="/uses" />
       <PageHero eyebrow="تجارب موثوقة" title="استخدامات فحم النخلة" subtitle="من جلسات المعسل إلى مطابخ المطاعم الفاخرة — جودة واحدة لكل احتراق." />
-      <section className="container mx-auto px-6 py-16">
+      <section className="container mx-auto px-6 section-tight">
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {uses.map((u, i) => (
             <motion.article

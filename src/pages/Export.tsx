@@ -76,7 +76,7 @@ export default function ExportPage() {
       />
 
       {/* Topline stats */}
-      <section className="py-20">
+      <section className="section-tight">
         <div className="container grid grid-cols-2 md:grid-cols-4 gap-5">
           {stats.map((s, i) => (
             <ScrollReveal key={s.label} delay={i * 80}>
@@ -91,7 +91,7 @@ export default function ExportPage() {
       </section>
 
       {/* Trade terms */}
-      <section className="py-20 section-dark border-y border-gold/10">
+      <section className="section-tight section-dark border-y border-gold/10">
         <div className="container">
           <ScrollReveal>
             <div className="text-center mb-12">
@@ -116,7 +116,7 @@ export default function ExportPage() {
       </section>
 
       {/* Countries */}
-      <section className="py-24 bg-surface border-y border-gold/10">
+      <section className="section bg-surface border-y border-gold/10">
         <div className="container">
           <ScrollReveal>
             <h2 className={`text-3xl md:text-5xl text-center mb-12 ${isAr ? 'font-arabic font-bold' : 'font-display'}`}>
@@ -136,7 +136,7 @@ export default function ExportPage() {
       </section>
 
       {/* B2B Inquiry form */}
-      <section className="py-24">
+      <section className="section">
         <div className="container max-w-3xl">
           <ScrollReveal>
             <div className="text-center mb-10">

@@ -139,7 +139,7 @@ export default function Home() {
       <SectionDivider flip />
 
       {/* Products — move higher for conversion */}
-      <LuxSection tone="surface" className="py-20 md:py-28">
+      <LuxSection tone="surface" className="section">
         <div className="container"><SectionNumber index={3} /></div>
         <SectionHeader
           align="between"
@@ -169,7 +169,7 @@ export default function Home() {
       <SectionDivider flip />
 
       {/* About band — story after the user has seen products & process */}
-      <LuxSection className="py-20 md:py-28">
+      <LuxSection className="section">
         <div className="container"><SectionNumber index={5} align="end" /></div>
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           <ScrollReveal className="lg:col-span-7">
@@ -221,7 +221,7 @@ export default function Home() {
       <SectionDivider />
 
       {/* Testimonials */}
-      <LuxSection tone="dark" className="py-20 md:py-28">
+      <LuxSection tone="dark" className="section">
         <div className="container"><SectionNumber index={6} /></div>
         <SectionHeader
           eyebrow={isAr ? 'آراء عملائنا' : 'Customer voices'}

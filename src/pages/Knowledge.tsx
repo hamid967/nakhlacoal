@@ -18,7 +18,7 @@ export default function Knowledge() {
       />
       <PageHero number={9} eyebrow={t("knowledge.eyebrow")} title={t("knowledge.title")} subtitle={t("knowledge.subtitle")} />
 
-      <section className="py-24">
+      <section className="section">
         <div className="container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {articles.map((a, i) => (
             <ScrollReveal key={a.title} delay={i * 60}>

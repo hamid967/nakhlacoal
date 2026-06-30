@@ -23,7 +23,7 @@ export default function Articles() {
         title="مقالات فحم النخلة"
         subtitle="نصائح، دلائل، ومعرفة فنية عن صناعة الفحم واستخداماته."
       />
-      <section className="container mx-auto px-6 py-16">
+      <section className="container mx-auto px-6 section-tight">
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {articles.map((a, i) => {
             const hasContent = !!(a.contentAr && a.contentAr.length);

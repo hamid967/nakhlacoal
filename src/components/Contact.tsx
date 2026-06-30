@@ -22,7 +22,7 @@ export function Contact() {
   }
 
   return (
-    <section id="contact" className="relative py-32 bg-card/30">
+    <section id="contact" className="relative section bg-card/30">
       <div className="container mx-auto px-6 sm:px-8 lg:px-12">
         {/* Section Header */}
         <div className="text-center mb-16">

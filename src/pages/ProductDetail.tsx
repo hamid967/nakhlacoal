@@ -167,7 +167,7 @@ export default function ProductDetail() {
       </section>
 
       {/* ============= SPECS ============= */}
-      <section className="py-20 md:py-28 section-dark relative overflow-hidden">
+      <section className="section section-dark relative overflow-hidden">
         <div className="absolute inset-0 ember-glow opacity-20 pointer-events-none" />
         <div className="container">
           <ScrollReveal>
@@ -195,7 +195,7 @@ export default function ProductDetail() {
       </section>
 
       {/* ============= USE CASES ============= */}
-      <section className="py-20 md:py-28">
+      <section className="section">
         <div className="container">
           <ScrollReveal>
             <div className="text-center mb-10 md:mb-14">
@@ -220,7 +220,7 @@ export default function ProductDetail() {
       </section>
 
       {/* ============= RELATED ============= */}
-      <section className="py-20 md:py-28 border-t border-gold/10">
+      <section className="section border-t border-gold/10">
         <div className="container">
           <ScrollReveal>
             <div className="text-center mb-10 md:mb-14">

@@ -153,7 +153,7 @@ export default function CampaignLanding() {
         {/* Hero */}
         <section className="relative overflow-hidden border-b border-border/40">
           <div className="absolute inset-0 bg-gradient-to-bl from-primary/10 via-background to-background" aria-hidden />
-          <div className="relative mx-auto max-w-6xl px-6 py-20 md:py-28">
+          <div className="relative mx-auto max-w-6xl px-6 section">
             <p className="mb-4 text-xs font-semibold uppercase tracking-[0.3em] text-primary">
               فحم النخلة · {c.title}
             </p>
@@ -184,7 +184,7 @@ export default function CampaignLanding() {
         </section>
 
         {/* Bullets */}
-        <section className="mx-auto max-w-6xl px-6 py-16">
+        <section className="mx-auto max-w-6xl px-6 section-tight">
           <h2 className="mb-10 font-serif text-3xl md:text-4xl">لماذا {c.title}؟</h2>
           <ul className="grid gap-5 md:grid-cols-2">
             {c.bullets.map((b, i) => (
@@ -223,7 +223,7 @@ export default function CampaignLanding() {
         </section>
 
         {/* FAQ */}
-        <section className="mx-auto max-w-3xl px-6 py-16">
+        <section className="mx-auto max-w-3xl px-6 section-tight">
           <h2 className="mb-8 font-serif text-3xl">أسئلة شائعة</h2>
           <div className="space-y-4">
             {c.faq.map((f, i) => (

@@ -20,7 +20,7 @@ export default function Wholesale() {
       />
       <PageHero number={8} eyebrow={t("wholesale.eyebrow")} title={t("wholesale.title")} subtitle={t("wholesale.subtitle")} />
 
-      <section className="py-32">
+      <section className="section">
         <div className="container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {tiers.map((tier, i) => {
             const item: any = t(`wholesale.${tier}`, { returnObjects: true });

@@ -38,7 +38,7 @@ export default function Compare() {
         title={isAr ? 'قارن منتجاتنا' : 'Compare Products'}
       />
 
-      <section className="py-14 md:py-20">
+      <section className="section-tight">
         <div className="container">
           {selected.length < 2 ? (
             <div className="text-center py-16 max-w-md mx-auto">

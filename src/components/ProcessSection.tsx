@@ -148,7 +148,7 @@ export function ProcessSection() {
   const sprockets = Array.from({ length: 8 });
 
   return (
-    <LuxSection tone="surface" className="relative py-20 md:py-28 overflow-hidden">
+    <LuxSection tone="surface" className="relative section overflow-hidden">
       {/* Parallax background layers (motion-safe) */}
       <div
         ref={bgRef}

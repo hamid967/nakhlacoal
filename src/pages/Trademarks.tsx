@@ -71,7 +71,7 @@ export default function Trademarks() {
         subtitle="خمس علامات تجارية مسجلة رسمياً لدى الهيئة السعودية للملكية الفكرية — تشمل فحم النخلة، نخلان، المركاز، النخلتين، وباعشن."
       />
 
-      <section className="container mx-auto px-6 py-16">
+      <section className="container mx-auto px-6 section-tight">
         <div className="grid lg:grid-cols-[260px,1fr] gap-10">
           {/* Index */}
           <aside className="lg:sticky lg:top-24 self-start">

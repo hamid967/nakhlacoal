@@ -45,7 +45,7 @@ export function AudienceTracks() {
   ];
 
   return (
-    <LuxSection tone="surface" className="py-20 md:py-28">
+    <LuxSection tone="surface" className="section">
       <div className="container"><SectionNumber index={2} /></div>
       <SectionHeader
         eyebrow={isAr ? 'اختر مسارك' : 'Choose your path'}
