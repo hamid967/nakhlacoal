@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { trademarks, type Trademark } from '@/data/trademarks';
 const IntroWebGL = lazy(() => import('./IntroWebGL'));
 import { hasWebGL } from '@/lib/hasWebGL';
+import { WebGLBoundary } from './WebGLBoundary';
 
 const KEY = 'palm-home-intro-played';
 const SETTINGS_KEY = 'palm-intro-settings';
@@ -136,9 +137,11 @@ export function HomeIntro() {
     >
       {/* WebGL cinematic backdrop (Three.js + R3F) — skipped on browsers without WebGL */}
       {hasWebGL() && (
-        <Suspense fallback={null}>
-          <IntroWebGL />
-        </Suspense>
+        <WebGLBoundary fallback={null}>
+          <Suspense fallback={null}>
+            <IntroWebGL />
+          </Suspense>
+        </WebGLBoundary>
       )}
 
       {/* Classic paper grain + vignette */}

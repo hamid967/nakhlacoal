@@ -9,6 +9,7 @@ import { LogOut } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthCard } from '@/features/auth/AuthCard';
 import { BrandCanvas } from '@/features/auth/BrandCanvas';
+import { WebGLBoundary } from '@/components/WebGLBoundary';
 import { TwoFactorChallenge } from '@/features/auth/TwoFactorChallenge';
 import { resolveRoleRoute, sanitizeFrom } from '@/features/auth/useRoleRedirect';
 
@@ -72,7 +73,9 @@ export default function Auth() {
         className="relative grid min-h-[calc(100dvh-4rem)] lg:grid-cols-[1.05fr_1fr] xl:grid-cols-[1.2fr_1fr]"
         dir={isAr ? 'rtl' : 'ltr'}
       >
-        <BrandCanvas isAr={isAr} />
+        <WebGLBoundary fallback={null}>
+          <BrandCanvas isAr={isAr} />
+        </WebGLBoundary>
 
         {/* Right: auth surface */}
         <div className="relative flex items-center justify-center px-4 py-12 sm:px-8 lg:py-16">

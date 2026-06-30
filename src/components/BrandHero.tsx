@@ -7,6 +7,7 @@ import { trademarks } from '@/data/trademarks';
 const Trademarks3D = lazy(() => import('./Trademarks3D'));
 import { Trademarks3DSkeleton } from './Trademarks3DSkeleton';
 import { hasWebGL } from '@/lib/hasWebGL';
+import { WebGLBoundary } from './WebGLBoundary';
 
 const AUTOPLAY_MS = 5500;
 
@@ -197,14 +198,16 @@ export function BrandHero() {
 
           {/* WebGL 3D trademarks carousel — falls back to a static skeleton when WebGL is unavailable */}
           {hasWebGL() ? (
-            <Suspense fallback={<Trademarks3DSkeleton className="absolute inset-0" />}>
-              <Trademarks3D
-                items={trademarks}
-                active={active}
-                onChange={setActive}
-                className="absolute inset-0"
-              />
-            </Suspense>
+            <WebGLBoundary fallback={<Trademarks3DSkeleton className="absolute inset-0" />}>
+              <Suspense fallback={<Trademarks3DSkeleton className="absolute inset-0" />}>
+                <Trademarks3D
+                  items={trademarks}
+                  active={active}
+                  onChange={setActive}
+                  className="absolute inset-0"
+                />
+              </Suspense>
+            </WebGLBoundary>
           ) : (
             <Trademarks3DSkeleton className="absolute inset-0" />
           )}
