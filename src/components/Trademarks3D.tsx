@@ -152,13 +152,33 @@ export function Trademarks3DSkeleton({ className = '' }: { className?: string })
   );
 }
 
+/** Re-renders the scene whenever `active` changes (demand mode requires explicit invalidation). */
+function InvalidateOnActive({ active }: { active: number }) {
+  const { invalidate } = useThree();
+  useEffect(() => { invalidate(); }, [active, invalidate]);
+  return null;
+}
+
 export default function Trademarks3D({ items, active, onChange, className = '' }: Props) {
   const tier = useMemo(detectTier, []);
   const lowTier = tier === 'low';
-  const reduced = typeof window !== 'undefined' && getReducedMotion();
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(true);
+
+  // Pause the loop entirely when the slider scrolls off-screen.
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el || typeof IntersectionObserver === 'undefined') return;
+    const io = new IntersectionObserver(
+      ([entry]) => setVisible(entry.isIntersecting),
+      { rootMargin: '120px' }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   return (
-    <div className={`relative ${className}`} style={{ touchAction: 'pan-y' }}>
+    <div ref={wrapRef} className={`relative ${className}`} style={{ touchAction: 'pan-y' }}>
       <Canvas
         dpr={lowTier ? [1, 1.25] : [1, 2]}
         camera={{ position: [0, 0.05, 3.4], fov: 38 }}
@@ -167,8 +187,9 @@ export default function Trademarks3D({ items, active, onChange, className = '' }
           alpha: true,
           powerPreference: lowTier ? 'low-power' : 'high-performance',
         }}
-        frameloop={reduced ? 'demand' : 'always'}
+        frameloop={visible ? 'demand' : 'never'}
       >
+        <InvalidateOnActive active={active} />
         <ambientLight intensity={lowTier ? 0.85 : 0.65} />
         <directionalLight position={[3, 4, 5]} intensity={1.1} color="#fff3d2" />
         {!lowTier && <pointLight position={[-3, -1, 2]} intensity={0.55} color="#c9a84c" />}
