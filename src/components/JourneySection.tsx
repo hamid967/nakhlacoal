@@ -95,7 +95,7 @@ export function JourneySection() {
 
               {/* Copy */}
               <div className="[direction:ltr]" style={{ direction: isAr ? 'rtl' : 'ltr' }}>
-                <div className={`text-[11px] tracking-[0.4em] text-[hsl(var(--gold-hi))] mb-3 font-mono`}>
+                <div className={`text-[11px] tracking-[0.4em] text-[hsl(var(--gold-ink))] font-semibold mb-3 font-mono`}>
                   {String(i + 1).padStart(2, '0')} / {SCENES.length.toString().padStart(2, '0')}
                 </div>
                 <h3 className={`text-2xl md:text-4xl mb-4 text-primary ${isAr ? 'font-arabic font-bold' : 'font-display'}`}>

@@ -9,12 +9,12 @@ export function SectionNumber({ index, total = 7, align = 'start' }: Props) {
   return (
     <div
       aria-hidden="true"
-      className={`mb-6 md:mb-8 flex items-center gap-3 text-[11px] uppercase tracking-[0.32em] text-gold-ink/70 font-display ${
+      className={`mb-6 md:mb-8 flex items-center gap-3 text-[11px] uppercase tracking-[0.32em] text-[hsl(var(--gold-lo))] font-semibold font-display ${
         align === 'end' ? 'justify-end' : ''
       }`}
     >
-      <span className="text-[hsl(var(--gold))] font-semibold">{pad(index)}</span>
-      <span className="h-px w-10 bg-gold/30" />
+      <span className="text-[hsl(var(--gold-lo))] font-bold">{pad(index)}</span>
+      <span className="h-px w-10 bg-[hsl(var(--gold-lo))]/40" />
       <span>{pad(total)}</span>
     </div>
   );

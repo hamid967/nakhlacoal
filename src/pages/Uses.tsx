@@ -34,7 +34,7 @@ export default function Uses() {
               <img decoding="async" src={u.img} alt={u.titleAr} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
               <div className="absolute inset-0 p-6 flex flex-col justify-end text-cream">
-                <h3 className="font-serif text-2xl text-[hsl(var(--gold))]">{u.titleAr}</h3>
+                <h3 className="font-serif text-2xl text-[hsl(var(--gold-ink))]">{u.titleAr}</h3>
                 <p className="text-xs uppercase tracking-[0.25em] opacity-70 mt-0.5">{u.titleEn}</p>
                 <p className="mt-2 text-sm opacity-90">{u.descAr}</p>
               </div>
