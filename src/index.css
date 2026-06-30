@@ -148,10 +148,15 @@
     @apply border-border;
   }
 
+  html, body {
+    overflow-x: clip;
+    max-width: 100%;
+  }
   html {
     scroll-behavior: smooth;
     background: hsl(var(--background));
   }
+
 
   body {
     @apply bg-background text-foreground antialiased;
