@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Palette, Check, RotateCcw, Monitor } from 'lucide-react';
+import { Palette, Check, RotateCcw, Monitor, Zap } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,6 +7,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
+import { useReducedMotion, setReducedMotion } from '@/hooks/useReducedMotion';
+
 
 type ThemeKey = 'auto' | 'emerald' | 'noir' | 'sand';
 type FontKey = 'classic' | 'modern' | 'editorial';
