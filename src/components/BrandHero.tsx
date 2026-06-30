@@ -181,6 +181,13 @@ export function BrandHero() {
         </motion.div>
 
 
+        {/* Eyebrow above the trademark slider */}
+        <div className="text-center -mb-4 md:-mb-6">
+          <span className="text-[10px] tracking-[0.35em] uppercase text-[hsl(var(--gold-hi))] font-arabic">
+            {isAr ? '— علاماتنا —' : '— Our trademarks —'}
+          </span>
+        </div>
+
         {/* Full-width prominent trademarks slider (replaces the previous small side cluster) */}
         <div
           className="w-full max-w-5xl relative h-[420px] sm:h-[500px] md:h-[580px] rounded-3xl border border-[hsl(var(--gold))]/40 bg-[hsl(var(--background))]/40 backdrop-blur-sm shadow-[0_30px_80px_-30px_hsl(var(--gold)/0.35)]"
