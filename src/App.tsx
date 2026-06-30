@@ -29,6 +29,7 @@ const ExportPage = lazy(() => import('@/pages/Export'));
 const ExportGuide = lazy(() => import('@/pages/ExportGuide'));
 const Knowledge = lazy(() => import('@/pages/Knowledge'));
 const Contact = lazy(() => import('@/pages/Contact'));
+const Location = lazy(() => import('@/pages/Location'));
 const Trademarks = lazy(() => import('@/pages/Trademarks'));
 const Uses = lazy(() => import('@/pages/Uses'));
 const Articles = lazy(() => import('@/pages/Articles'));
