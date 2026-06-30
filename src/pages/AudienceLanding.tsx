@@ -26,7 +26,12 @@ export default function AudienceLanding() {
   const faqs = isAr ? a.faqsAr : a.faqsEn;
   const cta = isAr ? a.ctaAr : a.ctaEn;
   const prefill = encodeURIComponent(isAr ? a.whatsappPrefillAr : a.whatsappPrefillEn);
-  const waHref = `${brand.footer.whatsapp}?text=${prefill}`;
+  // Defensive: tolerate brand config without a contact/whatsapp field.
+  const waBase =
+    (brand as { footer?: { whatsapp?: string }; contact?: { whatsapp?: string } }).footer?.whatsapp ??
+    (brand as { contact?: { whatsapp?: string } }).contact?.whatsapp ??
+    '';
+  const waHref = waBase ? `${waBase}?text=${prefill}` : '';
 
   const faqJsonLd = {
     '@context': 'https://schema.org',
@@ -56,15 +61,24 @@ export default function AudienceLanding() {
         <p className="text-lg text-muted-foreground max-w-3xl">{sub}</p>
 
         <div className="mt-8 flex flex-wrap gap-3">
-          <a
-            href={waHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => trackConversion('whatsapp_click', { source: `audience_${a.slug}` })}
-            className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-md font-semibold hover:opacity-90 transition"
-          >
-            <MessageCircle className="w-4 h-4" /> {cta}
-          </a>
+          {waHref ? (
+            <a
+              href={waHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackConversion('whatsapp_click', { source: `audience_${a.slug}` })}
+              className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-md font-semibold hover:opacity-90 transition"
+            >
+              <MessageCircle className="w-4 h-4" /> {cta}
+            </a>
+          ) : (
+            <Link
+              to="/contact"
+              className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-md font-semibold hover:opacity-90 transition"
+            >
+              <MessageCircle className="w-4 h-4" /> {cta}
+            </Link>
+          )}
           <Link
             to="/catalog"
             className="inline-flex items-center gap-2 border border-border px-6 py-3 rounded-md font-semibold hover:bg-muted transition"
@@ -147,15 +161,24 @@ export default function AudienceLanding() {
             ? 'تواصل مباشرة على واتساب وسنرسل لك عرض السعر خلال ساعة عمل.'
             : 'Message us on WhatsApp — we send your quote within one business hour.'}
         </p>
-        <a
-          href={waHref}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() => trackConversion('whatsapp_click', { source: `audience_${a.slug}_footer` })}
-          className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-8 py-4 rounded-md font-semibold hover:opacity-90 transition"
-        >
-          <MessageCircle className="w-5 h-5" /> {cta}
-        </a>
+        {waHref ? (
+          <a
+            href={waHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => trackConversion('whatsapp_click', { source: `audience_${a.slug}_footer` })}
+            className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-8 py-4 rounded-md font-semibold hover:opacity-90 transition"
+          >
+            <MessageCircle className="w-5 h-5" /> {cta}
+          </a>
+        ) : (
+          <Link
+            to="/contact"
+            className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-8 py-4 rounded-md font-semibold hover:opacity-90 transition"
+          >
+            <MessageCircle className="w-5 h-5" /> {cta}
+          </Link>
+        )}
       </section>
     </div>
   );
