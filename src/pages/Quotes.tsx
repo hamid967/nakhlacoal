@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-import { FileText, Trash2, MessageCircle, Mail, Plus, Archive } from 'lucide-react';
+import { FileText, Trash2, MessageCircle, Mail, Plus, Archive, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { listQuotes, deleteQuote, clearQuotes, type SavedQuote } from '@/lib/quoteStore';
+import { exportQuoteToPdf } from '@/lib/exportQuotePdf';
 import { products } from '@/data/products';
 import { toast } from 'sonner';
 
