@@ -59,6 +59,7 @@ const AdminSettings = lazy(() => import('@/admin/pages/Settings'));
 const AdminPlaceholder = lazy(() => import('@/admin/pages/Placeholder'));
 const AdminTrademarks = lazy(() => import('@/admin/pages/Trademarks'));
 const AdminTracking = lazy(() => import('@/admin/pages/Tracking'));
+const AdminInvoices = lazy(() => import('@/admin/pages/Invoices'));
 
 const PortalLayout = lazy(() => import('@/portal/PortalLayout'));
 const PortalDashboard = lazy(() => import('@/portal/pages/Dashboard'));
