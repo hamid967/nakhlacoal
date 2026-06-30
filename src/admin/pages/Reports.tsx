@@ -273,7 +273,7 @@ export default function AdminReports() {
           <p className="text-xs text-center" style={{ color: 'var(--a-text-muted)' }}>
             * الإيرادات تقديرية بناءً على أدنى سعر شريحة في المخزون مطابق لنوع المنتج.
           </p>
-        </>
+        </div>
       )}
     </div>
   );
