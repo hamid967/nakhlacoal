@@ -20,18 +20,32 @@ const TINT: Record<string, string> = {
 };
 
 export default function AdminOrders() {
+  const [sp, setSp] = useSearchParams();
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [q, setQ] = useState('');
-  const [qDebounced, setQDebounced] = useState('');
-  const [status, setStatus] = useState<string>('all');
+  const [q, setQ] = useState(() => sp.get('q') ?? '');
+  const [qDebounced, setQDebounced] = useState(() => sp.get('q') ?? '');
+  const [status, setStatus] = useState<string>(() => sp.get('status') ?? 'all');
   const [active, setActive] = useState<any | null>(null);
-  const [sortKey, setSortKey] = useState<SortKey>('created_at');
-  const [sortDir, setSortDir] = useState<SortDir>('desc');
-  const [page, setPage] = useState(1);
+  const [sortKey, setSortKey] = useState<SortKey>(() => (sp.get('sk') as SortKey) || 'created_at');
+  const [sortDir, setSortDir] = useState<SortDir>(() => (sp.get('sd') as SortDir) || 'desc');
+  const [page, setPage] = useState(() => Math.max(1, parseInt(sp.get('p') || '1', 10) || 1));
 
   useEffect(() => { const t = setTimeout(() => setQDebounced(q), 250); return () => clearTimeout(t); }, [q]);
   useEffect(() => { setPage(1); }, [qDebounced, status, sortKey, sortDir]);
+
+  // Sync state -> URL (omit defaults to keep it clean)
+  useEffect(() => {
+    const next = new URLSearchParams(sp);
+    const set = (k: string, v: string, def = '') => { v && v !== def ? next.set(k, v) : next.delete(k); };
+    set('q', qDebounced);
+    set('status', status, 'all');
+    set('sk', sortKey, 'created_at');
+    set('sd', sortDir, 'desc');
+    set('p', page > 1 ? String(page) : '', '');
+    if (next.toString() !== sp.toString()) setSp(next, { replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [qDebounced, status, sortKey, sortDir, page]);
 
   async function load() {
     setLoading(true);
