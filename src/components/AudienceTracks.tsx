@@ -4,13 +4,13 @@ import { useDir, LuxSection, SectionHeader } from '@/components/ui-lux';
 import { ScrollReveal } from '@/components/ScrollReveal';
 import { SectionNumber } from '@/components/SectionNumber';
 import { trackConversion } from '@/lib/track';
-import { BRAND } from '@/lib/brand';
+import { brand } from '@/lib/brand';
 
 export function AudienceTracks() {
   const { isAr, Arrow } = useDir();
 
   const waLink = (msg: string) =>
-    `https://wa.me/${BRAND.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(msg)}`;
+    `${brand.footer.whatsapp}?text=${encodeURIComponent(msg)}`;
 
   const tracks = [
     {
