@@ -89,7 +89,7 @@ export function HomeIntro() {
   const { slideMs, transitionMs, typeMs } = settings.current;
 
   useEffect(() => {
-    reduce.current = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    reduce.current = getReducedMotion();
     try {
       if (sessionStorage.getItem(KEY) === '1') { setPhase('done'); return; }
       sessionStorage.setItem(KEY, '1');
