@@ -238,3 +238,44 @@ function Section({ title, children }: { title: string; children: React.ReactNode
     </div>
   );
 }
+
+function SortTh({ label, k, sortKey, sortDir, onSort }: {
+  label: string; k: SortKey; sortKey: SortKey; sortDir: SortDir; onSort: (k: SortKey) => void;
+}) {
+  const active = sortKey === k;
+  return (
+    <button type="button" className="a-th-sort" data-active={active} data-dir={active ? sortDir : undefined} onClick={() => onSort(k)}>
+      {label}
+      <ChevronUp />
+    </button>
+  );
+}
+
+function Pagination({ page, totalPages, onChange }: { page: number; totalPages: number; onChange: (p: number) => void }) {
+  const pages: (number | '…')[] = [];
+  const push = (v: number | '…') => pages.push(v);
+  if (totalPages <= 7) {
+    for (let i = 1; i <= totalPages; i++) push(i);
+  } else {
+    push(1);
+    if (page > 3) push('…');
+    for (let i = Math.max(2, page - 1); i <= Math.min(totalPages - 1, page + 1); i++) push(i);
+    if (page < totalPages - 2) push('…');
+    push(totalPages);
+  }
+  return (
+    <div className="flex items-center gap-1">
+      <button className="a-page-btn" disabled={page === 1} onClick={() => onChange(page - 1)} aria-label="السابق">
+        <ChevronRight className="w-4 h-4" />
+      </button>
+      {pages.map((p, i) => p === '…' ? (
+        <span key={`e${i}`} className="px-1 text-sm" style={{ color: 'var(--a-text-muted)' }}>…</span>
+      ) : (
+        <button key={p} className="a-page-btn" data-active={p === page} onClick={() => onChange(p)}>{p}</button>
+      ))}
+      <button className="a-page-btn" disabled={page === totalPages} onClick={() => onChange(page + 1)} aria-label="التالي">
+        <ChevronLeft className="w-4 h-4" />
+      </button>
+    </div>
+  );
+}
