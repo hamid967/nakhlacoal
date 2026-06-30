@@ -194,5 +194,32 @@
 .admin-shell .a-scroll::-webkit-scrollbar { width: 8px; height: 8px; }
 .admin-shell .a-scroll::-webkit-scrollbar-thumb { background: var(--a-border-strong); border-radius: 4px; }
 
+/* Sortable column header — Untitled UI */
+.admin-shell .a-th-sort {
+  cursor: pointer; user-select: none;
+  display: inline-flex; align-items: center; gap: .35rem;
+  transition: color .15s;
+}
+.admin-shell .a-th-sort:hover { color: var(--a-text); }
+.admin-shell .a-th-sort[data-active="true"] { color: var(--a-text); font-weight: 600; }
+.admin-shell .a-th-sort svg { width: 12px; height: 12px; opacity: .5; transition: opacity .15s, transform .2s; }
+.admin-shell .a-th-sort[data-active="true"] svg { opacity: 1; color: var(--a-palm); }
+.admin-shell .a-th-sort[data-dir="desc"] svg { transform: rotate(180deg); }
+
+/* Pagination */
+.admin-shell .a-page-btn {
+  min-width: 32px; height: 32px; padding: 0 .55rem;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 8px; border: 1px solid var(--a-border);
+  background: var(--a-surface); color: var(--a-text);
+  font-size: 13px; font-weight: 500;
+  transition: background .15s, border-color .15s;
+}
+.admin-shell .a-page-btn:hover:not(:disabled) { background: var(--a-surface-2); border-color: var(--a-border-strong); }
+.admin-shell .a-page-btn:disabled { opacity: .45; cursor: not-allowed; }
+.admin-shell .a-page-btn[data-active="true"] {
+  background: var(--a-palm); color: var(--a-on-palm); border-color: var(--a-palm);
+}
+
 @keyframes a-fade-up { from { opacity:0; transform: translateY(4px);} to { opacity:1; transform: none; } }
 .admin-shell .a-fade-up { animation: a-fade-up .25s ease both; }
