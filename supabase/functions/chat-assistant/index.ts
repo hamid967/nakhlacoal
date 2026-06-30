@@ -83,14 +83,20 @@ Deno.serve(async (req) => {
       });
     }
 
-    const contentLength = Number(req.headers.get("content-length") ?? 0);
-    if (contentLength > 200_000) {
+    // C4: enforce real body size (content-length header is spoofable)
+    const rawBytes = new Uint8Array(await req.arrayBuffer());
+    if (rawBytes.byteLength > 200_000) {
       return new Response(JSON.stringify({ error: "Payload too large" }), {
         status: 413, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-
-    const body = await req.json();
+    let body: { messages?: unknown };
+    try { body = JSON.parse(new TextDecoder().decode(rawBytes)); }
+    catch {
+      return new Response(JSON.stringify({ error: "invalid_json" }), {
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
     const raw = Array.isArray(body?.messages) ? body.messages : [];
     const ALLOWED_ROLES = ["user", "assistant", "system"] as const;
     const MAX_CONTENT_CHARS = 4000;
