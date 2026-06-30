@@ -1,25 +1,72 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useSearchParams } from 'react-router-dom';
-import { FileText, Sparkles, MessageCircle, Phone, Mail, Clock } from 'lucide-react';
+import { FileText, Sparkles, MessageCircle, Phone, Mail, Clock, Calculator, Copy, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { QuoteForm } from '@/components/QuoteBuilder';
 import { PRICING } from '@/data/pricing';
+import { toast } from 'sonner';
 
 const WHATSAPP_NUMBER = '966540060095';
 const ORDER_EMAIL = 'mab355@gmail.com';
+
+const PRESETS: { label: string; text: string }[] = [
+  { label: 'مطعم/مشواة', text: 'مرحباً، أحتاج عرض سعر لفحم مطاعم بكميات شهرية منتظمة. ما الأنسب لي؟' },
+  { label: 'مقهى شيشة', text: 'أبحث عن فحم شيشة فاخر (كيوبس) — أحتاج توصية وسعر جملة لكميات شهرية.' },
+  { label: 'تصدير/جملة', text: 'لدي طلب تصدير بكميات كبيرة (طن فأكثر). أرجو إرسال عرض سعر تنافسي وشروط الشحن.' },
+  { label: 'مناسبات', text: 'أحتاج فحم لمناسبة واحدة (~50–100 كجم). ما الخيار الأفضل سعراً وجودة؟' },
+];
+
+type LiveQuote = {
+  count: number; subtotal: number; vat: number; total: number;
+  items: { label: string; qty: number; unit: string; lineTotal: number }[];
+};
+
+const fmt = (n: number) => new Intl.NumberFormat('ar-SA', { maximumFractionDigits: 2 }).format(n);
+const unitAr = (u: string) => ({ kg: 'كجم', carton: 'كرتون', ton: 'طن' } as Record<string, string>)[u] || u;
 
 export default function Quote() {
   const [sp] = useSearchParams();
   const initialSlug = sp.get('product') || undefined;
   const validSlug = initialSlug && PRICING[initialSlug] ? initialSlug : undefined;
+  const [live, setLive] = useState<LiveQuote | null>(null);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'auto' });
   }, []);
 
-  const openAssistant = () => {
-    window.dispatchEvent(new CustomEvent('palm:open-assistant'));
+  useEffect(() => {
+    const onUpdate = (e: Event) => setLive((e as CustomEvent<LiveQuote>).detail);
+    window.addEventListener('palm:quote-update', onUpdate);
+    return () => window.removeEventListener('palm:quote-update', onUpdate);
+  }, []);
+
+  const openAssistant = (prefill?: string) => {
+    window.dispatchEvent(new CustomEvent('palm:open-assistant', { detail: { prefill } }));
+  };
+
+  const summaryText = () => {
+    if (!live || !live.count) return '';
+    const lines = live.items
+      .map((i, idx) => `${idx + 1}) ${i.label} — ${i.qty} ${unitAr(i.unit)} = ${fmt(i.lineTotal)} ر.س`)
+      .join('\n');
+    return `🌴 ملخص عرض السعر — فحم النخلة\n${lines}\n— عدد البنود: ${live.count}\n— الإجمالي شامل الضريبة: ${fmt(live.total)} ر.س`;
+  };
+
+  const copySummary = async () => {
+    const t = summaryText();
+    if (!t) return toast.error('أضف منتجاً أولاً لتوليد الملخص');
+    await navigator.clipboard.writeText(t);
+    setCopied(true);
+    toast.success('تم نسخ ملخص السعر');
+    setTimeout(() => setCopied(false), 1800);
+  };
+
+  const sendSummaryWhatsApp = () => {
+    const t = summaryText();
+    if (!t) return toast.error('أضف منتجاً أولاً لتوليد الملخص');
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(t)}`, '_blank', 'noopener');
   };
 
   return (
