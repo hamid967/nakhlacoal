@@ -42,7 +42,6 @@ export function lcpPreload(opts: Options): Plugin {
     },
     writeBundle(_, bundle) {
       const files = Object.keys(bundle);
-      console.log('[lcp-preload] writeBundle, files:', files.length, 'outDir:', outDir);
       let href: string | null = null;
       let fmt: string | null = null;
       outer: for (const name of opts.candidates) {
