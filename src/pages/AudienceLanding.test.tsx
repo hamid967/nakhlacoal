@@ -38,10 +38,9 @@ describe('AudienceLanding WhatsApp CTA fallback', () => {
   it('uses brand.footer.whatsapp when present', async () => {
     brandMock.footer = { whatsapp: 'https://wa.me/966540060095' };
     await renderPage();
-    const links = screen.getAllByRole('link', { name: /whatsapp|message us|طلب/i }).concat(
-      screen.getAllByRole('link').filter((a) => a.getAttribute('href')?.startsWith('https://wa.me/'))
-    );
-    const wa = links.find((a) => a.getAttribute('href')?.startsWith('https://wa.me/966540060095'));
+    const wa = screen
+      .getAllByRole('link')
+      .find((a) => a.getAttribute('href')?.startsWith('https://wa.me/966540060095'));
     expect(wa).toBeTruthy();
     expect(wa!.getAttribute('href')).toContain('?text=');
   });
