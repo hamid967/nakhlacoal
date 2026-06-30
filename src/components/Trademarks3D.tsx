@@ -1,5 +1,5 @@
-import { Suspense, useMemo, useRef } from 'react';
-import { Canvas, useFrame, useLoader } from '@react-three/fiber';
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import { Canvas, useFrame, useLoader, useThree } from '@react-three/fiber';
 import { Environment, RoundedBox } from '@react-three/drei';
 import * as THREE from 'three';
 import type { Trademark } from '@/data/trademarks';
