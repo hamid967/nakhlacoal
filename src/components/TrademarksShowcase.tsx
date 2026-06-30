@@ -49,7 +49,7 @@ export function TrademarksShowcase() {
   ];
 
   return (
-    <section className="relative py-20 md:py-28 overflow-hidden">
+    <section className="relative section overflow-hidden">
       {/* Soft palm-leaf wash background */}
       <div aria-hidden className="pointer-events-none absolute inset-0 opacity-[0.07] bg-[radial-gradient(circle_at_20%_10%,hsl(var(--emerald))_0%,transparent_45%),radial-gradient(circle_at_80%_90%,hsl(var(--gold))_0%,transparent_50%)]" />
 

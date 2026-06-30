@@ -102,7 +102,7 @@ export default function ExportGuide() {
       />
 
       {/* Incoterms */}
-      <section className="py-20">
+      <section className="section-tight">
         <div className="container">
           <ScrollReveal>
             <div className="text-center mb-12">
@@ -138,7 +138,7 @@ export default function ExportGuide() {
       </section>
 
       {/* Packaging */}
-      <section className="py-20 section-dark border-y border-gold/10">
+      <section className="section-tight section-dark border-y border-gold/10">
         <div className="container">
           <ScrollReveal>
             <div className="text-center mb-12">
@@ -163,7 +163,7 @@ export default function ExportGuide() {
       </section>
 
       {/* Container loads */}
-      <section className="py-20">
+      <section className="section-tight">
         <div className="container max-w-5xl">
           <ScrollReveal>
             <div className="text-center mb-12">
@@ -199,7 +199,7 @@ export default function ExportGuide() {
       </section>
 
       {/* HS codes */}
-      <section className="py-20 section-dark border-y border-gold/10">
+      <section className="section-tight section-dark border-y border-gold/10">
         <div className="container max-w-4xl">
           <ScrollReveal>
             <div className="text-center mb-10">
@@ -227,7 +227,7 @@ export default function ExportGuide() {
       </section>
 
       {/* Documents */}
-      <section className="py-20">
+      <section className="section-tight">
         <div className="container max-w-5xl">
           <ScrollReveal>
             <div className="text-center mb-12">
@@ -251,7 +251,7 @@ export default function ExportGuide() {
       </section>
 
       {/* Payment */}
-      <section className="py-20 section-dark border-y border-gold/10">
+      <section className="section-tight section-dark border-y border-gold/10">
         <div className="container max-w-4xl">
           <ScrollReveal>
             <div className="text-center mb-10">
@@ -276,7 +276,7 @@ export default function ExportGuide() {
       </section>
 
       {/* Quality + lead time strip */}
-      <section className="py-16">
+      <section className="section-tight">
         <div className="container max-w-5xl grid md:grid-cols-3 gap-4">
           {[
             { icon: ShieldCheck, t: 'Quality guarantee', d: 'Third-party lab certificate per export lot. 7-day right of rejection on arrival.' },
@@ -295,7 +295,7 @@ export default function ExportGuide() {
       </section>
 
       {/* CTA */}
-      <section className="py-20">
+      <section className="section-tight">
         <div className="container max-w-3xl text-center">
           <ScrollReveal>
             <h2 className="text-3xl md:text-4xl font-display mb-4">

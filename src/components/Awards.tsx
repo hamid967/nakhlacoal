@@ -37,7 +37,7 @@ export function Awards() {
   ]
 
   return (
-    <section id="awards" className="relative py-20 bg-background overflow-hidden">
+    <section id="awards" className="relative section-tight bg-background overflow-hidden">
       
       {/* Elegant Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-background via-card/30 to-background" />

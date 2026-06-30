@@ -43,7 +43,7 @@ export function JourneySection() {
   }, []);
 
   return (
-    <section className="relative py-20 md:py-28 bg-[hsl(var(--background))]">
+    <section className="relative section bg-[hsl(var(--background))]">
       <div className="container mx-auto px-4 mb-12 md:mb-16 text-center">
         <span className="eyebrow">{isAr ? 'رحلة الفحم' : 'The Journey'}</span>
         <h2 className={`text-3xl md:text-5xl mt-3 ${isAr ? 'font-arabic font-bold' : 'font-display'}`}>

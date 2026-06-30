@@ -55,7 +55,7 @@ export function About() {
   }, [])
 
   return (
-    <section id="about" className="relative py-20 bg-background overflow-hidden">
+    <section id="about" className="relative section-tight bg-background overflow-hidden">
       
       {/* Cinematic Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-background via-card/20 to-background" />

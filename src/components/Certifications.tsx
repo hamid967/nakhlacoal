@@ -20,7 +20,7 @@ export function Certifications() {
   ];
 
   return (
-    <section className="py-12 md:py-16 border-y border-gold/15 bg-surface/50">
+    <section className="section-tight border-y border-gold/15 bg-surface/50">
       <div className="container">
         <ScrollReveal>
           <div className="text-center mb-8 md:mb-10">

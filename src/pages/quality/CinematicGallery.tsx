@@ -12,7 +12,7 @@ export default function CinematicGallery() {
     { src: burnImg, title: 'اختبار الاحتراق', sub: 'ثبات 180 دقيقة', tag: 'BURN', pos: '50% 50%' },
   ];
   return (
-    <section className="py-28 bg-dark">
+    <section className="section bg-dark">
       <div className="container">
         <SectionHeader eyebrow="معرض المختبر" title="لقطات حية من خط الجودة" />
         <div className="grid md:grid-cols-3 gap-6">
