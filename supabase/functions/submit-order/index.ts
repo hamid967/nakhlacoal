@@ -58,6 +58,7 @@ Deno.serve(async (req) => {
     return new Response("Method not allowed", { status: 405, headers: corsHeaders });
   }
   // Reject POST with missing or non-allowlisted Origin
+  const origin = req.headers.get("Origin") ?? "";
   if (!origin || !ALLOWED_ORIGINS.has(origin)) {
     return new Response(JSON.stringify({ error: "origin_not_allowed" }), {
       status: 403, headers: { "Content-Type": "application/json" },
@@ -69,7 +70,33 @@ Deno.serve(async (req) => {
     const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY")!;
 
-    // C4: read body as bytes and enforce real size (header is spoofable)
+    // Require a valid Bearer token
+    const authHeader = req.headers.get("Authorization") ?? "";
+    if (!authHeader.startsWith("Bearer ")) {
+      return new Response(JSON.stringify({ error: "unauthorized" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const token = authHeader.slice(7);
+    const anon = createClient(SUPABASE_URL, ANON_KEY);
+    const { data: authData, error: authErr } = await anon.auth.getUser(token);
+    if (authErr || !authData.user) {
+      return new Response(JSON.stringify({ error: "invalid_token" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const userId: string = authData.user.id;
+
+    // Rate limit: per-user + per-IP (ad-hoc in-memory, best-effort)
+    const ip = (req.headers.get("x-forwarded-for") ?? "").split(",")[0].trim() || "unknown";
+    if (rateLimited(`u:${userId}`) || rateLimited(`ip:${ip}`)) {
+      return new Response(JSON.stringify({ error: "rate_limited" }), {
+        status: 429,
+        headers: { ...corsHeaders, "Content-Type": "application/json", "Retry-After": "60" },
+      });
+    }
+
+    // Read body as bytes and enforce real size (header is spoofable)
     const raw = new Uint8Array(await req.arrayBuffer());
     if (raw.byteLength === 0 || raw.byteLength > MAX_BODY_BYTES) {
       return new Response(JSON.stringify({ error: "payload_too_large" }), {
@@ -91,14 +118,6 @@ Deno.serve(async (req) => {
       );
     }
 
-    // C1: capture user_id via getUser(jwt) — supported on supabase-js v2
-    let userId: string | null = null;
-    const authHeader = req.headers.get("Authorization");
-    if (authHeader?.startsWith("Bearer ")) {
-      const anon = createClient(SUPABASE_URL, ANON_KEY);
-      const { data, error } = await anon.auth.getUser(authHeader.slice(7));
-      if (!error) userId = data.user?.id ?? null;
-    }
 
     const admin = createClient(SUPABASE_URL, SERVICE_KEY);
     const payload = {
