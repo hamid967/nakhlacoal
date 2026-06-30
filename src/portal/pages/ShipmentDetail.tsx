@@ -46,7 +46,7 @@ export default function ShipmentDetail() {
       }
       if (s?.customer_user_id) {
         const { data: c } = await supabase.from('customers').select('*')
-          .eq('user_id', s.customer_user_id).maybeSingle();
+          .eq('owner_user_id', s.customer_user_id).maybeSingle();
         setCustomer(c);
       }
       setLoading(false);
