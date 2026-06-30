@@ -57,6 +57,8 @@ export function QuoteForm({ initialSlug, compact = false }: { initialSlug?: stri
       .join(`\n${sep}\n`);
     return [
       '🌴 *طلب عرض سعر — فحم النخلة*',
+      `📦 *عدد البنود:* ${computed.items.length}`,
+      `💰 *الإجمالي النهائي (شامل الضريبة):* ${fmt(computed.total)} ر.س`,
       sep,
       lns,
       sep,
