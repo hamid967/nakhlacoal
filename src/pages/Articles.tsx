@@ -37,7 +37,7 @@ export default function Articles() {
               >
                 <Link
                   to={`/articles/${a.id}`}
-                  className="glass-card block h-full rounded-2xl p-6 hover:border-gold/60 hover:shadow-gold transition"
+                  className="clay-card block h-full rounded-2xl p-6 hover:border-gold/60 hover:shadow-gold transition"
                 >
                   <div className="flex items-center justify-between text-[11px] text-muted-foreground mb-3">
                     <span className="px-2 py-0.5 rounded-full bg-[hsl(var(--gold))]/15 text-[hsl(var(--gold))]">{a.category}</span>

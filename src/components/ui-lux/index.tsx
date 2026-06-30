@@ -143,7 +143,7 @@ export function FeatureCard({
   const { isAr } = useDir();
   return (
     <ScrollReveal delay={index * 120}>
-      <div className="glass-card shimmer-card group h-full rounded-3xl p-8 md:p-10">
+      <div className="clay-card shimmer-card group h-full rounded-3xl p-8 md:p-10">
         <span className="w-14 h-14 rounded-2xl bg-gradient-to-br from-gold/30 to-gold/5 text-gold-lo flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500">
           <Icon className="w-6 h-6" />
         </span>
@@ -168,7 +168,7 @@ export function TrustItem({
 }) {
   return (
     <ScrollReveal delay={index * 80}>
-      <div className="glass-card flex items-center gap-4 rounded-2xl px-5 py-4 h-full">
+      <div className="clay-card flex items-center gap-4 rounded-2xl px-5 py-4 h-full">
         <span className="w-11 h-11 rounded-full flex items-center justify-center bg-gold/15 text-gold-lo shrink-0">
           <Icon className="w-5 h-5" />
         </span>
@@ -218,7 +218,7 @@ export function ProductCard({
   return (
     <ScrollReveal delay={index * 80}>
       <Link to={to} className="group block">
-        <div className="glass-card aspect-[4/5] overflow-hidden rounded-2xl mb-4 relative !p-0">
+        <div className="clay-card aspect-[4/5] overflow-hidden rounded-2xl mb-4 relative !p-0">
           <img
             src={img}
             alt={typeof name === 'string' ? name : ''}
@@ -259,7 +259,7 @@ export function TestimonialCard({
 }) {
   return (
     <ScrollReveal delay={index * 100}>
-      <figure className="glass-card h-full rounded-3xl p-8 flex flex-col">
+      <figure className="clay-card h-full rounded-3xl p-8 flex flex-col">
         <div className="flex items-center justify-between mb-5">
           <span className="flex gap-0.5 text-gold-hi">
             {[...Array(5)].map((_, j) => (

@@ -31,7 +31,7 @@ export default function QualityCharts() {
       <motion.div
         initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }} transition={{ duration: 0.8 }}
-        className="glass-card rounded-2xl p-6 shadow-luxe"
+        className="clay-card rounded-2xl p-6 shadow-luxe"
       >
         <h3 className="font-arabic font-bold mb-4">اتجاه الجودة عبر الدفعات</h3>
         <ResponsiveContainer width="100%" height={260}>
@@ -48,7 +48,7 @@ export default function QualityCharts() {
       <motion.div
         initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.1 }}
-        className="glass-card rounded-2xl p-6 shadow-luxe"
+        className="clay-card rounded-2xl p-6 shadow-luxe"
       >
         <h3 className="font-arabic font-bold mb-4">فحم النخلة مقابل متوسط السوق</h3>
         <ResponsiveContainer width="100%" height={260}>
@@ -67,7 +67,7 @@ export default function QualityCharts() {
       <motion.div
         initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.2 }}
-        className="lg:col-span-2 glass-card rounded-2xl p-6 shadow-luxe"
+        className="lg:col-span-2 clay-card rounded-2xl p-6 shadow-luxe"
       >
         <h3 className="font-arabic font-bold mb-4">مقارنة الأداء متعدد المحاور</h3>
         <ResponsiveContainer width="100%" height={360}>

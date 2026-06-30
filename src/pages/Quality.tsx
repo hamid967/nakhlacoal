@@ -355,7 +355,7 @@ export default function Quality() {
               <motion.div key={t.id}
                 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }} transition={{ delay: i * 0.08 }}
-                className="group rounded-2xl glass-card p-4 hover:shadow-gold transition"
+                className="group rounded-2xl clay-card p-4 hover:shadow-gold transition"
               >
                 <div className="aspect-square bg-cream rounded-lg overflow-hidden mb-3">
                   <img src={t.image} alt={t.nameAr} className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform" loading="lazy" decoding="async" />
@@ -413,7 +413,7 @@ export default function Quality() {
                 initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }} transition={{ delay: i * 0.08 }}
                 whileHover={{ y: -8 }}
-                className="glass-card text-start p-8 rounded-2xl hover:border-gold/60 hover:shadow-gold transition-all"
+                className="clay-card text-start p-8 rounded-2xl hover:border-gold/60 hover:shadow-gold transition-all"
               >
                 <c.icon className="w-10 h-10 text-gold-hi mb-5" />
                 <h3 className="font-arabic font-bold text-xl mb-2">{c.name}</h3>
@@ -509,7 +509,7 @@ export default function Quality() {
                 initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }} transition={{ delay: i * 0.08 }}
                 whileHover={{ y: -6 }}
-                className="glass-card group p-7 rounded-2xl hover:border-gold/60 hover:shadow-gold transition-all flex items-start gap-4"
+                className="clay-card group p-7 rounded-2xl hover:border-gold/60 hover:shadow-gold transition-all flex items-start gap-4"
               >
                 <div className="w-12 h-12 rounded-xl bg-gold/15 text-gold-hi flex items-center justify-center shrink-0">
                   <f.icon className="w-6 h-6" />
