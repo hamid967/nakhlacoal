@@ -5,6 +5,8 @@ import { Calendar, Clock, ArrowRight, ArrowLeft } from 'lucide-react';
 import { SEO } from '@/components/SEO';
 import { PageHero } from '@/components/PageHero';
 import { getArticle, articles } from '@/data/articles';
+import heroFallback from '@/assets/hero-charcoal.jpg';
+
 
 export default function ArticleDetail() {
   const { slug } = useParams<{ slug: string }>();
@@ -17,6 +19,9 @@ export default function ArticleDetail() {
   const title = isAr ? article.titleAr : article.titleEn;
   const excerpt = isAr ? article.excerptAr : article.excerptEn;
   const content = (isAr ? article.contentAr : article.contentEn) ?? [];
+  const featuredImage = article.image ?? heroFallback;
+
+
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -33,16 +38,27 @@ export default function ArticleDetail() {
       logo: { '@type': 'ImageObject', url: 'https://alnakhlacoal.com/palm-charcoal-logo.png' },
     },
     mainEntityOfPage: { '@type': 'WebPage', '@id': `https://alnakhlacoal.com/articles/${article.id}` },
+    image: featuredImage.startsWith('http') ? featuredImage : `https://alnakhlacoal.com${featuredImage}`,
   };
 
   const others = articles.filter((a) => a.id !== article.id).slice(0, 3);
 
   return (
     <>
-      <SEO title={`${title} | فحم النخلة`} description={excerpt} path={`/articles/${article.id}`} jsonLd={jsonLd} />
+      <SEO title={`${title} | فحم النخلة`} description={excerpt} path={`/articles/${article.id}`} jsonLd={jsonLd} image={featuredImage} />
       <PageHero eyebrow={article.category} title={title} subtitle={excerpt} />
 
+      <figure className="container mx-auto px-6 pt-8 max-w-4xl">
+        <img
+          src={featuredImage}
+          alt={title}
+          loading="eager"
+          className="w-full aspect-[16/9] object-cover rounded-2xl border border-gold/20 shadow-gold"
+        />
+      </figure>
+
       <article className="container mx-auto px-6 py-12 max-w-3xl">
+
         <div className="flex items-center gap-4 text-xs text-muted-foreground mb-8 pb-6 border-b border-gold/20">
           <span className="flex items-center gap-1"><Calendar className="w-3 h-3" /> {article.date}</span>
           <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {article.readMin} {isAr ? 'دقائق قراءة' : 'min read'}</span>
