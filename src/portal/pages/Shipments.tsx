@@ -156,6 +156,47 @@ export default function PortalShipments() {
         />
       </div>
 
+      <div
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 rounded-xl border p-3"
+        style={{ borderColor: 'var(--a-border)', background: 'var(--a-surface)' }}
+      >
+        <FilterField label="الناقل">
+          <select
+            value={carrier}
+            onChange={(e) => setCarrier(e.target.value)}
+            className="w-full bg-transparent outline-none text-sm py-1"
+          >
+            <option value="all">الكل</option>
+            {carriers.map((c) => (
+              <option key={c} value={c}>{c}</option>
+            ))}
+          </select>
+        </FilterField>
+        <FilterField label="إنشاء من">
+          <input type="date" value={createdFrom} onChange={(e) => setCreatedFrom(e.target.value)}
+            className="w-full bg-transparent outline-none text-sm py-1" />
+        </FilterField>
+        <FilterField label="إنشاء إلى">
+          <input type="date" value={createdTo} onChange={(e) => setCreatedTo(e.target.value)}
+            className="w-full bg-transparent outline-none text-sm py-1" />
+        </FilterField>
+        <FilterField label="تسليم من">
+          <input type="date" value={deliveredFrom} onChange={(e) => setDeliveredFrom(e.target.value)}
+            className="w-full bg-transparent outline-none text-sm py-1" />
+        </FilterField>
+        <FilterField label="تسليم إلى">
+          <input type="date" value={deliveredTo} onChange={(e) => setDeliveredTo(e.target.value)}
+            className="w-full bg-transparent outline-none text-sm py-1" />
+        </FilterField>
+        {hasDateFilters && (
+          <button onClick={resetFilters} className="sm:col-span-2 lg:col-span-5 text-xs underline justify-self-end"
+            style={{ color: 'var(--a-text-muted)' }}>
+            مسح الفلاتر
+          </button>
+        )}
+      </div>
+
+
       {loading ? (
         <div className="p-10 text-center"><Loader2 className="h-5 w-5 animate-spin inline" /></div>
       ) : filtered.length === 0 ? (
