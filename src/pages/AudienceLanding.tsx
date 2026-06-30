@@ -158,7 +158,7 @@ export default function AudienceLanding() {
       </section>
 
       {waHref && (
-        <section className="container mx-auto px-4 py-16 max-w-3xl text-center">
+        <section className="container mx-auto px-4 section-tight max-w-3xl text-center">
           <h2 className="text-3xl font-bold mb-3">
             {isAr ? 'جاهز للبدء؟' : 'Ready to start?'}
           </h2>
