@@ -61,7 +61,7 @@ export default function AudienceLanding() {
         <p className="text-lg text-muted-foreground max-w-3xl">{sub}</p>
 
         <div className="mt-8 flex flex-wrap gap-3">
-          {waHref ? (
+          {waHref && (
             <a
               href={waHref}
               target="_blank"
@@ -71,13 +71,6 @@ export default function AudienceLanding() {
             >
               <MessageCircle className="w-4 h-4" /> {cta}
             </a>
-          ) : (
-            <Link
-              to="/contact"
-              className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-md font-semibold hover:opacity-90 transition"
-            >
-              <MessageCircle className="w-4 h-4" /> {cta}
-            </Link>
           )}
           <Link
             to="/catalog"
@@ -151,17 +144,16 @@ export default function AudienceLanding() {
         </div>
       </section>
 
-      {/* Final CTA */}
-      <section className="container mx-auto px-4 py-16 max-w-3xl text-center">
-        <h2 className="text-3xl font-bold mb-3">
-          {isAr ? 'جاهز للبدء؟' : 'Ready to start?'}
-        </h2>
-        <p className="text-muted-foreground mb-6">
-          {isAr
-            ? 'تواصل مباشرة على واتساب وسنرسل لك عرض السعر خلال ساعة عمل.'
-            : 'Message us on WhatsApp — we send your quote within one business hour.'}
-        </p>
-        {waHref ? (
+      {waHref && (
+        <section className="container mx-auto px-4 py-16 max-w-3xl text-center">
+          <h2 className="text-3xl font-bold mb-3">
+            {isAr ? 'جاهز للبدء؟' : 'Ready to start?'}
+          </h2>
+          <p className="text-muted-foreground mb-6">
+            {isAr
+              ? 'تواصل مباشرة على واتساب وسنرسل لك عرض السعر خلال ساعة عمل.'
+              : 'Message us on WhatsApp — we send your quote within one business hour.'}
+          </p>
           <a
             href={waHref}
             target="_blank"
@@ -171,15 +163,8 @@ export default function AudienceLanding() {
           >
             <MessageCircle className="w-5 h-5" /> {cta}
           </a>
-        ) : (
-          <Link
-            to="/contact"
-            className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-8 py-4 rounded-md font-semibold hover:opacity-90 transition"
-          >
-            <MessageCircle className="w-5 h-5" /> {cta}
-          </Link>
-        )}
-      </section>
+        </section>
+      )}
     </div>
   );
 }
