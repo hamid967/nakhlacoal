@@ -74,6 +74,7 @@ const PortalSettings = lazy(() => import('@/portal/pages/Settings'));
 const PortalPlaceholder = lazy(() => import('@/portal/pages/Placeholder'));
 const PortalNewOrder = lazy(() => import('@/portal/pages/NewOrder'));
 const PortalShipments = lazy(() => import('@/portal/pages/Shipments'));
+const PortalShipmentDetail = lazy(() => import('@/portal/pages/ShipmentDetail'));
 
 const queryClient = new QueryClient();
 
@@ -153,6 +154,7 @@ export default function App() {
                   <Route path="orders/:id" element={<OrderTracking />} />
                   <Route path="tracking" element={<PortalShipments />} />
                   <Route path="shipments" element={<PortalShipments />} />
+                  <Route path="shipments/:id" element={<PortalShipmentDetail />} />
                   <Route path="quotes" element={<PortalPlaceholder title="العروض السعرية" />} />
                   <Route path="invoices" element={<PortalPlaceholder title="الفواتير" />} />
                   <Route path="payments" element={<PortalPlaceholder title="المدفوعات" />} />
