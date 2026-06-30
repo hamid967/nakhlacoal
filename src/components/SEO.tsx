@@ -17,8 +17,10 @@ type Props = {
   path: string;
   jsonLd?: object;
   noindex?: boolean;
+  image?: string;
   preloadImages?: PreloadImage[];
 };
+
 
 export function SEO({ title, description, path, jsonLd, noindex = false, preloadImages }: Props) {
   const { i18n } = useTranslation();
