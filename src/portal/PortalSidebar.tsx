@@ -59,7 +59,7 @@ export function PortalSidebar({ collapsed, onToggle }: { collapsed: boolean; onT
       style={{ width: collapsed ? 78 : 270, borderInlineEnd: '1px solid var(--a-border)' }}
     >
       <div className="flex items-center gap-2 px-4 h-16 border-b" style={{ borderColor: 'var(--a-border)' }}>
-        <img src={logo} alt="Palm Charcoal" className="w-9 h-9 rounded-xl object-contain" style={{ background: 'var(--a-surface-2)' }} />
+        <img decoding="async" loading="lazy" src={logo} alt="Palm Charcoal" className="w-9 h-9 rounded-xl object-contain" style={{ background: 'var(--a-surface-2)' }} />
         {!collapsed && (
           <div className="leading-tight">
             <div className="a-display text-lg" style={{ color: 'var(--a-palm)' }}>فحم النخلة</div>

@@ -283,7 +283,7 @@ export default function Assistant() {
           {/* Header */}
           <header className="border-b border-border px-4 md:px-6 py-3 flex items-center gap-3 bg-background/95 backdrop-blur">
             <div className="w-10 h-10 rounded-full bg-dark flex items-center justify-center shrink-0">
-              <img src={logo} alt="" className="w-7 h-7 object-contain" />
+              <img decoding="async" loading="lazy" src={logo} alt="" className="w-7 h-7 object-contain" />
             </div>
             <div className="flex-1 min-w-0">
               <h1 className="font-semibold text-sm md:text-base flex items-center gap-2">
@@ -302,7 +302,7 @@ export default function Assistant() {
               <div key={m.id} className={`flex gap-3 ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                 {m.role === 'assistant' && (
                   <div className="w-8 h-8 rounded-full bg-dark flex items-center justify-center shrink-0">
-                    <img src={logo} alt="" className="w-6 h-6 object-contain" />
+                    <img decoding="async" loading="lazy" src={logo} alt="" className="w-6 h-6 object-contain" />
                   </div>
                 )}
                 <div className={`max-w-[80%] ${m.role === 'user' ? 'order-1' : ''}`}>

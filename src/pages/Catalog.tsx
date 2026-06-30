@@ -55,7 +55,7 @@ export default function Catalog() {
       <div className="catalog-page mx-auto max-w-[860px] px-10 py-12">
         {/* Cover */}
         <section className="catalog-cover text-center pb-12 border-b-2 border-emerald-800">
-          <img src={logo} alt="Palm Charcoal" className="w-32 h-32 mx-auto mb-6 object-contain" />
+          <img decoding="async" loading="lazy" src={logo} alt="Palm Charcoal" className="w-32 h-32 mx-auto mb-6 object-contain" />
           <h1 className="text-5xl font-bold text-emerald-900 mb-2">
             {isAr ? 'فحم النخلة' : 'Palm Charcoal'}
           </h1>
@@ -103,7 +103,7 @@ export default function Catalog() {
               </div>
 
               <div className="grid grid-cols-2 gap-6">
-                <img
+                <img decoding="async" loading="lazy"
                   src={p.image}
                   alt={p.nameEn}
                   className="w-full h-48 object-cover rounded border border-stone-200"

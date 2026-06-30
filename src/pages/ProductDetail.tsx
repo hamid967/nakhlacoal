@@ -104,7 +104,7 @@ export default function ProductDetail() {
             <ScrollReveal>
               <div className="relative rounded-3xl overflow-hidden border-luxe-strong shimmer-card aspect-square section-dark">
                 <div className="absolute inset-0 ember-glow opacity-40 pointer-events-none" />
-                <img src={product.image} alt={name} className="relative w-full h-full object-cover" width={1280} height={1280} />
+                <img decoding="async" loading="lazy" src={product.image} alt={name} className="relative w-full h-full object-cover" width={1280} height={1280} />
               </div>
             </ScrollReveal>
 
@@ -238,7 +238,7 @@ export default function ProductDetail() {
                 <ScrollReveal key={p.slug} delay={i * 80}>
                   <Link to={`/products/${p.slug}`} className="group block rounded-2xl bg-surface border-luxe hover:border-luxe-strong transition-all duration-500 overflow-hidden h-full">
                     <div className="aspect-[4/3] overflow-hidden">
-                      <img src={p.image} alt={rName} loading="lazy" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
+                      <img decoding="async" src={p.image} alt={rName} loading="lazy" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
                     </div>
                     <div className="p-5 text-center">
                       <h3 className="text-xl mb-2 font-arabic font-bold text-gold-hi">{rName}</h3>

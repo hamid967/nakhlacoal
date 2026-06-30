@@ -36,7 +36,7 @@ export default function PortalCatalog() {
         {filtered.map((p) => (
           <div key={p.slug} className="a-card a-card-hover overflow-hidden">
             <div className="aspect-[4/3] relative">
-              <img src={p.image} alt={p.nameAr} className="w-full h-full object-cover" />
+              <img decoding="async" loading="lazy" src={p.image} alt={p.nameAr} className="w-full h-full object-cover" />
               <button
                 onClick={() => toggleFav(p.slug)}
                 className="absolute top-3 end-3 w-9 h-9 rounded-full grid place-items-center backdrop-blur"

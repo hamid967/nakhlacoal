@@ -380,7 +380,7 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
           aria-label="آخر رسالة من المساعد"
         >
           <div className="flex items-center gap-1.5 mb-1 text-[10px] text-muted-foreground">
-            <img src={logo} alt="" className="w-3 h-3 object-contain" />
+            <img decoding="async" loading="lazy" src={logo} alt="" className="w-3 h-3 object-contain" />
             مساعد فحم النخلة
           </div>
           <p className="line-clamp-2 leading-snug">{preview}{preview && preview.length >= 90 ? '…' : ''}</p>
@@ -398,7 +398,7 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
       {/* Header */}
       <header className="flex items-center gap-2 px-3 py-2.5 border-b border-gold/20 bg-dark text-cream">
         <div className="w-8 h-8 rounded-full bg-background/10 flex items-center justify-center">
-          <img src={logo} alt="" className="w-6 h-6 object-contain" />
+          <img decoding="async" loading="lazy" src={logo} alt="" className="w-6 h-6 object-contain" />
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-sm font-semibold flex items-center gap-1.5 font-arabic">
@@ -462,7 +462,7 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
           <div key={m.id} className={`flex gap-2 ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
             {m.role === 'assistant' && (
               <div className="w-6 h-6 rounded-full bg-dark flex items-center justify-center shrink-0">
-                <img src={logo} alt="" className="w-4 h-4 object-contain" />
+                <img decoding="async" loading="lazy" src={logo} alt="" className="w-4 h-4 object-contain" />
               </div>
             )}
             <div className="max-w-[85%]">

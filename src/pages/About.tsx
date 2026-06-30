@@ -116,7 +116,7 @@ export default function About() {
                 className="glass-card group block p-5 rounded-2xl hover:border-gold/60 transition-all duration-500 h-full text-center"
               >
                 <div className="aspect-square mb-4 rounded-xl bg-surface/50 overflow-hidden flex items-center justify-center p-3">
-                  <img src={tm.image} alt={tm.nameAr} loading="lazy" className="max-w-full max-h-full object-contain transition-transform duration-700 group-hover:scale-105" />
+                  <img decoding="async" src={tm.image} alt={tm.nameAr} loading="lazy" className="max-w-full max-h-full object-contain transition-transform duration-700 group-hover:scale-105" />
                 </div>
                 <h3 className="text-sm font-arabic font-bold text-gold-hi mb-1">{tm.nameAr}</h3>
                 <p className="text-[10px] text-foreground/50 mb-2">{tm.nameEn}</p>

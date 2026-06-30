@@ -93,7 +93,7 @@ export function LuxNav() {
           <Link to="/" className="group flex items-center gap-3 shrink-0" aria-label="Palm Charcoal">
             <span className="relative">
               <span className="absolute inset-0 rounded-full bg-gold/25 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-              <img
+              <img decoding="async" loading="lazy"
                 src={logo}
                 alt="فحم النخلة Palm Charcoal"
                 width={56}
@@ -271,7 +271,7 @@ export function LuxNav() {
 
         >
           <div className="flex items-center justify-between mb-10">
-            <img src={logo} alt="Palm Charcoal" width={48} height={48} className="h-12 w-auto" />
+            <img decoding="async" loading="lazy" src={logo} alt="Palm Charcoal" width={48} height={48} className="h-12 w-auto" />
             <button
               className="w-11 h-11 rounded-full border-luxe flex items-center justify-center text-gold"
               onClick={() => setOpen(false)}
