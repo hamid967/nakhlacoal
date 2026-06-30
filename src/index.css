@@ -215,6 +215,31 @@
 }
 
 @layer components {
+  /* Basic-style editorial primitives — unified across components */
+  .eyebrow {
+    font-family: 'Karla', system-ui, sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: hsl(var(--foreground) / 0.55);
+  }
+  html[dir="rtl"] .eyebrow { font-family: 'Tajawal', system-ui, sans-serif; letter-spacing: 0.18em; }
+
+  .lead {
+    font-size: clamp(1.0625rem, 1.4vw, 1.25rem);
+    line-height: 1.65;
+    color: hsl(var(--foreground) / 0.78);
+    max-width: 62ch;
+    font-weight: 400;
+  }
+
+  /* Unify button typography across shadcn variants */
+  button, .btn, [role="button"] {
+    letter-spacing: 0.02em;
+  }
+  html[dir="rtl"] button, html[dir="rtl"] .btn { letter-spacing: 0; }
+
   /* Olive metallic text */
   .text-gold-metal {
     background: var(--gradient-gold);
