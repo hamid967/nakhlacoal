@@ -85,13 +85,14 @@ export default function AdminTrademarks() {
 
   return (
     <div className="p-6 space-y-6">
-      <div className="flex items-center justify-between gap-3">
+      <header className="a-page-header">
         <div>
-          <h1 className="text-2xl font-bold">إدارة العلامات التجارية</h1>
-          <p className="text-sm text-foreground/60 mt-1">التحديثات تنعكس مباشرة عبر Realtime</p>
+          <p className="a-crumbs">الإدارة · العلامات التجارية</p>
+          <h1>إدارة العلامات التجارية</h1>
+          <p>التحديثات تنعكس مباشرة عبر Realtime.</p>
         </div>
         <Button onClick={openNew} className="gap-2"><Plus className="w-4 h-4" /> علامة جديدة</Button>
-      </div>
+      </header>
 
       <div className="rounded-xl border border-border overflow-hidden bg-card">
         <table className="w-full text-sm">
