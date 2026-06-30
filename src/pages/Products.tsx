@@ -8,6 +8,61 @@ import { PageIntro } from '@/components/ui-lux';
 import { products, type ProductCategory, type ProductUseCase } from '@/data/products';
 import { CompareToggle } from '@/components/CompareToggle';
 import { ProductRecommender } from '@/components/ProductRecommender';
+import { useTilt } from '@/hooks/useTilt';
+
+type ProductCardProps = {
+  p: typeof products[number];
+  i: number;
+  total: number;
+  isAr: boolean;
+  Arrow: typeof ArrowRight;
+};
+
+function ProductCard({ p, i, total, isAr, Arrow }: ProductCardProps) {
+  const tilt = useTilt<HTMLAnchorElement>(5);
+  const name = isAr ? p.nameAr : p.nameEn;
+  const tagline = isAr ? p.taglineAr : p.taglineEn;
+  return (
+    <>
+      <Link
+        ref={tilt.ref}
+        onPointerMove={tilt.onPointerMove}
+        onPointerLeave={tilt.onPointerLeave}
+        to={`/products/${p.slug}`}
+        className="group block clay-card overflow-hidden h-full"
+      >
+        <div className="aspect-[5/4] overflow-hidden rounded-t-[20px]">
+          <img
+            src={p.image}
+            alt={name}
+            loading="lazy"
+            className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+          />
+        </div>
+        <div className="p-6">
+          <div className="text-[10px] uppercase tracking-[0.3em] text-gold mb-2">
+            0{i + 1} / 0{total}
+          </div>
+          <h3 className={`mb-2 ${isAr ? 'font-arabic font-bold' : 'font-display'} text-gold-hi`}>
+            {name}
+          </h3>
+          <p className="text-sm text-foreground/65 mb-5 leading-relaxed">{tagline}</p>
+          <div className="flex justify-between items-center pt-4 border-t border-gold/10 text-xs">
+            <span className="text-foreground/55">
+              {isAr ? 'كربون' : 'Carbon'} <span className="text-gold-hi font-bold">{p.specs.carbon}</span>
+            </span>
+            <span className="inline-flex items-center gap-2 uppercase tracking-[0.2em] text-gold-hi">
+              {isAr ? 'التفاصيل' : 'Details'} <Arrow className="w-3.5 h-3.5" />
+            </span>
+          </div>
+        </div>
+      </Link>
+      <div className="px-6 pb-5 -mt-2">
+        <CompareToggle slug={p.slug} className="w-full justify-center" />
+      </div>
+    </>
+  );
+}
 
 const CATEGORIES: { value: ProductCategory | 'all'; ar: string; en: string }[] = [
   { value: 'all', ar: 'الكل', en: 'All' },
