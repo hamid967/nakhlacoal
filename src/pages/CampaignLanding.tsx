@@ -2,7 +2,7 @@ import { useParams, Link, Navigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useEffect } from 'react';
 import { brand } from '@/lib/brand';
-import { track } from '@/lib/track';
+import { trackConversion as track } from '@/lib/track';
 
 type Campaign = {
   slug: 'grill' | 'shisha' | 'wholesale';
