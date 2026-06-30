@@ -172,9 +172,9 @@ export function BrandHero() {
         </motion.div>
 
 
-        {/* RIGHT — floating glass cards on podium */}
+        {/* Full-width prominent trademarks slider (replaces the previous small side cluster) */}
         <div
-          className="lg:col-span-7 relative h-[460px] sm:h-[520px] md:h-[560px]"
+          className="w-full max-w-5xl relative h-[420px] sm:h-[500px] md:h-[580px] rounded-3xl border border-[hsl(var(--gold))]/40 bg-[hsl(var(--background))]/40 backdrop-blur-sm shadow-[0_30px_80px_-30px_hsl(var(--gold)/0.35)]"
           style={{ perspective: '1800px' }}
           role="region"
           aria-roledescription={isAr ? 'دائرة عرض' : 'carousel'}
