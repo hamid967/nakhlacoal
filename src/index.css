@@ -259,11 +259,37 @@
     font-weight: 400;
   }
 
+  /* Basic-style section rhythm — replaces ad-hoc py-14 md:py-20 */
+  .section        { padding-block: clamp(4.5rem, 9vw, 9rem); }
+  .section-tight  { padding-block: clamp(3rem,  6vw, 5.5rem); }
+  .section-hero   { padding-block: clamp(6rem,  12vw, 12rem); }
+
+  /* Editorial hairline divider */
+  .rule {
+    height: 1px;
+    background: linear-gradient(to right, transparent, hsl(var(--foreground) / 0.18), transparent);
+  }
+  .rule-gold {
+    height: 1px;
+    background: linear-gradient(to right, transparent, hsl(var(--gold) / 0.45), transparent);
+  }
+
+  /* Editorial paragraph block — Basic-style measure + leading */
+  .prose-basic {
+    max-width: 64ch;
+    font-size: clamp(1rem, 0.95rem + 0.2vw, 1.0625rem);
+    line-height: 1.78;
+    color: hsl(var(--foreground) / 0.82);
+  }
+  .prose-basic > * + * { margin-top: 1.25em; }
+  html[dir="rtl"] .prose-basic { line-height: 1.95; max-width: 62ch; }
+
   /* Unify button typography across shadcn variants */
   button, .btn, [role="button"] {
     letter-spacing: 0.02em;
   }
   html[dir="rtl"] button, html[dir="rtl"] .btn { letter-spacing: 0; }
+
 
   /* Olive metallic text */
   .text-gold-metal {
