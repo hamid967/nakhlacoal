@@ -622,6 +622,70 @@
     box-shadow: 0 0 10px hsl(var(--gold-hi));
   }
 
+  /* ============================================================
+     Lux Emerald Nav — selected direction (Floating Emerald Glass)
+     ============================================================ */
+  .lux-emerald-nav {
+    background: hsl(var(--dark) / 0.95);
+    border-bottom: 2px solid hsl(var(--gold));
+    backdrop-filter: blur(14px) saturate(1.3);
+    -webkit-backdrop-filter: blur(14px) saturate(1.3);
+    box-shadow: 0 20px 50px -28px hsl(158 78% 6% / 0.55);
+    color: hsl(var(--background));
+  }
+  .lux-emerald-wordmark {
+    font-family: 'Cormorant Garamond', 'Tajawal', serif;
+    color: hsl(var(--gold-hi));
+    letter-spacing: -0.01em;
+    line-height: 1;
+  }
+  .lux-emerald-link {
+    @apply relative inline-flex items-center text-[13px] xl:text-sm font-medium tracking-wide whitespace-nowrap py-2 transition-colors duration-300;
+    color: hsl(46 47% 92% / 0.85);
+  }
+  .lux-emerald-link::after {
+    content: '';
+    position: absolute;
+    inset-inline-end: 0;
+    bottom: -2px;
+    height: 2px;
+    width: 0;
+    background: hsl(var(--gold-hi));
+    transition: width 300ms ease;
+  }
+  .lux-emerald-link:hover,
+  .lux-emerald-link[data-active="true"] {
+    color: hsl(var(--gold-hi));
+  }
+  .lux-emerald-link:hover::after,
+  .lux-emerald-link[data-active="true"]::after {
+    width: 100%;
+  }
+  .lux-emerald-cta {
+    @apply relative inline-flex items-center justify-center px-7 xl:px-8 py-2.5 text-xs xl:text-sm font-bold tracking-wide overflow-hidden;
+    border: 1px solid hsl(var(--gold));
+    color: hsl(var(--gold-hi));
+    background: transparent;
+    transition: color 500ms ease;
+  }
+  .lux-emerald-cta > .lux-cta-fill {
+    position: absolute;
+    inset: 0;
+    background: hsl(var(--gold));
+    transform: translateX(-100%);
+    transition: transform 500ms ease;
+    z-index: 0;
+  }
+  [dir="rtl"] .lux-emerald-cta > .lux-cta-fill { transform: translateX(100%); }
+  .lux-emerald-cta:hover > .lux-cta-fill { transform: translateX(0); }
+  .lux-emerald-cta:hover { color: hsl(var(--dark)); }
+  .lux-emerald-cta > .lux-cta-label { position: relative; z-index: 1; }
+  .lux-emerald-icon-btn {
+    @apply inline-flex items-center justify-center w-10 h-10 rounded-full transition-colors duration-300;
+    color: hsl(46 47% 92% / 0.75);
+  }
+  .lux-emerald-icon-btn:hover { color: hsl(var(--gold-hi)); background: hsl(var(--gold) / 0.1); }
+
   /* Dark accent section (why-us, hero panel, about, footer) */
   .section-dark {
     background: hsl(var(--dark));
