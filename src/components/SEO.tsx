@@ -57,7 +57,7 @@ export function SEO({ title, description, path, jsonLd, noindex = false, image, 
           {...(p.type ? { type: p.type } : {})}
           {...(p.imageSrcSet ? { imagesrcset: p.imageSrcSet } : {})}
           {...(p.imageSizes ? { imagesizes: p.imageSizes } : {})}
-          {...(p.fetchPriority ? { fetchPriority: p.fetchPriority } : {})}
+          {...(p.fetchPriority ? ({ fetchpriority: p.fetchPriority } as any) : {})}
         />
       ))}
     </Helmet>
