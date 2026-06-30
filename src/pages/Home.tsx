@@ -165,7 +165,7 @@ export default function Home() {
       <SectionDivider flip />
 
       {/* Products — move higher for conversion */}
-      <LuxSection tone="surface" className="section">
+      <LuxSection id="products" tone="surface" className="section scroll-mt-24">
         <div className="container"><SectionNumber index={3} /></div>
         <SectionHeader
           align="between"
@@ -184,11 +184,9 @@ export default function Home() {
 
       <SectionDivider />
 
-
-
+      {/* Unified brand timeline — merges Process + Journey, anchored to #hero and #products */}
       <Suspense fallback={<SectionSkeleton variant="timeline" />}>
-        <ProcessSection />
-        <JourneySection />
+        <BrandTimeline />
       </Suspense>
 
 
