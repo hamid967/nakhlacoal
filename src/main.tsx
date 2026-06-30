@@ -11,9 +11,6 @@ import "@fontsource/karla/300.css";
 import "@fontsource/karla/400.css";
 import "@fontsource/karla/500.css";
 import "@fontsource/karla/700.css";
-import "@fontsource/tajawal/400.css";
-import "@fontsource/tajawal/500.css";
-import "@fontsource/tajawal/700.css";
 
 import "./i18n";
 import App from "./App.tsx";
