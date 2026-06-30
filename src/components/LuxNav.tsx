@@ -300,7 +300,10 @@ export function LuxNav() {
                       <li key={col.to}>
                         <NavLink
                           to={col.to}
-                          className="block py-2 text-xs text-foreground/60 hover:text-gold-ink font-arabic"
+                          end
+                          className={({ isActive }) =>
+                            `block py-2 text-xs font-arabic transition-colors ${isActive ? 'text-gold-hi' : 'text-foreground/60 hover:text-gold-ink'}`
+                          }
                         >
                           • {isAr ? col.titleAr : col.titleEn}
                         </NavLink>
