@@ -129,6 +129,20 @@ export default function Catalog() {
                 ))}
               </div>
 
+              {inv && (
+                <div className="mt-3 flex flex-wrap gap-2 text-[11px]">
+                  <span className="bg-amber-50 border border-amber-200 text-amber-900 px-2 py-1 rounded">
+                    {isAr ? 'الحد الأدنى للطلب' : 'MOQ'}: {inv.minOrderKg} {isAr ? 'كجم' : 'kg'}
+                  </span>
+                  <span className="bg-emerald-50 border border-emerald-200 text-emerald-900 px-2 py-1 rounded">
+                    {isAr ? 'مدة التجهيز' : 'Lead time'}: {inv.leadDays} {isAr ? 'يوم' : 'days'}
+                  </span>
+                  <span className="bg-stone-50 border border-stone-200 text-stone-700 px-2 py-1 rounded">
+                    {isAr ? 'متوفر' : 'In stock'}: {inv.inStockKg.toLocaleString()} {isAr ? 'كجم' : 'kg'}
+                  </span>
+                </div>
+              )}
+
               {tiers && (
                 <div className="mt-4">
                   <h4 className="text-sm font-semibold text-emerald-900 mb-2">
