@@ -139,7 +139,12 @@ export default function AdminOrders() {
               {loading && <tr><td colSpan={7} className="text-center py-10" style={{ color: 'var(--a-text-muted)' }}>جاري التحميل…</td></tr>}
               {!loading && !filtered.length && <tr><td colSpan={7} className="text-center py-10" style={{ color: 'var(--a-text-muted)' }}>لا توجد نتائج</td></tr>}
               {pageRows.map((o) => (
-                <tr key={o.id} className="a-fade-up">
+                <tr
+                  key={o.id}
+                  className="a-fade-up cursor-pointer"
+                  onClick={() => setActive(o)}
+                  data-active={active?.id === o.id}
+                >
                   <td>
                     <div className="font-semibold">#{o.id.slice(0, 8)}</div>
                     <div className="text-[11px]" style={{ color: 'var(--a-text-muted)' }}>{o.business_type || '—'}</div>
@@ -150,7 +155,7 @@ export default function AdminOrders() {
                   </td>
                   <td>{o.product_type}</td>
                   <td>{o.quantity} {o.unit}</td>
-                  <td>
+                  <td onClick={(e) => e.stopPropagation()}>
                     <select value={o.status} onChange={(e) => update(o.id, { status: e.target.value })}
                       className={`a-pill ${TINT[o.status] || ''}`} style={{ paddingInlineEnd: 20 }}>
                       {STATUSES.map((s) => <option key={s} value={s}>{LABEL[s]}</option>)}
@@ -159,8 +164,8 @@ export default function AdminOrders() {
                   <td className="text-xs" style={{ color: 'var(--a-text-muted)' }}>
                     {new Date(o.created_at).toLocaleDateString('ar-SA', { dateStyle: 'medium' })}
                   </td>
-                  <td>
-                    <button onClick={() => setActive(o)} className="a-btn a-btn-ghost py-1 px-2">
+                  <td onClick={(e) => e.stopPropagation()}>
+                    <button onClick={() => setActive(o)} className="a-btn a-btn-ghost py-1 px-2" aria-label="عرض التفاصيل">
                       <Eye className="w-4 h-4" />
                     </button>
                   </td>
@@ -182,49 +187,71 @@ export default function AdminOrders() {
 
 
       <AnimatePresence>
-        {active && (
-          <>
-            <motion.div className="fixed inset-0 bg-black/30 z-40"
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              onClick={() => setActive(null)} />
-            <motion.aside className="fixed inset-y-0 end-0 w-full max-w-md a-glass z-50 overflow-y-auto a-scroll p-6"
-              initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}
-              transition={{ type: 'spring', stiffness: 280, damping: 30 }}
-              style={{ background: 'var(--a-surface)' }}>
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <div className="text-[11px] tracking-widest" style={{ color: 'var(--a-text-muted)' }}>ORDER</div>
-                  <div className="a-display text-2xl">#{active.id.slice(0, 8)}</div>
+        {active && (() => {
+          const live = orders.find((o) => o.id === active.id) || active;
+          return (
+            <>
+              <motion.div className="fixed inset-0 bg-black/30 z-40"
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                onClick={() => setActive(null)} />
+              <motion.aside className="fixed inset-y-0 end-0 w-full max-w-md a-glass z-50 overflow-y-auto a-scroll p-6"
+                initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}
+                transition={{ type: 'spring', stiffness: 280, damping: 30 }}
+                style={{ background: 'var(--a-surface)' }}>
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <div className="text-[11px] tracking-widest" style={{ color: 'var(--a-text-muted)' }}>ORDER</div>
+                    <div className="a-display text-2xl">#{live.id.slice(0, 8)}</div>
+                  </div>
+                  <button onClick={() => setActive(null)} className="a-btn a-btn-ghost p-2" aria-label="إغلاق"><X className="w-4 h-4" /></button>
                 </div>
-                <button onClick={() => setActive(null)} className="a-btn a-btn-ghost p-2"><X className="w-4 h-4" /></button>
-              </div>
 
-              <div className="space-y-4 text-sm">
-                <Section title="العميل">
-                  <div className="font-semibold">{active.company_name}</div>
-                  <div>{active.contact_name}</div>
-                  <a href={`tel:${active.phone}`} className="flex items-center gap-2 text-[13px]" style={{ color: 'var(--a-palm)' }}>
-                    <Phone className="w-3.5 h-3.5" /> {active.phone}
-                  </a>
-                  {active.email && <a href={`mailto:${active.email}`} className="flex items-center gap-2 text-[13px]" style={{ color: 'var(--a-palm)' }}>
-                    <Mail className="w-3.5 h-3.5" /> {active.email}
-                  </a>}
-                </Section>
-                <Section title="المنتج">
-                  <div className="flex items-center justify-between"><span>{active.product_type}</span><b>{active.quantity} {active.unit}</b></div>
-                </Section>
-                {(active.city || active.address) && <Section title="الموقع">
-                  <div className="flex items-center gap-2"><MapPin className="w-3.5 h-3.5" /> {[active.city, active.address].filter(Boolean).join(' — ')}</div>
-                </Section>}
-                {active.delivery_date && <Section title="موعد التسليم">
-                  <div className="flex items-center gap-2"><Calendar className="w-3.5 h-3.5" /> {active.delivery_date}</div>
-                </Section>}
-                {active.notes && <Section title="ملاحظات"><p className="text-[13px]">{active.notes}</p></Section>}
-                {active.ai_summary && <Section title="ملخص AI"><p className="italic text-[13px]">"{active.ai_summary}"</p></Section>}
-              </div>
-            </motion.aside>
-          </>
-        )}
+                <div className="space-y-4 text-sm">
+                  <Section title="الحالة">
+                    <div className="flex flex-wrap gap-1.5">
+                      {STATUSES.map((s) => (
+                        <button key={s} onClick={() => update(live.id, { status: s })}
+                          className={`a-pill ${live.status === s ? TINT[s] : ''}`}
+                          style={live.status !== s ? { opacity: .6 } : undefined}>
+                          {LABEL[s]}
+                        </button>
+                      ))}
+                    </div>
+                  </Section>
+
+                  <Section title="العميل">
+                    <div className="font-semibold">{live.company_name}</div>
+                    <div>{live.contact_name}</div>
+                    <a href={`tel:${live.phone}`} className="flex items-center gap-2 text-[13px]" style={{ color: 'var(--a-palm)' }}>
+                      <Phone className="w-3.5 h-3.5" /> {live.phone}
+                    </a>
+                    {live.email && <a href={`mailto:${live.email}`} className="flex items-center gap-2 text-[13px]" style={{ color: 'var(--a-palm)' }}>
+                      <Mail className="w-3.5 h-3.5" /> {live.email}
+                    </a>}
+                  </Section>
+
+                  <Section title="المنتج">
+                    <div className="flex items-center justify-between"><span>{live.product_type}</span><b>{live.quantity} {live.unit}</b></div>
+                  </Section>
+
+                  {(live.city || live.address) && <Section title="الموقع">
+                    <div className="flex items-center gap-2"><MapPin className="w-3.5 h-3.5" /> {[live.city, live.address].filter(Boolean).join(' — ')}</div>
+                  </Section>}
+
+                  {live.delivery_date && <Section title="موعد التسليم">
+                    <div className="flex items-center gap-2"><Calendar className="w-3.5 h-3.5" /> {live.delivery_date}</div>
+                  </Section>}
+
+                  <Section title="ملاحظات داخلية">
+                    <NotesEditor key={live.id} initial={live.notes || ''} onSave={(v) => update(live.id, { notes: v })} />
+                  </Section>
+
+                  {live.ai_summary && <Section title="ملخص AI"><p className="italic text-[13px]">"{live.ai_summary}"</p></Section>}
+                </div>
+              </motion.aside>
+            </>
+          );
+        })()}
       </AnimatePresence>
     </div>
   );
@@ -235,6 +262,33 @@ function Section({ title, children }: { title: string; children: React.ReactNode
     <div className="a-card p-4" style={{ background: 'var(--a-surface-2)' }}>
       <div className="text-[10px] tracking-widest mb-1.5" style={{ color: 'var(--a-text-muted)' }}>{title.toUpperCase()}</div>
       {children}
+    </div>
+  );
+}
+
+function NotesEditor({ initial, onSave }: { initial: string; onSave: (v: string) => void }) {
+  const [val, setVal] = useState(initial);
+  const dirty = val !== initial;
+  return (
+    <div className="space-y-2">
+      <textarea
+        value={val}
+        onChange={(e) => setVal(e.target.value)}
+        rows={3}
+        className="a-input"
+        placeholder="أضف ملاحظة داخلية حول الطلب…"
+      />
+      <div className="flex justify-end">
+        <button
+          type="button"
+          disabled={!dirty}
+          onClick={() => onSave(val)}
+          className="a-btn a-btn-palm"
+          style={!dirty ? { opacity: .5, cursor: 'not-allowed' } : undefined}
+        >
+          حفظ
+        </button>
+      </div>
     </div>
   );
 }
