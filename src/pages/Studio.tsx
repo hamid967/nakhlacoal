@@ -102,7 +102,11 @@ export default function Studio() {
       }
       if (mode === "image" || mode === "both") {
         const r = await callAi("image");
-        newImage = r.image ?? null;
+        const url = r.image ?? null;
+        // Validate the returned image is a usable data URL / http URL before showing it
+        const isValid = !!url && (/^data:image\/[a-z+]+;base64,[A-Za-z0-9+/=]+$/i.test(url) || /^https?:\/\//.test(url));
+        if (!isValid) throw new Error(isAr ? "تعذّر توليد صورة صالحة" : "Image generation returned no valid data");
+        newImage = url;
         setImage(newImage);
       }
       const entry: Entry = {
