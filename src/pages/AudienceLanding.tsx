@@ -61,15 +61,24 @@ export default function AudienceLanding() {
         <p className="text-lg text-muted-foreground max-w-3xl">{sub}</p>
 
         <div className="mt-8 flex flex-wrap gap-3">
-          <a
-            href={waHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => trackConversion('whatsapp_click', { source: `audience_${a.slug}` })}
-            className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-md font-semibold hover:opacity-90 transition"
-          >
-            <MessageCircle className="w-4 h-4" /> {cta}
-          </a>
+          {waHref ? (
+            <a
+              href={waHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackConversion('whatsapp_click', { source: `audience_${a.slug}` })}
+              className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-md font-semibold hover:opacity-90 transition"
+            >
+              <MessageCircle className="w-4 h-4" /> {cta}
+            </a>
+          ) : (
+            <Link
+              to="/contact"
+              className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-md font-semibold hover:opacity-90 transition"
+            >
+              <MessageCircle className="w-4 h-4" /> {cta}
+            </Link>
+          )}
           <Link
             to="/catalog"
             className="inline-flex items-center gap-2 border border-border px-6 py-3 rounded-md font-semibold hover:bg-muted transition"
