@@ -129,11 +129,11 @@ export default function AdminInvoices() {
 
   return (
     <div className="space-y-5">
-      <header className="flex flex-wrap items-end justify-between gap-3">
+      <header className="a-page-header">
         <div>
-          <p className="text-[11px] tracking-[0.3em]" style={{ color: 'var(--a-text-muted)' }}>FINANCE</p>
-          <h1 className="a-display text-4xl mt-1">الفواتير</h1>
-          <p className="text-sm" style={{ color: 'var(--a-text-muted)' }}>
+          <p className="a-crumbs">FINANCE</p>
+          <h1>الفواتير</h1>
+          <p>
             {rows.length} فاتورة · متوافقة مع ZATCA المرحلة الأولى
           </p>
         </div>
