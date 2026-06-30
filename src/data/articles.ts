@@ -11,9 +11,11 @@ export type Article = {
   readMin: number;
   category: string;
   keywords: string[];
+  image?: string;
   contentAr?: { h: string; p: string }[];
   contentEn?: { h: string; p: string }[];
 };
+
 
 export const articles: Article[] = [
   {
