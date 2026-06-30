@@ -33,6 +33,13 @@ export default function AudienceLanding() {
     '';
   const waHref = waBase ? `${waBase}?text=${prefill}` : '';
 
+  if (import.meta.env.DEV && !waBase) {
+    // eslint-disable-next-line no-console
+    console.warn(
+      `[AudienceLanding] Missing WhatsApp link for "/for/${a.slug}". Set brand.footer.whatsapp or brand.contact.whatsapp in src/lib/brand.ts.`
+    );
+  }
+
   const faqJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
@@ -59,6 +66,12 @@ export default function AudienceLanding() {
         </span>
         <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-4">{title}</h1>
         <p className="text-lg text-muted-foreground max-w-3xl">{sub}</p>
+
+        {import.meta.env.DEV && !waBase && (
+          <div className="mt-4 inline-block rounded border border-destructive/50 bg-destructive/10 px-3 py-1.5 text-xs text-destructive font-mono">
+            DEV: WhatsApp link missing — set brand.footer.whatsapp
+          </div>
+        )}
 
         <div className="mt-8 flex flex-wrap gap-3">
           {waHref && (
