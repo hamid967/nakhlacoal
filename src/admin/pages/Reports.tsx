@@ -108,19 +108,18 @@ export default function AdminReports() {
     <div className="space-y-5">
       <header className="a-page-header">
         <div>
-          <p className="a-crumbs">INTELLIGENCE</p>
+          <p className="a-crumbs">INTELLIGENCE · REPORTS</p>
           <h1>التقارير والتحليلات</h1>
-          <p className="text-sm mt-1" style={{ color: 'var(--a-text-muted)' }}>أداء فحم النخلة عبر الفترة المختارة.</p>
+          <p>رحلة المستخدم مع تقارير فحم النخلة عبر الفترة المختارة.</p>
         </div>
-        <div className="flex gap-1 p-1 rounded-full" style={{ background: 'var(--a-surface-2)', border: '1px solid var(--a-border)' }}>
+        <div className="a-segmented" role="tablist" aria-label="الفترة">
           {PERIODS.map((p) => (
             <button
               key={p.value}
+              role="tab"
+              aria-selected={days === p.value}
               onClick={() => setDays(p.value)}
-              className="px-4 py-1.5 rounded-full text-xs transition"
-              style={days === p.value
-                ? { background: 'var(--a-palm)', color: 'var(--a-on-palm, #fff)' }
-                : { color: 'var(--a-text)' }}
+              className={days === p.value ? 'is-active' : ''}
             >{p.label}</button>
           ))}
         </div>
