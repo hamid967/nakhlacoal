@@ -41,7 +41,7 @@ export default defineConfig(({ mode }) => ({
         manualChunks(id) {
           if (!id.includes('node_modules')) return;
           if (/[\\/]node_modules[\\/](three|@react-three)[\\/]/.test(id)) return 'three';
-          if (/[\\/]node_modules[\\/]recharts[\\/]/.test(id)) return 'charts';
+          if (/[\\/]node_modules[\\/](recharts|recharts-scale|react-smooth|victory-vendor|d3-[^/]+|lodash|eventemitter3|tiny-invariant|react-is)[\\/]/.test(id)) return 'charts';
           if (/[\\/]node_modules[\\/]swiper[\\/]/.test(id)) return 'swiper';
           if (/[\\/]node_modules[\\/]@supabase[\\/]/.test(id)) return 'supabase';
           if (/[\\/]node_modules[\\/](i18next|react-i18next)[\\/]/.test(id)) return 'i18n';
