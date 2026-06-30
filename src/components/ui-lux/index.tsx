@@ -215,15 +215,29 @@ export function ProductCard({
   index?: number;
 }) {
   const { isAr, Arrow } = useDir();
+  const tilt = useTilt<HTMLDivElement>(8);
   return (
     <ScrollReveal delay={index * 80}>
-      <Link to={to} className="group block">
-        <div className="clay-card aspect-[4/5] overflow-hidden rounded-2xl mb-4 relative !p-0">
+      <Link to={to} className="group block [perspective:1000px]">
+        <div
+          ref={tilt.ref}
+          onPointerMove={tilt.onPointerMove}
+          onPointerLeave={tilt.onPointerLeave}
+          className="clay-card aspect-[4/5] overflow-hidden rounded-2xl mb-4 relative !p-0 will-change-transform transition-transform duration-300 ease-out [transform-style:preserve-3d] [transform:rotateX(var(--rx,0deg))_rotateY(var(--ry,0deg))]"
+          style={{ transform: 'rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))' }}
+        >
           <img
             src={img}
             alt={typeof name === 'string' ? name : ''}
             loading="lazy"
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 [transform:translateZ(20px)]"
+          />
+          <div
+            className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
+            style={{
+              background:
+                'radial-gradient(circle at var(--mx,50%) var(--my,50%), hsl(var(--gold) / 0.18), transparent 55%)',
+            }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-dark/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
         </div>
