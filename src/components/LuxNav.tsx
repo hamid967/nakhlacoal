@@ -84,34 +84,37 @@ export function LuxNav() {
   return (
     <>
       <nav
-        className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 glass-strip ${
-          scrolled ? 'py-2 shadow-lg' : 'py-4'
+        className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 lux-emerald-nav ${
+          scrolled ? 'py-3' : 'py-5'
         }`}
         onMouseLeave={scheduleClose}
       >
         <div className="container flex items-center justify-between gap-6">
-          <Link to="/" className="group flex items-center gap-3" aria-label="Palm Charcoal">
+          <Link to="/" className="group flex items-center gap-3 shrink-0" aria-label="Palm Charcoal">
             <span className="relative">
-              <span className="absolute inset-0 rounded-full bg-gold/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+              <span className="absolute inset-0 rounded-full bg-gold/25 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
               <img
                 src={logo}
                 alt="فحم النخلة Palm Charcoal"
                 width={56}
                 height={56}
-                className={`relative w-auto transition-all duration-700 group-hover:scale-105 ${scrolled ? 'h-10 md:h-11' : 'h-12 md:h-14'}`}
+                className={`relative w-auto transition-all duration-700 group-hover:scale-105 ${scrolled ? 'h-9 md:h-10' : 'h-11 md:h-12'}`}
               />
+            </span>
+            <span className={`hidden sm:inline lux-emerald-wordmark font-bold transition-all duration-500 ${scrolled ? 'text-xl' : 'text-2xl xl:text-[1.65rem]'}`}>
+              فحم النخلة
             </span>
           </Link>
 
-          {/* Desktop nav — 6 items max */}
-          <ul className="hidden lg:flex flex-nowrap items-center gap-0.5 xl:gap-1 rounded-full px-2 py-1 glass-card">
+          {/* Desktop nav — gold underline links */}
+          <ul className="hidden lg:flex flex-nowrap items-center gap-7 xl:gap-10">
             {navItems.map((item) => {
               if (item.type === 'link') {
                 return (
                   <li key={item.to} onMouseEnter={() => setActiveMega(null)}>
                     <NavLink to={item.to} end={item.to === '/'} className="block">
                       {({ isActive }) => (
-                        <span className="nav-pill font-arabic" data-active={isActive}>
+                        <span className="lux-emerald-link font-arabic" data-active={isActive}>
                           {t(item.key)}
                         </span>
                       )}
@@ -134,7 +137,10 @@ export function LuxNav() {
                     onClick={() => setActiveMega(expanded ? null : item.key)}
                     className="block"
                   >
-                    <span className="nav-pill font-arabic inline-flex items-center gap-1" data-active={location.pathname.startsWith(item.to)}>
+                    <span
+                      className="lux-emerald-link font-arabic inline-flex items-center gap-1"
+                      data-active={location.pathname.startsWith(item.to) || expanded}
+                    >
                       {t(item.key)}
                       <ChevronDown className={`w-3 h-3 transition-transform ${expanded ? 'rotate-180' : ''}`} />
                     </span>
@@ -146,17 +152,20 @@ export function LuxNav() {
 
           <div className="flex items-center gap-1.5 md:gap-2">
             <AccountButton />
-            <button aria-label="Cart" className="hidden xl:inline-flex w-10 h-10 rounded-full items-center justify-center text-foreground/70 hover:text-dark hover:bg-gold/10 transition-all">
+            <button aria-label="Cart" className="hidden xl:inline-flex lux-emerald-icon-btn">
               <ShoppingCart className="w-4 h-4" />
             </button>
             <ThemeToggle />
             <LanguageToggle compact />
-            {/* Unified single primary CTA */}
-            <button onClick={() => setOrderOpen(true)} className="hidden md:inline-flex btn-gold !px-4 xl:!px-5 !py-2 xl:!py-2.5 text-xs !rounded-full whitespace-nowrap min-h-11">
-              {t('nav.order')}
+            <button
+              onClick={() => setOrderOpen(true)}
+              className="hidden md:inline-flex lux-emerald-cta font-arabic whitespace-nowrap"
+            >
+              <span className="lux-cta-fill" aria-hidden="true" />
+              <span className="lux-cta-label">{t('nav.order')}</span>
             </button>
             <button
-              className="lg:hidden w-11 h-11 rounded-full border-luxe flex items-center justify-center text-dark hover:bg-gold/10 transition-colors"
+              className="lg:hidden lux-emerald-icon-btn w-11 h-11"
               onClick={() => setOpen(true)}
               aria-label="Open menu"
             >
