@@ -4,10 +4,11 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Trash2, Plus, MessageCircle, Mail, FileText } from 'lucide-react';
+import { Trash2, Plus, MessageCircle, Mail, FileText, Download } from 'lucide-react';
 import { products } from '@/data/products';
 import { PRICING, VAT_RATE, bestPrice, availableUnits } from '@/data/pricing';
 import { saveQuote } from '@/lib/quoteStore';
+import { exportQuoteToPdf } from '@/lib/exportQuotePdf';
 import { toast } from 'sonner';
 
 const WHATSAPP_NUMBER = '966540060095';
@@ -187,6 +188,29 @@ export function QuoteForm({ initialSlug, compact = false }: { initialSlug?: stri
         </Button>
         <Button onClick={sendEmail} variant="outline" className="flex-1">
           <Mail className="size-4 ms-1" /> إرسال عبر البريد
+        </Button>
+        <Button
+          onClick={async () => {
+            if (!validate()) return;
+            try {
+              toast.loading('جارٍ إنشاء ملف PDF…', { id: 'pdf' });
+              await exportQuoteToPdf({
+                customer: { ...customer },
+                items: computed.items.map((i) => ({ slug: i.slug, qty: i.qty, unit: i.unit, unitPrice: i.unitPrice, lineTotal: i.lineTotal })),
+                subtotal: computed.subtotal,
+                vat: computed.vat,
+                total: computed.total,
+                createdAt: Date.now(),
+              });
+              toast.success('تم تنزيل ملف PDF', { id: 'pdf' });
+            } catch {
+              toast.error('تعذّر إنشاء الملف', { id: 'pdf' });
+            }
+          }}
+          variant="outline"
+          className="flex-1 border-gold/40 text-gold hover:bg-gold/10"
+        >
+          <Download className="size-4 ms-1" /> تصدير PDF
         </Button>
       </div>
     </div>
