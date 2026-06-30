@@ -304,7 +304,7 @@ function AccountButton() {
       <Link
         to="/auth"
         aria-label={isAr ? 'تسجيل الدخول' : 'Sign in'}
-        className="hidden md:inline-flex w-11 h-11 rounded-full items-center justify-center text-foreground/70 hover:text-gold-ink focus-visible:text-gold-ink transition-colors"
+        className="hidden md:inline-flex lux-emerald-icon-btn w-11 h-11"
       >
         <User className="w-4 h-4" />
       </Link>
@@ -316,14 +316,14 @@ function AccountButton() {
         to="/profile"
         aria-label={isAr ? 'الملف الشخصي' : 'Profile'}
         title={user.email ?? ''}
-        className="w-11 h-11 rounded-full inline-flex items-center justify-center text-foreground/70 hover:text-gold-ink focus-visible:text-gold-ink transition-colors"
+        className="lux-emerald-icon-btn w-11 h-11"
       >
         <User className="w-4 h-4" />
       </Link>
       <button
         onClick={signOut}
         aria-label={isAr ? 'تسجيل الخروج' : 'Sign out'}
-        className="w-11 h-11 rounded-full inline-flex items-center justify-center text-foreground/70 hover:text-gold-ink focus-visible:text-gold-ink transition-colors"
+        className="lux-emerald-icon-btn w-11 h-11"
       >
         <LogOut className="w-4 h-4" />
       </button>
