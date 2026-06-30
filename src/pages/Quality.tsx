@@ -13,6 +13,8 @@ import { SectionHeader, Stat } from '@/components/ui-lux';
 import { SectionSkeleton } from '@/components/SectionSkeleton';
 import { trademarks } from '@/data/trademarks';
 import { useLiveLabReport } from '@/hooks/useLiveLabReport';
+import { hasWebGL } from '@/lib/hasWebGL';
+import { WebGLBoundary } from '@/components/WebGLBoundary';
 
 const CinematicGallery = lazy(() => import('./quality/CinematicGallery'));
 const QualityCharts = lazy(() => import('./quality/QualityCharts'));
@@ -340,9 +342,23 @@ export default function Quality() {
       <section className="section bg-gradient-to-b from-background via-surface-2/50 to-background">
         <div className="container">
           <SectionTitle eyebrow="فحص المنتج ثلاثي الأبعاد" title="اسحب لتدوير المكعب وفحص النقاط" />
-          <Suspense fallback={<SectionSkeleton variant="timeline" label="جارٍ تحميل المكعب التفاعلي" />}>
-            <InspectionCube />
-          </Suspense>
+          {hasWebGL() ? (
+            <WebGLBoundary
+              fallback={
+                <div className="rounded-2xl border border-gold/20 bg-surface-2/40 p-10 text-center text-ink/70">
+                  تعذر تشغيل العرض ثلاثي الأبعاد على جهازك — يتم عرض الصور الثابتة بدلاً منه.
+                </div>
+              }
+            >
+              <Suspense fallback={<SectionSkeleton variant="timeline" label="جارٍ تحميل المكعب التفاعلي" />}>
+                <InspectionCube />
+              </Suspense>
+            </WebGLBoundary>
+          ) : (
+            <div className="rounded-2xl border border-gold/20 bg-surface-2/40 p-10 text-center text-ink/70">
+              جهازك لا يدعم العرض ثلاثي الأبعاد بأداء كافٍ — تم تعطيل المكعب التفاعلي لتجربة أسرع.
+            </div>
+          )}
         </div>
       </section>
 
