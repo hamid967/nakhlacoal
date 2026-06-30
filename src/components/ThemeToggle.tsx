@@ -23,7 +23,7 @@ const THEMES: Record<Exclude<ThemeKey, 'auto'>, { name: string; swatches: string
 };
 
 const FONTS: Record<FontKey, { name: string; sample: string; cssFamily: string }> = {
-  classic:   { name: 'كلاسيكي',  sample: 'فحم النخلة · Palm Charcoal',  cssFamily: "'Tajawal','Cormorant Garamond',serif" },
+  classic:   { name: 'كلاسيكي',  sample: 'فحم النخلة · Palm Charcoal',  cssFamily: "'Reem Kufi','IBM Plex Sans Arabic','Cormorant Garamond',serif" },
   modern:    { name: 'عصري',     sample: 'فحم النخلة · Palm Charcoal',  cssFamily: "'IBM Plex Sans Arabic',system-ui,sans-serif" },
   editorial: { name: 'تحريري',   sample: 'فحم النخلة · Palm Charcoal',  cssFamily: "'Cormorant Garamond',serif" },
 };
