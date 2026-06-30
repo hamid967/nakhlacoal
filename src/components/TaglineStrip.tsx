@@ -19,13 +19,16 @@ export function TaglineStrip() {
 
   return (
     <>
-      {/* Spacer so page content isn't covered by the fixed nav + strip */}
-      <div aria-hidden className={scrolled ? 'h-[92px] md:h-[100px]' : 'h-[108px] md:h-[116px]'} />
+      {/* Spacer so page content isn't covered by the fixed promo + nav + strip */}
+      <div aria-hidden className={scrolled ? 'h-[124px] md:h-[132px]' : 'h-[140px] md:h-[148px]'} />
       <div
         dir={isAr ? 'rtl' : 'ltr'}
-        className={`fixed inset-x-0 z-40 border-y border-[hsl(var(--gold))]/25 bg-[hsl(var(--dark-2))] backdrop-blur-md transition-all duration-500 ${
-          scrolled ? 'top-[64px] md:top-[72px]' : 'top-[80px] md:top-[88px]'
-        }`}
+        className={`fixed inset-x-0 z-40 border-y border-[hsl(var(--gold))]/25 bg-[hsl(var(--dark-2))] backdrop-blur-md transition-all duration-500`}
+        style={{
+          top: scrolled
+            ? `calc(var(--promo-h, 32px) + 64px)`
+            : `calc(var(--promo-h, 32px) + 80px)`,
+        }}
         role="note"
         aria-label={isAr ? 'شعار العلامة' : 'Brand tagline'}
       >
