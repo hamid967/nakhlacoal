@@ -5,6 +5,8 @@ import { SEO } from '@/components/SEO';
 import { ScrollReveal } from '@/components/ScrollReveal';
 import { CompareToggle } from '@/components/CompareToggle';
 import { products, getProduct } from '@/data/products';
+import { useCart } from '@/contexts/CartContext';
+import { toast } from 'sonner';
 
 export default function ProductDetail() {
   const { slug = '' } = useParams();
@@ -147,7 +149,8 @@ export default function ProductDetail() {
                 )}
 
                 <div className="flex flex-wrap gap-3">
-                  <Link to="/contact" className="btn-gold">
+                  <AddToCartButton product={product} isAr={isAr} />
+                  <Link to="/contact" className="btn-ghost-gold">
                     <ShoppingCart className="w-4 h-4" /> {isAr ? 'اطلب عرض سعر' : 'Request a quote'}
                   </Link>
                   <a
