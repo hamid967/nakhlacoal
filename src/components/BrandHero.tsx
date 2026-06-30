@@ -302,7 +302,7 @@ export function BrandHero() {
                 aria-selected={i === active}
                 aria-label={isAr ? `${t.nameAr}` : `${t.nameEn}`}
                 tabIndex={i === active ? 0 : -1}
-                onClick={() => setActive(i)}
+                onClick={() => jumpTo(i)}
                 className={`h-1.5 rounded-full transition-all outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--gold-hi))] focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
                   i === active ? 'w-8 bg-[hsl(var(--gold-hi))]' : 'w-2 bg-foreground/20 hover:bg-foreground/40'
                 }`}
