@@ -11,7 +11,7 @@ export function Certifications() {
   const isAr = i18n.language?.startsWith('ar');
 
   const items = [
-    { icon: BadgeCheck, ar: 'علامة تجارية مسجلة', en: 'Registered Trademark', sub: '143313025' },
+    { icon: BadgeCheck, ar: 'علامة تجارية مسجلة', en: 'Registered Trademark', sub: '1431135825' },
     { icon: ShieldCheck, ar: 'مطابق لمواصفات SASO', en: 'SASO Compliant', sub: 'KSA' },
     { icon: Leaf, ar: 'طبيعي ١٠٠٪', en: '100% Natural', sub: isAr ? 'بدون كيماويات' : 'No Chemicals' },
     { icon: Award, ar: 'حلال معتمد', en: 'Halal Certified', sub: 'GCC' },
