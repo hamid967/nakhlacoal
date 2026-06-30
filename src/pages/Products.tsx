@@ -234,7 +234,7 @@ export default function Products() {
         </div>
       </section>
 
-      <section className="py-14 md:py-20">
+      <section className="section-tight">
         <div className="container">
           {filtered.length === 0 ? (
             <div className="text-center py-20 text-foreground/60">

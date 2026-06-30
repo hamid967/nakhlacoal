@@ -47,7 +47,7 @@ export default function Contact() {
       />
       <PageHero number={15} eyebrow={t("contact.eyebrow")} title={t("contact.title")} subtitle={t("contact.subtitle")} />
 
-      <section className="py-24">
+      <section className="section">
         <div className="container grid grid-cols-1 lg:grid-cols-12 gap-12">
           {/* Info column */}
           <div className="lg:col-span-4 space-y-8">

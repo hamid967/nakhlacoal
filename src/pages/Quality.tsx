@@ -271,7 +271,7 @@ export default function Quality() {
       </Suspense>
 
       {/* Lab Dashboard */}
-      <section className="py-28">
+      <section className="section">
         <div className="container">
           <SectionTitle eyebrow="لوحة المختبر الحية" title="مؤشرات الجودة في الزمن الحقيقي" />
           <div
@@ -297,7 +297,7 @@ export default function Quality() {
       </section>
 
       {/* Live Analytics */}
-      <section className="py-28 bg-surface-2/40 border-y border-gold/10">
+      <section className="section bg-surface-2/40 border-y border-gold/10">
         <div className="container">
           <SectionTitle eyebrow="تحليلات حية" title="بيانات الجودة عبر دفعات الإنتاج" />
           <Suspense fallback={<SectionSkeleton variant="grid" label="جارٍ تحميل التحليلات" />}>
@@ -307,7 +307,7 @@ export default function Quality() {
       </section>
 
       {/* Digital Laboratory */}
-      <section className="py-28">
+      <section className="section">
         <div className="container">
           <SectionTitle eyebrow="المختبر الرقمي" title="تحت العدسة — لحظات من داخل المعمل" />
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -337,7 +337,7 @@ export default function Quality() {
       </section>
 
       {/* 3D Inspection */}
-      <section className="py-28 bg-gradient-to-b from-background via-surface-2/50 to-background">
+      <section className="section bg-gradient-to-b from-background via-surface-2/50 to-background">
         <div className="container">
           <SectionTitle eyebrow="فحص المنتج ثلاثي الأبعاد" title="اسحب لتدوير المكعب وفحص النقاط" />
           <Suspense fallback={<SectionSkeleton variant="timeline" label="جارٍ تحميل المكعب التفاعلي" />}>
@@ -347,7 +347,7 @@ export default function Quality() {
       </section>
 
       {/* Registered Trademarks Showcase */}
-      <section className="py-28 bg-gradient-to-b from-background to-surface-2/30 border-y border-gold/10">
+      <section className="section bg-gradient-to-b from-background to-surface-2/30 border-y border-gold/10">
         <div className="container">
           <SectionTitle eyebrow="ملكية فكرية موثقة" title="علامات تجارية مسجلة رسمياً" />
           <div className="grid sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
@@ -374,7 +374,7 @@ export default function Quality() {
       </section>
 
       {/* Timeline */}
-      <section className="py-28">
+      <section className="section">
         <div className="container">
           <SectionTitle eyebrow="رحلة الجودة" title="من النخلة إلى منصة التصدير" />
           <div className="relative max-w-4xl mx-auto">
@@ -403,7 +403,7 @@ export default function Quality() {
       </section>
 
       {/* Certificates */}
-      <section className="py-28 bg-surface-2/40 border-y border-gold/10">
+      <section className="section bg-surface-2/40 border-y border-gold/10">
         <div className="container">
           <SectionTitle eyebrow="الشهادات والاعتمادات" title="جودة موثقة عالمياً" />
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -445,7 +445,7 @@ export default function Quality() {
       </Dialog>
 
       {/* AI Verification */}
-      <section className="py-28">
+      <section className="section">
         <div className="container">
           <SectionTitle eyebrow="الذكاء الاصطناعي" title="ذكاء اصطناعي لضمان الجودة" />
           <p className="text-center text-foreground/70 font-arabic max-w-2xl mx-auto leading-loose -mt-8 mb-16">
@@ -476,7 +476,7 @@ export default function Quality() {
       </section>
 
       {/* Confidence Counters */}
-      <section className="py-28 bg-foreground text-background relative overflow-hidden">
+      <section className="section bg-foreground text-background relative overflow-hidden">
         <div className="absolute inset-0 opacity-20"
           style={{ backgroundImage: 'radial-gradient(circle at 30% 50%, hsl(var(--gold) / 0.6), transparent 50%)' }} />
         <div className="container relative">
@@ -499,7 +499,7 @@ export default function Quality() {
       </section>
 
       {/* Download Center */}
-      <section className="py-28">
+      <section className="section">
         <div className="container">
           <SectionTitle eyebrow="مركز التنزيل" title="ملفات الجودة والمواصفات" />
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
