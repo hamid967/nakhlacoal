@@ -54,18 +54,18 @@ describe('LuxNav RTL behavior preserves NavLink active state', () => {
     const nav = container.querySelector('nav') as HTMLElement;
     const about = nav.querySelector('a[href="/about"]') as HTMLElement;
     expect(about).toHaveAttribute('aria-current', 'page');
-    expect(about.className).toMatch(/is-active/);
+    expect(about.className).toMatch(/\bactive\b/);
   });
 
   it('matches the same active behavior in LTR for the same path', () => {
     const rtl = renderAt('/about', 'rtl');
     const rtlActive = rtl.container.querySelector('nav a[href="/about"]') as HTMLElement;
-    const rtlHasActive = /is-active/.test(rtlActive.className);
+    const rtlHasActive = /\bactive\b/.test(rtlActive.className);
     rtl.unmount();
 
     const ltr = renderAt('/about', 'ltr');
     const ltrActive = ltr.container.querySelector('nav a[href="/about"]') as HTMLElement;
-    expect(/is-active/.test(ltrActive.className)).toBe(rtlHasActive);
+    expect(/\bactive\b/.test(ltrActive.className)).toBe(rtlHasActive);
     expect(ltrActive).toHaveAttribute('aria-current', 'page');
   });
 
