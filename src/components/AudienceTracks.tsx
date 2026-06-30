@@ -54,7 +54,7 @@ export function AudienceTracks() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
         {tracks.map((t, i) => (
           <ScrollReveal key={t.id} delay={i * 120}>
-            <div className="glass-card rounded-3xl p-7 md:p-8 h-full flex flex-col group hover:translate-y-[-4px] transition-transform">
+            <div className="clay-card rounded-3xl p-7 md:p-8 h-full flex flex-col group hover:translate-y-[-4px] transition-transform">
               <div className="w-12 h-12 rounded-2xl bg-gold/10 border border-gold/20 flex items-center justify-center text-gold-hi mb-5">
                 <t.icon className="w-6 h-6" />
               </div>

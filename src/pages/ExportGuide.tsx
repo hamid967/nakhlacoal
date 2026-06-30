@@ -151,7 +151,7 @@ export default function ExportGuide() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl mx-auto">
             {packaging.map((p, i) => (
               <ScrollReveal key={p.name} delay={i * 60}>
-                <div className="glass-card p-6 rounded-2xl h-full">
+                <div className="clay-card p-6 rounded-2xl h-full">
                   <Box className="w-5 h-5 text-gold-hi mb-3" />
                   <h3 className="font-display text-lg text-gold-hi mb-1.5">{p.name}</h3>
                   <p className="text-sm text-foreground/70">{p.detail}</p>
@@ -264,7 +264,7 @@ export default function ExportGuide() {
           <div className="grid md:grid-cols-3 gap-4">
             {payment.map((p, i) => (
               <ScrollReveal key={p.label} delay={i * 80}>
-                <div className="glass-card p-6 rounded-2xl h-full">
+                <div className="clay-card p-6 rounded-2xl h-full">
                   <CreditCard className="w-5 h-5 text-gold-hi mb-3" />
                   <p className="text-sm text-foreground/85 mb-3 leading-relaxed">{p.label}</p>
                   <p className="text-[11px] uppercase tracking-[0.18em] text-foreground/55">{p.best}</p>

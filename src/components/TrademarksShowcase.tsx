@@ -107,14 +107,14 @@ export function TrademarksShowcase() {
           <button
             onClick={() => go(-1)}
             aria-label="prev"
-            className="absolute start-0 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full glass-card border border-gold/40 hover:border-gold hover:bg-gold/10 transition flex items-center justify-center text-gold"
+            className="absolute start-0 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full clay-card border border-gold/40 hover:border-gold hover:bg-gold/10 transition flex items-center justify-center text-gold"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
           <button
             onClick={() => go(1)}
             aria-label="next"
-            className="absolute end-0 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full glass-card border border-gold/40 hover:border-gold hover:bg-gold/10 transition flex items-center justify-center text-gold"
+            className="absolute end-0 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full clay-card border border-gold/40 hover:border-gold hover:bg-gold/10 transition flex items-center justify-center text-gold"
           >
             <ChevronRight className="w-5 h-5" />
           </button>
@@ -187,7 +187,7 @@ export function TrademarksShowcase() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.4 }}
-            className="mt-10 max-w-3xl mx-auto glass-card rounded-2xl border border-gold/25 p-6 md:p-8"
+            className="mt-10 max-w-3xl mx-auto clay-card rounded-2xl border border-gold/25 p-6 md:p-8"
           >
             <div className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-5 text-sm">
               <Field icon={Hash}     label={isAr ? 'رقم التسجيل'   : 'Reg. No.'}    value={current.registrationNo} mono />
@@ -212,7 +212,7 @@ export function TrademarksShowcase() {
         {/* Feature chips */}
         <div className="mt-12 grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4">
           {features.map((f, i) => (
-            <div key={i} className="glass-card rounded-xl border border-gold/20 px-4 py-3 flex items-center gap-3">
+            <div key={i} className="clay-card rounded-xl border border-gold/20 px-4 py-3 flex items-center gap-3">
               <span className="w-9 h-9 rounded-lg bg-gold/10 text-gold flex items-center justify-center shrink-0">
                 <f.icon className="w-4 h-4" />
               </span>

@@ -62,7 +62,7 @@ export function ProductRecommender() {
 
   return (
     <section className="container py-12">
-      <div className="rounded-2xl glass-card p-6 md:p-8 border border-amber-700/20">
+      <div className="rounded-2xl clay-card p-6 md:p-8 border border-amber-700/20">
         <div className="flex items-center gap-2 mb-2">
           <Sparkles className="w-5 h-5 text-amber-600" />
           <span className="text-[10px] uppercase tracking-[0.3em] text-amber-700">

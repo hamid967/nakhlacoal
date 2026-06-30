@@ -120,7 +120,7 @@ export default function Home() {
 
         {/* Technical metrics strip */}
         <ScrollReveal delay={300}>
-          <div className="mt-12 md:mt-16 rounded-3xl glass-card section-dark p-6 md:p-8 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-4 text-center">
+          <div className="mt-12 md:mt-16 rounded-3xl clay-card-dark p-6 md:p-8 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-4 text-center">
             {[
               { v: '750°C', l: isAr ? 'حرارة قصوى' : 'Max Heat' },
               { v: '90', l: isAr ? 'دقيقة احتراق' : 'Min Burn' },
@@ -184,7 +184,7 @@ export default function Home() {
           </ScrollReveal>
 
           <ScrollReveal delay={150} className="lg:col-span-5">
-            <div className="rounded-3xl glass-card p-8 md:p-10">
+            <div className="rounded-3xl clay-card p-8 md:p-10">
               <Stat value="+5" label={isAr ? 'سنوات من الخبرة' : 'years of expertise'} size="lg" />
               <div className="divider-luxe my-8" />
               <div className="grid grid-cols-2 gap-6">
