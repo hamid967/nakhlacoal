@@ -61,7 +61,7 @@ export default function Checkout() {
       const first = items[0];
       const totalQty = items.reduce((s, i) => s + i.qty, 0);
       const unitPrice = subtotal / Math.max(totalQty, 1);
-      const { data, error } = await supabase.from('orders').insert({
+      const insertRes = await supabase.from('orders').insert({
         user_id: user?.id ?? null,
         status: 'new',
         product_type: items.length === 1 ? first.slug : 'mixed',
@@ -78,12 +78,24 @@ export default function Checkout() {
         payment_method: form.payment_method,
         country: 'SA',
         items: items.map((i) => ({ slug: i.slug, nameAr: i.nameAr, nameEn: i.nameEn, qty: i.qty, unit: i.unit })),
-      } as never).select('id').single();
-      if (error) throw error;
+      } as never);
+      if (insertRes.error) throw insertRes.error;
+      // For authenticated users, fetch the new order id to deep-link; guests stay on confirmation.
+      let newId: string | null = null;
+      if (user?.id) {
+        const { data: latest } = await supabase
+          .from('orders')
+          .select('id')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .maybeSingle();
+        newId = (latest as { id: string } | null)?.id ?? null;
+      }
       clear();
       setStep(3);
       toast.success(isAr ? 'تم إنشاء الطلب بنجاح' : 'Order created');
-      setTimeout(() => navigate(`/orders/${(data as { id: string }).id}`), 1500);
+      if (newId) setTimeout(() => navigate(`/orders/${newId}`), 1500);
     } catch (e) {
       const msg = e instanceof Error ? e.message : 'Failed';
       toast.error(msg);
