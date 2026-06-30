@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { Loader2, TrendingUp, Package, DollarSign, ShoppingCart } from 'lucide-react';
+import { Loader2, TrendingUp, Package, DollarSign, ShoppingCart, Download, Share2 } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 import {
   ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid,
   BarChart, Bar, PieChart, Pie, Cell, Legend,
