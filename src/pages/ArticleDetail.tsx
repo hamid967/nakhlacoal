@@ -19,6 +19,9 @@ export default function ArticleDetail() {
   const title = isAr ? article.titleAr : article.titleEn;
   const excerpt = isAr ? article.excerptAr : article.excerptEn;
   const content = (isAr ? article.contentAr : article.contentEn) ?? [];
+  const featuredImage = article.image ?? heroFallback;
+
+
 
   const jsonLd = {
     '@context': 'https://schema.org',
