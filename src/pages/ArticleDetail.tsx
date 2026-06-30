@@ -5,6 +5,8 @@ import { Calendar, Clock, ArrowRight, ArrowLeft } from 'lucide-react';
 import { SEO } from '@/components/SEO';
 import { PageHero } from '@/components/PageHero';
 import { getArticle, articles } from '@/data/articles';
+import heroFallback from '@/assets/hero-charcoal.jpg';
+
 
 export default function ArticleDetail() {
   const { slug } = useParams<{ slug: string }>();
