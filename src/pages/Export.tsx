@@ -185,8 +185,11 @@ export default function ExportPage() {
             </div>
           </form>
 
-          <div className="text-center mt-10">
-            <Link to="/contact" className="text-xs uppercase tracking-[0.22em] text-gold-hi hover:text-gold transition">
+          <div className="text-center mt-10 space-y-3">
+            <Link to="/export/guide" className="block text-xs uppercase tracking-[0.22em] text-gold-hi hover:text-gold transition">
+              {isAr ? 'دليل التصدير الكامل (Incoterms · Packaging · HS) →' : 'Full Export Protocol (Incoterms · Packaging · HS) →'}
+            </Link>
+            <Link to="/contact" className="block text-xs uppercase tracking-[0.22em] text-foreground/55 hover:text-gold-hi transition">
               {isAr ? 'أو تواصل معنا مباشرة →' : 'Or contact us directly →'}
             </Link>
           </div>
