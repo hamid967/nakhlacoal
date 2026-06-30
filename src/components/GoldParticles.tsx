@@ -13,7 +13,7 @@ type Props = {
  * - Disables on reduce-motion, touch-only, or low hardwareConcurrency (<4)
  * - DPR-capped at 1.5 to stay GPU-cheap
  */
-export function GoldParticles({ density = 6, className = '', color = '200, 168, 110' }: Props) {
+export function GoldParticles({ density = 3, className = '', color = '200, 168, 110' }: Props) {
   const ref = useRef<HTMLCanvasElement | null>(null);
   const reduced = useReducedMotion();
 
