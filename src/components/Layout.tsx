@@ -3,6 +3,7 @@ import { useEffect, lazy, Suspense } from 'react';
 import { LuxNav } from './LuxNav';
 import { LuxFooter } from './LuxFooter';
 import { PromoBanner } from './PromoBanner';
+import { TaglineStrip } from './TaglineStrip';
 import { ImageDiagnostics } from './ImageDiagnostics';
 
 // Lazy-load the floating AI/WhatsApp widget — heavy and not LCP-critical.
@@ -20,6 +21,7 @@ export function Layout() {
     <div className="min-h-dvh bg-background text-foreground">
       <PromoBanner />
       <LuxNav />
+      <TaglineStrip />
       <main>
         <Outlet />
       </main>

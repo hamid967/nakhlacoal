@@ -132,15 +132,13 @@ export function BrandHero() {
           >
             {isAr ? (
               <>
-                نقاء.<br />
-                استدامة.<br />
-                <span className="text-primary">تميّز.</span>
+                فحم النخلة<br />
+                <span className="text-primary">الفاخر.</span>
               </>
             ) : (
               <>
-                Pure.<br />
-                Sustainable.<br />
-                <span className="text-primary">Excellence.</span>
+                Palm Charcoal<br />
+                <span className="text-primary">Premium.</span>
               </>
             )}
           </h1>
