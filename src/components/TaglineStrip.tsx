@@ -23,7 +23,7 @@ export function TaglineStrip() {
       <div aria-hidden className={scrolled ? 'h-[124px] md:h-[132px]' : 'h-[140px] md:h-[148px]'} />
       <div
         dir={isAr ? 'rtl' : 'ltr'}
-        className={`fixed inset-x-0 z-40 border-y border-[hsl(var(--gold))]/25 bg-[hsl(var(--dark-2))] backdrop-blur-md transition-all duration-500`}
+        className={`fixed inset-x-0 z-40 border-y border-[hsl(var(--gold))]/25 bg-[hsl(var(--dark-2))]/95 transition-all duration-500 [text-shadow:0_1px_2px_rgba(0,0,0,0.45)]`}
         style={{
           top: scrolled
             ? `calc(var(--promo-h, 32px) + 64px)`
