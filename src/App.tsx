@@ -29,6 +29,7 @@ const ExportPage = lazy(() => import('@/pages/Export'));
 const ExportGuide = lazy(() => import('@/pages/ExportGuide'));
 const Knowledge = lazy(() => import('@/pages/Knowledge'));
 const Contact = lazy(() => import('@/pages/Contact'));
+const Location = lazy(() => import('@/pages/Location'));
 const Trademarks = lazy(() => import('@/pages/Trademarks'));
 const Uses = lazy(() => import('@/pages/Uses'));
 const Articles = lazy(() => import('@/pages/Articles'));
@@ -110,6 +111,7 @@ export default function App() {
                   <Route path="/export/guide" element={<ExportGuide />} />
                   <Route path="/knowledge" element={<Knowledge />} />
                   <Route path="/contact" element={<Contact />} />
+                  <Route path="/location" element={<Location />} />
                   <Route path="/trademarks" element={<Trademarks />} />
                   <Route path="/uses" element={<Uses />} />
                   <Route path="/articles" element={<Articles />} />
