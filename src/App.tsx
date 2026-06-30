@@ -118,6 +118,7 @@ export default function App() {
                   <Route path="/articles" element={<Articles />} />
                   <Route path="/articles/:slug" element={<ArticleDetail />} />
                   <Route path="/for/:slug" element={<AudienceLanding />} />
+                  <Route path="/lp/:slug" element={<CampaignLanding />} />
                   <Route path="/studio" element={<ProtectedRoute><Studio /></ProtectedRoute>} />
                   <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                   <Route path="/assistant" element={<Assistant />} />
