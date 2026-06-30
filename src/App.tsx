@@ -124,6 +124,7 @@ export default function App() {
                   <Route path="/export/guide" element={<ExportGuide />} />
                   <Route path="/knowledge" element={<Knowledge />} />
                   <Route path="/contact" element={<Contact />} />
+                  <Route path="/quote" element={<Quote />} />
                   <Route path="/location" element={<Location />} />
                   <Route path="/trademarks" element={<Trademarks />} />
                   <Route path="/uses" element={<Uses />} />
