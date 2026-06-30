@@ -165,24 +165,8 @@ export default function AudienceLanding() {
           </a>
         </section>
       )}
-          <a
-            href={waHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => trackConversion('whatsapp_click', { source: `audience_${a.slug}_footer` })}
-            className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-8 py-4 rounded-md font-semibold hover:opacity-90 transition"
-          >
-            <MessageCircle className="w-5 h-5" /> {cta}
-          </a>
-        ) : (
-          <Link
-            to="/contact"
-            className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-8 py-4 rounded-md font-semibold hover:opacity-90 transition"
-          >
-            <MessageCircle className="w-5 h-5" /> {cta}
-          </Link>
-        )}
-      </section>
+    </div>
+
     </div>
   );
 }
