@@ -6,6 +6,7 @@ import { ScrollReveal } from '@/components/ScrollReveal';
 
 // Heavy WebGL/3D hero — code-split so it doesn't block first paint
 const BrandHero = lazy(() => import('@/components/BrandHero').then((m) => ({ default: m.BrandHero })));
+const GoldParticles = lazy(() => import('@/components/GoldParticles').then((m) => ({ default: m.GoldParticles })));
 const ProcessSection = lazy(() => import('@/components/ProcessSection').then((m) => ({ default: m.ProcessSection })));
 const JourneySection = lazy(() => import('@/components/JourneySection').then((m) => ({ default: m.JourneySection })));
 const LocationSection = lazy(() => import('@/components/LocationSection').then((m) => ({ default: m.LocationSection })));
@@ -85,10 +86,15 @@ export default function Home() {
       />
 
       {/* HERO — first impression (lazy-loaded WebGL) */}
-      <div className="pt-24 md:pt-28">
-        <Suspense fallback={<SectionSkeleton variant="hero" label={isAr ? 'جارٍ تحميل الواجهة' : 'Loading hero'} />}>
-          <BrandHero />
+      <div className="relative pt-24 md:pt-28">
+        <Suspense fallback={null}>
+          <GoldParticles className="z-0 opacity-70" />
         </Suspense>
+        <div className="relative z-10">
+          <Suspense fallback={<SectionSkeleton variant="hero" label={isAr ? 'جارٍ تحميل الواجهة' : 'Loading hero'} />}>
+            <BrandHero />
+          </Suspense>
+        </div>
       </div>
 
 
