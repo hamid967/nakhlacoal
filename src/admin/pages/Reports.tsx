@@ -178,23 +178,34 @@ export default function AdminReports() {
           <h1>التقارير والتحليلات</h1>
           <p>رحلة المستخدم مع تقارير فحم النخلة عبر الفترة المختارة.</p>
         </div>
-        <div className="a-segmented" role="tablist" aria-label="الفترة">
-          {PERIODS.map((p) => (
-            <button
-              key={p.value}
-              role="tab"
-              aria-selected={days === p.value}
-              onClick={() => setDays(p.value)}
-              className={days === p.value ? 'is-active' : ''}
-            >{p.label}</button>
-          ))}
+        <div className="flex items-center gap-2 flex-wrap">
+          <div className="a-segmented" role="tablist" aria-label="الفترة">
+            {PERIODS.map((p) => (
+              <button
+                key={p.value}
+                role="tab"
+                aria-selected={days === p.value}
+                onClick={() => setDays(p.value)}
+                className={days === p.value ? 'is-active' : ''}
+              >{p.label}</button>
+            ))}
+          </div>
+          <button className="a-btn a-btn-sm a-btn-ghost" onClick={handleDownload} disabled={loading || exporting !== 'idle'}>
+            {exporting === 'pdf' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
+            تحميل PDF
+          </button>
+          <button className="a-btn a-btn-sm" onClick={handleShare} disabled={loading || exporting !== 'idle'}>
+            {exporting === 'share' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Share2 className="w-3.5 h-3.5" />}
+            مشاركة
+          </button>
         </div>
       </header>
 
       {loading ? (
         <div className="flex items-center justify-center py-24"><Loader2 className="animate-spin" style={{ color: 'var(--a-palm)' }} /></div>
       ) : (
-        <>
+        <div ref={reportRef} className="space-y-5">
+
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <StatCard icon={ShoppingCart} label="إجمالي الطلبات" value={stats.totalOrders.toLocaleString('ar-SA')} />
             <StatCard icon={Package} label="الكمية (كجم)" value={stats.totalKg.toLocaleString('ar-SA', { maximumFractionDigits: 0 })} />
