@@ -104,7 +104,7 @@ export default function Home() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productsLd) }} />
 
       {/* HERO — first impression (lazy-loaded WebGL) */}
-      <div className="relative pt-24 md:pt-28">
+      <div id="hero" className="relative pt-24 md:pt-28 scroll-mt-24">
         <WebGLBoundary>
           <Suspense fallback={null}>
             <GoldParticles className="z-0 opacity-70" />
