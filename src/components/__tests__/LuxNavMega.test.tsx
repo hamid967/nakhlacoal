@@ -57,14 +57,13 @@ describe('LuxNav mega menu active states', () => {
   });
 
   it('applies is-active to the matching mega item link when opened', async () => {
-    const user = userEvent.setup();
     const { container } = renderAt('/compare');
-    await user.click(screen.getByRole('button', { name: /nav\.products/i }));
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: /nav\.products/i }));
+    });
 
     const mega = container.querySelector('.lux-emerald-mega') as HTMLElement;
     expect(mega).toBeTruthy();
-    // eslint-disable-next-line no-console
-    console.log('MEGA HTML:', mega.innerHTML.slice(0, 400));
     const compareLink = within(mega).getByRole('link', { name: /compare/i });
     const productsLink = within(mega).getByRole('link', { name: /all products/i });
 
@@ -73,9 +72,10 @@ describe('LuxNav mega menu active states', () => {
   });
 
   it('moves is-active to a different mega item when the path changes', async () => {
-    const user = userEvent.setup();
     const { container } = renderAt('/wholesale');
-    await user.click(screen.getByRole('button', { name: /nav\.products/i }));
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: /nav\.products/i }));
+    });
 
     const mega = container.querySelector('.lux-emerald-mega') as HTMLElement;
     const wholesale = within(mega).getByRole('link', { name: /wholesale/i });
