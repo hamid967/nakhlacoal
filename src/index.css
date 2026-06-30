@@ -166,12 +166,12 @@
     font-weight: 400;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
-    cursor: url('/cursor-logo.png') 16 16, auto;
+    cursor: url('/cursor-lux.png') 4 2, auto;
   }
   @media (pointer: fine) {
     a, button, [role="button"], summary, label, select, input[type="submit"],
     input[type="button"], .cursor-pointer {
-      cursor: url('/cursor-logo.png') 16 16, pointer;
+      cursor: url('/cursor-lux.png') 4 2, pointer;
     }
   }
   @media (pointer: coarse) {
