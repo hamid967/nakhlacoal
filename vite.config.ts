@@ -35,14 +35,15 @@ export default defineConfig(({ mode }) => ({
     chunkSizeWarningLimit: 800,
     rollupOptions: {
       output: {
-        manualChunks: {
-          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          'three': ['three', '@react-three/fiber', '@react-three/drei'],
-          'charts': ['recharts'],
-          'swiper': ['swiper'],
-          'supabase': ['@supabase/supabase-js'],
-          'i18n': ['i18next', 'react-i18next', 'i18next-browser-languagedetector'],
-          'forms': ['react-hook-form', '@hookform/resolvers', 'zod'],
+        manualChunks(id) {
+          if (!id.includes('node_modules')) return;
+          if (/[\\/]node_modules[\\/](three|@react-three)[\\/]/.test(id)) return 'three';
+          if (/[\\/]node_modules[\\/]recharts[\\/]/.test(id)) return 'charts';
+          if (/[\\/]node_modules[\\/]swiper[\\/]/.test(id)) return 'swiper';
+          if (/[\\/]node_modules[\\/]@supabase[\\/]/.test(id)) return 'supabase';
+          if (/[\\/]node_modules[\\/](i18next|react-i18next)[\\/]/.test(id)) return 'i18n';
+          if (/[\\/]node_modules[\\/](react-hook-form|@hookform|zod)[\\/]/.test(id)) return 'forms';
+          if (/[\\/]node_modules[\\/](react|react-dom|react-router|react-router-dom|scheduler)[\\/]/.test(id)) return 'react-vendor';
         },
       },
     },
