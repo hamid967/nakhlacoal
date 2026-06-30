@@ -8,8 +8,7 @@ import { ScrollReveal } from '@/components/ScrollReveal';
 // Heavy WebGL/3D hero — code-split so it doesn't block first paint
 const BrandHero = lazy(() => import('@/components/BrandHero').then((m) => ({ default: m.BrandHero })));
 const GoldParticles = lazy(() => import('@/components/GoldParticles').then((m) => ({ default: m.GoldParticles })));
-const ProcessSection = lazy(() => import('@/components/ProcessSection').then((m) => ({ default: m.ProcessSection })));
-const JourneySection = lazy(() => import('@/components/JourneySection').then((m) => ({ default: m.JourneySection })));
+const BrandTimeline = lazy(() => import('@/components/BrandTimeline').then((m) => ({ default: m.BrandTimeline })));
 const LocationSection = lazy(() => import('@/components/LocationSection').then((m) => ({ default: m.LocationSection })));
 const FaqSection = lazy(() => import('@/components/FaqSection').then((m) => ({ default: m.FaqSection })));
 
@@ -105,7 +104,7 @@ export default function Home() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productsLd) }} />
 
       {/* HERO — first impression (lazy-loaded WebGL) */}
-      <div className="relative pt-24 md:pt-28">
+      <div id="hero" className="relative pt-24 md:pt-28 scroll-mt-24">
         <WebGLBoundary>
           <Suspense fallback={null}>
             <GoldParticles className="z-0 opacity-70" />
@@ -166,7 +165,7 @@ export default function Home() {
       <SectionDivider flip />
 
       {/* Products — move higher for conversion */}
-      <LuxSection tone="surface" className="section">
+      <LuxSection id="products" tone="surface" className="section scroll-mt-24">
         <div className="container"><SectionNumber index={3} /></div>
         <SectionHeader
           align="between"
@@ -185,11 +184,9 @@ export default function Home() {
 
       <SectionDivider />
 
-
-
+      {/* Unified brand timeline — merges Process + Journey, anchored to #hero and #products */}
       <Suspense fallback={<SectionSkeleton variant="timeline" />}>
-        <ProcessSection />
-        <JourneySection />
+        <BrandTimeline />
       </Suspense>
 
 
