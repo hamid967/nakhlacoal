@@ -57,9 +57,8 @@ Deno.serve(async (req) => {
   if (req.method !== "POST") {
     return new Response("Method not allowed", { status: 405, headers: corsHeaders });
   }
-  // C3: reject cross-origin POSTs from non-allowlisted origins
-  const origin = req.headers.get("Origin") ?? "";
-  if (origin && !ALLOWED_ORIGINS.has(origin)) {
+  // Reject POST with missing or non-allowlisted Origin
+  if (!origin || !ALLOWED_ORIGINS.has(origin)) {
     return new Response(JSON.stringify({ error: "origin_not_allowed" }), {
       status: 403, headers: { "Content-Type": "application/json" },
     });
