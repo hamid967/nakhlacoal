@@ -22,7 +22,7 @@ type Props = {
 };
 
 
-export function SEO({ title, description, path, jsonLd, noindex = false, preloadImages }: Props) {
+export function SEO({ title, description, path, jsonLd, noindex = false, image, preloadImages }: Props) {
   const { i18n } = useTranslation();
   const lang = i18n.language?.startsWith('ar') ? 'ar' : 'en';
   const cleanPath = path.startsWith('http') ? path : `${SITE}${path}`;
