@@ -257,6 +257,13 @@ export default function PortalShipments() {
                         تتبع <ExternalLink className="h-3 w-3" />
                       </a>
                     )}
+                    <Link
+                      to={`/portal/shipments/${s.id}`}
+                      className="inline-flex items-center gap-1 text-xs px-3 py-1 rounded-full border"
+                      style={{ borderColor: 'var(--a-border)' }}
+                    >
+                      تفاصيل
+                    </Link>
                   </div>
                 </div>
 
