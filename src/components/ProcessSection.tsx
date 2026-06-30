@@ -6,11 +6,76 @@ import { LuxSection, SectionHeader } from './ui-lux';
 import { ImageWatermark } from './ImageWatermark';
 import { Picture } from './Picture';
 import { useParallax } from '@/hooks/useParallax';
+import { useTilt } from '@/hooks/useTilt';
 import s1 from '@/assets/step-harvest.jpg?picture';
 import s2 from '@/assets/step-carbonize.jpg?picture';
 import s3 from '@/assets/step-grind.jpg?picture';
 import s4 from '@/assets/step-press.jpg?picture';
 import s5 from '@/assets/step-pack.jpg?picture';
+
+type Step = { img: any; ar: { t: string; d: string }; en: { t: string; d: string } };
+
+function FilmFrame({ step, i, total, isAr }: { step: Step; i: number; total: number; isAr: boolean }) {
+  const tilt = useTilt<HTMLDivElement>(5);
+  const txt = isAr ? step.ar : step.en;
+  return (
+    <div
+      ref={tilt.ref}
+      onPointerMove={tilt.onPointerMove}
+      onPointerLeave={tilt.onPointerLeave}
+      className="clay-card-dark group snap-center shrink-0 w-[78vw] sm:w-[44vw] md:w-[32vw] lg:w-[22vw] relative overflow-hidden"
+    >
+      <div className="absolute top-2 start-2 z-20 flex items-center gap-1.5 px-2 py-1 bg-dark/80 backdrop-blur-sm"
+        style={{ border: '1px solid rgba(212,175,55,0.4)' }}
+      >
+        <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+        <span className="text-[9px] tracking-[0.2em] font-mono text-gold-hi">
+          SCN {String(i + 1).padStart(2, '0')}
+        </span>
+      </div>
+
+      <div className="relative aspect-[4/5] overflow-hidden rounded-[20px]">
+        <Picture
+          source={step.img}
+          alt={txt.t}
+          sizes="(min-width: 1024px) 22vw, (min-width: 768px) 32vw, (min-width: 640px) 44vw, 78vw"
+          className="block w-full h-full"
+          imgClassName="w-full h-full object-cover transition-transform [transition-duration:1600ms] ease-out group-hover:scale-110"
+          imgStyle={{ filter: 'contrast(1.05) saturate(1.05)' }}
+        />
+        <div
+          className="pointer-events-none absolute inset-0 mix-blend-overlay opacity-30"
+          style={{
+            backgroundImage:
+              'url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'120\' height=\'120\'><filter id=\'n\'><feTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'2\' stitchTiles=\'stitch\'/></filter><rect width=\'100%\' height=\'100%\' filter=\'url(%23n)\' opacity=\'0.6\'/></svg>")',
+          }}
+        />
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{ background: 'radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.55) 100%)' }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/30 to-transparent" />
+        <ImageWatermark variant="light" position="br" />
+        <div className="absolute bottom-3 inset-x-3 text-background">
+          <div className="text-[10px] tracking-[0.25em] uppercase text-gold-hi/90 mb-1 font-mono">
+            {isAr ? `مشهد ${i + 1} / ${total}` : `Scene ${i + 1} / ${total}`}
+          </div>
+          <h3 className={`text-base md:text-lg leading-tight mb-1 ${isAr ? 'font-arabic font-bold' : 'font-display font-bold'}`}>
+            {txt.t}
+          </h3>
+          <p className={`text-[11px] md:text-xs leading-relaxed text-background/80 ${isAr ? 'font-arabic' : ''}`}>
+            {txt.d}
+          </p>
+        </div>
+        <div
+          className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+          style={{ background: 'linear-gradient(115deg, transparent 40%, rgba(212,175,55,0.18) 50%, transparent 60%)' }}
+        />
+      </div>
+    </div>
+  );
+}
+
 
 export function ProcessSection() {
   const { i18n } = useTranslation();
