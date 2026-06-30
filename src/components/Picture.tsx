@@ -48,7 +48,7 @@ export function Picture({
         alt={alt}
         loading={eager ? "eager" : "lazy"}
         decoding="async"
-        {...(priority ? ({ fetchpriority: "high" } as any) : {})}
+        {...(priority ? ({ fetchPriority: "high" } as any) : {})}
         className={imgClassName}
         style={imgStyle}
       />
