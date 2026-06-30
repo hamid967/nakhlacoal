@@ -33,6 +33,13 @@ export default function AudienceLanding() {
     '';
   const waHref = waBase ? `${waBase}?text=${prefill}` : '';
 
+  if (import.meta.env.DEV && !waBase) {
+    // eslint-disable-next-line no-console
+    console.warn(
+      `[AudienceLanding] Missing WhatsApp link for "/for/${a.slug}". Set brand.footer.whatsapp or brand.contact.whatsapp in src/lib/brand.ts.`
+    );
+  }
+
   const faqJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
