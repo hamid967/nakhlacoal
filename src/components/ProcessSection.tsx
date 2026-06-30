@@ -167,12 +167,7 @@ export function ProcessSection() {
                 return (
                   <div
                     key={i}
-                    className="group snap-center shrink-0 w-[78vw] sm:w-[44vw] md:w-[32vw] lg:w-[22vw] relative"
-                    style={{
-                      border: '1px solid hsl(var(--gold) / 0.25)',
-                      background: 'hsl(var(--dark))',
-                      boxShadow: '0 10px 30px -10px rgba(0,0,0,0.7)',
-                    }}
+                    className="clay-card-dark group snap-center shrink-0 w-[78vw] sm:w-[44vw] md:w-[32vw] lg:w-[22vw] relative overflow-hidden"
                   >
                     {/* Frame number — film slate style */}
                     <div className="absolute top-2 start-2 z-20 flex items-center gap-1.5 px-2 py-1 bg-dark/80 backdrop-blur-sm"
@@ -184,7 +179,7 @@ export function ProcessSection() {
                       </span>
                     </div>
 
-                    <div className="relative aspect-[4/5] overflow-hidden">
+                    <div className="relative aspect-[4/5] overflow-hidden rounded-[20px]">
                       <Picture
                         source={step.img}
                         alt={txt.t}

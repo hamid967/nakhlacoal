@@ -31,7 +31,7 @@ export function LocationSection() {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-10 items-stretch">
         <ScrollReveal className="lg:col-span-5">
-          <div className="h-full rounded-2xl sm:rounded-3xl border-luxe bg-background p-5 sm:p-8 md:p-10 flex flex-col">
+          <div className="clay-card h-full p-5 sm:p-8 md:p-10 flex flex-col">
             <Eyebrow>{isAr ? 'تفاصيل التواصل' : 'Contact details'}</Eyebrow>
 
             <ul className="mt-6 sm:mt-8 space-y-4 sm:space-y-6 flex-1">
@@ -63,7 +63,7 @@ export function LocationSection() {
         </ScrollReveal>
 
         <ScrollReveal delay={150} className="lg:col-span-7">
-          <div className="relative h-[300px] sm:h-[380px] lg:h-full lg:min-h-[420px] rounded-2xl sm:rounded-3xl overflow-hidden border-luxe shadow-luxe">
+          <div className="clay-card relative h-[300px] sm:h-[380px] lg:h-full lg:min-h-[420px] overflow-hidden p-0">
             <iframe
               title={isAr ? 'موقع فحم النخلة' : 'Palm Charcoal location'}
               src={EMBED}
