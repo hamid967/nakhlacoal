@@ -266,6 +266,33 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   );
 }
 
+function NotesEditor({ initial, onSave }: { initial: string; onSave: (v: string) => void }) {
+  const [val, setVal] = useState(initial);
+  const dirty = val !== initial;
+  return (
+    <div className="space-y-2">
+      <textarea
+        value={val}
+        onChange={(e) => setVal(e.target.value)}
+        rows={3}
+        className="a-input"
+        placeholder="أضف ملاحظة داخلية حول الطلب…"
+      />
+      <div className="flex justify-end">
+        <button
+          type="button"
+          disabled={!dirty}
+          onClick={() => onSave(val)}
+          className="a-btn a-btn-palm"
+          style={!dirty ? { opacity: .5, cursor: 'not-allowed' } : undefined}
+        >
+          حفظ
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function SortTh({ label, k, sortKey, sortDir, onSort }: {
   label: string; k: SortKey; sortKey: SortKey; sortDir: SortDir; onSort: (k: SortKey) => void;
 }) {
