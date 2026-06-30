@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react';
 import { WebGLBoundary } from '@/components/WebGLBoundary';
+import { hasWebGL } from '@/lib/hasWebGL';
 import { Link } from 'react-router-dom';
 import { Flame, Clock, Leaf, Wind, ShieldCheck, Award } from 'lucide-react';
 import { SEO } from '@/components/SEO';
@@ -110,11 +111,13 @@ export default function Home() {
 
       {/* HERO — first impression (lazy-loaded WebGL) */}
       <div id="hero" className="relative pt-24 md:pt-28 scroll-mt-24">
-        <WebGLBoundary>
-          <Suspense fallback={null}>
-            <GoldParticles className="z-0 opacity-70" />
-          </Suspense>
-        </WebGLBoundary>
+        {hasWebGL() && (
+          <WebGLBoundary fallback={null}>
+            <Suspense fallback={null}>
+              <GoldParticles className="z-0 opacity-70" />
+            </Suspense>
+          </WebGLBoundary>
+        )}
         <div className="relative z-10">
           <Suspense fallback={<SectionSkeleton variant="hero" label={isAr ? 'جارٍ تحميل الواجهة' : 'Loading hero'} />}>
             <BrandHero />
