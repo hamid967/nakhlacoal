@@ -378,6 +378,19 @@
     .clay-card, .clay-card-dark { transform: none !important; }
   }
 
+  /* User-controlled reduce-motion toggle (overrides regardless of OS) */
+  html[data-reduce-motion="1"] .clay-card,
+  html[data-reduce-motion="1"] .clay-card-dark { transform: none !important; }
+  html[data-reduce-motion="1"] *,
+  html[data-reduce-motion="1"] *::before,
+  html[data-reduce-motion="1"] *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+
   /* ============================================================
      Neo Glassmorphism 2.0
      ------------------------------------------------------------
