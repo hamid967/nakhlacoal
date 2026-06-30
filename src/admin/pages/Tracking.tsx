@@ -222,8 +222,8 @@ export default function AdminTracking() {
   return (
     <div className="space-y-5">
       <header>
-        <p className="text-[11px] tracking-[0.3em]" style={{ color: 'var(--a-text-muted)' }}>ANALYTICS</p>
-        <h1 className="a-display text-4xl mt-1 flex items-center gap-3">
+        <p className="a-crumbs">ANALYTICS</p>
+        <h1 className=" flex items-center gap-3">
           <BarChart3 className="w-8 h-8" /> إعدادات التتبع
         </h1>
         <p className="text-sm mt-2" style={{ color: 'var(--a-text-muted)' }}>

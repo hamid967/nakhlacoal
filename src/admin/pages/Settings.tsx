@@ -16,12 +16,11 @@ export default function AdminSettings() {
   return (
     <div className="space-y-6">
       {/* Page header — Untitled UI style */}
-      <header className="flex flex-wrap items-end justify-between gap-4 pb-5 border-b" style={{ borderColor: 'var(--a-border)' }}>
+      <header className="a-page-header">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight" style={{ color: 'var(--a-text)' }}>الإعدادات</h1>
-          <p className="text-sm mt-1" style={{ color: 'var(--a-text-muted)' }}>
-            إدارة معلومات الشركة، التفضيلات، والتكاملات.
-          </p>
+          <p className="a-crumbs">الإدارة · الإعدادات</p>
+          <h1>الإعدادات</h1>
+          <p>إدارة معلومات الشركة، التفضيلات، والتكاملات.</p>
         </div>
         <button className="a-btn a-btn-palm" onClick={() => toast.success('تم حفظ جميع التغييرات')}>
           <Save className="w-4 h-4" /> حفظ التغييرات

@@ -18,11 +18,11 @@ export default function AdminProducts() {
 
   return (
     <div className="space-y-5">
-      <header className="flex flex-wrap items-end justify-between gap-3">
+      <header className="a-page-header">
         <div>
-          <p className="text-[11px] tracking-[0.3em]" style={{ color: 'var(--a-text-muted)' }}>CATALOG</p>
-          <h1 className="a-display text-4xl mt-1">المنتجات</h1>
-          <p className="text-sm" style={{ color: 'var(--a-text-muted)' }}>{items.length} منتج · إدارة المخزون والأسعار</p>
+          <p className="a-crumbs">CATALOG</p>
+          <h1>المنتجات</h1>
+          <p>{items.length} منتج · إدارة المخزون والأسعار</p>
         </div>
         <div className="flex gap-2">
           <button className="a-btn a-btn-ghost"><Sparkles className="w-4 h-4" /> توليد وصف AI</button>

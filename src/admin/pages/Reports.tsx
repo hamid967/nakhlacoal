@@ -106,10 +106,10 @@ export default function AdminReports() {
 
   return (
     <div className="space-y-5">
-      <header className="flex flex-wrap items-end justify-between gap-4">
+      <header className="a-page-header">
         <div>
-          <p className="text-[11px] tracking-[0.3em]" style={{ color: 'var(--a-text-muted)' }}>INTELLIGENCE</p>
-          <h1 className="a-display text-4xl mt-1">التقارير والتحليلات</h1>
+          <p className="a-crumbs">INTELLIGENCE</p>
+          <h1>التقارير والتحليلات</h1>
           <p className="text-sm mt-1" style={{ color: 'var(--a-text-muted)' }}>أداء فحم النخلة عبر الفترة المختارة.</p>
         </div>
         <div className="flex gap-1 p-1 rounded-full" style={{ background: 'var(--a-surface-2)', border: '1px solid var(--a-border)' }}>

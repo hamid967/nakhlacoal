@@ -120,11 +120,11 @@ export default function AdminOrders() {
 
   return (
     <div className="space-y-5">
-      <header className="flex flex-wrap items-end justify-between gap-3">
+      <header className="a-page-header">
         <div>
-          <p className="text-[11px] tracking-[0.3em]" style={{ color: 'var(--a-text-muted)' }}>OPERATIONS</p>
-          <h1 className="a-display text-4xl mt-1">الطلبات</h1>
-          <p className="text-sm" style={{ color: 'var(--a-text-muted)' }}>{orders.length} طلب إجمالي · {filtered.length} مطابق</p>
+          <p className="a-crumbs">OPERATIONS</p>
+          <h1>الطلبات</h1>
+          <p>{orders.length} طلب إجمالي · {filtered.length} مطابق</p>
         </div>
         <div className="flex gap-2">
           <button onClick={load} className="a-btn a-btn-ghost"><RefreshCw className="w-4 h-4" /> تحديث</button>

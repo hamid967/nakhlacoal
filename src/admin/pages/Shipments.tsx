@@ -209,11 +209,11 @@ export default function AdminShipments() {
 
   return (
     <div className="space-y-5">
-      <header className="flex flex-wrap items-end justify-between gap-3">
+      <header className="a-page-header">
         <div>
-          <p className="text-[11px] tracking-[0.3em]" style={{ color: 'var(--a-text-muted)' }}>LOGISTICS</p>
-          <h1 className="a-display text-4xl mt-1">الشحنات</h1>
-          <p className="text-sm" style={{ color: 'var(--a-text-muted)' }}>{rows.length} شحنة</p>
+          <p className="a-crumbs">LOGISTICS</p>
+          <h1>الشحنات</h1>
+          <p>{rows.length} شحنة</p>
         </div>
         <button
           onClick={startCreate}

@@ -109,10 +109,10 @@ export default function AdminDashboard() {
 
   return (
     <div className="space-y-6">
-      <header className="flex flex-wrap items-end justify-between gap-3">
+      <header className="a-page-header">
         <div>
-          <p className="text-[11px] tracking-[0.3em]" style={{ color: 'var(--a-text-muted)' }}>OVERVIEW · {new Date().toLocaleDateString('ar-SA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
-          <h1 className="a-display text-4xl md:text-5xl mt-1">أهلاً بعودتك ✦</h1>
+          <p className="a-crumbs">OVERVIEW · {new Date().toLocaleDateString('ar-SA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+          <h1>أهلاً بعودتك ✦</h1>
           <p className="text-sm mt-1" style={{ color: 'var(--a-text-muted)' }}>نظرة شاملة على عمليات فحم النخلة اليوم.</p>
         </div>
         <div className="flex gap-2">
