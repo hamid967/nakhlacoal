@@ -109,7 +109,7 @@ export default function Home() {
       />
 
 
-      {/* HERO — first impression (lazy-loaded WebGL) */}
+      {/* 1 — HERO + trust strip merged */}
       <div id="hero" className="relative pt-24 md:pt-28 scroll-mt-24">
         {hasWebGL() && (
           <WebGLBoundary fallback={null}>
@@ -122,28 +122,22 @@ export default function Home() {
           <Suspense fallback={<SectionSkeleton variant="hero" label={isAr ? 'جارٍ تحميل الواجهة' : 'Loading hero'} />}>
             <BrandHero />
           </Suspense>
+          <div className="container mt-8 md:mt-10 grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
+            {topStrip.map((f, i) => <TrustItem key={i} icon={f.icon} text={f.text} index={i} />)}
+          </div>
         </div>
       </div>
 
-
-      {/* Trust strip — credibility right after the hero */}
-      <section className="mt-2 md:mt-6">
-        <div className="container grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
-          {topStrip.map((f, i) => <TrustItem key={i} icon={f.icon} text={f.text} index={i} />)}
-        </div>
-      </section>
-
-
       <SectionDivider />
 
-      {/* Audience tracks — clear commercial paths: Individuals / Wholesale / Export */}
+      {/* 2 — Audience tracks */}
       <AudienceTracks />
 
+      <SectionDivider flip />
 
-
-      {/* Features */}
+      {/* 3 — Why us + technical metrics */}
       <LuxSection tone="surface">
-        <div className="container"><SectionNumber index={2} /></div>
+        <div className="container"><SectionNumber index={3} /></div>
         <SectionHeader
           eyebrow={isAr ? 'لماذا فحم النخلة' : 'Why Palm Charcoal'}
           title={isAr ? 'تفوّق ملموس في كل تفصيلة' : 'Excellence in every detail'}
@@ -152,7 +146,6 @@ export default function Home() {
           {features.map((f, i) => <FeatureCard key={i} icon={f.icon} title={f.title} body={f.body} index={i} />)}
         </div>
 
-        {/* Technical metrics strip */}
         <ScrollReveal delay={300}>
           <div className="mt-12 md:mt-16 rounded-3xl clay-card-dark p-6 md:p-8 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-4 text-center">
             {[
@@ -170,11 +163,9 @@ export default function Home() {
         </ScrollReveal>
       </LuxSection>
 
-      <SectionDivider flip />
-
-      {/* Products — move higher for conversion */}
-      <LuxSection id="products" tone="surface" className="section scroll-mt-24">
-        <div className="container"><SectionNumber index={3} /></div>
+      {/* 4 — Products */}
+      <LuxSection id="products" tone="surface" className="scroll-mt-24">
+        <div className="container"><SectionNumber index={4} /></div>
         <SectionHeader
           align="between"
           eyebrow={isAr ? 'منتجاتنا' : 'Our products'}
@@ -190,19 +181,18 @@ export default function Home() {
         </div>
       </LuxSection>
 
-      <SectionDivider />
+      <SectionDivider flip />
 
-      {/* Unified brand timeline — merges Process + Journey, anchored to #hero and #products */}
+      {/* 5 — Brand timeline (process + journey) */}
       <Suspense fallback={<SectionSkeleton variant="timeline" />}>
         <BrandTimeline />
       </Suspense>
 
+      <SectionDivider />
 
-      <SectionDivider flip />
-
-      {/* About band — story after the user has seen products & process */}
-      <LuxSection className="section">
-        <div className="container"><SectionNumber index={5} align="end" /></div>
+      {/* 6 — About + certifications grouped */}
+      <LuxSection>
+        <div className="container"><SectionNumber index={6} align="end" /></div>
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           <ScrollReveal className="lg:col-span-7">
             <Eyebrow>{isAr ? 'من نحن' : 'Our story'}</Eyebrow>
@@ -234,7 +224,6 @@ export default function Home() {
                   }
                   size="sm"
                 />
-
                 <Stat value="24/7" label={isAr ? 'دعم' : 'Support'} size="sm" />
                 <Stat value="100%" label={isAr ? 'طبيعي' : 'Natural'} size="sm" />
               </div>
@@ -242,19 +231,14 @@ export default function Home() {
           </ScrollReveal>
         </div>
       </LuxSection>
-
-      {/* Certifications */}
       <Certifications />
 
+      {/* 7 — Social proof: trademarks + testimonials */}
       <Suspense fallback={<SectionSkeleton variant="grid" />}>
         <TrademarksShowcase />
       </Suspense>
-
-      <SectionDivider />
-
-      {/* Testimonials */}
-      <LuxSection tone="dark" className="section">
-        <div className="container"><SectionNumber index={6} /></div>
+      <LuxSection tone="dark">
+        <div className="container"><SectionNumber index={7} /></div>
         <SectionHeader
           eyebrow={isAr ? 'آراء عملائنا' : 'Customer voices'}
           title={isAr ? 'ثقة تتجدد مع كل تجربة' : 'Trusted with every order'}
@@ -264,12 +248,11 @@ export default function Home() {
         </div>
       </LuxSection>
 
+      {/* 8 — FAQ + location + CTA */}
       <Suspense fallback={<SectionSkeleton variant="band" />}>
         <FaqSection />
         <LocationSection />
       </Suspense>
-
-
       <CtaBand
         title={isAr ? 'جاهز لتجربة الفحم الفاخر؟' : 'Ready to taste the premium difference?'}
         lead={isAr ? 'تواصل معنا الآن واحصل على عرض خاص لجملة وتجزئة وتصدير.' : 'Contact us for wholesale, retail and export offers.'}
