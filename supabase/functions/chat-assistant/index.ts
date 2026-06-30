@@ -35,6 +35,29 @@ async function resolveUserId(req: Request): Promise<string | null> {
   }
 }
 
+// ── Model guard ──────────────────────────────────────────────────────────────
+// Allowlist of chat models supported by Lovable AI Gateway. Adding the env
+// override `CHAT_MODEL` lets us swap models without redeploy, but only to a
+// value in this list — anything else falls back to the safe default and logs
+// a warning, so a typo can never break the assistant.
+const ALLOWED_MODELS = new Set<string>([
+  "google/gemini-3-flash-preview",
+  "google/gemini-2.5-pro",
+  "google/gemini-2.5-flash",
+  "google/gemini-2.5-flash-lite",
+  "openai/gpt-5",
+  "openai/gpt-5-mini",
+  "openai/gpt-5-nano",
+]);
+const DEFAULT_MODEL = "google/gemini-2.5-flash";
+function resolveModel(): string {
+  const requested = (Deno.env.get("CHAT_MODEL") ?? "").trim();
+  if (!requested) return DEFAULT_MODEL;
+  if (ALLOWED_MODELS.has(requested)) return requested;
+  console.warn(`[chat-assistant] CHAT_MODEL "${requested}" not in allowlist; falling back to ${DEFAULT_MODEL}`);
+  return DEFAULT_MODEL;
+}
+
 const SYSTEM_PROMPT = `أنت **مساعد فحم النخلة** — مستشار مبيعات احترافي لشركة فحم النخلة (Palm Charcoal) في جدة، المملكة العربية السعودية. تتحدث بالعربية الفصحى المبسّطة بنبرة دافئة وراقية تليق بعلامة فاخرة.
 
 ## شخصيتك
@@ -154,7 +177,7 @@ Deno.serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
+        model: resolveModel(),
         stream: true,
         messages: [
           { role: "system", content: SYSTEM_PROMPT },
