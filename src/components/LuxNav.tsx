@@ -367,3 +367,23 @@ function AccountButton() {
     </div>
   );
 }
+
+function CartButton() {
+  const { count, setOpen } = useCart();
+  return (
+    <button
+      type="button"
+      onClick={() => setOpen(true)}
+      aria-label="Cart"
+      className="relative lux-emerald-icon-btn w-11 h-11"
+    >
+      <ShoppingCart className="w-4 h-4" />
+      {count > 0 && (
+        <span className="absolute -top-1 -end-1 min-w-5 h-5 px-1 rounded-full bg-[hsl(var(--gold-hi))] text-[10px] font-bold text-[hsl(var(--ink))] grid place-items-center">
+          {count}
+        </span>
+      )}
+    </button>
+  );
+}
+
