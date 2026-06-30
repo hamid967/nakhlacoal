@@ -231,6 +231,7 @@ export function BrandHero() {
 
           {/* Accessible focusable layer for each card (WebGL has no DOM nodes) */}
           <ul
+            role="tablist"
             className="absolute inset-0 z-[55] flex items-center justify-center gap-2 pointer-events-none"
             aria-label={isAr ? 'بطاقات العلامات' : 'Trademark cards'}
           >

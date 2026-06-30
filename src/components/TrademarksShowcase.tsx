@@ -167,14 +167,21 @@ export function TrademarksShowcase() {
           </div>
 
           {/* Dots */}
-          <div className="flex justify-center gap-2 mt-6">
-            {trademarks.map((_, i) => (
+          <div role="tablist" className="flex justify-center gap-1 mt-6">
+            {trademarks.map((t, i) => (
               <button
                 key={i}
+                role="tab"
+                aria-selected={i === active}
                 onClick={() => setActive(i)}
-                aria-label={`go to ${i + 1}`}
-                className={`h-2 rounded-full transition-all ${i === active ? 'w-6 bg-gold' : 'w-2 bg-gold/30 hover:bg-gold/60'}`}
-              />
+                aria-label={`${t.nameEn} (${i + 1} / ${trademarks.length})`}
+                className="inline-flex items-center justify-center h-11 w-11 group"
+              >
+                <span
+                  aria-hidden="true"
+                  className={`block h-2 rounded-full transition-all ${i === active ? 'w-6 bg-gold' : 'w-2 bg-gold/30 group-hover:bg-gold/60'}`}
+                />
+              </button>
             ))}
           </div>
         </div>

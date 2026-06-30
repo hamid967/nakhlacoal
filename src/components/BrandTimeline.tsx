@@ -31,11 +31,11 @@ export function BrandTimeline() {
       <div className="container mx-auto px-4 pt-10 md:pt-14 flex justify-center">
         <a
           href="#hero"
-          className="group inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[hsl(var(--gold))]/35 bg-[hsl(var(--background))]/60 backdrop-blur-sm text-xs font-arabic text-[hsl(var(--gold-hi))] hover:bg-[hsl(var(--gold))]/10 transition-colors"
+          className="group inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[hsl(var(--gold))]/60 bg-[hsl(var(--background))]/90 text-xs font-arabic text-[hsl(var(--ink))] hover:bg-[hsl(var(--gold))]/15 transition-colors"
         >
-          <Sparkles className="w-3.5 h-3.5" />
+          <Sparkles className="w-3.5 h-3.5 text-[hsl(var(--gold-hi))]" aria-hidden="true" />
           <span>{isAr ? 'من الواجهة' : 'From the hero'}</span>
-          <span className="opacity-40">·</span>
+          <span className="opacity-50" aria-hidden="true">·</span>
           <span>{isAr ? 'الفصل ١ — الحكاية' : 'Chapter 1 — The story'}</span>
         </a>
       </div>
