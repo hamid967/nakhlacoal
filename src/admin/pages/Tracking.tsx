@@ -116,6 +116,28 @@ function StatusBadge({ state }: { state: TestState }) {
   return <span className="inline-flex items-center gap-1 text-[10px] text-red-600"><XCircle className="w-3 h-3" /> فشل</span>;
 }
 
+function TestFeedback({ state, onRetry }: { state: TestState; onRetry?: () => void }) {
+  const tone =
+    state.status === 'ok' ? 'text-emerald-700 bg-emerald-50 border-emerald-200'
+    : state.status === 'fail' ? 'text-red-700 bg-red-50 border-red-200'
+    : 'text-foreground bg-muted border-border';
+  return (
+    <div className={`text-xs mt-2 rounded-md border px-3 py-2 ${tone}`}>
+      <div className="flex items-start gap-2">
+        <span className="flex-1">{state.message}</span>
+        {state.status === 'fail' && onRetry && (
+          <button type="button" onClick={onRetry} className="underline shrink-0">إعادة المحاولة</button>
+        )}
+      </div>
+      {state.hints && state.hints.length > 0 && (
+        <ul className="list-disc ms-5 mt-1.5 space-y-0.5 opacity-90">
+          {state.hints.map((h, i) => <li key={i}>{h}</li>)}
+        </ul>
+      )}
+    </div>
+  );
+}
+
 export default function AdminTracking() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
