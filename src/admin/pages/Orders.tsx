@@ -56,6 +56,18 @@ export default function AdminOrders() {
     });
   }, [orders, qDebounced, status, sortKey, sortDir]);
 
+  // Counts per status respect the current search (but not status itself).
+  const counts = useMemo(() => {
+    const s = qDebounced.toLowerCase().trim();
+    const matchSearch = (o: any) => !s || [o.company_name, o.contact_name, o.phone, o.email, o.product_type, o.city]
+      .filter(Boolean).some((v: string) => v.toLowerCase().includes(s));
+    const base = orders.filter(matchSearch);
+    const out: Record<string, number> = { all: base.length };
+    STATUSES.forEach((k) => { out[k] = 0; });
+    base.forEach((o) => { if (out[o.status] !== undefined) out[o.status]++; });
+    return out;
+  }, [orders, qDebounced]);
+
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const pageRows = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
@@ -105,19 +117,54 @@ export default function AdminOrders() {
         </div>
       </header>
 
-      <div className="a-card p-3 flex flex-wrap items-center gap-2">
-        <div className="relative flex-1 min-w-[220px]">
-          <Search className="w-4 h-4 absolute top-1/2 -translate-y-1/2 start-3" style={{ color: 'var(--a-text-muted)' }} />
-          <input className="a-input ps-9" placeholder="ابحث باسم العميل، الهاتف، المنتج…" value={q} onChange={(e) => setQ(e.target.value)} />
-        </div>
-        <div className="flex items-center gap-1 p-1 rounded-full" style={{ background: 'var(--a-surface-2)' }}>
-          {['all', ...STATUSES].map((s) => (
-            <button key={s} onClick={() => setStatus(s)}
-              className={`px-3 py-1.5 rounded-full text-xs transition ${status === s ? 'shadow font-semibold' : 'opacity-70 hover:opacity-100'}`}
-              style={status === s ? { background: 'var(--a-surface)', color: 'var(--a-palm)' } : undefined}>
-              {s === 'all' ? 'الكل' : LABEL[s]}
+      <div className="space-y-3">
+        {/* Quick status filters as Untitled UI tab-pills with counts */}
+        <div className="flex flex-wrap items-center gap-1.5">
+          {(['all', ...STATUSES] as const).map((s) => {
+            const isActive = status === s;
+            const n = counts[s] ?? 0;
+            return (
+              <button
+                key={s}
+                onClick={() => setStatus(s)}
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-[13px] font-medium border transition"
+                style={{
+                  background: isActive ? 'var(--a-surface)' : 'transparent',
+                  borderColor: isActive ? 'var(--a-palm)' : 'var(--a-border)',
+                  color: isActive ? 'var(--a-palm)' : 'var(--a-text-muted)',
+                  boxShadow: isActive ? '0 0 0 3px rgba(4,120,87,.08)' : 'none',
+                }}
+              >
+                {s === 'all' ? 'الكل' : LABEL[s]}
+                <span
+                  className="text-[11px] px-1.5 py-0.5 rounded-md"
+                  style={{
+                    background: isActive ? 'rgba(4,120,87,.1)' : 'var(--a-surface-2)',
+                    color: isActive ? 'var(--a-palm)' : 'var(--a-text-muted)',
+                  }}
+                >
+                  {n}
+                </span>
+              </button>
+            );
+          })}
+          {(status !== 'all' || q) && (
+            <button
+              onClick={() => { setStatus('all'); setQ(''); }}
+              className="ms-auto inline-flex items-center gap-1 text-[12px]"
+              style={{ color: 'var(--a-text-muted)' }}
+            >
+              <X className="w-3.5 h-3.5" /> مسح الفلاتر
             </button>
-          ))}
+          )}
+        </div>
+
+        {/* Search */}
+        <div className="a-card p-3 flex flex-wrap items-center gap-2">
+          <div className="relative flex-1 min-w-[220px]">
+            <Search className="w-4 h-4 absolute top-1/2 -translate-y-1/2 start-3" style={{ color: 'var(--a-text-muted)' }} />
+            <input className="a-input ps-9" placeholder="ابحث باسم العميل، الهاتف، المنتج…" value={q} onChange={(e) => setQ(e.target.value)} />
+          </div>
         </div>
       </div>
 
