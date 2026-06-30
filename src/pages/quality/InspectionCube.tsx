@@ -93,23 +93,24 @@ export default function InspectionCube() {
             transition: pointers.current.size ? 'none' : 'transform 0.6s cubic-bezier(0.16,1,0.3,1)',
           }}>
             {(Object.keys(FACE_TRANSFORMS) as Face[]).map((face) => (
-              <div key={face} className="absolute inset-0 border border-gold/40"
+              <div key={face} className="absolute inset-0 border-2 border-gold"
                 style={{
                   transform: FACE_TRANSFORMS[face],
-                  background: 'linear-gradient(135deg, hsl(var(--dark-2, var(--dark))) 0%, hsl(var(--dark)) 100%)',
-                  boxShadow: 'inset 0 0 40px hsl(var(--gold) / 0.15), 0 0 30px hsl(var(--gold) / 0.2)',
+                  background: 'linear-gradient(135deg, hsl(var(--jade)) 0%, hsl(var(--dark)) 100%)',
+                  boxShadow: 'inset 0 0 40px hsl(var(--gold-hi) / 0.35), 0 0 40px hsl(var(--gold) / 0.4)',
                 }}>
-                <div className="absolute inset-2 opacity-40"
-                  style={{ backgroundImage: 'radial-gradient(circle at 30% 30%, hsl(var(--gold-hi) / 0.4), transparent 50%), radial-gradient(circle at 70% 70%, hsl(var(--jade) / 0.3), transparent 50%)' }} />
-                <span className="absolute top-1 left-2 text-[10px] font-mono uppercase tracking-widest text-gold-hi/40">{FACE_LABEL[face]}</span>
+                <div className="absolute inset-2 opacity-60"
+                  style={{ backgroundImage: 'radial-gradient(circle at 30% 30%, hsl(var(--gold-hi) / 0.55), transparent 55%), radial-gradient(circle at 70% 70%, hsl(var(--gold) / 0.35), transparent 55%)' }} />
+                <span className="absolute top-1.5 left-2 text-[11px] font-mono uppercase tracking-widest text-gold-hi font-bold drop-shadow">{FACE_LABEL[face]}</span>
                 {inspectionSpots.map((s, i) => s.face === face && (
                   <button key={i} onClick={(e) => { e.stopPropagation(); focusSpot(i); }}
                     onMouseEnter={() => setActive(i)}
+                    aria-label={s.label}
                     className="absolute -translate-x-1/2 -translate-y-1/2 group"
                     style={{ left: `${s.x}%`, top: `${s.y}%` }}>
-                    <span className={`block w-3 h-3 rounded-full transition-all ${active === i ? 'bg-gold-hi scale-150' : 'bg-gold-hi/80'}`}
-                      style={{ boxShadow: '0 0 12px hsl(var(--gold-hi))' }} />
-                    <span className={`absolute inset-0 rounded-full bg-gold-hi/40 ${active === i ? 'animate-ping' : ''}`} />
+                    <span className={`block rounded-full transition-all ${active === i ? 'w-5 h-5 bg-gold-hi scale-125' : 'w-4 h-4 bg-gold-hi'}`}
+                      style={{ boxShadow: '0 0 18px hsl(var(--gold-hi)), 0 0 4px #fff inset' }} />
+                    <span className={`absolute inset-0 rounded-full bg-gold-hi/60 ${active === i ? 'animate-ping' : ''}`} />
                   </button>
                 ))}
               </div>
