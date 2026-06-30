@@ -1,8 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Filter, Download, Eye, Phone, Mail, Calendar, MapPin, X, RefreshCw } from 'lucide-react';
+import { Search, Download, Eye, Phone, Mail, Calendar, MapPin, X, RefreshCw, ChevronUp, ChevronLeft, ChevronRight } from 'lucide-react';
 import { toast } from 'sonner';
+
+type SortKey = 'id' | 'company_name' | 'product_type' | 'quantity' | 'status' | 'created_at';
+type SortDir = 'asc' | 'desc';
+const PAGE_SIZE = 10;
 
 const STATUSES = ['new', 'contacted', 'confirmed', 'shipped', 'completed', 'cancelled'] as const;
 const LABEL: Record<string, string> = {
