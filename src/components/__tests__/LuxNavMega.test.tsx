@@ -64,6 +64,8 @@ describe('LuxNav mega menu active states', () => {
 
     const mega = container.querySelector('.lux-emerald-mega') as HTMLElement;
     expect(mega).toBeTruthy();
+    // eslint-disable-next-line no-console
+    console.log('MEGA HTML:', mega.innerHTML.slice(0, 400));
     const compareLink = within(mega).getByRole('link', { name: /compare/i });
     const productsLink = within(mega).getByRole('link', { name: /all products/i });
 
