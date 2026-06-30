@@ -84,7 +84,7 @@ export function LuxNav() {
   return (
     <>
       <nav
-        className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 lux-emerald-nav ${
+        className={`fixed top-[var(--promo-h,32px)] inset-x-0 z-50 transition-all duration-500 lux-emerald-nav ${
           scrolled ? 'py-3' : 'py-5'
         }`}
         onMouseLeave={scheduleClose}
