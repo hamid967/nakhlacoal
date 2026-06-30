@@ -351,8 +351,8 @@ function AccountButton() {
   return (
     <div className="hidden md:inline-flex items-center gap-1">
       <Link
-        to="/profile"
-        aria-label={isAr ? 'الملف الشخصي' : 'Profile'}
+        to="/portal"
+        aria-label={isAr ? 'حسابي ولوحة الطلبات' : 'My account & orders'}
         title={user.email ?? ''}
         className="lux-emerald-icon-btn w-11 h-11"
       >
