@@ -2,7 +2,8 @@ import { useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
 // Dynamically injects GA4 (gtag.js) and/or GTM scripts based on admin settings.
-// Reads public row from public.analytics_settings. Safe no-op when disabled or empty.
+// Reads sanitized config from the public `get-tracking-config` edge function so
+// the underlying analytics_settings table can stay restricted to admins.
 
 const GA4_RE = /^G-[A-Z0-9]{6,}$/;
 const GTM_RE = /^GTM-[A-Z0-9]{4,}$/;
@@ -40,11 +41,7 @@ export default function TrackingLoader() {
     let cancelled = false;
     (async () => {
       try {
-        const { data } = await supabase
-          .from('analytics_settings')
-          .select('ga4_measurement_id, gtm_container_id, enabled')
-          .eq('id', true)
-          .maybeSingle();
+        const { data } = await supabase.functions.invoke('get-tracking-config');
         if (cancelled || !data || !data.enabled) return;
 
         if (data.gtm_container_id && GTM_RE.test(data.gtm_container_id)) {
@@ -61,3 +58,4 @@ export default function TrackingLoader() {
   }, []);
   return null;
 }
+
