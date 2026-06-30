@@ -10,7 +10,7 @@ const ProcessSection = lazy(() => import('@/components/ProcessSection').then((m)
 const JourneySection = lazy(() => import('@/components/JourneySection').then((m) => ({ default: m.JourneySection })));
 const LocationSection = lazy(() => import('@/components/LocationSection').then((m) => ({ default: m.LocationSection })));
 const FaqSection = lazy(() => import('@/components/FaqSection').then((m) => ({ default: m.FaqSection })));
-const Services = lazy(() => import('@/components/Services').then((m) => ({ default: m.Services })));
+
 const TrademarksShowcase = lazy(() => import('@/components/TrademarksShowcase').then((m) => ({ default: m.TrademarksShowcase })));
 
 
