@@ -59,12 +59,13 @@ describe('LuxNav mega menu active states', () => {
 
   it('applies is-active to the matching mega item link when opened', async () => {
     const user = userEvent.setup();
-    renderAt('/compare');
-    const trigger = screen.getByRole('button', { name: /nav\.products/i });
-    await user.click(trigger);
+    const { container } = renderAt('/compare');
+    await user.click(screen.getByRole('button', { name: /nav\.products/i }));
 
-    const compareLink = screen.getByRole('link', { name: /compare/i });
-    const productsLink = screen.getByRole('link', { name: /^all products$/i });
+    const mega = container.querySelector('.lux-emerald-mega') as HTMLElement;
+    expect(mega).toBeTruthy();
+    const compareLink = within(mega).getByRole('link', { name: /compare/i });
+    const productsLink = within(mega).getByRole('link', { name: /all products/i });
 
     expect(compareLink.className).toMatch(/is-active/);
     expect(productsLink.className).not.toMatch(/is-active/);
@@ -72,11 +73,12 @@ describe('LuxNav mega menu active states', () => {
 
   it('moves is-active to a different mega item when the path changes', async () => {
     const user = userEvent.setup();
-    renderAt('/wholesale');
+    const { container } = renderAt('/wholesale');
     await user.click(screen.getByRole('button', { name: /nav\.products/i }));
 
-    const wholesale = screen.getByRole('link', { name: /wholesale/i });
-    const compare = screen.getByRole('link', { name: /compare/i });
+    const mega = container.querySelector('.lux-emerald-mega') as HTMLElement;
+    const wholesale = within(mega).getByRole('link', { name: /wholesale/i });
+    const compare = within(mega).getByRole('link', { name: /compare/i });
 
     expect(wholesale.className).toMatch(/is-active/);
     expect(compare.className).not.toMatch(/is-active/);
