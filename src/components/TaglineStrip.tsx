@@ -23,7 +23,7 @@ export function TaglineStrip() {
       <div aria-hidden className={scrolled ? 'h-[92px] md:h-[100px]' : 'h-[108px] md:h-[116px]'} />
       <div
         dir={isAr ? 'rtl' : 'ltr'}
-        className={`fixed inset-x-0 z-40 border-y border-[hsl(var(--gold))]/20 bg-[hsl(var(--dark))]/75 backdrop-blur-md transition-all duration-500 ${
+        className={`fixed inset-x-0 z-40 border-y border-[hsl(var(--gold))]/25 bg-[hsl(var(--dark-2))] backdrop-blur-md transition-all duration-500 ${
           scrolled ? 'top-[64px] md:top-[72px]' : 'top-[80px] md:top-[88px]'
         }`}
         role="note"
@@ -33,14 +33,14 @@ export function TaglineStrip() {
           {words.map((w, i) => (
             <span key={w} className="flex items-center gap-4 sm:gap-8">
               <span
-                className={`text-[11px] sm:text-xs tracking-[0.4em] uppercase text-[hsl(var(--gold-hi))] ${
+                className={`text-[11px] sm:text-xs tracking-[0.4em] uppercase font-semibold text-[hsl(var(--gold-hi))] ${
                   isAr ? 'font-arabic' : 'font-display'
                 }`}
               >
                 {w}.
               </span>
               {i < words.length - 1 && (
-                <span aria-hidden className="h-1 w-1 rounded-full bg-[hsl(var(--gold))]/70" />
+                <span aria-hidden className="h-1 w-1 rounded-full bg-[hsl(var(--gold-hi))]" />
               )}
             </span>
           ))}
