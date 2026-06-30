@@ -153,9 +153,8 @@ export function LuxNav() {
 
           <div className="flex items-center gap-1.5 md:gap-2">
             <AccountButton />
-            <button aria-label="Cart" className="hidden xl:inline-flex lux-emerald-icon-btn">
-              <ShoppingCart className="w-4 h-4" />
-            </button>
+            <CartButton />
+
             <ThemeToggle />
             <LanguageToggle compact />
             <button
