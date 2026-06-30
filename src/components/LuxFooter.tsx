@@ -82,7 +82,7 @@ export function LuxFooter() {
 function FooterCol({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div>
-      <h4 className="text-xs uppercase tracking-[0.3em] text-gold mb-5 font-body">{title}</h4>
+      <h2 className="text-xs uppercase tracking-[0.3em] text-gold mb-5 font-body">{title}</h2>
       <ul className="space-y-3">{children}</ul>
     </div>
   );
