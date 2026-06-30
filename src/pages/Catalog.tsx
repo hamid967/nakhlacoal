@@ -24,11 +24,11 @@ export default function Catalog() {
       : 'Palm Charcoal — Product Catalog';
   }, [isAr]);
 
-  const priceFor = (slug: string) => {
-    const inv = INVENTORY.find((i) => i.match.test(slug) || i.match.test(products.find((p) => p.slug === slug)?.nameAr || ''));
-    if (!inv) return null;
-    return inv.tiers;
+  const inventoryFor = (slug: string) => {
+    const product = products.find((p) => p.slug === slug);
+    return INVENTORY.find((i) => i.match.test(slug) || (product && i.match.test(product.nameAr)));
   };
+  const priceFor = (slug: string) => inventoryFor(slug)?.tiers ?? null;
 
   const handlePrint = () => window.print();
 
