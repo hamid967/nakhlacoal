@@ -1,9 +1,39 @@
 // Palm Charcoal AI Order Assistant — streaming chat that collects order info
+import { createClient } from "npm:@supabase/supabase-js@2";
+
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
+
+/**
+ * Optional, non-blocking identity resolution.
+ * Uses supabase-js v2 `auth.getUser(jwt)` (the supported replacement for the
+ * non-existent `getClaims()`). Any failure is swallowed and returns null so
+ * anonymous chat keeps working.
+ */
+async function resolveUserId(req: Request): Promise<string | null> {
+  const authHeader = req.headers.get("Authorization");
+  if (!authHeader?.startsWith("Bearer ")) return null;
+  const jwt = authHeader.slice(7).trim();
+  if (!jwt) return null;
+  try {
+    const url = Deno.env.get("SUPABASE_URL");
+    const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
+    if (!url || !anonKey) return null;
+    const client = createClient(url, anonKey);
+    const { data, error } = await client.auth.getUser(jwt);
+    if (error) {
+      console.warn("[chat-assistant] getUser failed:", error.message);
+      return null;
+    }
+    return data.user?.id ?? null;
+  } catch (e) {
+    console.warn("[chat-assistant] auth resolve threw:", e);
+    return null;
+  }
+}
 
 const SYSTEM_PROMPT = `أنت **مساعد فحم النخلة** — مستشار مبيعات احترافي لشركة فحم النخلة (Palm Charcoal) في جدة، المملكة العربية السعودية. تتحدث بالعربية الفصحى المبسّطة بنبرة دافئة وراقية تليق بعلامة فاخرة.
 
@@ -97,6 +127,10 @@ Deno.serve(async (req) => {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+
+    const userId = await resolveUserId(req);
+    if (userId) console.log("[chat-assistant] user:", userId);
+
     const raw = Array.isArray(body?.messages) ? body.messages : [];
     const ALLOWED_ROLES = ["user", "assistant", "system"] as const;
     const MAX_CONTENT_CHARS = 4000;
