@@ -46,7 +46,10 @@ export default defineConfig(({ mode }) => ({
           if (/[\\/]node_modules[\\/]@supabase[\\/]/.test(id)) return 'supabase';
           if (/[\\/]node_modules[\\/](i18next|react-i18next)[\\/]/.test(id)) return 'i18n';
           if (/[\\/]node_modules[\\/](react-hook-form|@hookform|zod)[\\/]/.test(id)) return 'forms';
-          if (/[\\/]node_modules[\\/](react|react-dom|react-router|react-router-dom|scheduler)[\\/]/.test(id)) return 'react-vendor';
+          // Do NOT split react/react-dom into a separate chunk; doing so
+          // creates TDZ "Cannot access 'P' before initialization" errors
+          // when other vendor chunks (recharts, etc.) reference React at
+          // module-evaluation time before the react chunk is initialized.
         },
       },
     },
