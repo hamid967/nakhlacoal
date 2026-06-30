@@ -26,7 +26,7 @@ export default function AudienceLanding() {
   const faqs = isAr ? a.faqsAr : a.faqsEn;
   const cta = isAr ? a.ctaAr : a.ctaEn;
   const prefill = encodeURIComponent(isAr ? a.whatsappPrefillAr : a.whatsappPrefillEn);
-  const waHref = `${brand.contact.whatsapp}?text=${prefill}`;
+  const waHref = `${brand.footer.whatsapp}?text=${prefill}`;
 
   const faqJsonLd = {
     '@context': 'https://schema.org',
