@@ -14,6 +14,10 @@
   --a-soft: #E8E5DE;
   --a-shadow: 0 10px 40px -10px rgba(15,15,15,0.08), 0 2px 6px rgba(15,15,15,0.04);
   --a-radius: 22px;
+  --a-accent: #1A4A00;
+  --a-accent-2: #2F6A12;
+  --a-on-palm: #FFFFFF;
+  --a-on-accent: #FFFFFF;
 
   background: var(--a-ivory);
   color: var(--a-text);
