@@ -56,6 +56,18 @@ export default function AdminOrders() {
     });
   }, [orders, qDebounced, status, sortKey, sortDir]);
 
+  // Counts per status respect the current search (but not status itself).
+  const counts = useMemo(() => {
+    const s = qDebounced.toLowerCase().trim();
+    const matchSearch = (o: any) => !s || [o.company_name, o.contact_name, o.phone, o.email, o.product_type, o.city]
+      .filter(Boolean).some((v: string) => v.toLowerCase().includes(s));
+    const base = orders.filter(matchSearch);
+    const out: Record<string, number> = { all: base.length };
+    STATUSES.forEach((k) => { out[k] = 0; });
+    base.forEach((o) => { if (out[o.status] !== undefined) out[o.status]++; });
+    return out;
+  }, [orders, qDebounced]);
+
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const pageRows = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
