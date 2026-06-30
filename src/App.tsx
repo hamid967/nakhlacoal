@@ -185,6 +185,8 @@ export default function App() {
                   <Route path="/orders/new" element={<ProtectedRoute><NewOrder /></ProtectedRoute>} />
                   <Route path="/orders/:id" element={<ProtectedRoute><OrderTracking /></ProtectedRoute>} />
                   <Route path="/catalog" element={<Catalog />} />
+                  <Route path="/checkout" element={<Checkout />} />
+                  <Route path="/track/:id" element={<OrderTracking />} />
 
                   <Route path="*" element={<NotFound />} />
                 </Route>
