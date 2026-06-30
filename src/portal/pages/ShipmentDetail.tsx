@@ -180,8 +180,8 @@ export default function ShipmentDetail() {
 
           {customer && (
             <Card title="بيانات العميل" Icon={User}>
-              <div className="text-sm font-medium">{customer.contact_person || customer.company_name || '—'}</div>
-              {customer.company_name && customer.contact_person && (
+              <div className="text-sm font-medium">{customer.contact_name || customer.company_name || '—'}</div>
+              {customer.company_name && customer.contact_name && (
                 <div className="text-xs" style={{ color: 'var(--a-text-muted)' }}>{customer.company_name}</div>
               )}
               {customer.phone && <div className="text-xs mt-1">{customer.phone}</div>}
