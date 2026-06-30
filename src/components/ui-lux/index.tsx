@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, LucideIcon, Star } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { ScrollReveal } from '@/components/ScrollReveal';
+import { useTilt } from '@/hooks/useTilt';
 
 /* ---------- helpers ---------- */
 export function useDir() {
