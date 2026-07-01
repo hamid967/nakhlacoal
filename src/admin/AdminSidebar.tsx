@@ -4,7 +4,7 @@ import {
   Users, Truck, Warehouse, Beaker, FileBadge, Receipt, CreditCard,
   BarChart3, Megaphone, BookOpen, Image as ImageIcon, LayoutTemplate,
   Search, ShieldCheck, KeyRound, Settings as SettingsIcon, ScrollText,
-  Sparkles, ChevronLeft, Gauge,
+  Sparkles, ChevronLeft, Gauge, MessageSquare,
 } from 'lucide-react';
 import { BrandLogo } from '@/components/BrandLogo';
 
@@ -16,6 +16,7 @@ const groups: Group[] = [
     { to: '/admin', label: 'لوحة القيادة', icon: LayoutDashboard },
     { to: '/admin/reports', label: 'التقارير', icon: BarChart3 },
     { to: '/admin/web-vitals', label: 'أداء الويب', icon: Gauge },
+    { to: '/admin/chats', label: 'محادثات المساعد', icon: MessageSquare },
   ]},
   { title: 'الكتالوج', items: [
     { to: '/admin/products', label: 'المنتجات', icon: Package },
