@@ -197,6 +197,7 @@ export function TrademarksShowcase() {
             </div>
           </motion.div>
         </AnimatePresence>
+        </div>
 
         {/* Notes strip */}
         <div className="mt-6 max-w-4xl mx-auto flex items-start gap-3 text-sm text-foreground/70 bg-background/60 border border-gold/15 rounded-2xl p-4">
