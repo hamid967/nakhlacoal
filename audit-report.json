@@ -1,40 +1,40 @@
 {
   "base": "http://localhost:8080",
-  "generatedAt": "2026-07-01T18:18:40.358Z",
+  "generatedAt": "2026-07-01T18:22:53.518Z",
   "results": [
     {
       "route": "/",
       "status": 200,
-      "timing": 651,
+      "timing": 589,
       "meta": {
         "title": "فحم النخلة | الفحم السعودي الفاخر",
-        "desc": "فحم طبيعي ١٠٠٪ — احتراق أطول، حرارة أعلى، ورماد أقل.",
+        "desc": "فحم النخلة السعودي الفاخر من نخيل المدينة المنورة — احتراق أطول، حرارة أعلى، رماد أقل، ودخان نقي. مصنّع ومصدَّر لأفخم المطاعم والفنادق والشيشة عالميًا.",
         "lang": "ar",
-        "h1Count": 1,
-        "imgsNoAlt": 0,
+        "h1Count": 2,
+        "imgsNoAlt": 3,
         "cspMeta": true
       },
       "findings": [
         {
-          "rule": "short_desc",
-          "detail": "52 chars"
+          "rule": "multiple_h1",
+          "detail": "2 h1s"
+        },
+        {
+          "rule": "img_no_alt",
+          "detail": "3 imgs"
         },
         {
           "rule": "csp_meta"
-        },
-        {
-          "rule": "console_error",
-          "detail": "The Content Security Policy directive 'frame-ancestors' is ignored when delivered via a <meta> element."
         }
       ]
     },
     {
       "route": "/products",
       "status": 200,
-      "timing": 13232,
+      "timing": 490,
       "meta": {
         "title": "المنتجات — فحم النخلة",
-        "desc": "تشكيلة فاخرة من الفحم السعودي للشواء والشيشة والتصدير.",
+        "desc": "تشكيلة فاخرة من الفحم السعودي: فحم شواء، فحم شيشة، فحم بخور، وفحم صناعي. سبع عائلات منتجات معتمدة للتصدير بأعلى معايير الجودة السعودية.",
         "lang": "ar",
         "h1Count": 1,
         "imgsNoAlt": 3,
@@ -42,33 +42,21 @@
       },
       "findings": [
         {
-          "rule": "slow_dcl",
-          "detail": "DCL 13232ms"
-        },
-        {
-          "rule": "short_desc",
-          "detail": "54 chars"
-        },
-        {
           "rule": "img_no_alt",
           "detail": "3 imgs"
         },
         {
           "rule": "csp_meta"
-        },
-        {
-          "rule": "console_error",
-          "detail": "The Content Security Policy directive 'frame-ancestors' is ignored when delivered via a <meta> element."
         }
       ]
     },
     {
       "route": "/quality",
       "status": 200,
-      "timing": 457,
+      "timing": 476,
       "meta": {
         "title": "الجودة — فحم النخلة",
-        "desc": "كل دفعة من فحم النخلة مقيسة ومعتمدة. مختبر متكامل، تحليلات حية، وشهادات دولية.",
+        "desc": "كل دفعة من فحم النخلة مقيسة ومعتمدة في مختبرنا الداخلي: قيمة حرارية، نسبة الرماد، الرطوبة، والمواد المتطايرة — مع شهادات ISO ومطابقة للمعايير السعودية والدولية للتصدير.",
         "lang": "ar",
         "h1Count": 1,
         "imgsNoAlt": 3,
@@ -76,26 +64,18 @@
       },
       "findings": [
         {
-          "rule": "short_desc",
-          "detail": "78 chars"
-        },
-        {
           "rule": "img_no_alt",
           "detail": "3 imgs"
         },
         {
           "rule": "csp_meta"
-        },
-        {
-          "rule": "console_error",
-          "detail": "The Content Security Policy directive 'frame-ancestors' is ignored when delivered via a <meta> element."
         }
       ]
     },
     {
       "route": "/trademarks",
       "status": 200,
-      "timing": 17077,
+      "timing": 566,
       "meta": {
         "title": "العلامات التجارية المسجلة | فحم النخلة، نخلان، المركاز، النخلتين، باعشن",
         "desc": "خمس علامات تجارية سعودية مسجلة رسمياً لدى الهيئة السعودية للملكية الفكرية لمؤسسة محمد عبدالله باعشن التجارية — فحم النخلة، نخلان، المركاز، النخلتين، وباعشن، مع أرقام التسجيل وتواريخ الحماية.",
@@ -106,64 +86,40 @@
       },
       "findings": [
         {
-          "rule": "slow_dcl",
-          "detail": "DCL 17077ms"
-        },
-        {
           "rule": "img_no_alt",
           "detail": "3 imgs"
         },
         {
           "rule": "csp_meta"
-        },
-        {
-          "rule": "console_error",
-          "detail": "The Content Security Policy directive 'frame-ancestors' is ignored when delivered via a <meta> element."
         }
       ]
     },
     {
       "route": "/wholesale",
       "status": 200,
-      "timing": 440,
+      "timing": 442,
       "meta": {
-        "title": "تسجيل الدخول | فحم النخلة",
-        "desc": "بوابة دخول آمنة لعملاء وشركاء فحم النخلة.",
+        "title": "الجملة والتسعير — فحم النخلة",
+        "desc": "باقات جملة ديناميكية للمطاعم والمقاهي والموزّعين والتصدير مع تسعير فوري وطلب عرض سعر.",
         "lang": "ar",
-        "h1Count": 2,
-        "imgsNoAlt": 4,
+        "h1Count": 1,
+        "imgsNoAlt": 3,
         "cspMeta": true
       },
       "findings": [
         {
-          "rule": "short_desc",
-          "detail": "41 chars"
-        },
-        {
-          "rule": "multiple_h1",
-          "detail": "2 h1s"
-        },
-        {
           "rule": "img_no_alt",
-          "detail": "4 imgs"
+          "detail": "3 imgs"
         },
         {
           "rule": "csp_meta"
-        },
-        {
-          "rule": "console_error",
-          "detail": "The Content Security Policy directive 'frame-ancestors' is ignored when delivered via a <meta> element."
-        },
-        {
-          "rule": "duplicate_desc",
-          "detail": "shared with /auth"
         }
       ]
     },
     {
       "route": "/quote",
       "status": 200,
-      "timing": 436,
+      "timing": 469,
       "meta": {
         "title": "عرض سعر فوري | فحم النخلة — Palm Charcoal",
         "desc": "احصل على عرض سعر فوري لأنواع الفحم الفاخر مع مساعد فحم النخلة الذكي. شامل الضريبة، التسعير الجملة، وإرسال مباشر عبر واتساب.",
@@ -179,17 +135,13 @@
         },
         {
           "rule": "csp_meta"
-        },
-        {
-          "rule": "console_error",
-          "detail": "The Content Security Policy directive 'frame-ancestors' is ignored when delivered via a <meta> element."
         }
       ]
     },
     {
       "route": "/checkout",
       "status": 200,
-      "timing": 450,
+      "timing": 518,
       "meta": {
         "title": "إتمام الطلب",
         "desc": "أكمل شراء منتجات فحم النخلة بأمان ودفع مبسّط.",
@@ -209,17 +161,13 @@
         },
         {
           "rule": "csp_meta"
-        },
-        {
-          "rule": "console_error",
-          "detail": "The Content Security Policy directive 'frame-ancestors' is ignored when delivered via a <meta> element."
         }
       ]
     },
     {
       "route": "/about",
       "status": 200,
-      "timing": 470,
+      "timing": 473,
       "meta": {
         "title": "من نحن — فحم النخلة",
         "desc": "علامة سعودية متخصصة في إنتاج واستيراد وتوريد الفحم الطبيعي عالي الجودة، من سوق الفحم بجدة البلد إلى العالم.",
@@ -235,20 +183,16 @@
         },
         {
           "rule": "csp_meta"
-        },
-        {
-          "rule": "console_error",
-          "detail": "The Content Security Policy directive 'frame-ancestors' is ignored when delivered via a <meta> element."
         }
       ]
     },
     {
       "route": "/contact",
       "status": 200,
-      "timing": 445,
+      "timing": 519,
       "meta": {
         "title": "تواصل معنا — فحم النخلة",
-        "desc": "مكتب التصدير لدينا يرد خلال يوم عمل واحد.",
+        "desc": "تواصل مع فريق مبيعات فحم النخلة في جدة — واتساب 0540060095 والبريد mab355@gmail.com. عروض للجملة والتصدير والفنادق والمطاعم خلال ساعات العمل.",
         "lang": "ar",
         "h1Count": 1,
         "imgsNoAlt": 3,
@@ -256,39 +200,27 @@
       },
       "findings": [
         {
-          "rule": "short_desc",
-          "detail": "41 chars"
-        },
-        {
           "rule": "img_no_alt",
           "detail": "3 imgs"
         },
         {
           "rule": "csp_meta"
-        },
-        {
-          "rule": "console_error",
-          "detail": "The Content Security Policy directive 'frame-ancestors' is ignored when delivered via a <meta> element."
         }
       ]
     },
     {
       "route": "/auth",
       "status": 200,
-      "timing": 457,
+      "timing": 440,
       "meta": {
         "title": "تسجيل الدخول | فحم النخلة",
-        "desc": "بوابة دخول آمنة لعملاء وشركاء فحم النخلة.",
+        "desc": "بوابة دخول آمنة لعملاء وشركاء فحم النخلة — إدارة الطلبات، عروض الأسعار، الفواتير، وتتبّع الشحنات لتجّار الجملة والموزّعين والمصدّرين.",
         "lang": "ar",
         "h1Count": 2,
         "imgsNoAlt": 4,
         "cspMeta": true
       },
       "findings": [
-        {
-          "rule": "short_desc",
-          "detail": "41 chars"
-        },
         {
           "rule": "multiple_h1",
           "detail": "2 h1s"
@@ -299,21 +231,13 @@
         },
         {
           "rule": "csp_meta"
-        },
-        {
-          "rule": "console_error",
-          "detail": "The Content Security Policy directive 'frame-ancestors' is ignored when delivered via a <meta> element."
-        },
-        {
-          "rule": "duplicate_desc",
-          "detail": "shared with /wholesale"
         }
       ]
     },
     {
       "route": "/portal/login",
       "status": 200,
-      "timing": 443,
+      "timing": 413,
       "meta": {
         "title": "بوابة العملاء — دخول | فحم النخلة",
         "desc": "بوابة عملاء فحم النخلة: سجّل الدخول أو أنشئ حسابك لإدارة الطلبات والشحنات والفواتير بأمان.",
@@ -325,78 +249,6 @@
       "findings": [
         {
           "rule": "csp_meta"
-        },
-        {
-          "rule": "console_error",
-          "detail": "The Content Security Policy directive 'frame-ancestors' is ignored when delivered via a <meta> element."
-        }
-      ]
-    },
-    {
-      "route": "/faq",
-      "status": 200,
-      "timing": 438,
-      "meta": {
-        "title": "صفحة غير موجودة | فحم النخلة",
-        "desc": "الصفحة غير موجودة.",
-        "lang": "ar",
-        "h1Count": 1,
-        "imgsNoAlt": 3,
-        "cspMeta": true
-      },
-      "findings": [
-        {
-          "rule": "short_desc",
-          "detail": "18 chars"
-        },
-        {
-          "rule": "img_no_alt",
-          "detail": "3 imgs"
-        },
-        {
-          "rule": "csp_meta"
-        },
-        {
-          "rule": "console_error",
-          "detail": "The Content Security Policy directive 'frame-ancestors' is ignored when delivered via a <meta> element."
-        },
-        {
-          "rule": "duplicate_desc",
-          "detail": "shared with /pricing"
-        }
-      ]
-    },
-    {
-      "route": "/pricing",
-      "status": 200,
-      "timing": 476,
-      "meta": {
-        "title": "صفحة غير موجودة | فحم النخلة",
-        "desc": "الصفحة غير موجودة.",
-        "lang": "ar",
-        "h1Count": 1,
-        "imgsNoAlt": 3,
-        "cspMeta": true
-      },
-      "findings": [
-        {
-          "rule": "short_desc",
-          "detail": "18 chars"
-        },
-        {
-          "rule": "img_no_alt",
-          "detail": "3 imgs"
-        },
-        {
-          "rule": "csp_meta"
-        },
-        {
-          "rule": "console_error",
-          "detail": "The Content Security Policy directive 'frame-ancestors' is ignored when delivered via a <meta> element."
-        },
-        {
-          "rule": "duplicate_desc",
-          "detail": "shared with /faq"
         }
       ]
     }

@@ -66,14 +66,14 @@ export default function Auth() {
       <Helmet>
         <title>{t('تسجيل الدخول | فحم النخلة', 'Sign In | Palm Charcoal')}</title>
         <meta name="robots" content="noindex, nofollow" />
-        <meta name="description" content={t('بوابة دخول آمنة لعملاء وشركاء فحم النخلة.', 'Secure access portal for Palm Charcoal clients & partners.')} />
+        <meta name="description" content={t('بوابة دخول آمنة لعملاء وشركاء فحم النخلة — إدارة الطلبات، عروض الأسعار، الفواتير، وتتبّع الشحنات لتجّار الجملة والموزّعين والمصدّرين.', 'Secure sign-in portal for Palm Charcoal customers and partners — manage orders, quotes, invoices, and shipment tracking for wholesalers, distributors, and exporters.')} />
       </Helmet>
 
       <section
         className="relative grid min-h-[calc(100dvh-4rem)] lg:grid-cols-[1.05fr_1fr] xl:grid-cols-[1.2fr_1fr]"
         dir={isAr ? 'rtl' : 'ltr'}
       >
-        <h1 className="sr-only">{t('تسجيل الدخول إلى فحم النخلة', 'Sign in to Palm Charcoal')}</h1>
+        {/* AuthCard provides the visible <h1>; no sr-only duplicate. */}
         <WebGLBoundary fallback={null}>
           <BrandCanvas isAr={isAr} />
         </WebGLBoundary>

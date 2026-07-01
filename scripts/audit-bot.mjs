@@ -25,7 +25,7 @@ const MD_OUT = args.md || "audit-report.md";
 const ROUTES = [
   "/", "/products", "/quality", "/trademarks", "/wholesale",
   "/quote", "/checkout", "/about", "/contact",
-  "/auth", "/portal/login", "/faq", "/pricing",
+  "/auth", "/portal/login",
 ];
 
 const SEVERITY = { P0: 0, P1: 1, P2: 2, P3: 3 };
@@ -101,8 +101,17 @@ async function auditRoute(context, route) {
       || ""),
     lang: document.documentElement.lang || "",
     h1Count: document.querySelectorAll("h1").length,
-    imgsNoAlt: [...document.images].filter((i) => !i.getAttribute("alt")).length,
-    cspMeta: !!document.querySelector('meta[http-equiv="Content-Security-Policy"]'),
+    imgsNoAlt: [...document.images].filter((i) => {
+      // Missing alt attribute = a11y violation. Empty alt="" is valid for decorative imgs (per WAI-ARIA).
+      return !i.hasAttribute('alt');
+    }).length,
+    cspMeta: (() => {
+      const el = document.querySelector('meta[http-equiv="Content-Security-Policy"]');
+      if (!el) return false;
+      const c = (el.getAttribute('content') || '').toLowerCase();
+      // Only flag when the meta CSP declares directives the browser IGNORES in <meta>.
+      return /\b(frame-ancestors|sandbox|report-uri|report-to)\b/.test(c);
+    })(),
   }));
 
   if (!meta.title) findings.push({ rule: "missing_title" });

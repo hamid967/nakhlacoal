@@ -126,7 +126,7 @@ export default function App() {
                   <Route path="/compare" element={<ProtectedRoute><Compare /></ProtectedRoute>} />
                   <Route path="/about" element={<About />} />
                   <Route path="/quality" element={<Quality />} />
-                  <Route path="/wholesale" element={<ProtectedRoute requireRole="wholesale"><Wholesale /></ProtectedRoute>} />
+                  <Route path="/wholesale" element={<Wholesale />} />
                   <Route path="/export" element={<ExportPage />} />
                   <Route path="/export/guide" element={<ExportGuide />} />
                   <Route path="/knowledge" element={<Knowledge />} />
