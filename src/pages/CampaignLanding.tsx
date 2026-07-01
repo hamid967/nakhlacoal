@@ -149,7 +149,7 @@ export default function CampaignLanding() {
         </script>
       </Helmet>
 
-      <main dir="rtl" className="min-h-dvh bg-background text-foreground">
+      <div dir="rtl" className="min-h-dvh bg-background text-foreground">
         {/* Hero */}
         <section className="relative overflow-hidden border-b border-border/40">
           <div className="absolute inset-0 bg-gradient-to-bl from-primary/10 via-background to-background" aria-hidden />
@@ -249,7 +249,7 @@ export default function CampaignLanding() {
             </p>
           </div>
         </section>
-      </main>
+      </div>
     </>
   );
 }
