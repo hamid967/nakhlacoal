@@ -172,6 +172,34 @@ export function SectionSkeleton({
         </BaseWrap>
       );
 
+    case 'map':
+      // Map placeholder (aspect-preserving) + side list + 3 stat cards
+      return (
+        <BaseWrap variant={variant} label={label}>
+          <div className="py-8">
+            <div className="mb-8 h-8 w-64 rounded bg-white/10 animate-pulse" />
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+              <div className="lg:col-span-8">
+                <div className="rounded-3xl border border-[hsl(46_90%_50%/0.2)] bg-white/[0.02] p-4 md:p-6">
+                  <div className="aspect-[100/60] w-full rounded-2xl bg-gradient-to-br from-white/[0.04] to-black/40 animate-pulse" />
+                </div>
+                <div className="mt-6 grid grid-cols-3 gap-3">
+                  {Array.from({ length: 3 }).map((_, i) => (
+                    <div key={i} className="h-20 rounded-2xl border border-[hsl(46_90%_50%/0.2)] bg-black/40 animate-pulse" />
+                  ))}
+                </div>
+              </div>
+              <div className="lg:col-span-4 space-y-3">
+                <div className="h-24 rounded-2xl border border-[hsl(46_90%_50%/0.3)] bg-black/50 animate-pulse" />
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} className="h-12 rounded-lg bg-white/[0.03] border border-white/10 animate-pulse" />
+                ))}
+              </div>
+            </div>
+          </div>
+        </BaseWrap>
+      );
+
     default:
       return (
         <BaseWrap variant={variant} label={label}>
