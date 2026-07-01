@@ -106,7 +106,7 @@ export default function Checkout() {
 
   return (
     <div className="container max-w-5xl py-10 px-4" dir={isAr ? 'rtl' : 'ltr'}>
-      <SeoHead title={isAr ? 'إتمام الطلب | فحم النخلة' : 'Checkout | Palm Charcoal'} noindex />
+      <SeoHead title={isAr ? 'إتمام الطلب | فحم النخلة' : 'Checkout | Palm Charcoal'} description={isAr ? 'مراجعة السلة وإدخال بيانات الشحن وإتمام الدفع لطلبات فحم النخلة.' : 'Review your cart, enter shipping details and complete payment for Palm Charcoal orders.'} noindex />
       <h1 className="text-3xl font-display mb-6">{isAr ? 'إتمام الطلب' : 'Checkout'}</h1>
 
       {/* Stepper */}
