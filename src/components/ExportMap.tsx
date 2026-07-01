@@ -214,13 +214,19 @@ export function ExportMap() {
                   d={`M ${o.x} ${o.y} Q ${mx} ${my} ${d.x} ${d.y}`}
                   fill="none"
                   stroke="url(#arc)"
-                  strokeWidth="1"
+                  strokeWidth={guide === 'arcs' ? 2 : 1}
                   strokeDasharray="3 4"
                   initial={{ pathLength: 0, opacity: 0 }}
                   whileInView={{ pathLength: 1, opacity: 1 }}
                   viewport={{ once: true }}
+                  animate={{
+                    opacity:
+                      guide === 'arcs' ? 1 : guide === 'points' ? 0.15 : guide === 'selection' ? 0.2 : 1,
+                  }}
                   transition={{ duration: 1.8, delay: 0.15 * i, ease: 'easeInOut' }}
+                  style={{ transition: 'stroke-width 0.25s' }}
                 />
+
               );
             })}
 
