@@ -4,7 +4,7 @@ import {
   Users, Truck, Warehouse, Beaker, FileBadge, Receipt, CreditCard,
   BarChart3, Megaphone, BookOpen, Image as ImageIcon, LayoutTemplate,
   Search, ShieldCheck, KeyRound, Settings as SettingsIcon, ScrollText,
-  Sparkles, ChevronLeft, Gauge,
+  Sparkles, ChevronLeft, Gauge, MessageSquare,
 } from 'lucide-react';
 import { BrandLogo } from '@/components/BrandLogo';
 
