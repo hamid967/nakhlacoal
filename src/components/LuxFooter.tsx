@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Instagram, Linkedin, Mail } from 'lucide-react';
-import logo from '@/assets/palm-charcoal-logo.png';
+import { BrandLogo } from '@/components/BrandLogo';
 import { brand } from '@/lib/brand';
 
 export function LuxFooter() {
