@@ -83,39 +83,80 @@ export function BrandHero() {
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      {/* Ivory + warm gold bg */}
+      {/* Cinematic noir backdrop — charcoal photo + gold rim light + film grain */}
       <motion.div
         aria-hidden
         className="absolute inset-0"
-        style={{
-          opacity: bgOpacity,
-          background:
-            'radial-gradient(900px 600px at 85% 15%, hsl(var(--gold-hi) / 0.35), transparent 60%), radial-gradient(700px 500px at 10% 90%, hsl(var(--primary) / 0.08), transparent 65%), linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--surface-2)) 100%)',
-        }}
-      />
-      {/* Palm leaf shadow top-left */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -top-20 -start-20 w-[55vw] h-[55vw] max-w-[700px] max-h-[700px] opacity-[0.18]"
-        style={{
-          backgroundImage:
-            "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'><g fill='none' stroke='%231A4A00' stroke-width='1.2' stroke-linecap='round'><path d='M40 380 Q160 160 380 40'/><path d='M40 380 Q120 240 200 100'/><path d='M40 380 Q220 280 380 220'/><path d='M40 380 Q100 280 150 200'/><path d='M40 380 Q260 200 380 100'/></g></svg>\")",
-          backgroundSize: 'contain',
-          backgroundRepeat: 'no-repeat',
-        }}
-      />
-      {/* Dust particles */}
+        style={{ opacity: bgOpacity }}
+      >
+        {/* Deep base */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              'radial-gradient(1100px 700px at 82% 12%, hsl(46 72% 62% / 0.28), transparent 62%),' +
+              'radial-gradient(900px 600px at 8% 92%, hsl(46 65% 52% / 0.16), transparent 65%),' +
+              'linear-gradient(180deg, hsl(0 0% 4%) 0%, hsl(0 0% 7%) 55%, hsl(0 0% 4%) 100%)',
+          }}
+        />
+        {/* Charcoal photo layer */}
+        <div
+          className="absolute inset-0 mix-blend-screen opacity-[0.22]"
+          style={{
+            backgroundImage: "url('/src/assets/hero-charcoal.jpg')",
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            filter: 'contrast(1.15) saturate(0.6)',
+          }}
+        />
+        {/* Vignette */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              'radial-gradient(ellipse at center, transparent 40%, hsl(0 0% 0% / 0.55) 100%)',
+          }}
+        />
+        {/* Gold scanning bar — cinematic */}
+        <motion.div
+          className="absolute inset-x-0 h-[2px]"
+          style={{
+            background:
+              'linear-gradient(90deg, transparent, hsl(46 72% 62% / 0.55), transparent)',
+            filter: 'blur(1px)',
+          }}
+          initial={{ top: '10%', opacity: 0 }}
+          animate={{ top: ['10%', '92%', '10%'], opacity: [0, 0.8, 0] }}
+          transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
+        />
+        {/* Film grain */}
+        <div
+          className="absolute inset-0 opacity-[0.06] mix-blend-overlay pointer-events-none"
+          style={{
+            backgroundImage:
+              "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>\")",
+          }}
+        />
+      </motion.div>
+
+      {/* Gold embers drifting up */}
       <div aria-hidden className="pointer-events-none absolute inset-0">
-        {Array.from({ length: 14 }).map((_, i) => (
+        {Array.from({ length: 12 }).map((_, i) => (
           <motion.span
             key={i}
-            className="absolute w-1 h-1 rounded-full bg-[hsl(var(--gold))]/35"
-            style={{ left: `${(i * 53) % 100}%`, top: `${(i * 29) % 100}%` }}
-            animate={{ y: [0, -18, 0], opacity: [0.2, 0.55, 0.2] }}
-            transition={{ duration: 6 + (i % 5), repeat: Infinity, delay: i * 0.3 }}
+            className="absolute w-[3px] h-[3px] rounded-full"
+            style={{
+              left: `${(i * 53) % 100}%`,
+              top: `${60 + ((i * 17) % 30)}%`,
+              background: 'hsl(46 72% 62%)',
+              boxShadow: '0 0 8px hsl(46 72% 62% / 0.7)',
+            }}
+            animate={{ y: [0, -140, -220], opacity: [0, 0.9, 0] }}
+            transition={{ duration: 7 + (i % 5), repeat: Infinity, delay: i * 0.5, ease: 'easeOut' }}
           />
         ))}
       </div>
+
 
       <motion.div
         style={{ y: contentY, opacity: contentOpacity }}
