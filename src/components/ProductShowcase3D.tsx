@@ -42,9 +42,15 @@ export function ProductShowcase3D() {
           </h2>
         </div>
 
-        {/* 3D perspective carousel */}
-        <div className="relative h-[420px] md:h-[520px]" style={{ perspective: '1600px' }}>
-          <div className="absolute inset-0 flex items-center justify-center" style={{ transformStyle: 'preserve-3d' }}>
+        {/* 3D perspective carousel — falls back to a lightweight scale/opacity slide on low-perf devices */}
+        <div
+          className="relative h-[420px] md:h-[520px]"
+          style={{ perspective: lowPerf ? undefined : '1600px' }}
+        >
+          <div
+            className="absolute inset-0 flex items-center justify-center"
+            style={{ transformStyle: lowPerf ? undefined : 'preserve-3d' }}
+          >
             {items.map((item, i) => {
               const offset = i - active;
               const abs = Math.abs(offset);
@@ -56,23 +62,30 @@ export function ProductShowcase3D() {
                   aria-label={isAr ? item.ar : item.en}
                   className="absolute w-[260px] md:w-[340px] h-[360px] md:h-[460px] rounded-3xl overflow-hidden outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--gold))] focus-visible:ring-offset-4 focus-visible:ring-offset-black"
                   animate={{
-                    x: offset * 220,
-                    rotateY: offset * -22,
+                    x: offset * (lowPerf ? 180 : 220),
+                    rotateY: lowPerf ? 0 : offset * -22,
                     scale: abs === 0 ? 1 : abs === 1 ? 0.85 : 0.7,
-                    opacity: abs > 2 ? 0 : abs === 0 ? 1 : 0.55,
+                    opacity: abs > 2 ? 0 : abs === 0 ? 1 : lowPerf ? 0.35 : 0.55,
                     zIndex: 10 - abs,
                   }}
-                  transition={{ type: 'spring', stiffness: 120, damping: 20 }}
-                  style={{ transformStyle: 'preserve-3d' }}
+                  transition={
+                    lowPerf
+                      ? { type: 'tween', duration: 0.35, ease: 'easeOut' }
+                      : { type: 'spring', stiffness: 120, damping: 20 }
+                  }
+                  style={{ transformStyle: lowPerf ? undefined : 'preserve-3d', willChange: 'transform' }}
                 >
                   <img
                     src={item.img}
                     alt={isAr ? item.ar : item.en}
                     loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover"
                   />
-                  {/* Gold rim + overlay */}
-                  <div className="absolute inset-0 rounded-3xl ring-1 ring-[hsl(var(--gold))]/40" />
+                  {/* Gold rim + overlay (rim skipped on low-perf) */}
+                  {!lowPerf && (
+                    <div className="absolute inset-0 rounded-3xl ring-1 ring-[hsl(var(--gold))]/40" />
+                  )}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
                   <div className="absolute inset-x-0 bottom-0 p-5 md:p-6 text-start">
                     <div className="inline-flex items-center gap-1.5 text-[10px] tracking-[0.25em] uppercase text-[hsl(var(--gold-hi,46_95%_78%))] mb-2">
