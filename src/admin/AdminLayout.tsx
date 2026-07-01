@@ -5,6 +5,7 @@ import { AdminSidebar } from './AdminSidebar';
 import { AdminTopbar } from './AdminTopbar';
 import './admin.css';
 import { useVitalsAlerts } from './useVitalsAlerts';
+import { useRealtimeOrders } from './useRealtimeOrders';
 
 export default function AdminLayout() {
   const [collapsed, setCollapsed] = useState(false);
@@ -17,6 +18,7 @@ export default function AdminLayout() {
 
   useEffect(() => { localStorage.setItem('admin-theme', theme); }, [theme]);
   useVitalsAlerts();
+  useRealtimeOrders();
 
   return (
     <div className="admin-shell" data-theme={theme} dir="rtl">
