@@ -73,6 +73,7 @@ export default function Auth() {
         className="relative grid min-h-[calc(100dvh-4rem)] lg:grid-cols-[1.05fr_1fr] xl:grid-cols-[1.2fr_1fr]"
         dir={isAr ? 'rtl' : 'ltr'}
       >
+        <h1 className="sr-only">{t('تسجيل الدخول إلى فحم النخلة', 'Sign in to Palm Charcoal')}</h1>
         <WebGLBoundary fallback={null}>
           <BrandCanvas isAr={isAr} />
         </WebGLBoundary>

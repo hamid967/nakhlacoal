@@ -123,6 +123,9 @@ export default function Home() {
 
       {/* 1 — HERO (single, 3D slider only — no particles overlay) + trust strip */}
       <div id="hero" className="relative pt-24 md:pt-28 scroll-mt-24">
+        <h1 className="sr-only">
+          {isAr ? 'فحم النخلة — الفحم السعودي الفاخر' : 'Palm Charcoal — Premium Saudi Charcoal'}
+        </h1>
         <Suspense fallback={<SectionSkeleton variant="hero" label={isAr ? 'جارٍ تحميل الواجهة' : 'Loading hero'} />}>
           <BrandHero />
         </Suspense>

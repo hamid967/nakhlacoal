@@ -81,7 +81,8 @@ async function auditRoute(context, route) {
     return { route, status: 0, timing: Date.now() - t0, findings };
   }
   const timing = Date.now() - t0;
-  await page.waitForTimeout(600);
+  try { await page.waitForSelector("h1, main, [role=main]", { timeout: 3000 }); } catch {}
+  await page.waitForTimeout(500);
 
   if (status >= 400) findings.push({ rule: "http_error", detail: `HTTP ${status}` });
   if (timing > 8000) findings.push({ rule: "slow_dcl", detail: `DCL ${timing}ms` });
