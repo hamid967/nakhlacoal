@@ -29,6 +29,7 @@ const StoryFilm = lazy(() => import('@/components/StoryFilm').then((m) => ({ def
 const InsightsEditorial = lazy(() => import('@/components/InsightsEditorial').then((m) => ({ default: m.InsightsEditorial })));
 const SustainabilityReport = lazy(() => import('@/components/SustainabilityReport').then((m) => ({ default: m.SustainabilityReport })));
 const CareersInvite = lazy(() => import('@/components/CareersInvite').then((m) => ({ default: m.CareersInvite })));
+const CaseStudies = lazy(() => import('@/components/CaseStudies').then((m) => ({ default: m.CaseStudies })));
 
 
 
@@ -292,6 +293,11 @@ export default function Home() {
       </Suspense>
       <Suspense fallback={<SectionSkeleton variant="band" label={isAr ? 'جارٍ تحميل الوظائف' : 'Loading careers'} />}>
         <CareersInvite />
+      </Suspense>
+
+      {/* Case Studies */}
+      <Suspense fallback={<SectionSkeleton variant="cases" label={isAr ? 'جارٍ تحميل دراسات الحالة' : 'Loading case studies'} />}>
+        <CaseStudies />
       </Suspense>
 
       {/* 8 — FAQ + location + CTA */}

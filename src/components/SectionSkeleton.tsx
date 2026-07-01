@@ -12,7 +12,8 @@ type Variant =
   | 'press'
   | 'awards'
   | 'constellation'
-  | 'film';
+  | 'film'
+  | 'cases';
 
 const HEIGHTS: Record<Variant, string> = {
   hero: 'min-h-[70vh]',
@@ -23,6 +24,7 @@ const HEIGHTS: Record<Variant, string> = {
   awards: 'min-h-[260px]',
   constellation: 'min-h-[520px]',
   film: 'min-h-[640px]',
+  cases: 'min-h-[560px]',
 };
 
 function BaseWrap({
@@ -127,6 +129,42 @@ export function SectionSkeleton({
                 <div className="h-3 w-3/4 max-w-xl rounded bg-white/10 mb-3 animate-pulse" />
                 <div className="h-3 w-1/2 max-w-md rounded bg-white/10 animate-pulse" />
               </div>
+            </div>
+          </div>
+        </BaseWrap>
+      );
+
+    case 'cases':
+      // Header row + big card + dots (mirrors CaseStudies layout)
+      return (
+        <BaseWrap variant={variant} label={label}>
+          <div className="py-8">
+            <div className="mb-10 flex items-end justify-between">
+              <div className="space-y-3">
+                <div className="h-3 w-32 rounded bg-white/10 animate-pulse" />
+                <div className="h-8 md:h-10 w-72 md:w-[28rem] rounded bg-white/10 animate-pulse" />
+              </div>
+              <div className="hidden md:flex gap-2">
+                <div className="h-11 w-11 rounded-full bg-white/5 border border-[hsl(46_90%_50%/0.2)] animate-pulse" />
+                <div className="h-11 w-11 rounded-full bg-white/5 border border-[hsl(46_90%_50%/0.2)] animate-pulse" />
+              </div>
+            </div>
+            <div className="rounded-3xl border border-[hsl(46_90%_50%/0.2)] bg-white/[0.02] p-8 md:p-12 grid grid-cols-1 lg:grid-cols-3 gap-10">
+              <div className="lg:col-span-2 space-y-4">
+                <div className="h-3 w-40 rounded bg-white/10 animate-pulse" />
+                <div className="h-8 w-3/4 rounded bg-white/10 animate-pulse" />
+                <div className="h-3 w-full rounded bg-white/10 animate-pulse" />
+                <div className="h-3 w-11/12 rounded bg-white/10 animate-pulse" />
+                <div className="h-3 w-2/3 rounded bg-white/10 animate-pulse" />
+              </div>
+              <div className="rounded-2xl border border-[hsl(46_90%_50%/0.2)] bg-black/40 p-8 grid place-items-center">
+                <div className="h-16 w-32 rounded bg-[hsl(46_90%_50%/0.15)] animate-pulse" />
+              </div>
+            </div>
+            <div className="mt-8 flex justify-center gap-2">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="h-1.5 w-6 rounded-full bg-white/15 animate-pulse" />
+              ))}
             </div>
           </div>
         </BaseWrap>
