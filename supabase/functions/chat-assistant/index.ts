@@ -259,7 +259,31 @@ Deno.serve(async (req) => {
           },
         },
       },
+      {
+        type: "function",
+        function: {
+          name: "remember_preference",
+          description: "احفظ تفضيلاً دائماً للعميل المسجّل (مثل: preferred_product, usage, city, business_name). يستخدم فقط عندما يذكر العميل معلومة يحتاجها في محادثات مستقبلية.",
+          parameters: {
+            type: "object",
+            properties: {
+              key: { type: "string", description: "مفتاح قصير بالإنجليزية snake_case" },
+              value: { type: "string", description: "القيمة كنص قصير" },
+            },
+            required: ["key", "value"],
+          },
+        },
+      },
+      {
+        type: "function",
+        function: {
+          name: "recall_preferences",
+          description: "استرجع كل التفضيلات المحفوظة للعميل الحالي.",
+          parameters: { type: "object", properties: {} },
+        },
+      },
     ];
+
 
     const SITE_URL = Deno.env.get("SITE_URL") ?? "https://alnakhlacoal.com";
     const publicDb = createClient(
