@@ -28,13 +28,9 @@ export function SmoothScroll() {
 
     const loop = (time: number) => {
       lenis.raf(time);
-      // Bail out if scrolling too fast — let the browser handle it natively to avoid jank.
-      if (Math.abs(lenis.velocity) > 80) {
-        stop();
-        return;
-      }
       raf = requestAnimationFrame(loop);
     };
+
 
     const start = () => {
       if (running) return;
