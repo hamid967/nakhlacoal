@@ -444,7 +444,7 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
           href={waHref}
           target="_blank"
           rel="noreferrer noopener"
-          className="relative p-2 sm:p-1.5 rounded-lg hover:bg-white/10 active:bg-white/15 transition text-[#25D366] shrink-0"
+          className="relative p-2 sm:p-1.5 rounded-lg hover:bg-white/10 active:bg-white/15 transition text-whatsapp shrink-0"
           aria-label="واتساب مباشر"
           title="واتساب مباشر"
         >

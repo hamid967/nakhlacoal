@@ -172,7 +172,7 @@ export default function Quote() {
                       {copied ? <Check className="size-3.5 ms-1" /> : <Copy className="size-3.5 ms-1" />}
                       {copied ? 'تم النسخ' : 'نسخ الملخص'}
                     </Button>
-                    <Button onClick={sendSummaryWhatsApp} size="sm" className="text-xs bg-[#25D366] hover:bg-[#1ebe57] text-white">
+                    <Button onClick={sendSummaryWhatsApp} size="sm" className="text-xs bg-whatsapp hover:bg-whatsapp-hover text-white">
                       <MessageCircle className="size-3.5 ms-1" /> إرسال واتساب
                     </Button>
                   </div>
@@ -192,7 +192,7 @@ export default function Quote() {
                 rel="noreferrer noopener"
                 className="flex items-center gap-3 p-3 rounded-lg border hover:bg-muted/40 transition"
               >
-                <MessageCircle className="size-5 text-[#25D366]" />
+                <MessageCircle className="size-5 text-whatsapp" />
                 <div>
                   <div className="text-sm font-semibold">واتساب المبيعات</div>
                   <div className="text-xs text-muted-foreground" dir="ltr">+966 54 006 0095</div>
