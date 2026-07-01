@@ -803,7 +803,7 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
             rows={1}
             placeholder="اكتب رسالتك..."
             disabled={streaming || submitting}
-            className="flex-1 resize-none rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 max-h-28 min-h-[40px]"
+            className="flex-1 resize-none rounded-lg border border-border bg-muted/30 px-3 py-2.5 text-[16px] sm:text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 max-h-28 min-h-[44px]"
           />
           <button
             onClick={send}
