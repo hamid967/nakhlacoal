@@ -102,7 +102,7 @@ export default function App() {
           <CompareProvider>
             <CartProvider>
               <CartDrawer />
-            <SmoothScroll />
+            {/* SmoothScroll removed — was interfering with native mouse/keyboard scrolling */}
             <HomeIntro />
             <AnalyticsTracker />
             <TrackingLoader />
