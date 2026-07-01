@@ -167,11 +167,34 @@ export function QuickEditTrademarkDialog({ open, onOpenChange, trademark, isAr }
             <Textarea rows={3} value={form.description_ar} onChange={set('description_ar')} />
           </Field>
           <Field
-            label={isAr ? 'رابط الشعار (URL)' : 'Logo image URL'}
-            hint={isAr ? 'اترك الحقل فارغاً لاستخدام الشعار الافتراضي.' : 'Leave empty to use the bundled default logo.'}
+            label={isAr ? 'شعار العلامة' : 'Trademark logo'}
+            hint={isAr ? 'ارفع صورة PNG/SVG أو الصق رابطاً مباشراً. اتركه فارغاً لاستخدام الشعار الافتراضي.' : 'Upload PNG/SVG or paste a direct URL. Leave empty for the bundled default.'}
             className="md:col-span-2"
           >
-            <Input placeholder="https://…/logo.png" value={form.image_url} onChange={set('image_url')} />
+            <div className="flex flex-wrap items-center gap-2">
+              <label className="inline-flex items-center gap-2 px-3 py-2 rounded-md border border-border bg-background hover:bg-muted cursor-pointer text-sm">
+                {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+                <span>{isAr ? 'رفع ملف' : 'Upload file'}</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  disabled={uploading}
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (f) onUpload(f);
+                    e.target.value = '';
+                  }}
+                />
+              </label>
+              {form.image_url && (
+                <Button type="button" variant="ghost" size="sm" onClick={() => setForm((f) => ({ ...f, image_url: '' }))} disabled={uploading || saving}>
+                  {isAr ? 'إزالة' : 'Remove'}
+                </Button>
+              )}
+            </div>
+            <Input className="mt-2" placeholder="https://…/logo.png" value={form.image_url} onChange={set('image_url')} />
+
             {form.image_url && (
               <img
                 src={form.image_url}
