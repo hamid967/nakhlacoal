@@ -53,6 +53,7 @@ export default function ResetPassword() {
     <>
       <Helmet>
         <title>{t('استعادة كلمة المرور | فحم النخلة', 'Reset Password | Palm Charcoal')}</title>
+        <meta name="description" content={t('استعِد كلمة مرور حساب فحم النخلة عبر بريدك الإلكتروني بأمان.', 'Securely recover your Palm Charcoal account password via email.')} />
         <meta name="robots" content="noindex, nofollow" />
       </Helmet>
       <section className="min-h-[calc(100dvh-4rem)] grid place-items-center px-4 py-16" dir={isAr ? 'rtl' : 'ltr'}>
