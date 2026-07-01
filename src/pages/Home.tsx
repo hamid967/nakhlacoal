@@ -17,6 +17,8 @@ import { Certifications } from '@/components/Certifications';
 import { AudienceTracks } from '@/components/AudienceTracks';
 import { GlowingCubes } from '@/components/GlowingCubes';
 import { StatsGrid } from '@/components/StatsGrid';
+import { ExportMap } from '@/components/ExportMap';
+
 
 
 import { StickyMobileCTA } from '@/components/StickyMobileCTA';
@@ -125,6 +127,8 @@ export default function Home() {
       {/* 1.5 — Glowing Charcoal Cubes (Noir + Gold) */}
       <GlowingCubes />
       <StatsGrid />
+      <ExportMap />
+
 
 
 
