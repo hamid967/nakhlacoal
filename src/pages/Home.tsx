@@ -127,6 +127,8 @@ export default function Home() {
       {/* 1.5 — Glowing Charcoal Cubes (Noir + Gold) */}
       <GlowingCubes />
       <StatsGrid />
+      <ExportMap />
+
 
 
 
