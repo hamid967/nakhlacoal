@@ -218,8 +218,159 @@ Deno.serve(async (req) => {
       }
     }
 
+    // ── Tools: check_inventory, track_order, create_quote_link ───────────────
+    const TOOLS = [
+      {
+        type: "function",
+        function: {
+          name: "check_inventory",
+          description: "يعرض المخزون الحالي وشرائح الأسعار لمنتج محدد أو لكل الكتالوج.",
+          parameters: {
+            type: "object",
+            properties: { product: { type: "string", description: "اسم أو جزء من اسم المنتج (اختياري)" } },
+          },
+        },
+      },
+      {
+        type: "function",
+        function: {
+          name: "track_order",
+          description: "يتحقق من حالة طلب باستخدام رقم الطلب.",
+          parameters: {
+            type: "object",
+            properties: { order_number: { type: "string", description: "رقم الطلب (مثل PC-2025-0001)" } },
+            required: ["order_number"],
+          },
+        },
+      },
+      {
+        type: "function",
+        function: {
+          name: "create_quote_link",
+          description: "ينشئ رابط عرض سعر جاهز للعميل يفتح في صفحة /quote.",
+          parameters: {
+            type: "object",
+            properties: {
+              product_type: { type: "string" },
+              quantity: { type: "number" },
+              unit: { type: "string", enum: ["kg", "carton", "ton", "box"] },
+            },
+            required: ["product_type", "quantity", "unit"],
+          },
+        },
+      },
+    ];
 
-    const upstream = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const SITE_URL = Deno.env.get("SITE_URL") ?? "https://alnakhlacoal.com";
+    const publicDb = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+    );
+
+    async function execTool(name: string, args: Record<string, unknown>): Promise<unknown> {
+      try {
+        if (name === "check_inventory") {
+          const q = String(args.product ?? "").trim();
+          let query = publicDb.from("inventory_items").select("label,in_stock_kg,min_order_kg,lead_days,tiers,active").eq("active", true);
+          if (q) query = query.ilike("label", `%${q}%`);
+          const { data, error } = await query.limit(10);
+          if (error) return { error: error.message };
+          return { items: data ?? [] };
+        }
+        if (name === "track_order") {
+          const num = String(args.order_number ?? "").trim();
+          if (!num) return { error: "order_number مطلوب" };
+          const { data, error } = await publicDb
+            .from("orders")
+            .select("order_number,status,product_type,quantity,unit,city,delivery_date,grand_total_sar,created_at")
+            .or(`order_number.eq.${num},id.eq.${num}`)
+            .maybeSingle();
+          if (error) return { error: error.message };
+          if (!data) return { found: false };
+          return { found: true, order: data };
+        }
+        if (name === "create_quote_link") {
+          const p = new URLSearchParams({
+            product: String(args.product_type ?? ""),
+            qty: String(args.quantity ?? ""),
+            unit: String(args.unit ?? "kg"),
+          });
+          return { url: `${SITE_URL}/quote?${p.toString()}` };
+        }
+        return { error: `unknown tool: ${name}` };
+      } catch (e) {
+        return { error: String((e as Error).message ?? e) };
+      }
+    }
+
+    // ── Preflight: non-streaming call with tools ────────────────────────────
+    const workingMessages: Array<Record<string, unknown>> = [
+      { role: "system", content: SYSTEM_PROMPT },
+      ...messages.slice(-30),
+    ];
+
+    async function gwCall(stream: boolean): Promise<Response> {
+      return await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${LOVABLE_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: resolveModel(),
+          stream,
+          tools: TOOLS,
+          messages: workingMessages,
+        }),
+      });
+    }
+
+    // Up to 3 tool-loop iterations before final streamed answer.
+    let toolLoopUpstream: Response | null = null;
+    for (let i = 0; i < 3; i++) {
+      const preflight = await gwCall(false);
+      if (!preflight.ok) { toolLoopUpstream = preflight; break; }
+      const json = await preflight.json();
+      const choice = json?.choices?.[0];
+      const toolCalls = choice?.message?.tool_calls;
+      if (!Array.isArray(toolCalls) || toolCalls.length === 0) {
+        // No tools requested — echo the message directly (skip second call).
+        const finalText = String(choice?.message?.content ?? "");
+        if (dbClient && conversationId && finalText.trim()) {
+          try {
+            await dbClient.from("chat_messages").insert({
+              conversation_id: conversationId, user_id: userId!,
+              role: "assistant", content: finalText.slice(0, 20000),
+            });
+          } catch (e) { console.warn("[chat-assistant] persist (no-tools) failed:", e); }
+        }
+        const headers: Record<string, string> = {
+          ...corsHeaders,
+          "Content-Type": "text/plain; charset=utf-8",
+          "Cache-Control": "no-cache",
+        };
+        if (conversationId) {
+          headers["X-Conversation-Id"] = conversationId;
+          headers["Access-Control-Expose-Headers"] = "X-Conversation-Id";
+        }
+        return new Response(finalText, { headers });
+      }
+      // Append assistant tool-call turn + execute each tool.
+      workingMessages.push({ role: "assistant", content: choice.message.content ?? "", tool_calls: toolCalls });
+      for (const tc of toolCalls) {
+        let parsed: Record<string, unknown> = {};
+        try { parsed = JSON.parse(tc?.function?.arguments ?? "{}"); } catch { /* ignore */ }
+        const result = await execTool(tc?.function?.name ?? "", parsed);
+        workingMessages.push({
+          role: "tool",
+          tool_call_id: tc.id,
+          content: JSON.stringify(result),
+        });
+      }
+    }
+
+    // Final streaming answer (tools already resolved, or fallthrough after 3 loops).
+    const upstream = toolLoopUpstream ?? await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${LOVABLE_API_KEY}`,
@@ -228,10 +379,7 @@ Deno.serve(async (req) => {
       body: JSON.stringify({
         model: resolveModel(),
         stream: true,
-        messages: [
-          { role: "system", content: SYSTEM_PROMPT },
-          ...messages.slice(-30),
-        ],
+        messages: workingMessages,
       }),
     });
 
