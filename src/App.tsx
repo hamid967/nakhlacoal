@@ -80,6 +80,7 @@ const PortalPlaceholder = lazy(() => import('@/portal/pages/Placeholder'));
 const PortalNewOrder = lazy(() => import('@/portal/pages/NewOrder'));
 const PortalShipments = lazy(() => import('@/portal/pages/Shipments'));
 const PortalShipmentDetail = lazy(() => import('@/portal/pages/ShipmentDetail'));
+const PortalLogin = lazy(() => import('@/portal/pages/Login'));
 
 const queryClient = new QueryClient();
 
