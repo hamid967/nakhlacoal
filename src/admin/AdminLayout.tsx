@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { AdminSidebar } from './AdminSidebar';
 import { AdminTopbar } from './AdminTopbar';
 import './admin.css';
+import { useVitalsAlerts } from './useVitalsAlerts';
 
 export default function AdminLayout() {
   const [collapsed, setCollapsed] = useState(false);
@@ -15,6 +16,7 @@ export default function AdminLayout() {
   const location = useLocation();
 
   useEffect(() => { localStorage.setItem('admin-theme', theme); }, [theme]);
+  useVitalsAlerts();
 
   return (
     <div className="admin-shell" data-theme={theme} dir="rtl">
