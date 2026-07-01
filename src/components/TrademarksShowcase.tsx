@@ -112,17 +112,18 @@ export function TrademarksShowcase() {
           aria-roledescription={isAr ? 'شرائح متحركة' : 'carousel'}
           aria-label={isAr ? 'علاماتنا التجارية' : 'Our trademarks'}
         >
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={current.id}
             id="trademarks-slide"
             role="group"
             aria-roledescription={isAr ? 'شريحة' : 'slide'}
             aria-label={`${isAr ? current.nameAr : current.nameEn} — ${active + 1} / ${total}`}
-            initial={{ opacity: 0, y: 12 }}
+            initial={prefersReduced ? false : { opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -6 }}
-            transition={{ duration: 0.45 }}
+            exit={prefersReduced ? { opacity: 0 } : { opacity: 0, y: -4 }}
+            transition={SLIDE_TRANSITION}
+            style={{ willChange: 'transform, opacity' }}
             className="grid grid-cols-1 md:grid-cols-12 gap-4 auto-rows-[160px]"
           >
             {/* Logo main card — 8×3 */}
