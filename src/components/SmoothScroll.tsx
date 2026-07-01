@@ -89,6 +89,7 @@ export function SmoothScroll() {
     return () => {
       stop();
       window.clearTimeout(idleTimer);
+      window.removeEventListener('keydown', onKey);
       document.removeEventListener('visibilitychange', onVisibility);
       lenis.destroy();
       lenisInstance = null;
