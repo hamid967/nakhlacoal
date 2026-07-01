@@ -255,11 +255,29 @@ Deno.serve(async (req) => {
     const decoder = new TextDecoder();
     const encoder = new TextEncoder();
     let buffer = "";
+    let assistantAcc = "";
 
     const stream = new ReadableStream({
       async pull(controller) {
         const { done, value } = await reader.read();
-        if (done) { controller.close(); return; }
+        if (done) {
+          // Persist the full assistant reply once streaming completes.
+          if (dbClient && conversationId && assistantAcc.trim()) {
+            try {
+              await dbClient.from("chat_messages").insert({
+                conversation_id: conversationId,
+                user_id: userId!,
+                role: "assistant",
+                content: assistantAcc.slice(0, 20000),
+              });
+              await dbClient.from("chat_conversations")
+                .update({ updated_at: new Date().toISOString() })
+                .eq("id", conversationId);
+            } catch (e) { console.warn("[chat-assistant] persist assistant msg failed:", e); }
+          }
+          controller.close();
+          return;
+        }
         buffer += decoder.decode(value, { stream: true });
         const lines = buffer.split("\n");
         buffer = lines.pop() ?? "";
@@ -267,23 +285,46 @@ Deno.serve(async (req) => {
           const trimmed = line.trim();
           if (!trimmed.startsWith("data:")) continue;
           const data = trimmed.slice(5).trim();
-          if (data === "[DONE]") { controller.close(); return; }
+          if (data === "[DONE]") {
+            if (dbClient && conversationId && assistantAcc.trim()) {
+              try {
+                await dbClient.from("chat_messages").insert({
+                  conversation_id: conversationId,
+                  user_id: userId!,
+                  role: "assistant",
+                  content: assistantAcc.slice(0, 20000),
+                });
+              } catch (e) { console.warn("[chat-assistant] persist assistant msg [DONE] failed:", e); }
+            }
+            controller.close();
+            return;
+          }
           try {
             const json = JSON.parse(data);
             const token = json?.choices?.[0]?.delta?.content;
-            if (token) controller.enqueue(encoder.encode(token));
+            if (token) {
+              assistantAcc += token;
+              controller.enqueue(encoder.encode(token));
+            }
           } catch { /* skip non-JSON keepalives */ }
         }
       },
     });
 
-    return new Response(stream, {
-      headers: {
-        ...corsHeaders,
-        "Content-Type": "text/plain; charset=utf-8",
-        "Cache-Control": "no-cache",
-      },
-    });
+    const responseHeaders: Record<string, string> = {
+      ...corsHeaders,
+      "Content-Type": "text/plain; charset=utf-8",
+      "Cache-Control": "no-cache",
+    };
+    if (conversationId) {
+      responseHeaders["X-Conversation-Id"] = conversationId;
+      // Expose the custom header so browsers permit reading it.
+      const expose = responseHeaders["Access-Control-Expose-Headers"];
+      responseHeaders["Access-Control-Expose-Headers"] =
+        expose ? `${expose}, X-Conversation-Id` : "X-Conversation-Id";
+    }
+    return new Response(stream, { headers: responseHeaders });
+
   } catch (e) {
     console.error("[chat-assistant] unhandled error:", e);
     return new Response(JSON.stringify({ error: "Internal server error" }), {
