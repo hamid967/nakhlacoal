@@ -1,6 +1,7 @@
 // Palm Charcoal — persist a finalized order from the AI assistant
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { z } from "npm:zod@3.23.8";
+import { checkRateLimit, clientIp } from "../_shared/rate-limit.ts";
 
 const ALLOWED_ORIGINS = new Set<string>([
   "https://nakhlacoal.lovable.app",
