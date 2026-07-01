@@ -80,7 +80,7 @@ export default function Quote() {
         <link rel="canonical" href="https://alnakhlacoal.com/quote" />
       </Helmet>
 
-      <div dir="rtl" className="min-h-screen pt-24 pb-16">
+      <div dir="rtl" className="min-h-dvh pt-24 pb-16">
         {/* Hero */}
         <section className="container max-w-6xl px-4 mb-10">
           <div className="text-center space-y-3">

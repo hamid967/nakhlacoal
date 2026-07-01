@@ -79,7 +79,7 @@ export class ErrorBoundary extends Component<Props, State> {
     const { title, hint, links } = classify(error);
 
     return (
-      <div dir="rtl" className="min-h-screen flex items-center justify-center px-4 py-16 bg-background text-foreground">
+      <div dir="rtl" className="min-h-dvh flex items-center justify-center px-4 py-16 bg-background text-foreground">
         <div className="max-w-lg w-full rounded-2xl border border-gold/20 bg-card/80 backdrop-blur p-6 md:p-8 shadow-xl">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-3 rounded-full bg-destructive/10 text-destructive">

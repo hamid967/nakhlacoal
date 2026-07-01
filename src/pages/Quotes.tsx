@@ -78,7 +78,7 @@ export default function Quotes() {
         <link rel="canonical" href="https://alnakhlacoal.com/quotes" />
       </Helmet>
 
-      <div dir="rtl" className="min-h-screen pt-24 pb-16">
+      <div dir="rtl" className="min-h-dvh pt-24 pb-16">
         <section className="container max-w-5xl px-4">
           <div className="flex items-center justify-between mb-6">
             <div>
