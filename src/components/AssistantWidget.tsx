@@ -700,63 +700,84 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
               ))}
             </div>
           )}
-          <div className="space-y-1.5">
-            <div>
+          <div className="space-y-2">
+            <div className="relative">
+              <User className="absolute top-1/2 -translate-y-1/2 start-2.5 w-3.5 h-3.5 text-gold/70 pointer-events-none" aria-hidden />
               <input
+                aria-label="الاسم الكامل"
                 value={formData.contact_name}
                 onChange={(e) => setFormData(f => ({ ...f, contact_name: e.target.value }))}
                 placeholder="الاسم الكامل *"
-                className="w-full rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-gold"
+                className={`w-full rounded-lg border bg-background ps-8 pe-2.5 py-2 text-xs font-arabic transition focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold ${formErrors.contact_name ? 'border-destructive/60' : 'border-border'}`}
               />
-              {formErrors.contact_name && <p className="text-[10px] text-destructive mt-0.5">{formErrors.contact_name}</p>}
+              {formErrors.contact_name && <p className="text-[10px] text-destructive mt-0.5 ps-1">{formErrors.contact_name}</p>}
             </div>
-            <div>
+            <div className="relative">
+              <Phone className="absolute top-1/2 -translate-y-1/2 start-2.5 w-3.5 h-3.5 text-gold/70 pointer-events-none" aria-hidden />
               <input
+                aria-label="رقم الجوال"
                 value={formData.phone}
                 onChange={(e) => setFormData(f => ({ ...f, phone: e.target.value }))}
-                placeholder="رقم الجوال (05xxxxxxxx) *"
+                placeholder="05xxxxxxxx *"
                 dir="ltr"
-                className="w-full rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-gold text-right"
+                inputMode="tel"
+                className={`w-full rounded-lg border bg-background ps-8 pe-2.5 py-2 text-xs transition focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold text-right ${formErrors.phone ? 'border-destructive/60' : 'border-border'}`}
               />
-              {formErrors.phone && <p className="text-[10px] text-destructive mt-0.5">{formErrors.phone}</p>}
+              {formErrors.phone && <p className="text-[10px] text-destructive mt-0.5 ps-1">{formErrors.phone}</p>}
             </div>
-            <div>
+            <div className="relative">
+              <MapPin className="absolute top-2.5 start-2.5 w-3.5 h-3.5 text-gold/70 pointer-events-none" aria-hidden />
               <textarea
+                aria-label="العنوان"
                 value={formData.address}
                 onChange={(e) => setFormData(f => ({ ...f, address: e.target.value }))}
                 placeholder="العنوان (المدينة، الحي، الشارع) *"
                 rows={2}
-                className="w-full rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-gold resize-none"
+                className={`w-full rounded-lg border bg-background ps-8 pe-2.5 py-2 text-xs font-arabic transition focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold resize-none ${formErrors.address ? 'border-destructive/60' : 'border-border'}`}
               />
-              {formErrors.address && <p className="text-[10px] text-destructive mt-0.5">{formErrors.address}</p>}
+              {formErrors.address && <p className="text-[10px] text-destructive mt-0.5 ps-1">{formErrors.address}</p>}
             </div>
             <div>
-              <label className="text-[10px] text-muted-foreground block mb-1">طريقة الاستلام *</label>
+              <label className="text-[10px] text-muted-foreground block mb-1 font-arabic font-semibold tracking-wide uppercase">طريقة الاستلام *</label>
               <div className="grid grid-cols-2 gap-1.5">
-                {(['توصيل', 'استلام من المستودع'] as const).map(m => (
-                  <button
-                    key={m}
-                    type="button"
-                    onClick={() => setFormData(f => ({ ...f, delivery_method: m }))}
-                    className={`px-2 py-1.5 rounded-lg text-[11px] border transition ${
-                      formData.delivery_method === m
-                        ? 'bg-gold text-dark border-gold font-semibold'
-                        : 'bg-background border-border text-foreground hover:border-gold/50'
-                    }`}
-                  >
-                    {m === 'توصيل' ? '🚚 توصيل' : '🏭 استلام من المستودع'}
-                  </button>
-                ))}
+                {([
+                  { key: 'توصيل', icon: Truck, label: 'توصيل للعنوان' },
+                  { key: 'استلام من المستودع', icon: Warehouse, label: 'استلام من المستودع' },
+                ] as const).map(({ key, icon: Icon, label }) => {
+                  const active = formData.delivery_method === key;
+                  return (
+                    <button
+                      key={key}
+                      type="button"
+                      onClick={() => setFormData(f => ({ ...f, delivery_method: key }))}
+                      className={`px-2 py-2 rounded-lg text-[11px] border transition flex items-center justify-center gap-1.5 font-arabic ${
+                        active
+                          ? 'bg-gradient-to-b from-gold to-[hsl(var(--gold)/0.85)] text-dark border-gold font-bold shadow-[0_4px_14px_-4px_hsl(var(--gold)/0.6)]'
+                          : 'bg-background border-border text-foreground hover:border-gold/50 hover:bg-gold/5'
+                      }`}
+                    >
+                      <Icon className="w-3.5 h-3.5" />
+                      {label}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </div>
           <button
             onClick={confirmOrder}
             disabled={submitting}
-            className="w-full mt-2 py-2 rounded-lg bg-dark text-cream text-xs font-semibold shadow-gold hover:opacity-90 disabled:opacity-50 transition flex items-center justify-center gap-1.5"
+            className="w-full mt-2 py-2.5 rounded-lg text-xs font-bold font-arabic tracking-wide text-cream transition flex items-center justify-center gap-1.5 disabled:opacity-50 hover:shadow-[0_10px_28px_-8px_hsl(var(--gold)/0.6)] hover:-translate-y-px"
+            style={{
+              background:
+                'linear-gradient(135deg, hsl(var(--dark)) 0%, hsl(0 0% 10%) 100%)',
+              boxShadow: '0 4px 14px -4px hsl(var(--gold) / 0.4), inset 0 1px 0 hsl(var(--gold-hi) / 0.35)',
+            }}
           >
-            {submitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-3.5 h-3.5 text-gold-hi" />}
-            تأكيد وإرسال الطلب
+            {submitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-4 h-4 text-gold-hi" />}
+            <span className="bg-gradient-to-l from-gold-hi to-cream bg-clip-text text-transparent">
+              تأكيد وإرسال الطلب
+            </span>
           </button>
         </div>
       )}
