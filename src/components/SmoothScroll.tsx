@@ -111,10 +111,13 @@ export function SmoothScroll() {
       stop();
       window.clearTimeout(idleTimer);
       window.removeEventListener('keydown', onKey);
+      window.removeEventListener('wheel', onInput);
+      window.removeEventListener('touchstart', onInput);
       document.removeEventListener('visibilitychange', onVisibility);
       lenis.destroy();
       lenisInstance = null;
     };
+
   }, []);
 
   return null;
