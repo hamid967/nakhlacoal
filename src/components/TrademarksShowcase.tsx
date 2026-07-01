@@ -16,6 +16,7 @@ const SLIDE_TRANSITION: Transition = { duration: DURATION, ease: EASE };
  */
 export function TrademarksShowcase() {
   const { isAr } = useDir();
+  const prefersReduced = useReducedMotion();
   const { trademarks, loading, syncing, status, error } = useTrademarks();
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
