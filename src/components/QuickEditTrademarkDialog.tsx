@@ -59,7 +59,54 @@ export function QuickEditTrademarkDialog({ open, onOpenChange, trademark, isAr }
   const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     setForm((f) => ({ ...f, [k]: e.target.value }));
 
+  const onUpload = async (file: File) => {
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      toast({ title: isAr ? 'ملف غير صالح' : 'Invalid file', description: isAr ? 'اختر ملف صورة.' : 'Please choose an image.', variant: 'destructive' });
+      return;
+    }
+    if (file.size > 4 * 1024 * 1024) {
+      toast({ title: isAr ? 'الحجم كبير' : 'File too large', description: isAr ? 'الحد الأقصى 4MB.' : 'Max 4MB.', variant: 'destructive' });
+      return;
+    }
+    setUploading(true);
+    const ext = (file.name.split('.').pop() || 'png').toLowerCase();
+    const path = `${trademark.id}/${Date.now()}.${ext}`;
+    const { error: upErr } = await supabase.storage
+      .from(LOGO_BUCKET)
+      .upload(path, file, { cacheControl: '31536000', upsert: true, contentType: file.type });
+    if (upErr) {
+      setUploading(false);
+      toast({ title: isAr ? 'فشل الرفع' : 'Upload failed', description: upErr.message, variant: 'destructive' });
+      return;
+    }
+    // Try public URL first (works when bucket is public); fall back to a long-lived signed URL.
+    const { data: pub } = supabase.storage.from(LOGO_BUCKET).getPublicUrl(path);
+    let url = pub?.publicUrl ?? '';
+    try {
+      const head = await fetch(url, { method: 'HEAD' });
+      if (!head.ok) url = '';
+    } catch {
+      url = '';
+    }
+    if (!url) {
+      const { data: signed, error: signErr } = await supabase.storage
+        .from(LOGO_BUCKET)
+        .createSignedUrl(path, SIGNED_URL_TTL);
+      if (signErr || !signed) {
+        setUploading(false);
+        toast({ title: isAr ? 'تعذّر إنشاء الرابط' : 'URL error', description: signErr?.message ?? '', variant: 'destructive' });
+        return;
+      }
+      url = signed.signedUrl;
+    }
+    setForm((f) => ({ ...f, image_url: url }));
+    setUploading(false);
+    toast({ title: isAr ? 'تم رفع الشعار' : 'Logo uploaded' });
+  };
+
   const onSave = async () => {
+
     setSaving(true);
     const { error } = await supabase
       .from('trademarks')
