@@ -18,6 +18,10 @@ import { AudienceTracks } from '@/components/AudienceTracks';
 import { GlowingCubes } from '@/components/GlowingCubes';
 import { StatsGrid } from '@/components/StatsGrid';
 import { ExportMap } from '@/components/ExportMap';
+const ProductShowcase3D = lazy(() => import('@/components/ProductShowcase3D').then((m) => ({ default: m.ProductShowcase3D })));
+const TestimonialsMarquee = lazy(() => import('@/components/TestimonialsMarquee').then((m) => ({ default: m.TestimonialsMarquee })));
+const CertificationsWall = lazy(() => import('@/components/CertificationsWall').then((m) => ({ default: m.CertificationsWall })));
+const CinematicCTA = lazy(() => import('@/components/CinematicCTA').then((m) => ({ default: m.CinematicCTA })));
 
 
 
@@ -36,7 +40,6 @@ import {
   TrustItem,
   Stat,
   ProductCard,
-  TestimonialCard,
   CtaBand,
 } from '@/components/ui-lux';
 
@@ -71,11 +74,8 @@ export default function Home() {
     { img: productLump, name: isAr ? 'فحم القطع' : 'Lump Charcoal', tag: isAr ? 'قطع كبيرة طبيعية' : 'Large Natural Pieces' },
   ];
 
-  const reviews = [
-    { name: isAr ? 'علي الزهراني' : 'Ali Al-Zahrani', role: isAr ? 'جدة' : 'Jeddah', meta: isAr ? 'معسل وشيشة 💨' : 'Hookah 💨', body: isAr ? 'جربت كثير وما تركت الفحم الصيني — أداء الفحم الطبيعي أحسن بكثير. أنصح الجميع.' : 'Tried many — natural beats imported by far. Highly recommend.' },
-    { name: isAr ? 'سعد القحطاني' : 'Saad Al-Qahtani', role: isAr ? 'الرياض' : 'Riyadh', meta: isAr ? 'بخور وعود 🪔' : 'Incense 🪔', body: isAr ? 'استخدمته للبخور في عرس أخوي — الرائحة طلعت رائعة وما حس أحد برائحة الفحم.' : 'Used it for incense at a wedding — pure aroma, zero smoke smell.' },
-    { name: isAr ? 'أحمد العتيبي' : 'Ahmed Al-Otaibi', role: isAr ? 'مكة المكرمة' : 'Makkah', meta: isAr ? 'شواء 🔥' : 'BBQ 🔥', body: isAr ? 'اللحم يطلع طعمه مختلف. الحرارة ثابتة من أول الشوية لآخرها بدون إعادة إشعال.' : 'Different flavor entirely. Stable heat from start to finish.' },
-  ];
+
+
 
   const SITE = 'https://alnakhlacoal.com';
   const absUrl = (u: string) => (u?.startsWith('http') ? u : `${SITE}${u?.startsWith('/') ? '' : '/'}${u || ''}`);
@@ -184,6 +184,11 @@ export default function Home() {
         </div>
       </LuxSection>
 
+      {/* 4.5 — Product Showcase 3D (Noir + Gold) */}
+      <Suspense fallback={<SectionSkeleton variant="band" />}>
+        <ProductShowcase3D />
+      </Suspense>
+
       <SectionDivider flip />
 
       {/* 5 — Brand timeline (process + journey) */}
@@ -236,26 +241,32 @@ export default function Home() {
       </LuxSection>
       <Certifications />
 
+      {/* 6.5 — Certifications Wall (Apple-style Noir) */}
+      <Suspense fallback={<SectionSkeleton variant="grid" />}>
+        <CertificationsWall />
+      </Suspense>
+
       {/* 7 — Social proof: trademarks + testimonials */}
       <Suspense fallback={<SectionSkeleton variant="grid" />}>
         <TrademarksShowcase />
       </Suspense>
-      <LuxSection tone="dark">
-        <div className="container"><SectionNumber index={7} /></div>
-        <SectionHeader
-          eyebrow={isAr ? 'آراء عملائنا' : 'Customer voices'}
-          title={isAr ? 'ثقة تتجدد مع كل تجربة' : 'Trusted with every order'}
-        />
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {reviews.map((r, i) => <TestimonialCard key={i} {...r} index={i} />)}
-        </div>
-      </LuxSection>
+
+      {/* 7.5 — Testimonials Marquee */}
+      <Suspense fallback={<SectionSkeleton variant="band" />}>
+        <TestimonialsMarquee />
+      </Suspense>
 
       {/* 8 — FAQ + location + CTA */}
       <Suspense fallback={<SectionSkeleton variant="band" />}>
         <FaqSection />
         <LocationSection />
       </Suspense>
+
+      {/* 8.5 — Cinematic CTA (Noir + Gold) */}
+      <Suspense fallback={<SectionSkeleton variant="band" />}>
+        <CinematicCTA />
+      </Suspense>
+
       <CtaBand
         title={isAr ? 'جاهز لتجربة الفحم الفاخر؟' : 'Ready to taste the premium difference?'}
         lead={isAr ? 'تواصل معنا الآن واحصل على عرض خاص لجملة وتجزئة وتصدير.' : 'Contact us for wholesale, retail and export offers.'}
