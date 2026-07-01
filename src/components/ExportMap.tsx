@@ -402,8 +402,9 @@ export function ExportMap() {
 
         {/* Guide / Legend — explains icons, values, and route semantics */}
         <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {[
+          {([
             {
+              hint: 'points' as const,
               swatch: (
                 <span className="relative inline-flex w-6 h-6 items-center justify-center">
                   <span className="absolute inset-0 rounded-full bg-[hsl(46_72%_62%/0.25)]" />
@@ -416,6 +417,7 @@ export function ExportMap() {
               descEn: 'A glowing gold point marks a discharge port we ship to on a recurring basis. Click to view details.',
             },
             {
+              hint: 'arcs' as const,
               swatch: (
                 <span
                   className="inline-block w-8 h-0"
@@ -428,6 +430,7 @@ export function ExportMap() {
               descEn: 'A dashed gold arc from Jeddah to each port represents an established sea or air export lane.',
             },
             {
+              hint: 'selection' as const,
               swatch: (
                 <span className="relative inline-block w-10 h-2 rounded-full bg-gradient-to-r from-[hsl(46_95%_78%)] to-[hsl(46_80%_60%/0.4)] shadow-[0_0_14px_hsl(46_90%_70%/0.8)]" />
               ),
@@ -437,6 +440,7 @@ export function ExportMap() {
               descEn: 'Selecting a port draws its lane progressively in glowing gold, with a moving sparkle showing shipping direction.',
             },
             {
+              hint: 'terms' as const,
               swatch: (
                 <span className="inline-flex items-center gap-1 text-[10px] tracking-[0.25em] text-[hsl(var(--gold-hi))]">
                   <span className="rounded border border-[hsl(var(--gold))]/50 px-1.5 py-0.5">CIF</span>
@@ -448,11 +452,22 @@ export function ExportMap() {
               descAr: 'مدة العبور بالأيام، الحجم الشهري بالأطنان، تردّد الشحنات، وشرط التسليم Incoterm (CIF/FOB/DAP).',
               descEn: 'Transit time (days), monthly volume (tons), shipping frequency, and the Incoterm (CIF/FOB/DAP) used per lane.',
             },
-          ].map((item, i) => (
-            <div
+          ]).map((item, i) => (
+            <button
+              type="button"
               key={i}
-              className="rounded-2xl border border-[hsl(var(--gold))]/20 bg-black/40 p-4 transition hover:border-[hsl(var(--gold))]/50"
+              onMouseEnter={() => setGuide(item.hint)}
+              onMouseLeave={() => setGuide((g) => (g === item.hint ? null : g))}
+              onFocus={() => setGuide(item.hint)}
+              onBlur={() => setGuide((g) => (g === item.hint ? null : g))}
+              aria-pressed={guide === item.hint}
+              className={`text-start rounded-2xl border p-4 transition ${
+                guide === item.hint
+                  ? 'border-[hsl(var(--gold))]/70 bg-black/60 shadow-[0_0_30px_-8px_hsl(46_90%_60%/0.5)]'
+                  : 'border-[hsl(var(--gold))]/20 bg-black/40 hover:border-[hsl(var(--gold))]/50'
+              }`}
             >
+
               <div className="flex items-center gap-3 min-h-[2rem]">{item.swatch}</div>
               <div
                 className={`mt-3 text-sm font-semibold text-[hsl(var(--foreground))] ${
