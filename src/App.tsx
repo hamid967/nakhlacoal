@@ -161,6 +161,7 @@ export default function App() {
                   <Route path="shipments" element={<AdminShipments />} />
                   <Route path="analytics" element={<AdminReports />} />
                   <Route path="web-vitals" element={<AdminWebVitals />} />
+                  <Route path="chats" element={<AdminChatAnalytics />} />
                   <Route path="settings" element={<AdminSettings />} />
                   <Route path="tracking" element={<AdminTracking />} />
                   <Route path="trademarks" element={<AdminTrademarks />} />
