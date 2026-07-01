@@ -936,13 +936,14 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
             className="flex-1 resize-none rounded-lg border border-border bg-muted/30 px-3 py-2.5 text-[16px] sm:text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 max-h-28 min-h-[44px]"
           />
           <button
-            onClick={send}
-            disabled={!input.trim() || streaming || submitting}
-            className="shrink-0 w-10 h-10 rounded-lg bg-primary text-primary-foreground flex items-center justify-center hover:opacity-90 disabled:opacity-50 transition"
-            aria-label="إرسال"
+            onClick={() => { if (streaming) abortRef.current?.abort(); else send(); }}
+            disabled={!streaming && (!input.trim() || submitting)}
+            className={`shrink-0 w-10 h-10 rounded-lg flex items-center justify-center hover:opacity-90 disabled:opacity-50 transition ${streaming ? 'bg-destructive text-destructive-foreground' : 'bg-primary text-primary-foreground'}`}
+            aria-label={streaming ? 'إيقاف' : 'إرسال'}
           >
-            {streaming ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4 rtl:rotate-180" />}
+            {streaming ? <Square className="w-4 h-4" fill="currentColor" /> : <Send className="w-4 h-4 rtl:rotate-180" />}
           </button>
+
         </div>
       </div>
     </div>
