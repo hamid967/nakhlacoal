@@ -1,6 +1,7 @@
 // Palm Charcoal AI Order Assistant — streaming chat that collects order info
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { buildCors } from "../_shared/cors.ts";
+import { checkRateLimit, clientIp } from "../_shared/rate-limit.ts";
 
 /**
  * Optional, non-blocking identity resolution.
