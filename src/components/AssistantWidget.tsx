@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Send, Loader2, Sparkles, X, Maximize2, CheckCircle2, MessageCircle, FileText } from 'lucide-react';
+import { Send, Loader2, Sparkles, X, Maximize2, CheckCircle2, MessageCircle, FileText, User, Phone, MapPin, Truck, Warehouse } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { QuoteBuilder } from './QuoteBuilder';
 import { quoteForItems, formatSAR } from '@/data/inventory';
@@ -405,22 +405,35 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
       aria-hidden={!open}
       aria-label="مساعد فحم النخلة"
     >
-      {/* Header */}
-      <header className="flex items-center gap-2 px-3 py-2.5 border-b border-gold/20 bg-dark text-cream">
-        <div className="w-8 h-8 rounded-full bg-background/10 flex items-center justify-center">
-          <img decoding="async" loading="lazy" src={logo} alt="" className="w-6 h-6 object-contain" />
+      {/* Header — refined luxury */}
+      <header
+        className="relative flex items-center gap-2.5 px-3.5 py-3 border-b border-gold/25 text-cream overflow-hidden"
+        style={{
+          background:
+            'linear-gradient(135deg, hsl(var(--dark)) 0%, hsl(0 0% 8%) 55%, hsl(var(--dark)) 100%)',
+        }}
+      >
+        <span className="absolute inset-0 bg-[radial-gradient(circle_at_10%_0%,hsl(var(--gold)/0.18),transparent_55%)] pointer-events-none" aria-hidden />
+        <div
+          className="relative w-9 h-9 rounded-full flex items-center justify-center ring-1 ring-gold/40 shadow-[0_0_18px_-4px_hsl(var(--gold)/0.6)]"
+          style={{ background: 'radial-gradient(circle at 30% 25%, hsl(var(--gold-hi)/0.35), hsl(0 0% 6%) 70%)' }}
+        >
+          <img decoding="async" loading="lazy" src={logo} alt="" className="w-7 h-7 object-contain drop-shadow-[0_0_6px_hsl(var(--gold-hi)/0.5)]" />
         </div>
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-semibold flex items-center gap-1.5 font-arabic">
-            مساعد فحم النخلة <Sparkles className="w-3.5 h-3.5 text-gold-hi" />
+        <div className="relative flex-1 min-w-0">
+          <p className="text-[13px] font-bold flex items-center gap-1.5 font-arabic tracking-wide">
+            <span className="bg-gradient-to-l from-gold-hi via-cream to-gold-hi bg-clip-text text-transparent">
+              مساعد فحم النخلة
+            </span>
+            <Sparkles className="w-3.5 h-3.5 text-gold-hi shrink-0" />
           </p>
-          <p className="text-[10px] opacity-70 flex items-center gap-1">
+          <p className="text-[10px] opacity-80 flex items-center gap-1.5 mt-0.5 font-arabic">
             {streaming ? (
               <><span className="w-1.5 h-1.5 rounded-full bg-gold-hi animate-pulse" /> يكتب الآن…</>
             ) : submitting ? (
               <><Loader2 className="w-3 h-3 animate-spin" /> جارٍ الإرسال…</>
             ) : (
-              <><span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> متصل · مجاني</>
+              <><span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_hsl(142_70%_45%)] animate-pulse" /> متصل · مجاني ٢٤/٧</>
             )}
           </p>
         </div>
@@ -428,7 +441,7 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
           href={waHref}
           target="_blank"
           rel="noreferrer noopener"
-          className="p-1.5 rounded-lg hover:bg-white/10 transition text-[#25D366]"
+          className="relative p-1.5 rounded-lg hover:bg-white/10 transition text-[#25D366]"
           aria-label="واتساب مباشر"
           title="واتساب مباشر"
         >
@@ -436,7 +449,7 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
         </a>
         <button
           onClick={() => { setMessages([greet]); setPendingOrder(null); setInput(''); inputRef.current?.focus(); }}
-          className="p-1.5 rounded-lg hover:bg-white/10 transition"
+          className="relative p-1.5 rounded-lg hover:bg-white/10 transition"
           aria-label="محادثة جديدة"
           title="بدء محادثة جديدة"
         >
@@ -444,13 +457,13 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
         </button>
         <button
           onClick={() => { onClose(); navigate('/assistant'); }}
-          className="p-1.5 rounded-lg hover:bg-white/10 transition"
+          className="relative p-1.5 rounded-lg hover:bg-white/10 transition"
           aria-label="تكبير"
           title="فتح في الشاشة الكاملة"
         >
           <Maximize2 className="w-4 h-4" />
         </button>
-        <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-white/10 transition" aria-label="إغلاق" title="إغلاق">
+        <button onClick={onClose} className="relative p-1.5 rounded-lg hover:bg-white/10 transition" aria-label="إغلاق" title="إغلاق">
           <X className="w-4 h-4" />
         </button>
       </header>
@@ -687,63 +700,84 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
               ))}
             </div>
           )}
-          <div className="space-y-1.5">
-            <div>
+          <div className="space-y-2">
+            <div className="relative">
+              <User className="absolute top-1/2 -translate-y-1/2 start-2.5 w-3.5 h-3.5 text-gold/70 pointer-events-none" aria-hidden />
               <input
+                aria-label="الاسم الكامل"
                 value={formData.contact_name}
                 onChange={(e) => setFormData(f => ({ ...f, contact_name: e.target.value }))}
                 placeholder="الاسم الكامل *"
-                className="w-full rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-gold"
+                className={`w-full rounded-lg border bg-background ps-8 pe-2.5 py-2 text-xs font-arabic transition focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold ${formErrors.contact_name ? 'border-destructive/60' : 'border-border'}`}
               />
-              {formErrors.contact_name && <p className="text-[10px] text-destructive mt-0.5">{formErrors.contact_name}</p>}
+              {formErrors.contact_name && <p className="text-[10px] text-destructive mt-0.5 ps-1">{formErrors.contact_name}</p>}
             </div>
-            <div>
+            <div className="relative">
+              <Phone className="absolute top-1/2 -translate-y-1/2 start-2.5 w-3.5 h-3.5 text-gold/70 pointer-events-none" aria-hidden />
               <input
+                aria-label="رقم الجوال"
                 value={formData.phone}
                 onChange={(e) => setFormData(f => ({ ...f, phone: e.target.value }))}
-                placeholder="رقم الجوال (05xxxxxxxx) *"
+                placeholder="05xxxxxxxx *"
                 dir="ltr"
-                className="w-full rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-gold text-right"
+                inputMode="tel"
+                className={`w-full rounded-lg border bg-background ps-8 pe-2.5 py-2 text-xs transition focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold text-right ${formErrors.phone ? 'border-destructive/60' : 'border-border'}`}
               />
-              {formErrors.phone && <p className="text-[10px] text-destructive mt-0.5">{formErrors.phone}</p>}
+              {formErrors.phone && <p className="text-[10px] text-destructive mt-0.5 ps-1">{formErrors.phone}</p>}
             </div>
-            <div>
+            <div className="relative">
+              <MapPin className="absolute top-2.5 start-2.5 w-3.5 h-3.5 text-gold/70 pointer-events-none" aria-hidden />
               <textarea
+                aria-label="العنوان"
                 value={formData.address}
                 onChange={(e) => setFormData(f => ({ ...f, address: e.target.value }))}
                 placeholder="العنوان (المدينة، الحي، الشارع) *"
                 rows={2}
-                className="w-full rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-gold resize-none"
+                className={`w-full rounded-lg border bg-background ps-8 pe-2.5 py-2 text-xs font-arabic transition focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold resize-none ${formErrors.address ? 'border-destructive/60' : 'border-border'}`}
               />
-              {formErrors.address && <p className="text-[10px] text-destructive mt-0.5">{formErrors.address}</p>}
+              {formErrors.address && <p className="text-[10px] text-destructive mt-0.5 ps-1">{formErrors.address}</p>}
             </div>
             <div>
-              <label className="text-[10px] text-muted-foreground block mb-1">طريقة الاستلام *</label>
+              <label className="text-[10px] text-muted-foreground block mb-1 font-arabic font-semibold tracking-wide uppercase">طريقة الاستلام *</label>
               <div className="grid grid-cols-2 gap-1.5">
-                {(['توصيل', 'استلام من المستودع'] as const).map(m => (
-                  <button
-                    key={m}
-                    type="button"
-                    onClick={() => setFormData(f => ({ ...f, delivery_method: m }))}
-                    className={`px-2 py-1.5 rounded-lg text-[11px] border transition ${
-                      formData.delivery_method === m
-                        ? 'bg-gold text-dark border-gold font-semibold'
-                        : 'bg-background border-border text-foreground hover:border-gold/50'
-                    }`}
-                  >
-                    {m === 'توصيل' ? '🚚 توصيل' : '🏭 استلام من المستودع'}
-                  </button>
-                ))}
+                {([
+                  { key: 'توصيل', icon: Truck, label: 'توصيل للعنوان' },
+                  { key: 'استلام من المستودع', icon: Warehouse, label: 'استلام من المستودع' },
+                ] as const).map(({ key, icon: Icon, label }) => {
+                  const active = formData.delivery_method === key;
+                  return (
+                    <button
+                      key={key}
+                      type="button"
+                      onClick={() => setFormData(f => ({ ...f, delivery_method: key }))}
+                      className={`px-2 py-2 rounded-lg text-[11px] border transition flex items-center justify-center gap-1.5 font-arabic ${
+                        active
+                          ? 'bg-gradient-to-b from-gold to-[hsl(var(--gold)/0.85)] text-dark border-gold font-bold shadow-[0_4px_14px_-4px_hsl(var(--gold)/0.6)]'
+                          : 'bg-background border-border text-foreground hover:border-gold/50 hover:bg-gold/5'
+                      }`}
+                    >
+                      <Icon className="w-3.5 h-3.5" />
+                      {label}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </div>
           <button
             onClick={confirmOrder}
             disabled={submitting}
-            className="w-full mt-2 py-2 rounded-lg bg-dark text-cream text-xs font-semibold shadow-gold hover:opacity-90 disabled:opacity-50 transition flex items-center justify-center gap-1.5"
+            className="w-full mt-2 py-2.5 rounded-lg text-xs font-bold font-arabic tracking-wide text-cream transition flex items-center justify-center gap-1.5 disabled:opacity-50 hover:shadow-[0_10px_28px_-8px_hsl(var(--gold)/0.6)] hover:-translate-y-px"
+            style={{
+              background:
+                'linear-gradient(135deg, hsl(var(--dark)) 0%, hsl(0 0% 10%) 100%)',
+              boxShadow: '0 4px 14px -4px hsl(var(--gold) / 0.4), inset 0 1px 0 hsl(var(--gold-hi) / 0.35)',
+            }}
           >
-            {submitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-3.5 h-3.5 text-gold-hi" />}
-            تأكيد وإرسال الطلب
+            {submitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-4 h-4 text-gold-hi" />}
+            <span className="bg-gradient-to-l from-gold-hi to-cream bg-clip-text text-transparent">
+              تأكيد وإرسال الطلب
+            </span>
           </button>
         </div>
       )}
