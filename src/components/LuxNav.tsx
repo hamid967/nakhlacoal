@@ -94,7 +94,7 @@ export function LuxNav() {
           <Link to="/" className="group flex items-center gap-3 shrink-0" aria-label="Palm Charcoal">
             <span className="relative">
               <span className="absolute inset-0 rounded-full bg-gold/25 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-              <img decoding="async" loading="eager" fetchpriority="high"
+              <img decoding="async" loading="eager" {...({ fetchpriority: "high" } as any)}
                 src={logo}
                 alt="فحم النخلة Palm Charcoal"
                 width={56}
