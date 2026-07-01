@@ -7,11 +7,13 @@ import productBbq from '@/assets/product-bbq.jpg';
 import productHookah from '@/assets/product-hookah.jpg';
 import productCoconut from '@/assets/product-coconut.jpg';
 import productLump from '@/assets/product-lump.jpg';
+import { useLowPerf } from '@/hooks/useLowPerf';
 
 export function ProductShowcase3D() {
   const { i18n } = useTranslation();
   const isAr = i18n.language === 'ar';
   const [active, setActive] = useState(1);
+  const lowPerf = useLowPerf();
 
   const items = [
     { img: productHookah, ar: 'فحم شيشة كوبي', en: 'Hookah Cubes', tag: isAr ? 'رمّاد ناعم' : 'Fine Ash', to: '/products/hookah' },
