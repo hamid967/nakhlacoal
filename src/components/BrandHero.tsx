@@ -231,8 +231,9 @@ export function BrandHero() {
 
         {/* Full-width prominent trademarks slider (replaces the previous small side cluster) */}
         <div
-          className="w-full max-w-5xl relative h-[420px] sm:h-[500px] md:h-[580px] rounded-3xl border border-[hsl(var(--gold))]/40 bg-[hsl(var(--background))]/40 backdrop-blur-sm shadow-[0_30px_80px_-30px_hsl(var(--gold)/0.35)]"
+          className="w-full max-w-5xl relative h-[420px] sm:h-[500px] md:h-[580px] rounded-3xl border border-[hsl(var(--gold))]/40 bg-black/40 backdrop-blur-md shadow-[0_40px_120px_-30px_hsl(46_72%_62%/0.35)]"
           style={{ perspective: '1800px', contain: 'layout paint size', aspectRatio: '16 / 10' }}
+
           role="region"
           aria-roledescription={isAr ? 'دائرة عرض' : 'carousel'}
           aria-label={isAr ? 'علاماتنا التجارية' : 'Our trademarks'}
