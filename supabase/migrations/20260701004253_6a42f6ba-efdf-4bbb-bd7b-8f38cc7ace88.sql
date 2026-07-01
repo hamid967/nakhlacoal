@@ -1,0 +1,1 @@
+ALTER TABLE public.trademarks ADD COLUMN IF NOT EXISTS image_url text;

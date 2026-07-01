@@ -602,6 +602,7 @@ export type Database = {
           filed_hijri: string | null
           goods_ar: string | null
           id: string
+          image_url: string | null
           is_active: boolean
           name_ar: string
           name_en: string
@@ -622,6 +623,7 @@ export type Database = {
           filed_hijri?: string | null
           goods_ar?: string | null
           id: string
+          image_url?: string | null
           is_active?: boolean
           name_ar: string
           name_en: string
@@ -642,6 +644,7 @@ export type Database = {
           filed_hijri?: string | null
           goods_ar?: string | null
           id?: string
+          image_url?: string | null
           is_active?: boolean
           name_ar?: string
           name_en?: string
