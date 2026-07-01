@@ -623,8 +623,10 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-3 py-3 space-y-3 bg-muted/20">
         {messages.map((m, idx) => {
           const isLastAssistant = m.role === 'assistant' && idx === messages.length - 1;
-          const showTyping = isLastAssistant && streaming && !m.content;
-          const { chips, clean } = m.role === 'assistant' ? extractQuickReplies(m.content) : { chips: [], clean: m.content };
+          const { tools, clean: afterTools } = m.role === 'assistant' ? extractTools(m.content) : { tools: [], clean: m.content };
+          const showTyping = isLastAssistant && streaming && !afterTools;
+          const { chips, clean } = m.role === 'assistant' ? extractQuickReplies(afterTools) : { chips: [], clean: afterTools };
+
           const showChips = isLastAssistant && !streaming && chips.length > 0 && !pendingOrder;
           return (
           <div key={m.id} className={`flex gap-2 ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
