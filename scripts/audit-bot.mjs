@@ -160,7 +160,15 @@ function toMarkdown(results) {
 
 (async () => {
   console.log(`[audit-bot] scanning ${ROUTES.length} routes at ${BASE}`);
-  const browser = await chromium.launch({ headless: true });
+  const fsSync = await import("node:fs");
+  const candidates = [
+    process.env.AUDIT_CHROME,
+    "/chromium-1194/chrome-linux/chrome",
+    "/usr/bin/chromium",
+    "/usr/bin/google-chrome",
+  ].filter(Boolean);
+  const executablePath = candidates.find((p) => { try { return fsSync.existsSync(p); } catch { return false; } });
+  const browser = await chromium.launch({ headless: true, ...(executablePath ? { executablePath } : {}) });
   const context = await browser.newContext({ viewport: { width: 1280, height: 1800 } });
   const results = [];
   for (const r of ROUTES) {
