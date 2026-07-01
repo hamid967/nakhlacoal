@@ -19,6 +19,9 @@ const SLIDE_TRANSITION: Transition = { duration: DURATION, ease: EASE };
 export function TrademarksShowcase() {
   const { isAr } = useDir();
   const prefersReduced = useReducedMotion();
+  const { roles } = useAuth();
+  const canEdit = roles.includes('admin') || roles.includes('super_admin');
+  const [editOpen, setEditOpen] = useState(false);
   const { trademarks, loading, syncing, status, error } = useTrademarks();
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
