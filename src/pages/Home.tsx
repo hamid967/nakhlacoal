@@ -101,7 +101,7 @@ export default function Home() {
         path="/"
         jsonLd={productsLd}
         preloadImages={[
-          { href: heroTrademark, type: 'image/png', fetchPriority: 'high' },
+          { href: heroTrademark, type: 'image/webp', fetchPriority: 'high' },
         ]}
       />
 

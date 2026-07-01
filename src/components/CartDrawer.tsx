@@ -53,7 +53,7 @@ export function CartDrawer() {
           ) : (
             items.map((it) => (
               <div key={it.slug + it.unit} className="flex gap-3 p-3 rounded-xl border border-[hsl(var(--gold-hi)/0.15)] bg-[hsl(var(--card))]">
-                {it.image && <img src={it.image} alt="" className="w-16 h-16 rounded-lg object-cover" loading="lazy" />}
+                {it.image && <img src={it.image} alt="" className="w-16 h-16 rounded-lg object-cover" loading="lazy" decoding="async" />}
                 <div className="flex-1 min-w-0">
                   <h3 className="font-semibold truncate">{isAr ? it.nameAr : it.nameEn}</h3>
                   <p className="text-xs text-[hsl(var(--muted-foreground))]">{it.unit}</p>
