@@ -15,6 +15,7 @@ import "@fontsource/karla/700.css";
 import "./i18n";
 import App from "./App.tsx";
 import "./index.css";
+import ErrorBoundary from "./components/ErrorBoundary";
 import { initWebVitals } from "./lib/webVitals";
 
 initWebVitals();
