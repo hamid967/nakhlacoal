@@ -398,7 +398,10 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
       )}
 
     <div
-      className={`fixed bottom-24 end-6 z-50 w-[92vw] max-w-[380px] h-[78vh] max-h-[560px] rounded-2xl glass-card !border-gold/30 flex flex-col overflow-hidden origin-bottom-right transition-all duration-300 ease-out ${
+      className={`fixed z-50 flex flex-col overflow-hidden origin-bottom-right transition-all duration-300 ease-out
+        bottom-2 end-2 start-2 max-h-[92vh] h-[calc(100vh-5rem)]
+        sm:bottom-24 sm:end-6 sm:start-auto sm:w-[92vw] sm:max-w-[380px] sm:h-[78vh] sm:max-h-[560px]
+        rounded-2xl glass-card !border-gold/30 ${
         open ? 'opacity-100 scale-100 translate-y-0 pointer-events-auto' : 'opacity-0 scale-90 translate-y-4 pointer-events-none'
       }`}
       role="dialog"
@@ -407,7 +410,7 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
     >
       {/* Header — refined luxury */}
       <header
-        className="relative flex items-center gap-2.5 px-3.5 py-3 border-b border-gold/25 text-cream overflow-hidden"
+        className="relative flex items-center gap-2 sm:gap-2.5 px-3 sm:px-3.5 py-2.5 sm:py-3 border-b border-gold/25 text-cream overflow-hidden"
         style={{
           background:
             'linear-gradient(135deg, hsl(var(--dark)) 0%, hsl(0 0% 8%) 55%, hsl(var(--dark)) 100%)',
@@ -415,19 +418,19 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
       >
         <span className="absolute inset-0 bg-[radial-gradient(circle_at_10%_0%,hsl(var(--gold)/0.18),transparent_55%)] pointer-events-none" aria-hidden />
         <div
-          className="relative w-9 h-9 rounded-full flex items-center justify-center ring-1 ring-gold/40 shadow-[0_0_18px_-4px_hsl(var(--gold)/0.6)]"
+          className="relative w-10 h-10 sm:w-9 sm:h-9 rounded-full flex items-center justify-center ring-1 ring-gold/40 shadow-[0_0_18px_-4px_hsl(var(--gold)/0.6)] shrink-0"
           style={{ background: 'radial-gradient(circle at 30% 25%, hsl(var(--gold-hi)/0.35), hsl(0 0% 6%) 70%)' }}
         >
-          <img decoding="async" loading="lazy" src={logo} alt="" className="w-7 h-7 object-contain drop-shadow-[0_0_6px_hsl(var(--gold-hi)/0.5)]" />
+          <img decoding="async" loading="lazy" src={logo} alt="" className="w-7 h-7 sm:w-7 sm:h-7 object-contain drop-shadow-[0_0_6px_hsl(var(--gold-hi)/0.5)]" />
         </div>
         <div className="relative flex-1 min-w-0">
-          <p className="text-[13px] font-bold flex items-center gap-1.5 font-arabic tracking-wide">
-            <span className="bg-gradient-to-l from-gold-hi via-cream to-gold-hi bg-clip-text text-transparent">
+          <p className="text-sm sm:text-[13px] font-bold flex items-center gap-1.5 font-arabic tracking-wide truncate">
+            <span className="bg-gradient-to-l from-gold-hi via-cream to-gold-hi bg-clip-text text-transparent truncate">
               مساعد فحم النخلة
             </span>
             <Sparkles className="w-3.5 h-3.5 text-gold-hi shrink-0" />
           </p>
-          <p className="text-[10px] opacity-80 flex items-center gap-1.5 mt-0.5 font-arabic">
+          <p className="text-[11px] sm:text-[10px] opacity-80 flex items-center gap-1.5 mt-0.5 font-arabic truncate">
             {streaming ? (
               <><span className="w-1.5 h-1.5 rounded-full bg-gold-hi animate-pulse" /> يكتب الآن…</>
             ) : submitting ? (
@@ -441,15 +444,15 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
           href={waHref}
           target="_blank"
           rel="noreferrer noopener"
-          className="relative p-1.5 rounded-lg hover:bg-white/10 transition text-[#25D366]"
+          className="relative p-2 sm:p-1.5 rounded-lg hover:bg-white/10 active:bg-white/15 transition text-[#25D366] shrink-0"
           aria-label="واتساب مباشر"
           title="واتساب مباشر"
         >
-          <MessageCircle className="w-4 h-4" />
+          <MessageCircle className="w-5 h-5 sm:w-4 sm:h-4" />
         </a>
         <button
           onClick={() => { setMessages([greet]); setPendingOrder(null); setInput(''); inputRef.current?.focus(); }}
-          className="relative p-1.5 rounded-lg hover:bg-white/10 transition"
+          className="relative p-2 sm:p-1.5 rounded-lg hover:bg-white/10 active:bg-white/15 transition shrink-0 hidden sm:inline-flex"
           aria-label="محادثة جديدة"
           title="بدء محادثة جديدة"
         >
@@ -457,14 +460,14 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
         </button>
         <button
           onClick={() => { onClose(); navigate('/assistant'); }}
-          className="relative p-1.5 rounded-lg hover:bg-white/10 transition"
+          className="relative p-2 sm:p-1.5 rounded-lg hover:bg-white/10 active:bg-white/15 transition shrink-0"
           aria-label="تكبير"
           title="فتح في الشاشة الكاملة"
         >
-          <Maximize2 className="w-4 h-4" />
+          <Maximize2 className="w-5 h-5 sm:w-4 sm:h-4" />
         </button>
-        <button onClick={onClose} className="relative p-1.5 rounded-lg hover:bg-white/10 transition" aria-label="إغلاق" title="إغلاق">
-          <X className="w-4 h-4" />
+        <button onClick={onClose} className="relative p-2 sm:p-1.5 rounded-lg hover:bg-white/10 active:bg-white/15 transition shrink-0" aria-label="إغلاق" title="إغلاق">
+          <X className="w-5 h-5 sm:w-4 sm:h-4" />
         </button>
       </header>
 
