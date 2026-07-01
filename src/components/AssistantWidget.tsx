@@ -285,9 +285,16 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
       const resp = await fetch(`${baseUrl}/functions/v1/chat-assistant`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', apikey: anon, Authorization: `Bearer ${anon}` },
-        body: JSON.stringify({ messages: [...messages, userMsg].map(m => ({ role: m.role, content: m.content })) }),
+        body: JSON.stringify({
+          messages: [...messages, userMsg].map(m => ({ role: m.role, content: m.content })),
+          conversation_id: conversationId ?? undefined,
+        }),
         signal: ac.signal,
       });
+      // Capture the server-assigned conversation id (first turn for signed-in users).
+      const returnedConv = resp.headers.get('X-Conversation-Id');
+      if (returnedConv && returnedConv !== conversationId) setConversationId(returnedConv);
+
       if (!resp.ok) {
         if (resp.status === 429) {
           triggerOfflineOrder('⚡ المساعد مشغول حالياً، لكن يمكنك إكمال طلبك الآن مباشرة.');
