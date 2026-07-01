@@ -113,7 +113,7 @@ export default function Profile() {
 
   return (
     <>
-      <SeoHead title={isAr ? 'الملف الشخصي' : 'Profile'} noindex />
+      <SeoHead title={isAr ? 'الملف الشخصي' : 'Profile'} description={isAr ? 'إدارة بيانات حسابك في فحم النخلة: الاسم، العناوين، وتفضيلات التواصل.' : 'Manage your Palm Charcoal account: name, addresses and contact preferences.'} noindex />
       <div className="relative overflow-hidden">
         {/* Natural-light parallax layers */}
         <div

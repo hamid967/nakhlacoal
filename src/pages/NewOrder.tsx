@@ -19,7 +19,7 @@ export default function NewOrder() {
 
   return (
     <>
-      <SeoHead title={isAr ? "طلب جديد" : "New Order"} noindex />
+      <SeoHead title={isAr ? "طلب جديد" : "New Order"} description={isAr ? "إنشاء طلب جديد لمنتجات فحم النخلة مع خيارات الكمية والتوصيل." : "Create a new Palm Charcoal order with quantity and delivery options."} noindex />
       <div className="relative overflow-hidden">
         {/* Natural-light parallax layers */}
         <div

@@ -20,7 +20,7 @@ export default function OrderTracking() {
 
   return (
     <>
-      <SeoHead title={isAr ? "تتبع الطلب" : "Track Order"} noindex />
+      <SeoHead title={isAr ? "تتبع الطلب" : "Track Order"} description={isAr ? "تتبّع حالة طلبك من فحم النخلة لحظة بلحظة حتى الاستلام." : "Track your Palm Charcoal order status in real time until delivery."} noindex />
       <div className="relative overflow-hidden">
         <div
           aria-hidden
