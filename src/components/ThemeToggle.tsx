@@ -170,7 +170,7 @@ export function ThemeToggle() {
           </button>
         </div>
 
-        </div>
+
 
         {themeKeys.map((k) => {
           const isAuto = k === 'auto';
