@@ -13,6 +13,7 @@ export function TrademarksShowcase() {
   const { isAr } = useDir();
   const { trademarks, loading, syncing, status, error } = useTrademarks();
   const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
   const total = trademarks.length;
 
 
@@ -20,11 +21,14 @@ export function TrademarksShowcase() {
     setActive((a) => (a + dir + total) % total);
   }, [total]);
 
-  // Auto-rotate
+  // Auto-rotate (pauses on hover/focus and when the user prefers reduced motion)
   useEffect(() => {
+    if (paused || total < 2) return;
+    const mql = window.matchMedia?.('(prefers-reduced-motion: reduce)');
+    if (mql?.matches) return;
     const id = window.setInterval(() => setActive((a) => (a + 1) % total), 5500);
     return () => window.clearInterval(id);
-  }, [total]);
+  }, [total, paused]);
 
   // Keyboard
   useEffect(() => {
