@@ -22,7 +22,7 @@ const mdComponents = {
 };
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
-import logo from '@/assets/palm-charcoal-logo.png';
+import { BrandLogo } from '@/components/BrandLogo';
 
 type Msg = { id: string; role: 'user' | 'assistant'; content: string };
 
@@ -390,7 +390,7 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
           aria-label="آخر رسالة من المساعد"
         >
           <div className="flex items-center gap-1.5 mb-1 text-[10px] text-muted-foreground">
-            <img decoding="async" loading="lazy" src={logo} alt="" className="w-3 h-3 object-contain" />
+            <BrandLogo alt="" className="w-3 h-3 object-contain" />
             مساعد فحم النخلة
           </div>
           <p className="line-clamp-2 leading-snug">{preview}{preview && preview.length >= 90 ? '…' : ''}</p>
@@ -421,7 +421,7 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
           className="relative w-10 h-10 sm:w-9 sm:h-9 rounded-full flex items-center justify-center ring-1 ring-gold/40 shadow-[0_0_18px_-4px_hsl(var(--gold)/0.6)] shrink-0"
           style={{ background: 'radial-gradient(circle at 30% 25%, hsl(var(--gold-hi)/0.35), hsl(0 0% 6%) 70%)' }}
         >
-          <img decoding="async" loading="lazy" src={logo} alt="" className="w-7 h-7 sm:w-7 sm:h-7 object-contain drop-shadow-[0_0_6px_hsl(var(--gold-hi)/0.5)]" />
+          <BrandLogo alt="" className="w-7 h-7 sm:w-7 sm:h-7 object-contain drop-shadow-[0_0_6px_hsl(var(--gold-hi)/0.5)]" />
         </div>
         <div className="relative flex-1 min-w-0">
           <p className="text-sm sm:text-[13px] font-bold flex items-center gap-1.5 font-arabic tracking-wide truncate">
@@ -488,7 +488,7 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
           <div key={m.id} className={`flex gap-2 ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
             {m.role === 'assistant' && (
               <div className="w-6 h-6 rounded-full bg-dark flex items-center justify-center shrink-0">
-                <img decoding="async" loading="lazy" src={logo} alt="" className="w-4 h-4 object-contain" />
+                <BrandLogo alt="" className="w-4 h-4 object-contain" />
               </div>
             )}
             <div className="max-w-[85%]">

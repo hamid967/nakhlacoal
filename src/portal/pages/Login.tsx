@@ -5,7 +5,7 @@ import { lovable } from '@/integrations/lovable';
 import { useAuth } from '@/contexts/AuthContext';
 import { Loader2, Mail, Lock, User, Phone, Shield, ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
-import logo from '@/assets/palm-charcoal-logo.png';
+import { BrandLogo } from '@/components/BrandLogo';
 
 const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const phoneRe = /^(\+?966|0)?5\d{8}$/;
@@ -126,7 +126,7 @@ export default function PortalLogin() {
           <span className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,hsl(var(--gold)/0.25),transparent_60%)] pointer-events-none" aria-hidden />
           <div className="relative inline-flex items-center justify-center w-14 h-14 rounded-full ring-1 ring-gold/40 mb-2"
                style={{ background: 'radial-gradient(circle at 30% 25%, hsl(var(--gold-hi)/0.4), hsl(0 0% 6%) 70%)' }}>
-            <img src={logo} alt="فحم النخلة" className="w-11 h-11 object-contain" />
+            <BrandLogo alt="فحم النخلة" className="w-11 h-11 object-contain" />
           </div>
           <h1 className="relative text-lg font-bold bg-gradient-to-l from-gold-hi via-cream to-gold-hi bg-clip-text text-transparent">
             بوابة العملاء
