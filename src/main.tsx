@@ -16,6 +16,7 @@ import "./i18n";
 import App from "./App.tsx";
 import "./index.css";
 import ErrorBoundary from "./components/ErrorBoundary";
+import DevErrorPanel from "./components/DevErrorPanel";
 import { initWebVitals } from "./lib/webVitals";
 
 initWebVitals();
@@ -50,6 +51,7 @@ createRoot(document.getElementById("root")!).render(
         }}
       >
         <App />
+        <DevErrorPanel />
       </BrowserRouter>
     </HelmetProvider>
   </ErrorBoundary>
