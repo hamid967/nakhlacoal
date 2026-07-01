@@ -13,6 +13,7 @@ export function TrademarksShowcase() {
   const { isAr } = useDir();
   const { trademarks, loading, syncing, status, error } = useTrademarks();
   const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
   const total = trademarks.length;
 
 
@@ -20,11 +21,14 @@ export function TrademarksShowcase() {
     setActive((a) => (a + dir + total) % total);
   }, [total]);
 
-  // Auto-rotate
+  // Auto-rotate (pauses on hover/focus and when the user prefers reduced motion)
   useEffect(() => {
+    if (paused || total < 2) return;
+    const mql = window.matchMedia?.('(prefers-reduced-motion: reduce)');
+    if (mql?.matches) return;
     const id = window.setInterval(() => setActive((a) => (a + 1) % total), 5500);
     return () => window.clearInterval(id);
-  }, [total]);
+  }, [total, paused]);
 
   // Keyboard
   useEffect(() => {
@@ -49,7 +53,15 @@ export function TrademarksShowcase() {
   ];
 
   return (
-    <section dir={isAr ? 'rtl' : 'ltr'} className="relative section overflow-hidden bg-cream/40">
+    <section
+      dir={isAr ? 'rtl' : 'ltr'}
+      className="relative section overflow-hidden bg-cream/40"
+      aria-labelledby="trademarks-title"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocus={() => setPaused(true)}
+      onBlur={() => setPaused(false)}
+    >
       {/* Soft palm-leaf wash background */}
       <div aria-hidden className="pointer-events-none absolute inset-0 opacity-[0.06] bg-[radial-gradient(circle_at_20%_10%,hsl(var(--emerald))_0%,transparent_45%),radial-gradient(circle_at_80%_90%,hsl(var(--gold))_0%,transparent_50%)]" />
 
@@ -61,7 +73,7 @@ export function TrademarksShowcase() {
               {isAr ? 'تأسست 2010 — ملف 2060' : 'Est. 2010 — Dossier 2060'}
             </span>
           </div>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl text-emerald font-bold font-arabic leading-tight">
+          <h2 id="trademarks-title" className="text-4xl md:text-5xl lg:text-6xl text-emerald font-bold font-arabic leading-tight">
             {isAr ? 'علاماتنا التجارية المسجلة' : 'Our Registered Trademarks'}
           </h2>
           <div className="w-24 h-px bg-gold mx-auto mt-5" />
@@ -70,18 +82,18 @@ export function TrademarksShowcase() {
         {/* Live-sync status pill */}
         <div aria-live="polite" aria-busy={loading || syncing} className="flex justify-center mb-8 min-h-[24px]">
           {loading ? (
-            <span className="inline-flex items-center gap-2 text-[11px] text-foreground/60">
-              <span className="w-2 h-2 rounded-full bg-gold/70 animate-pulse" />
+            <span className="inline-flex items-center gap-2 text-[12px] text-foreground/80">
+              <span aria-hidden="true" className="w-2 h-2 rounded-full bg-gold/80 animate-pulse" />
               {isAr ? 'جاري تحميل العلامات…' : 'Loading trademarks…'}
             </span>
           ) : error ? (
-            <span className="inline-flex items-center gap-2 text-[11px] text-foreground/55">
-              <span className="w-2 h-2 rounded-full bg-foreground/30" />
+            <span className="inline-flex items-center gap-2 text-[12px] text-foreground/75">
+              <span aria-hidden="true" className="w-2 h-2 rounded-full bg-foreground/50" />
               {isAr ? 'عرض النسخة المحفوظة' : 'Showing cached version'}
             </span>
           ) : (
-            <span className="inline-flex items-center gap-2 text-[11px] text-foreground/55">
-              <span className={`w-2 h-2 rounded-full ${status === 'live' ? 'bg-emerald-500 animate-pulse' : status === 'reconnecting' ? 'bg-amber-500 animate-pulse' : 'bg-foreground/30'}`} />
+            <span className="inline-flex items-center gap-2 text-[12px] text-foreground/75">
+              <span aria-hidden="true" className={`w-2 h-2 rounded-full ${status === 'live' ? 'bg-emerald-600 animate-pulse' : status === 'reconnecting' ? 'bg-amber-600 animate-pulse' : 'bg-foreground/50'}`} />
               {status === 'live' ? (isAr ? 'متزامن مباشرة' : 'Live sync') : status === 'reconnecting' ? (isAr ? 'إعادة الاتصال…' : 'Reconnecting…') : (isAr ? 'غير متصل' : 'Offline')}
               {syncing && (isAr ? ' • تحديث…' : ' • refreshing…')}
             </span>
@@ -89,9 +101,18 @@ export function TrademarksShowcase() {
         </div>
 
         {/* ================= Bento Grid ================= */}
+        <div
+          role="region"
+          aria-roledescription={isAr ? 'شرائح متحركة' : 'carousel'}
+          aria-label={isAr ? 'علاماتنا التجارية' : 'Our trademarks'}
+        >
         <AnimatePresence mode="wait">
           <motion.div
             key={current.id}
+            id="trademarks-slide"
+            role="group"
+            aria-roledescription={isAr ? 'شريحة' : 'slide'}
+            aria-label={`${isAr ? current.nameAr : current.nameEn} — ${active + 1} / ${total}`}
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -6 }}
@@ -100,20 +121,24 @@ export function TrademarksShowcase() {
           >
             {/* Logo main card — 8×3 */}
             <div className="md:col-span-8 md:row-span-3 relative bg-background rounded-3xl border border-gold/25 shadow-xl shadow-emerald/5 flex flex-col items-center justify-center p-8 overflow-hidden group">
-              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,hsl(var(--gold)/0.06),transparent_60%)]" />
+              <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,hsl(var(--gold)/0.06),transparent_60%)]" />
               <button
+                type="button"
                 onClick={() => go(-1)}
-                aria-label={isAr ? 'السابق' : 'Previous'}
-                className="absolute start-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-cream/80 border border-gold/40 hover:border-gold hover:bg-gold/10 transition flex items-center justify-center text-gold"
+                aria-label={isAr ? 'العلامة السابقة' : 'Previous trademark'}
+                aria-controls="trademarks-slide"
+                className="absolute start-4 top-1/2 -translate-y-1/2 z-20 min-w-11 min-h-11 w-11 h-11 rounded-full bg-cream border border-gold/50 hover:border-gold hover:bg-gold/15 transition flex items-center justify-center text-emerald focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
-                <ChevronLeft className="w-5 h-5" />
+                <ChevronLeft aria-hidden="true" className="w-5 h-5" />
               </button>
               <button
+                type="button"
                 onClick={() => go(1)}
-                aria-label={isAr ? 'التالي' : 'Next'}
-                className="absolute end-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-cream/80 border border-gold/40 hover:border-gold hover:bg-gold/10 transition flex items-center justify-center text-gold"
+                aria-label={isAr ? 'العلامة التالية' : 'Next trademark'}
+                aria-controls="trademarks-slide"
+                className="absolute end-4 top-1/2 -translate-y-1/2 z-20 min-w-11 min-h-11 w-11 h-11 rounded-full bg-cream border border-gold/50 hover:border-gold hover:bg-gold/15 transition flex items-center justify-center text-emerald focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
-                <ChevronRight className="w-5 h-5" />
+                <ChevronRight aria-hidden="true" className="w-5 h-5" />
               </button>
               <img
                 src={current.image}
@@ -162,7 +187,7 @@ export function TrademarksShowcase() {
             </div>
 
             {/* Meta — 6×1 */}
-            <div className="md:col-span-6 md:row-span-1 bg-emerald rounded-3xl p-6 grid grid-cols-3 items-center text-cream/90">
+            <div className="md:col-span-6 md:row-span-1 bg-emerald rounded-3xl p-6 grid grid-cols-3 items-center text-cream">
               <MetaCol label={isAr ? 'المنشأ' : 'Origin'} value={isAr ? 'المملكة' : 'KSA'} />
               <div className="justify-self-center w-px h-8 bg-cream/15" />
               <MetaCol label={isAr ? 'الحالة' : 'Status'} value={isAr ? 'موثّقة' : 'Verified'} mono />
@@ -172,10 +197,11 @@ export function TrademarksShowcase() {
             </div>
           </motion.div>
         </AnimatePresence>
+        </div>
 
         {/* Notes strip */}
-        <div className="mt-6 max-w-4xl mx-auto flex items-start gap-3 text-sm text-foreground/70 bg-background/60 border border-gold/15 rounded-2xl p-4">
-          <FileText className="w-4 h-4 text-gold mt-0.5 shrink-0" />
+        <div className="mt-6 max-w-4xl mx-auto flex items-start gap-3 text-sm text-foreground/85 bg-background/80 border border-gold/25 rounded-2xl p-4">
+          <FileText aria-hidden="true" className="w-4 h-4 text-gold mt-0.5 shrink-0" />
           <p className="leading-relaxed font-arabic">
             <span className="text-gold font-semibold me-2">{isAr ? 'ملاحظات:' : 'Notes:'}</span>
             {current.descriptionAr}
@@ -183,47 +209,50 @@ export function TrademarksShowcase() {
         </div>
 
         {/* Trademark dots */}
-        <div role="tablist" className="flex justify-center gap-1.5 mt-8">
+        <div role="tablist" aria-label={isAr ? 'اختيار العلامة التجارية' : 'Select trademark'} className="flex justify-center gap-1.5 mt-8">
           {trademarks.map((t, i) => (
             <button
-              key={i}
+              key={t.id ?? i}
+              type="button"
               role="tab"
               aria-selected={i === active}
+              aria-controls="trademarks-slide"
+              tabIndex={i === active ? 0 : -1}
               onClick={() => setActive(i)}
-              aria-label={`${t.nameEn} (${i + 1} / ${trademarks.length})`}
-              className="inline-flex items-center justify-center h-11 w-11 group"
+              aria-label={`${isAr ? t.nameAr : t.nameEn} (${i + 1} ${isAr ? 'من' : 'of'} ${trademarks.length})`}
+              className="inline-flex items-center justify-center h-11 w-11 group rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               <span
                 aria-hidden="true"
-                className={`block h-2 rounded-full transition-all ${i === active ? 'w-8 bg-gold' : 'w-2 bg-gold/30 group-hover:bg-gold/60'}`}
+                className={`block h-2 rounded-full transition-all ${i === active ? 'w-8 bg-gold' : 'w-2 bg-gold/50 group-hover:bg-gold/80'}`}
               />
             </button>
           ))}
         </div>
 
         {/* Feature chips */}
-        <div className="mt-10 grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4">
+        <ul className="mt-10 grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4 list-none p-0">
           {features.map((f, i) => (
-            <div key={i} className="bg-background border border-gold/20 rounded-xl px-4 py-3 flex items-center gap-3 hover:border-gold/50 hover:-translate-y-0.5 transition-all">
-              <span className="w-9 h-9 rounded-lg bg-gold/10 text-gold flex items-center justify-center shrink-0">
+            <li key={i} className="bg-background border border-gold/25 rounded-xl px-4 py-3 flex items-center gap-3 hover:border-gold/60 hover:-translate-y-0.5 transition-all">
+              <span aria-hidden="true" className="w-9 h-9 rounded-lg bg-gold/15 text-gold flex items-center justify-center shrink-0">
                 <f.icon className="w-4 h-4" />
               </span>
               <div>
                 <p className="font-arabic text-sm font-semibold text-emerald leading-tight">{f.title}</p>
-                <p className="text-[11px] text-foreground/60 leading-tight mt-0.5">{f.desc}</p>
+                <p className="text-[12px] text-foreground/80 leading-tight mt-0.5">{f.desc}</p>
               </div>
-            </div>
+            </li>
           ))}
-        </div>
+        </ul>
 
         {/* Editorial footer tag */}
         <div className="mt-10 flex justify-center">
-          <div className="inline-flex items-center gap-3 text-emerald/60">
-            <span className="w-8 h-px bg-gold/40" />
-            <span className="text-[10px] uppercase tracking-[0.28em] font-medium">
+          <div className="inline-flex items-center gap-3 text-emerald/85">
+            <span aria-hidden="true" className="w-8 h-px bg-gold/60" />
+            <span className="text-[11px] uppercase tracking-[0.28em] font-medium">
               {isAr ? 'إرث سعودي أصيل' : 'Authentic Saudi Legacy'}
             </span>
-            <span className="w-8 h-px bg-gold/40" />
+            <span aria-hidden="true" className="w-8 h-px bg-gold/60" />
           </div>
         </div>
       </div>
@@ -234,7 +263,7 @@ export function TrademarksShowcase() {
 function MetaCol({ label, value, mono }: { label: string; value: string; mono?: boolean }) {
   return (
     <div className="text-center min-w-0">
-      <div className="text-gold text-[10px] uppercase tracking-widest mb-1">{label}</div>
+      <div className="text-gold text-[11px] uppercase tracking-widest mb-1 font-semibold">{label}</div>
       <div className={`text-cream font-medium truncate ${mono ? 'font-mono text-xs tracking-wider uppercase' : 'font-arabic text-sm'}`}>{value}</div>
     </div>
   );
