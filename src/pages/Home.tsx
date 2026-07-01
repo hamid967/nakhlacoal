@@ -30,6 +30,7 @@ const InsightsEditorial = lazy(() => import('@/components/InsightsEditorial').th
 const SustainabilityReport = lazy(() => import('@/components/SustainabilityReport').then((m) => ({ default: m.SustainabilityReport })));
 const CareersInvite = lazy(() => import('@/components/CareersInvite').then((m) => ({ default: m.CareersInvite })));
 const CaseStudies = lazy(() => import('@/components/CaseStudies').then((m) => ({ default: m.CaseStudies })));
+const GlobalPresence = lazy(() => import('@/components/GlobalPresence').then((m) => ({ default: m.GlobalPresence })));
 
 
 
@@ -298,6 +299,11 @@ export default function Home() {
       {/* Case Studies */}
       <Suspense fallback={<SectionSkeleton variant="cases" label={isAr ? 'جارٍ تحميل دراسات الحالة' : 'Loading case studies'} />}>
         <CaseStudies />
+      </Suspense>
+
+      {/* Global Presence */}
+      <Suspense fallback={<SectionSkeleton variant="map" label={isAr ? 'جارٍ تحميل الحضور العالمي' : 'Loading global presence'} />}>
+        <GlobalPresence />
       </Suspense>
 
       {/* 8 — FAQ + location + CTA */}
