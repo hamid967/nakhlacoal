@@ -1,12 +1,9 @@
-// Lighthouse CI — automated performance checks for Home ("/")
-// Focus: Cumulative Layout Shift (CLS) and DOMContentLoaded (DCL) budgets.
-// Run locally:
-//   npx -y @lhci/cli@0.14.x autorun
-// CI wiring lives in .github/workflows/lhci.yml
+// Lighthouse CI — enforces performance budgets on Home ("/").
+// Build fails on: CLS > 0.1, FCP > 2s, TTI > 4s, or any budget breach.
+// Run locally: npx -y @lhci/cli@0.14.x autorun
 module.exports = {
   ci: {
     collect: {
-      // Start Vite preview, then hit the home route 3× for stable medians.
       startServerCommand: 'npm run build && npm run preview -- --port 4173',
       startServerReadyPattern: 'Local:',
       url: ['http://localhost:4173/'],
@@ -14,24 +11,23 @@ module.exports = {
       settings: {
         preset: 'desktop',
         onlyCategories: ['performance'],
-        // Skip PWA/SW checks — we're not a PWA.
+        budgetsPath: './performance-budgets.cjs',
         skipAudits: ['uses-http2', 'redirects-http', 'is-on-https'],
       },
     },
     assert: {
-      // Fail the build if CLS regresses or DCL blows past budget.
+      // Hard budgets — any breach FAILS the build.
       assertions: {
-        'cumulative-layout-shift': ['error', { maxNumericValue: 0.1 }],
-        // DOMContentLoaded proxy: max potential FID + FCP as guardrails.
-        'first-contentful-paint': ['warn', { maxNumericValue: 2500 }],
-        'largest-contentful-paint': ['warn', { maxNumericValue: 3500 }],
-        'total-blocking-time': ['warn', { maxNumericValue: 300 }],
-        'speed-index': ['warn', { maxNumericValue: 4000 }],
+        'cumulative-layout-shift':   ['error', { maxNumericValue: 0.1 }],
+        'first-contentful-paint':    ['error', { maxNumericValue: 2000 }],
+        'interactive':               ['error', { maxNumericValue: 4000 }],
+        'largest-contentful-paint':  ['error', { maxNumericValue: 3000 }],
+        'total-blocking-time':       ['error', { maxNumericValue: 250 }],
+        'speed-index':               ['warn',  { maxNumericValue: 4000 }],
+        // Enforce the resource/timing budgets from performance-budgets.cjs
+        'performance-budget':        ['error', { minScore: 1 }],
       },
     },
-    upload: {
-      // Public temporary storage — no account required. Swap to lhci-server if desired.
-      target: 'temporary-public-storage',
-    },
+    upload: { target: 'temporary-public-storage' },
   },
 };
