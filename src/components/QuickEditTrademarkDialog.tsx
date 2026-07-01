@@ -155,7 +155,12 @@ export function QuickEditTrademarkDialog({ open, onOpenChange, trademark, isAr }
       toast({ title: isAr ? 'فشل الرفع' : 'Upload failed', description: (e as Error).message, variant: 'destructive' });
     } finally {
       setUploading(false);
+      setPreview((prev) => {
+        if (prev) URL.revokeObjectURL(prev);
+        return null;
+      });
     }
+
   };
 
 
