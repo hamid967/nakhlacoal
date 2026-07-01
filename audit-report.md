@@ -1,13 +1,13 @@
 # Palm Charcoal — Audit Report
 
-Base: `http://localhost:8080` · Generated: 2026-07-01T18:06:38.385Z
+Base: `http://localhost:8080` · Generated: 2026-07-01T18:18:40.417Z
 
 ## Summary
 
 | Priority | Count |
 |---|---|
-| P0 | 0 |
-| P1 | 28 |
+| P0 | 2 |
+| P1 | 26 |
 | P2 | 26 |
 | P3 | 0 |
 
@@ -15,28 +15,31 @@ Base: `http://localhost:8080` · Generated: 2026-07-01T18:06:38.385Z
 
 | Route | Status | DCL (ms) | Findings |
 |---|---|---|---|
-| / | 200 | 549 | 5 |
-| /products | 200 | 453 | 4 |
-| /quality | 200 | 441 | 4 |
-| /trademarks | 200 | 485 | 3 |
-| /wholesale | 200 | 490 | 6 |
-| /quote | 200 | 474 | 3 |
-| /checkout | 200 | 495 | 4 |
-| /about | 200 | 501 | 3 |
-| /contact | 200 | 453 | 4 |
-| /auth | 200 | 525 | 6 |
-| /portal/login | 200 | 572 | 2 |
-| /faq | 200 | 529 | 5 |
-| /pricing | 200 | 487 | 5 |
+| / | 200 | 651 | 3 |
+| /products | 200 | 13232 | 5 |
+| /quality | 200 | 457 | 4 |
+| /trademarks | 200 | 17077 | 4 |
+| /wholesale | 200 | 440 | 6 |
+| /quote | 200 | 436 | 3 |
+| /checkout | 200 | 450 | 4 |
+| /about | 200 | 470 | 3 |
+| /contact | 200 | 445 | 4 |
+| /auth | 200 | 457 | 6 |
+| /portal/login | 200 | 443 | 2 |
+| /faq | 200 | 438 | 5 |
+| /pricing | 200 | 476 | 5 |
 
-## P1 — 28 finding(s)
+## P0 — 2 finding(s)
+
+- **/products** · `slow_dcl` — DCL 13232ms
+  - Fix: Wrap heavy 3D/canvas components with React.lazy + Suspense, and prefer `frameloop="demand"` for r3f.
+- **/trademarks** · `slow_dcl` — DCL 17077ms
+  - Fix: Wrap heavy 3D/canvas components with React.lazy + Suspense, and prefer `frameloop="demand"` for r3f.
+
+## P1 — 26 finding(s)
 
 - **/** · `short_desc` — 52 chars
   - Fix: Set a unique <meta name=description> per route via SEO.tsx; 120-160 chars.
-- **/** · `multiple_h1` — 2 h1s
-  - Fix: Reduce to a single <h1>; convert extras to <h2>.
-- **/** · `img_no_alt` — 3 imgs
-  - Fix: Add descriptive alt text (or alt="" for decorative). Enforce via lint rule jsx-a11y/alt-text.
 - **/products** · `short_desc` — 54 chars
   - Fix: Set a unique <meta name=description> per route via SEO.tsx; 120-160 chars.
 - **/products** · `img_no_alt` — 3 imgs
