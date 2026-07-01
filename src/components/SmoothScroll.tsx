@@ -90,7 +90,9 @@ export function SmoothScroll() {
         default: return;
       }
       e.preventDefault();
+      start(); // ensure the RAF loop is running so scrollTo animates
       lenis.scrollTo(target, { duration: 0.4 });
+
     };
     window.addEventListener('keydown', onKey, { passive: false });
 
