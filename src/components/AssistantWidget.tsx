@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Send, Loader2, Sparkles, X, Maximize2, CheckCircle2, MessageCircle, FileText, User, Phone, MapPin, Truck, Warehouse, History, Plus, Square } from 'lucide-react';
+import { Send, Loader2, Sparkles, X, Maximize2, CheckCircle2, MessageCircle, FileText, User, Phone, MapPin, Truck, Warehouse, History, Plus, Square, Mic, MicOff } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { QuoteBuilder } from './QuoteBuilder';
 import { quoteForItems, formatSAR } from '@/data/inventory';
@@ -133,6 +133,34 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
   const [threadsOpen, setThreadsOpen] = useState(false);
   const [threadsLoading, setThreadsLoading] = useState(false);
   const hydratedFromCloud = useRef(false);
+  const [listening, setListening] = useState(false);
+  const recognitionRef = useRef<any>(null);
+  const voiceSupported = typeof window !== 'undefined' && !!((window as any).SpeechRecognition || (window as any).webkitSpeechRecognition);
+
+  const toggleVoice = () => {
+    if (!voiceSupported) { toast.error('المتصفح لا يدعم الإدخال الصوتي'); return; }
+    if (listening) { recognitionRef.current?.stop(); return; }
+    const SR: any = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const rec = new SR();
+    rec.lang = 'ar-SA';
+    rec.interimResults = true;
+    rec.continuous = false;
+    let finalText = '';
+    rec.onresult = (e: any) => {
+      let interim = '';
+      for (let i = e.resultIndex; i < e.results.length; i++) {
+        const t = e.results[i][0].transcript;
+        if (e.results[i].isFinal) finalText += t; else interim += t;
+      }
+      setInput((finalText + interim).trim());
+    };
+    rec.onerror = (e: any) => { setListening(false); if (e.error !== 'aborted' && e.error !== 'no-speech') toast.error('تعذّر الاستماع'); };
+    rec.onend = () => { setListening(false); recognitionRef.current = null; inputRef.current?.focus(); };
+    recognitionRef.current = rec;
+    setListening(true);
+    try { rec.start(); } catch { setListening(false); }
+  };
+
   const abortRef = useRef<AbortController | null>(null);
 
   useEffect(() => () => { abortRef.current?.abort(); }, []);
@@ -965,10 +993,22 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }}
             rows={1}
-            placeholder="اكتب رسالتك..."
+            placeholder={listening ? '🎙️ جارٍ الاستماع…' : 'اكتب رسالتك…'}
             disabled={streaming || submitting}
             className="flex-1 resize-none rounded-lg border border-border bg-muted/30 px-3 py-2.5 text-[16px] sm:text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 max-h-28 min-h-[44px]"
           />
+          {voiceSupported && (
+            <button
+              type="button"
+              onClick={toggleVoice}
+              disabled={streaming || submitting}
+              className={`shrink-0 w-10 h-10 rounded-lg flex items-center justify-center border transition disabled:opacity-50 ${listening ? 'bg-destructive text-destructive-foreground border-destructive animate-pulse' : 'bg-muted/40 border-border hover:bg-muted'}`}
+              aria-label={listening ? 'إيقاف التسجيل' : 'إدخال صوتي'}
+              title={listening ? 'إيقاف التسجيل' : 'إدخال صوتي'}
+            >
+              {listening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+            </button>
+          )}
           <button
             onClick={() => { if (streaming) abortRef.current?.abort(); else send(); }}
             disabled={!streaming && (!input.trim() || submitting)}
@@ -979,6 +1019,7 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
           </button>
 
         </div>
+
       </div>
     </div>
     </>
