@@ -4,7 +4,7 @@ import {
   Users, Truck, Warehouse, Beaker, FileBadge, Receipt, CreditCard,
   BarChart3, Megaphone, BookOpen, Image as ImageIcon, LayoutTemplate,
   Search, ShieldCheck, KeyRound, Settings as SettingsIcon, ScrollText,
-  Sparkles, ChevronLeft,
+  Sparkles, ChevronLeft, Gauge,
 } from 'lucide-react';
 import logo from '@/assets/palm-charcoal-logo.png';
 
@@ -15,6 +15,7 @@ const groups: Group[] = [
   { title: 'نظرة عامة', items: [
     { to: '/admin', label: 'لوحة القيادة', icon: LayoutDashboard },
     { to: '/admin/reports', label: 'التقارير', icon: BarChart3 },
+    { to: '/admin/web-vitals', label: 'أداء الويب', icon: Gauge },
   ]},
   { title: 'الكتالوج', items: [
     { to: '/admin/products', label: 'المنتجات', icon: Package },
