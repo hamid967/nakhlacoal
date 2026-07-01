@@ -347,11 +347,26 @@ Deno.serve(async (req) => {
       }
     }
 
+    // Load persisted preferences to prime the assistant (signed-in only).
+    let memoryPreamble = "";
+    if (userId && dbClient) {
+      try {
+        const { data: prefs } = await dbClient
+          .from("chat_memory").select("key,value").eq("user_id", userId).limit(50);
+        if (prefs && (prefs as Array<{ key: string; value: string }>).length > 0) {
+          const lines = (prefs as Array<{ key: string; value: string }>)
+            .map((p) => `- ${p.key}: ${p.value}`).join("\n");
+          memoryPreamble = `\n\n## تفضيلات محفوظة للعميل الحالي\n${lines}\nاستخدمها ضمنياً لتخصيص الرد. لا تعيد سؤال العميل عمّا هو مذكور هنا.`;
+        }
+      } catch (e) { console.warn("[chat-assistant] load prefs failed:", e); }
+    }
+
     // ── Preflight: non-streaming call with tools ────────────────────────────
     const workingMessages: Array<Record<string, unknown>> = [
-      { role: "system", content: SYSTEM_PROMPT },
+      { role: "system", content: SYSTEM_PROMPT + memoryPreamble },
       ...messages.slice(-30),
     ];
+
 
     async function gwCall(stream: boolean): Promise<Response> {
       return await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
