@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
@@ -59,8 +59,79 @@ export function ExportMap() {
   const isAr = i18n.language?.startsWith('ar');
   const [hover, setHover] = useState<Point | null>(null);
   const [selected, setSelected] = useState<Point | null>(null);
+  const [focusIdx, setFocusIdx] = useState(0);
+  const pointRefs = useRef<Array<SVGGElement | null>>([]);
+
+  // Pre-sort by longitude so ArrowRight/Left move geographically (LTR reading).
+  // In RTL locales we mirror the horizontal direction.
+  const orderedIdx = POINTS.map((_, i) => i).sort(
+    (a, b) => POINTS[a].lng - POINTS[b].lng
+  );
+  const posInOrder = (i: number) => orderedIdx.indexOf(i);
+
+  const focusPoint = (i: number) => {
+    const clamped = (i + POINTS.length) % POINTS.length;
+    setFocusIdx(clamped);
+    pointRefs.current[clamped]?.focus();
+  };
+
+  const handleKey = (e: React.KeyboardEvent<SVGGElement>, i: number) => {
+    const horiz = isAr ? -1 : 1;
+    const cur = posInOrder(i);
+    switch (e.key) {
+      case 'ArrowRight':
+        e.preventDefault();
+        focusPoint(orderedIdx[(cur + horiz + POINTS.length) % POINTS.length]);
+        break;
+      case 'ArrowLeft':
+        e.preventDefault();
+        focusPoint(orderedIdx[(cur - horiz + POINTS.length) % POINTS.length]);
+        break;
+      case 'ArrowDown': {
+        e.preventDefault();
+        // Nearest point below current by latitude
+        const cy = POINTS[i].lat;
+        const below = POINTS
+          .map((p, idx) => ({ idx, d: cy - p.lat }))
+          .filter((x) => x.d > 0.5)
+          .sort((a, b) => a.d - b.d)[0];
+        if (below) focusPoint(below.idx);
+        break;
+      }
+      case 'ArrowUp': {
+        e.preventDefault();
+        const cy = POINTS[i].lat;
+        const above = POINTS
+          .map((p, idx) => ({ idx, d: p.lat - cy }))
+          .filter((x) => x.d > 0.5)
+          .sort((a, b) => a.d - b.d)[0];
+        if (above) focusPoint(above.idx);
+        break;
+      }
+      case 'Home':
+        e.preventDefault();
+        focusPoint(orderedIdx[0]);
+        break;
+      case 'End':
+        e.preventDefault();
+        focusPoint(orderedIdx[orderedIdx.length - 1]);
+        break;
+      case 'Enter':
+      case ' ':
+        e.preventDefault();
+        setSelected(POINTS[i]);
+        break;
+      case 'Escape':
+        if (selected) {
+          e.preventDefault();
+          setSelected(null);
+        }
+        break;
+    }
+  };
 
   const o = project(ORIGIN.lat, ORIGIN.lng);
+
 
   return (
     <section className="relative py-20 md:py-28 bg-[hsl(var(--dark))] overflow-hidden">
@@ -87,8 +158,8 @@ export function ExportMap() {
           </h2>
           <p className={`mt-4 text-[hsl(var(--foreground))]/60 max-w-xl mx-auto ${isAr ? 'font-arabic' : ''}`}>
             {isAr
-              ? 'انقر على أي وجهة ذهبية لعرض تفاصيل الشحن الكاملة في اللوحة الجانبية.'
-              : 'Click any gold destination to open the full shipment details in the side panel.'}
+              ? 'انقر على أي وجهة ذهبية أو استخدم الأسهم ← → ↑ ↓ ثم Enter لعرض تفاصيل الشحن.'
+              : 'Click any gold destination, or use ← → ↑ ↓ arrows then Enter to open shipment details.'}
           </p>
         </div>
 
@@ -152,37 +223,75 @@ export function ExportMap() {
               </text>
             </g>
 
-            {POINTS.map((p) => {
+            {POINTS.map((p, i) => {
               const d = project(p.lat, p.lng);
               const isActive = hover?.id === p.id || selected?.id === p.id;
+              const isFocused = focusIdx === i;
               return (
                 <g
                   key={p.id}
+                  ref={(el) => (pointRefs.current[i] = el)}
                   transform={`translate(${d.x} ${d.y})`}
                   onMouseEnter={() => setHover(p)}
                   onMouseLeave={() => setHover((h) => (h?.id === p.id ? null : h))}
-                  onFocus={() => setHover(p)}
-                  onBlur={() => setHover(null)}
-                  onClick={() => setSelected(p)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      setSelected(p);
-                    }
+                  onFocus={() => {
+                    setHover(p);
+                    setFocusIdx(i);
                   }}
-                  tabIndex={0}
+                  onBlur={() => setHover(null)}
+                  onClick={() => {
+                    setFocusIdx(i);
+                    setSelected(p);
+                  }}
+                  onKeyDown={(e) => handleKey(e, i)}
+                  tabIndex={isFocused ? 0 : -1}
                   role="button"
-                  aria-label={`${isAr ? p.cityAr : p.cityEn} — ${isAr ? 'اعرض تفاصيل الشحن' : 'View shipment details'}`}
-                  style={{ cursor: 'pointer', outline: 'none' }}
+                  aria-label={`${isAr ? p.cityAr : p.cityEn} — ${isAr ? 'اعرض تفاصيل الشحن' : 'View shipment details'} (${i + 1}/${POINTS.length})`}
+                  aria-pressed={selected?.id === p.id}
+                  className="focus:outline-none [&:focus-visible_.focus-ring]:opacity-100"
+                  style={{ cursor: 'pointer' }}
                 >
                   <circle r="14" fill="url(#glow)" opacity={isActive ? 1 : 0.6} />
                   <circle r={isActive ? 5.5 : 4} fill="hsl(46 72% 62%)">
                     <animate attributeName="opacity" values="1;0.6;1" dur="2.4s" repeatCount="indefinite" />
                   </circle>
                   <circle r="1.6" fill="hsl(0 0% 4%)" />
+                  {/* High-contrast focus ring — visible only when keyboard-focused */}
+                  <circle
+                    className="focus-ring"
+                    r="12"
+                    fill="none"
+                    stroke="hsl(0 0% 100%)"
+                    strokeWidth="2"
+                    opacity="0"
+                    style={{ transition: 'opacity 0.15s' }}
+                  />
+                  <circle
+                    className="focus-ring"
+                    r="14"
+                    fill="none"
+                    stroke="hsl(46 72% 62%)"
+                    strokeWidth="1.5"
+                    opacity="0"
+                    style={{ transition: 'opacity 0.15s' }}
+                  />
+                  {isFocused && (
+                    <text
+                      x="0"
+                      y="-20"
+                      textAnchor="middle"
+                      fill="hsl(46 72% 62%)"
+                      fontSize="11"
+                      fontWeight="700"
+                      style={{ paintOrder: 'stroke', stroke: 'hsl(0 0% 0%)', strokeWidth: 3 }}
+                    >
+                      {isAr ? p.cityAr : p.cityEn}
+                    </text>
+                  )}
                 </g>
               );
             })}
+
           </svg>
 
           {hover && !selected && (
