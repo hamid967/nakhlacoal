@@ -7,7 +7,11 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from '@/hooks/use-toast';
 import type { Trademark } from '@/data/trademarks';
-import { Loader2, Save } from 'lucide-react';
+import { Loader2, Save, Upload } from 'lucide-react';
+
+const LOGO_BUCKET = 'trademark-logos';
+const SIGNED_URL_TTL = 60 * 60 * 24 * 365 * 10; // 10 years
+
 
 interface Props {
   open: boolean;
