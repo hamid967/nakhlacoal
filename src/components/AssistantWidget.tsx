@@ -647,15 +647,15 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
 
       {/* Order confirmation form */}
       {pendingOrder && !reviewMode && (
-        <div className="border-t border-gold/30 bg-gold/5 p-3 space-y-2 font-arabic max-h-[55%] overflow-y-auto">
+        <div className="border-t border-gold/30 bg-gold/5 p-3 sm:p-3 space-y-2.5 font-arabic max-h-[60%] sm:max-h-[55%] overflow-y-auto">
           <div className="flex items-center justify-between">
-            <p className="text-xs font-semibold text-foreground flex items-center gap-1.5">
+            <p className="text-sm sm:text-xs font-semibold text-foreground flex items-center gap-1.5">
               📋 تأكيد بيانات الطلب
             </p>
-            <button onClick={() => setPendingOrder(null)} className="text-[10px] text-muted-foreground hover:text-foreground">إلغاء</button>
+            <button onClick={() => setPendingOrder(null)} className="text-[11px] sm:text-[10px] text-muted-foreground hover:text-foreground py-1 px-2 -my-1 -mx-2">إلغاء</button>
           </div>
           {/* Progress stepper */}
-          <ol className="flex items-center gap-1 text-[9px] text-muted-foreground">
+          <ol className="flex items-center gap-1 text-[10px] sm:text-[9px] text-muted-foreground">
             {[
               { k: 'منتج', done: !!pendingOrder.product_type },
               { k: 'كمية', done: !!pendingOrder.quantity },
@@ -663,33 +663,33 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
               { k: 'عنوان', done: formData.address.length > 4 },
               { k: 'تأكيد', done: false },
             ].map((s, i, arr) => (
-              <li key={s.k} className="flex items-center gap-1 flex-1">
-                <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-bold ${s.done ? 'bg-emerald-500 text-white' : 'bg-muted text-muted-foreground border border-border'}`}>{s.done ? '✓' : i + 1}</span>
-                <span className={s.done ? 'text-foreground font-medium' : ''}>{s.k}</span>
+              <li key={s.k} className="flex items-center gap-1 flex-1 min-w-0">
+                <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-bold shrink-0 ${s.done ? 'bg-emerald-500 text-white' : 'bg-muted text-muted-foreground border border-border'}`}>{s.done ? '✓' : i + 1}</span>
+                <span className={`truncate ${s.done ? 'text-foreground font-medium' : ''}`}>{s.k}</span>
                 {i < arr.length - 1 && <span className={`flex-1 h-px ${s.done ? 'bg-emerald-500/50' : 'bg-border'}`} />}
               </li>
             ))}
           </ol>
-          <p className="text-[10px] text-muted-foreground border-t border-gold/15 pt-1.5">
+          <p className="text-[11px] sm:text-[10px] text-muted-foreground border-t border-gold/15 pt-1.5 leading-relaxed">
             <span className="font-semibold text-foreground">{pendingOrder.product_type}</span> · {pendingOrder.quantity} {pendingOrder.unit}
             {pendingOrder.ai_summary && <span className="block mt-0.5 italic">{pendingOrder.ai_summary}</span>}
           </p>
           {liveQuote && (
-            <div className={`rounded-lg border p-2 text-[10.5px] space-y-1 ${liveQuote.ok ? 'border-emerald-500/40 bg-emerald-500/5' : 'border-destructive/50 bg-destructive/5'}`} aria-live="polite">
-              <div className="flex items-center justify-between">
+            <div className={`rounded-lg border p-2 text-[11px] sm:text-[10.5px] space-y-1 ${liveQuote.ok ? 'border-emerald-500/40 bg-emerald-500/5' : 'border-destructive/50 bg-destructive/5'}`} aria-live="polite">
+              <div className="flex items-center justify-between flex-wrap gap-1">
                 <span className="font-semibold text-foreground flex items-center gap-1">
                   {liveQuote.ok ? '✅ متوفر' : '⚠️ تحقق الكمية'}
                 </span>
                 {liveQuote.item && (
-                  <span className="text-muted-foreground">
+                  <span className="text-muted-foreground text-[10px]">
                     المخزون: {liveQuote.item.inStockKg.toLocaleString('ar-SA')} كجم · تجهيز {liveQuote.leadDays} يوم
                   </span>
                 )}
               </div>
               {liveQuote.ok && (
-                <div className="flex items-center justify-between font-arabic">
+                <div className="flex items-center justify-between font-arabic flex-wrap gap-1">
                   <span className="text-muted-foreground">السعر اللحظي</span>
-                  <span className="font-semibold text-foreground">
+                  <span className="font-semibold text-foreground text-end">
                     {formatSAR(liveQuote.pricePerKg)} / كجم · إجمالي <span className="text-emerald-700">{formatSAR(liveQuote.total)}</span>
                     <span className="block text-[9px] text-muted-foreground text-end">شامل ضريبة القيمة المضافة</span>
                   </span>
@@ -703,20 +703,20 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
               ))}
             </div>
           )}
-          <div className="space-y-2">
+          <div className="space-y-2.5">
             <div className="relative">
-              <User className="absolute top-1/2 -translate-y-1/2 start-2.5 w-3.5 h-3.5 text-gold/70 pointer-events-none" aria-hidden />
+              <User className="absolute top-1/2 -translate-y-1/2 start-3 w-4 h-4 text-gold/70 pointer-events-none" aria-hidden />
               <input
                 aria-label="الاسم الكامل"
                 value={formData.contact_name}
                 onChange={(e) => setFormData(f => ({ ...f, contact_name: e.target.value }))}
                 placeholder="الاسم الكامل *"
-                className={`w-full rounded-lg border bg-background ps-8 pe-2.5 py-2 text-xs font-arabic transition focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold ${formErrors.contact_name ? 'border-destructive/60' : 'border-border'}`}
+                className={`w-full rounded-lg border bg-background ps-9 pe-3 py-2.5 text-[15px] sm:text-xs font-arabic transition focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold ${formErrors.contact_name ? 'border-destructive/60' : 'border-border'}`}
               />
-              {formErrors.contact_name && <p className="text-[10px] text-destructive mt-0.5 ps-1">{formErrors.contact_name}</p>}
+              {formErrors.contact_name && <p className="text-[11px] sm:text-[10px] text-destructive mt-1 ps-1">{formErrors.contact_name}</p>}
             </div>
             <div className="relative">
-              <Phone className="absolute top-1/2 -translate-y-1/2 start-2.5 w-3.5 h-3.5 text-gold/70 pointer-events-none" aria-hidden />
+              <Phone className="absolute top-1/2 -translate-y-1/2 start-3 w-4 h-4 text-gold/70 pointer-events-none" aria-hidden />
               <input
                 aria-label="رقم الجوال"
                 value={formData.phone}
@@ -724,25 +724,25 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
                 placeholder="05xxxxxxxx *"
                 dir="ltr"
                 inputMode="tel"
-                className={`w-full rounded-lg border bg-background ps-8 pe-2.5 py-2 text-xs transition focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold text-right ${formErrors.phone ? 'border-destructive/60' : 'border-border'}`}
+                className={`w-full rounded-lg border bg-background ps-9 pe-3 py-2.5 text-[15px] sm:text-xs transition focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold text-right ${formErrors.phone ? 'border-destructive/60' : 'border-border'}`}
               />
-              {formErrors.phone && <p className="text-[10px] text-destructive mt-0.5 ps-1">{formErrors.phone}</p>}
+              {formErrors.phone && <p className="text-[11px] sm:text-[10px] text-destructive mt-1 ps-1">{formErrors.phone}</p>}
             </div>
             <div className="relative">
-              <MapPin className="absolute top-2.5 start-2.5 w-3.5 h-3.5 text-gold/70 pointer-events-none" aria-hidden />
+              <MapPin className="absolute top-3 start-3 w-4 h-4 text-gold/70 pointer-events-none" aria-hidden />
               <textarea
                 aria-label="العنوان"
                 value={formData.address}
                 onChange={(e) => setFormData(f => ({ ...f, address: e.target.value }))}
                 placeholder="العنوان (المدينة، الحي، الشارع) *"
                 rows={2}
-                className={`w-full rounded-lg border bg-background ps-8 pe-2.5 py-2 text-xs font-arabic transition focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold resize-none ${formErrors.address ? 'border-destructive/60' : 'border-border'}`}
+                className={`w-full rounded-lg border bg-background ps-9 pe-3 py-2.5 text-[15px] sm:text-xs font-arabic transition focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold resize-none ${formErrors.address ? 'border-destructive/60' : 'border-border'}`}
               />
-              {formErrors.address && <p className="text-[10px] text-destructive mt-0.5 ps-1">{formErrors.address}</p>}
+              {formErrors.address && <p className="text-[11px] sm:text-[10px] text-destructive mt-1 ps-1">{formErrors.address}</p>}
             </div>
             <div>
-              <label className="text-[10px] text-muted-foreground block mb-1 font-arabic font-semibold tracking-wide uppercase">طريقة الاستلام *</label>
-              <div className="grid grid-cols-2 gap-1.5">
+              <label className="text-[11px] sm:text-[10px] text-muted-foreground block mb-1.5 font-arabic font-semibold tracking-wide uppercase">طريقة الاستلام *</label>
+              <div className="grid grid-cols-2 gap-2 sm:gap-1.5">
                 {([
                   { key: 'توصيل', icon: Truck, label: 'توصيل للعنوان' },
                   { key: 'استلام من المستودع', icon: Warehouse, label: 'استلام من المستودع' },
@@ -753,14 +753,14 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
                       key={key}
                       type="button"
                       onClick={() => setFormData(f => ({ ...f, delivery_method: key }))}
-                      className={`px-2 py-2 rounded-lg text-[11px] border transition flex items-center justify-center gap-1.5 font-arabic ${
+                      className={`px-2 py-2.5 sm:py-2 rounded-lg text-[12px] sm:text-[11px] border transition flex items-center justify-center gap-1.5 font-arabic leading-tight ${
                         active
                           ? 'bg-gradient-to-b from-gold to-[hsl(var(--gold)/0.85)] text-dark border-gold font-bold shadow-[0_4px_14px_-4px_hsl(var(--gold)/0.6)]'
                           : 'bg-background border-border text-foreground hover:border-gold/50 hover:bg-gold/5'
                       }`}
                     >
-                      <Icon className="w-3.5 h-3.5" />
-                      {label}
+                      <Icon className="w-4 h-4 sm:w-3.5 sm:h-3.5 shrink-0" />
+                      <span className="truncate">{label}</span>
                     </button>
                   );
                 })}
@@ -770,14 +770,14 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
           <button
             onClick={confirmOrder}
             disabled={submitting}
-            className="w-full mt-2 py-2.5 rounded-lg text-xs font-bold font-arabic tracking-wide text-cream transition flex items-center justify-center gap-1.5 disabled:opacity-50 hover:shadow-[0_10px_28px_-8px_hsl(var(--gold)/0.6)] hover:-translate-y-px"
+            className="w-full mt-2 py-3 sm:py-2.5 rounded-lg text-sm sm:text-xs font-bold font-arabic tracking-wide text-cream transition flex items-center justify-center gap-2 disabled:opacity-50 hover:shadow-[0_10px_28px_-8px_hsl(var(--gold)/0.6)] hover:-translate-y-px active:translate-y-0"
             style={{
               background:
                 'linear-gradient(135deg, hsl(var(--dark)) 0%, hsl(0 0% 10%) 100%)',
               boxShadow: '0 4px 14px -4px hsl(var(--gold) / 0.4), inset 0 1px 0 hsl(var(--gold-hi) / 0.35)',
             }}
           >
-            {submitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-4 h-4 text-gold-hi" />}
+            {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4 text-gold-hi" />}
             <span className="bg-gradient-to-l from-gold-hi to-cream bg-clip-text text-transparent">
               تأكيد وإرسال الطلب
             </span>
