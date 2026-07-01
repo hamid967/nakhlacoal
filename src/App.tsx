@@ -70,6 +70,7 @@ const AdminTracking = lazy(() => import('@/admin/pages/Tracking'));
 const AdminInvoices = lazy(() => import('@/admin/pages/Invoices'));
 const AdminShipments = lazy(() => import('@/admin/pages/Shipments'));
 const AdminWebVitals = lazy(() => import('@/admin/pages/WebVitals'));
+const AdminChatAnalytics = lazy(() => import('@/admin/pages/ChatAnalytics'));
 
 const PortalLayout = lazy(() => import('@/portal/PortalLayout'));
 const PortalDashboard = lazy(() => import('@/portal/pages/Dashboard'));
