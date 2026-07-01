@@ -1,6 +1,6 @@
 # Palm Charcoal — Audit Report
 
-Base: `http://localhost:8080` · Generated: 2026-07-01T18:03:36.813Z
+Base: `http://localhost:8080` · Generated: 2026-07-01T18:04:57.228Z
 
 ## Summary
 
@@ -15,77 +15,77 @@ Base: `http://localhost:8080` · Generated: 2026-07-01T18:03:36.813Z
 
 | Route | Status | DCL (ms) | Findings |
 |---|---|---|---|
-| / | 200 | 560 | 5 |
-| /products | 200 | 456 | 4 |
-| /quality | 200 | 444 | 4 |
-| /trademarks | 200 | 524 | 4 |
-| /wholesale | 200 | 447 | 5 |
-| /quote | 200 | 482 | 4 |
-| /checkout | 200 | 445 | 4 |
-| /about | 200 | 556 | 4 |
-| /contact | 200 | 461 | 4 |
-| /auth | 200 | 595 | 5 |
-| /portal/login | 200 | 475 | 3 |
-| /faq | 200 | 493 | 4 |
-| /pricing | 200 | 472 | 4 |
+| / | 200 | 647 | 5 |
+| /products | 200 | 479 | 4 |
+| /quality | 200 | 463 | 4 |
+| /trademarks | 200 | 522 | 3 |
+| /wholesale | 200 | 491 | 6 |
+| /quote | 200 | 466 | 3 |
+| /checkout | 200 | 447 | 4 |
+| /about | 200 | 470 | 3 |
+| /contact | 200 | 460 | 4 |
+| /auth | 200 | 461 | 6 |
+| /portal/login | 200 | 434 | 2 |
+| /faq | 200 | 472 | 5 |
+| /pricing | 200 | 507 | 5 |
 
 ## P1 — 28 finding(s)
 
+- **/** · `short_desc` — 52 chars
+  - Fix: Set a unique <meta name=description> per route via SEO.tsx; 120-160 chars.
 - **/** · `multiple_h1` — 2 h1s
   - Fix: Reduce to a single <h1>; convert extras to <h2>.
 - **/** · `img_no_alt` — 3 imgs
   - Fix: Add descriptive alt text (or alt="" for decorative). Enforce via lint rule jsx-a11y/alt-text.
-- **/** · `duplicate_desc` — shared with /products, /quality, /trademarks, /wholesale, /quote, /checkout, /about, /contact, /auth, /portal/login, /faq, /pricing
-  - Fix: Same description used on multiple routes — differentiate to avoid SEO duplication penalties.
+- **/products** · `short_desc` — 54 chars
+  - Fix: Set a unique <meta name=description> per route via SEO.tsx; 120-160 chars.
 - **/products** · `img_no_alt` — 3 imgs
   - Fix: Add descriptive alt text (or alt="" for decorative). Enforce via lint rule jsx-a11y/alt-text.
-- **/products** · `duplicate_desc` — shared with /, /quality, /trademarks, /wholesale, /quote, /checkout, /about, /contact, /auth, /portal/login, /faq, /pricing
-  - Fix: Same description used on multiple routes — differentiate to avoid SEO duplication penalties.
+- **/quality** · `short_desc` — 78 chars
+  - Fix: Set a unique <meta name=description> per route via SEO.tsx; 120-160 chars.
 - **/quality** · `img_no_alt` — 3 imgs
   - Fix: Add descriptive alt text (or alt="" for decorative). Enforce via lint rule jsx-a11y/alt-text.
-- **/quality** · `duplicate_desc` — shared with /, /products, /trademarks, /wholesale, /quote, /checkout, /about, /contact, /auth, /portal/login, /faq, /pricing
-  - Fix: Same description used on multiple routes — differentiate to avoid SEO duplication penalties.
 - **/trademarks** · `img_no_alt` — 3 imgs
   - Fix: Add descriptive alt text (or alt="" for decorative). Enforce via lint rule jsx-a11y/alt-text.
-- **/trademarks** · `duplicate_desc` — shared with /, /products, /quality, /wholesale, /quote, /checkout, /about, /contact, /auth, /portal/login, /faq, /pricing
-  - Fix: Same description used on multiple routes — differentiate to avoid SEO duplication penalties.
+- **/wholesale** · `short_desc` — 41 chars
+  - Fix: Set a unique <meta name=description> per route via SEO.tsx; 120-160 chars.
 - **/wholesale** · `multiple_h1` — 2 h1s
   - Fix: Reduce to a single <h1>; convert extras to <h2>.
 - **/wholesale** · `img_no_alt` — 4 imgs
   - Fix: Add descriptive alt text (or alt="" for decorative). Enforce via lint rule jsx-a11y/alt-text.
-- **/wholesale** · `duplicate_desc` — shared with /, /products, /quality, /trademarks, /quote, /checkout, /about, /contact, /auth, /portal/login, /faq, /pricing
+- **/wholesale** · `duplicate_desc` — shared with /auth
   - Fix: Same description used on multiple routes — differentiate to avoid SEO duplication penalties.
 - **/quote** · `img_no_alt` — 3 imgs
   - Fix: Add descriptive alt text (or alt="" for decorative). Enforce via lint rule jsx-a11y/alt-text.
-- **/quote** · `duplicate_desc` — shared with /, /products, /quality, /trademarks, /wholesale, /checkout, /about, /contact, /auth, /portal/login, /faq, /pricing
-  - Fix: Same description used on multiple routes — differentiate to avoid SEO duplication penalties.
+- **/checkout** · `short_desc` — 45 chars
+  - Fix: Set a unique <meta name=description> per route via SEO.tsx; 120-160 chars.
 - **/checkout** · `img_no_alt` — 3 imgs
   - Fix: Add descriptive alt text (or alt="" for decorative). Enforce via lint rule jsx-a11y/alt-text.
-- **/checkout** · `duplicate_desc` — shared with /, /products, /quality, /trademarks, /wholesale, /quote, /about, /contact, /auth, /portal/login, /faq, /pricing
-  - Fix: Same description used on multiple routes — differentiate to avoid SEO duplication penalties.
 - **/about** · `img_no_alt` — 3 imgs
   - Fix: Add descriptive alt text (or alt="" for decorative). Enforce via lint rule jsx-a11y/alt-text.
-- **/about** · `duplicate_desc` — shared with /, /products, /quality, /trademarks, /wholesale, /quote, /checkout, /contact, /auth, /portal/login, /faq, /pricing
-  - Fix: Same description used on multiple routes — differentiate to avoid SEO duplication penalties.
+- **/contact** · `short_desc` — 41 chars
+  - Fix: Set a unique <meta name=description> per route via SEO.tsx; 120-160 chars.
 - **/contact** · `img_no_alt` — 3 imgs
   - Fix: Add descriptive alt text (or alt="" for decorative). Enforce via lint rule jsx-a11y/alt-text.
-- **/contact** · `duplicate_desc` — shared with /, /products, /quality, /trademarks, /wholesale, /quote, /checkout, /about, /auth, /portal/login, /faq, /pricing
-  - Fix: Same description used on multiple routes — differentiate to avoid SEO duplication penalties.
+- **/auth** · `short_desc` — 41 chars
+  - Fix: Set a unique <meta name=description> per route via SEO.tsx; 120-160 chars.
 - **/auth** · `multiple_h1` — 2 h1s
   - Fix: Reduce to a single <h1>; convert extras to <h2>.
 - **/auth** · `img_no_alt` — 4 imgs
   - Fix: Add descriptive alt text (or alt="" for decorative). Enforce via lint rule jsx-a11y/alt-text.
-- **/auth** · `duplicate_desc` — shared with /, /products, /quality, /trademarks, /wholesale, /quote, /checkout, /about, /contact, /portal/login, /faq, /pricing
+- **/auth** · `duplicate_desc` — shared with /wholesale
   - Fix: Same description used on multiple routes — differentiate to avoid SEO duplication penalties.
-- **/portal/login** · `duplicate_desc` — shared with /, /products, /quality, /trademarks, /wholesale, /quote, /checkout, /about, /contact, /auth, /faq, /pricing
-  - Fix: Same description used on multiple routes — differentiate to avoid SEO duplication penalties.
+- **/faq** · `short_desc` — 18 chars
+  - Fix: Set a unique <meta name=description> per route via SEO.tsx; 120-160 chars.
 - **/faq** · `img_no_alt` — 3 imgs
   - Fix: Add descriptive alt text (or alt="" for decorative). Enforce via lint rule jsx-a11y/alt-text.
-- **/faq** · `duplicate_desc` — shared with /, /products, /quality, /trademarks, /wholesale, /quote, /checkout, /about, /contact, /auth, /portal/login, /pricing
+- **/faq** · `duplicate_desc` — shared with /pricing
   - Fix: Same description used on multiple routes — differentiate to avoid SEO duplication penalties.
+- **/pricing** · `short_desc` — 18 chars
+  - Fix: Set a unique <meta name=description> per route via SEO.tsx; 120-160 chars.
 - **/pricing** · `img_no_alt` — 3 imgs
   - Fix: Add descriptive alt text (or alt="" for decorative). Enforce via lint rule jsx-a11y/alt-text.
-- **/pricing** · `duplicate_desc` — shared with /, /products, /quality, /trademarks, /wholesale, /quote, /checkout, /about, /contact, /auth, /portal/login, /faq
+- **/pricing** · `duplicate_desc` — shared with /faq
   - Fix: Same description used on multiple routes — differentiate to avoid SEO duplication penalties.
 
 ## P2 — 26 finding(s)

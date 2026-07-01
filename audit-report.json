@@ -1,20 +1,24 @@
 {
   "base": "http://localhost:8080",
-  "generatedAt": "2026-07-01T18:03:36.810Z",
+  "generatedAt": "2026-07-01T18:04:57.225Z",
   "results": [
     {
       "route": "/",
       "status": 200,
-      "timing": 560,
+      "timing": 647,
       "meta": {
         "title": "فحم النخلة | الفحم السعودي الفاخر",
-        "desc": "فحم النخلة — مصنع سعودي متخصص في فحم النخيل الفاخر للمعسل والبخور والشواء والتصدير. اشتعال أسرع، حرارة أعلى، رماد أقل. Premium Saudi date-palm charcoal.",
+        "desc": "فحم طبيعي ١٠٠٪ — احتراق أطول، حرارة أعلى، ورماد أقل.",
         "lang": "ar",
         "h1Count": 2,
         "imgsNoAlt": 3,
         "cspMeta": true
       },
       "findings": [
+        {
+          "rule": "short_desc",
+          "detail": "52 chars"
+        },
         {
           "rule": "multiple_h1",
           "detail": "2 h1s"
@@ -29,26 +33,26 @@
         {
           "rule": "console_error",
           "detail": "The Content Security Policy directive 'frame-ancestors' is ignored when delivered via a <meta> element."
-        },
-        {
-          "rule": "duplicate_desc",
-          "detail": "shared with /products, /quality, /trademarks, /wholesale, /quote, /checkout, /about, /contact, /auth, /portal/login, /faq, /pricing"
         }
       ]
     },
     {
       "route": "/products",
       "status": 200,
-      "timing": 456,
+      "timing": 479,
       "meta": {
         "title": "المنتجات — فحم النخلة",
-        "desc": "فحم النخلة — مصنع سعودي متخصص في فحم النخيل الفاخر للمعسل والبخور والشواء والتصدير. اشتعال أسرع، حرارة أعلى، رماد أقل. Premium Saudi date-palm charcoal.",
+        "desc": "تشكيلة فاخرة من الفحم السعودي للشواء والشيشة والتصدير.",
         "lang": "ar",
         "h1Count": 1,
         "imgsNoAlt": 3,
         "cspMeta": true
       },
       "findings": [
+        {
+          "rule": "short_desc",
+          "detail": "54 chars"
+        },
         {
           "rule": "img_no_alt",
           "detail": "3 imgs"
@@ -59,26 +63,26 @@
         {
           "rule": "console_error",
           "detail": "The Content Security Policy directive 'frame-ancestors' is ignored when delivered via a <meta> element."
-        },
-        {
-          "rule": "duplicate_desc",
-          "detail": "shared with /, /quality, /trademarks, /wholesale, /quote, /checkout, /about, /contact, /auth, /portal/login, /faq, /pricing"
         }
       ]
     },
     {
       "route": "/quality",
       "status": 200,
-      "timing": 444,
+      "timing": 463,
       "meta": {
         "title": "الجودة — فحم النخلة",
-        "desc": "فحم النخلة — مصنع سعودي متخصص في فحم النخيل الفاخر للمعسل والبخور والشواء والتصدير. اشتعال أسرع، حرارة أعلى، رماد أقل. Premium Saudi date-palm charcoal.",
+        "desc": "كل دفعة من فحم النخلة مقيسة ومعتمدة. مختبر متكامل، تحليلات حية، وشهادات دولية.",
         "lang": "ar",
         "h1Count": 1,
         "imgsNoAlt": 3,
         "cspMeta": true
       },
       "findings": [
+        {
+          "rule": "short_desc",
+          "detail": "78 chars"
+        },
         {
           "rule": "img_no_alt",
           "detail": "3 imgs"
@@ -89,20 +93,16 @@
         {
           "rule": "console_error",
           "detail": "The Content Security Policy directive 'frame-ancestors' is ignored when delivered via a <meta> element."
-        },
-        {
-          "rule": "duplicate_desc",
-          "detail": "shared with /, /products, /trademarks, /wholesale, /quote, /checkout, /about, /contact, /auth, /portal/login, /faq, /pricing"
         }
       ]
     },
     {
       "route": "/trademarks",
       "status": 200,
-      "timing": 524,
+      "timing": 522,
       "meta": {
         "title": "العلامات التجارية المسجلة | فحم النخلة، نخلان، المركاز، النخلتين، باعشن",
-        "desc": "فحم النخلة — مصنع سعودي متخصص في فحم النخيل الفاخر للمعسل والبخور والشواء والتصدير. اشتعال أسرع، حرارة أعلى، رماد أقل. Premium Saudi date-palm charcoal.",
+        "desc": "خمس علامات تجارية سعودية مسجلة رسمياً لدى الهيئة السعودية للملكية الفكرية لمؤسسة محمد عبدالله باعشن التجارية — فحم النخلة، نخلان، المركاز، النخلتين، وباعشن، مع أرقام التسجيل وتواريخ الحماية.",
         "lang": "ar",
         "h1Count": 1,
         "imgsNoAlt": 3,
@@ -119,26 +119,26 @@
         {
           "rule": "console_error",
           "detail": "The Content Security Policy directive 'frame-ancestors' is ignored when delivered via a <meta> element."
-        },
-        {
-          "rule": "duplicate_desc",
-          "detail": "shared with /, /products, /quality, /wholesale, /quote, /checkout, /about, /contact, /auth, /portal/login, /faq, /pricing"
         }
       ]
     },
     {
       "route": "/wholesale",
       "status": 200,
-      "timing": 447,
+      "timing": 491,
       "meta": {
         "title": "تسجيل الدخول | فحم النخلة",
-        "desc": "فحم النخلة — مصنع سعودي متخصص في فحم النخيل الفاخر للمعسل والبخور والشواء والتصدير. اشتعال أسرع، حرارة أعلى، رماد أقل. Premium Saudi date-palm charcoal.",
+        "desc": "بوابة دخول آمنة لعملاء وشركاء فحم النخلة.",
         "lang": "ar",
         "h1Count": 2,
         "imgsNoAlt": 4,
         "cspMeta": true
       },
       "findings": [
+        {
+          "rule": "short_desc",
+          "detail": "41 chars"
+        },
         {
           "rule": "multiple_h1",
           "detail": "2 h1s"
@@ -156,17 +156,17 @@
         },
         {
           "rule": "duplicate_desc",
-          "detail": "shared with /, /products, /quality, /trademarks, /quote, /checkout, /about, /contact, /auth, /portal/login, /faq, /pricing"
+          "detail": "shared with /auth"
         }
       ]
     },
     {
       "route": "/quote",
       "status": 200,
-      "timing": 482,
+      "timing": 466,
       "meta": {
         "title": "عرض سعر فوري | فحم النخلة — Palm Charcoal",
-        "desc": "فحم النخلة — مصنع سعودي متخصص في فحم النخيل الفاخر للمعسل والبخور والشواء والتصدير. اشتعال أسرع، حرارة أعلى، رماد أقل. Premium Saudi date-palm charcoal.",
+        "desc": "احصل على عرض سعر فوري لأنواع الفحم الفاخر مع مساعد فحم النخلة الذكي. شامل الضريبة، التسعير الجملة، وإرسال مباشر عبر واتساب.",
         "lang": "ar",
         "h1Count": 1,
         "imgsNoAlt": 3,
@@ -183,26 +183,26 @@
         {
           "rule": "console_error",
           "detail": "The Content Security Policy directive 'frame-ancestors' is ignored when delivered via a <meta> element."
-        },
-        {
-          "rule": "duplicate_desc",
-          "detail": "shared with /, /products, /quality, /trademarks, /wholesale, /checkout, /about, /contact, /auth, /portal/login, /faq, /pricing"
         }
       ]
     },
     {
       "route": "/checkout",
       "status": 200,
-      "timing": 445,
+      "timing": 447,
       "meta": {
         "title": "إتمام الطلب",
-        "desc": "فحم النخلة — مصنع سعودي متخصص في فحم النخيل الفاخر للمعسل والبخور والشواء والتصدير. اشتعال أسرع، حرارة أعلى، رماد أقل. Premium Saudi date-palm charcoal.",
+        "desc": "أكمل شراء منتجات فحم النخلة بأمان ودفع مبسّط.",
         "lang": "ar",
         "h1Count": 1,
         "imgsNoAlt": 3,
         "cspMeta": true
       },
       "findings": [
+        {
+          "rule": "short_desc",
+          "detail": "45 chars"
+        },
         {
           "rule": "img_no_alt",
           "detail": "3 imgs"
@@ -213,20 +213,16 @@
         {
           "rule": "console_error",
           "detail": "The Content Security Policy directive 'frame-ancestors' is ignored when delivered via a <meta> element."
-        },
-        {
-          "rule": "duplicate_desc",
-          "detail": "shared with /, /products, /quality, /trademarks, /wholesale, /quote, /about, /contact, /auth, /portal/login, /faq, /pricing"
         }
       ]
     },
     {
       "route": "/about",
       "status": 200,
-      "timing": 556,
+      "timing": 470,
       "meta": {
         "title": "من نحن — فحم النخلة",
-        "desc": "فحم النخلة — مصنع سعودي متخصص في فحم النخيل الفاخر للمعسل والبخور والشواء والتصدير. اشتعال أسرع، حرارة أعلى، رماد أقل. Premium Saudi date-palm charcoal.",
+        "desc": "علامة سعودية متخصصة في إنتاج واستيراد وتوريد الفحم الطبيعي عالي الجودة، من سوق الفحم بجدة البلد إلى العالم.",
         "lang": "ar",
         "h1Count": 1,
         "imgsNoAlt": 3,
@@ -243,26 +239,26 @@
         {
           "rule": "console_error",
           "detail": "The Content Security Policy directive 'frame-ancestors' is ignored when delivered via a <meta> element."
-        },
-        {
-          "rule": "duplicate_desc",
-          "detail": "shared with /, /products, /quality, /trademarks, /wholesale, /quote, /checkout, /contact, /auth, /portal/login, /faq, /pricing"
         }
       ]
     },
     {
       "route": "/contact",
       "status": 200,
-      "timing": 461,
+      "timing": 460,
       "meta": {
         "title": "تواصل معنا — فحم النخلة",
-        "desc": "فحم النخلة — مصنع سعودي متخصص في فحم النخيل الفاخر للمعسل والبخور والشواء والتصدير. اشتعال أسرع، حرارة أعلى، رماد أقل. Premium Saudi date-palm charcoal.",
+        "desc": "مكتب التصدير لدينا يرد خلال يوم عمل واحد.",
         "lang": "ar",
         "h1Count": 1,
         "imgsNoAlt": 3,
         "cspMeta": true
       },
       "findings": [
+        {
+          "rule": "short_desc",
+          "detail": "41 chars"
+        },
         {
           "rule": "img_no_alt",
           "detail": "3 imgs"
@@ -273,26 +269,26 @@
         {
           "rule": "console_error",
           "detail": "The Content Security Policy directive 'frame-ancestors' is ignored when delivered via a <meta> element."
-        },
-        {
-          "rule": "duplicate_desc",
-          "detail": "shared with /, /products, /quality, /trademarks, /wholesale, /quote, /checkout, /about, /auth, /portal/login, /faq, /pricing"
         }
       ]
     },
     {
       "route": "/auth",
       "status": 200,
-      "timing": 595,
+      "timing": 461,
       "meta": {
         "title": "تسجيل الدخول | فحم النخلة",
-        "desc": "فحم النخلة — مصنع سعودي متخصص في فحم النخيل الفاخر للمعسل والبخور والشواء والتصدير. اشتعال أسرع، حرارة أعلى، رماد أقل. Premium Saudi date-palm charcoal.",
+        "desc": "بوابة دخول آمنة لعملاء وشركاء فحم النخلة.",
         "lang": "ar",
         "h1Count": 2,
         "imgsNoAlt": 4,
         "cspMeta": true
       },
       "findings": [
+        {
+          "rule": "short_desc",
+          "detail": "41 chars"
+        },
         {
           "rule": "multiple_h1",
           "detail": "2 h1s"
@@ -310,17 +306,17 @@
         },
         {
           "rule": "duplicate_desc",
-          "detail": "shared with /, /products, /quality, /trademarks, /wholesale, /quote, /checkout, /about, /contact, /portal/login, /faq, /pricing"
+          "detail": "shared with /wholesale"
         }
       ]
     },
     {
       "route": "/portal/login",
       "status": 200,
-      "timing": 475,
+      "timing": 434,
       "meta": {
         "title": "بوابة العملاء — دخول | فحم النخلة",
-        "desc": "فحم النخلة — مصنع سعودي متخصص في فحم النخيل الفاخر للمعسل والبخور والشواء والتصدير. اشتعال أسرع، حرارة أعلى، رماد أقل. Premium Saudi date-palm charcoal.",
+        "desc": "بوابة عملاء فحم النخلة: سجّل الدخول أو أنشئ حسابك لإدارة الطلبات والشحنات والفواتير بأمان.",
         "lang": "ar",
         "h1Count": 1,
         "imgsNoAlt": 0,
@@ -333,26 +329,26 @@
         {
           "rule": "console_error",
           "detail": "The Content Security Policy directive 'frame-ancestors' is ignored when delivered via a <meta> element."
-        },
-        {
-          "rule": "duplicate_desc",
-          "detail": "shared with /, /products, /quality, /trademarks, /wholesale, /quote, /checkout, /about, /contact, /auth, /faq, /pricing"
         }
       ]
     },
     {
       "route": "/faq",
       "status": 200,
-      "timing": 493,
+      "timing": 472,
       "meta": {
         "title": "صفحة غير موجودة | فحم النخلة",
-        "desc": "فحم النخلة — مصنع سعودي متخصص في فحم النخيل الفاخر للمعسل والبخور والشواء والتصدير. اشتعال أسرع، حرارة أعلى، رماد أقل. Premium Saudi date-palm charcoal.",
+        "desc": "الصفحة غير موجودة.",
         "lang": "ar",
         "h1Count": 1,
         "imgsNoAlt": 3,
         "cspMeta": true
       },
       "findings": [
+        {
+          "rule": "short_desc",
+          "detail": "18 chars"
+        },
         {
           "rule": "img_no_alt",
           "detail": "3 imgs"
@@ -366,23 +362,27 @@
         },
         {
           "rule": "duplicate_desc",
-          "detail": "shared with /, /products, /quality, /trademarks, /wholesale, /quote, /checkout, /about, /contact, /auth, /portal/login, /pricing"
+          "detail": "shared with /pricing"
         }
       ]
     },
     {
       "route": "/pricing",
       "status": 200,
-      "timing": 472,
+      "timing": 507,
       "meta": {
         "title": "صفحة غير موجودة | فحم النخلة",
-        "desc": "فحم النخلة — مصنع سعودي متخصص في فحم النخيل الفاخر للمعسل والبخور والشواء والتصدير. اشتعال أسرع، حرارة أعلى، رماد أقل. Premium Saudi date-palm charcoal.",
+        "desc": "الصفحة غير موجودة.",
         "lang": "ar",
         "h1Count": 1,
         "imgsNoAlt": 3,
         "cspMeta": true
       },
       "findings": [
+        {
+          "rule": "short_desc",
+          "detail": "18 chars"
+        },
         {
           "rule": "img_no_alt",
           "detail": "3 imgs"
@@ -396,7 +396,7 @@
         },
         {
           "rule": "duplicate_desc",
-          "detail": "shared with /, /products, /quality, /trademarks, /wholesale, /quote, /checkout, /about, /contact, /auth, /portal/login, /faq"
+          "detail": "shared with /faq"
         }
       ]
     }
