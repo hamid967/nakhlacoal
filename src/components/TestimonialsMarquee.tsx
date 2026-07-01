@@ -27,7 +27,7 @@ export function TestimonialsMarquee() {
   const rowB = [...data.slice().reverse(), ...data.slice().reverse()];
 
   return (
-    <section className="relative py-24 md:py-32 bg-[#0B0B0B] overflow-hidden">
+    <section className="relative z-0 isolate py-24 md:py-32 bg-[#0B0B0B] overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,hsl(46_72%_62%/0.08),transparent_60%)] pointer-events-none" />
 
       <div className="container relative mb-14 md:mb-20">
