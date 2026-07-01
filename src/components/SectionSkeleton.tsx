@@ -16,17 +16,21 @@ type Variant =
   | 'cases'
   | 'map';
 
+// Tuned to match measured real section heights across mobile/tablet/desktop
+// (see /tmp/browser/skel audit). Reserving slightly less than the smallest
+// observed real height on each breakpoint keeps CLS ≈ 0 without leaving
+// visible empty gaps once content resolves.
 const HEIGHTS: Record<Variant, string> = {
   hero: 'min-h-[70vh]',
-  grid: 'min-h-[480px]',
-  timeline: 'min-h-[560px]',
-  band: 'min-h-[320px]',
-  press: 'min-h-[220px]',
-  awards: 'min-h-[260px]',
-  constellation: 'min-h-[520px]',
-  film: 'min-h-[640px]',
-  cases: 'min-h-[560px]',
-  map: 'min-h-[600px]',
+  grid: 'min-h-[640px]',
+  timeline: 'min-h-[720px]',
+  band: 'min-h-[460px]',
+  press: 'min-h-[300px]',
+  awards: 'min-h-[320px]',
+  constellation: 'min-h-[580px]',
+  film: 'min-h-[720px]',
+  cases: 'min-h-[720px]',
+  map: 'min-h-[900px]',
 };
 
 function BaseWrap({
