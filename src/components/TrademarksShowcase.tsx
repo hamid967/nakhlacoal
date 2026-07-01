@@ -187,7 +187,7 @@ export function TrademarksShowcase() {
             </div>
 
             {/* Meta — 6×1 */}
-            <div className="md:col-span-6 md:row-span-1 bg-emerald rounded-3xl p-6 grid grid-cols-3 items-center text-cream/90">
+            <div className="md:col-span-6 md:row-span-1 bg-emerald rounded-3xl p-6 grid grid-cols-3 items-center text-cream">
               <MetaCol label={isAr ? 'المنشأ' : 'Origin'} value={isAr ? 'المملكة' : 'KSA'} />
               <div className="justify-self-center w-px h-8 bg-cream/15" />
               <MetaCol label={isAr ? 'الحالة' : 'Status'} value={isAr ? 'موثّقة' : 'Verified'} mono />
