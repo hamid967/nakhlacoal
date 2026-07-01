@@ -2,7 +2,7 @@ import { Helmet } from 'react-helmet-async';
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
-const SITE = 'https://starlight-echoes.lovable.app';
+const SITE = 'https://alnakhlacoal.com';
 
 interface Props {
   title?: string;
