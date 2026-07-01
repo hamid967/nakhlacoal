@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Play } from 'lucide-react';
-import factory from '@/assets/palm-charcoal-factory.jpg';
+import factory from '@/assets/slide-coconut-factory.jpg';
 
 export function StoryFilm() {
   const { i18n } = useTranslation();

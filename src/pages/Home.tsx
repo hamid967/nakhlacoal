@@ -22,6 +22,10 @@ const ProductShowcase3D = lazy(() => import('@/components/ProductShowcase3D').th
 const TestimonialsMarquee = lazy(() => import('@/components/TestimonialsMarquee').then((m) => ({ default: m.TestimonialsMarquee })));
 const CertificationsWall = lazy(() => import('@/components/CertificationsWall').then((m) => ({ default: m.CertificationsWall })));
 const CinematicCTA = lazy(() => import('@/components/CinematicCTA').then((m) => ({ default: m.CinematicCTA })));
+const PressLogos = lazy(() => import('@/components/PressLogos').then((m) => ({ default: m.PressLogos })));
+const AwardsRibbon = lazy(() => import('@/components/AwardsRibbon').then((m) => ({ default: m.AwardsRibbon })));
+const PartnersConstellation = lazy(() => import('@/components/PartnersConstellation').then((m) => ({ default: m.PartnersConstellation })));
+const StoryFilm = lazy(() => import('@/components/StoryFilm').then((m) => ({ default: m.StoryFilm })));
 
 
 
