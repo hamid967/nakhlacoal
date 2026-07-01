@@ -57,7 +57,9 @@ function applyTheme(t: ThemeKey) {
   document.documentElement.setAttribute('data-theme', eff);
 }
 function applyFont(f: FontKey) {
+  ensureFontLoaded(f);
   document.documentElement.setAttribute('data-font', f);
+  document.documentElement.style.setProperty('--pc-font-family', FONTS[f].cssFamily);
 }
 
 export function ThemeToggle() {
