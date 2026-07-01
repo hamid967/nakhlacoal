@@ -8,8 +8,23 @@ on:
   workflow_dispatch:
 
 jobs:
+  skeletons:
+    name: Skeleton height budget (vitest)
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - name: Run skeleton height budget test
+        run: npx vitest run src/components/__tests__/SectionSkeleton.heights.test.tsx --reporter=verbose
+
   lhci:
     name: Home — CLS & DCL budgets
+    needs: skeletons
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -31,3 +46,4 @@ jobs:
         run: lhci autorun --config=./lighthouserc.cjs
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
