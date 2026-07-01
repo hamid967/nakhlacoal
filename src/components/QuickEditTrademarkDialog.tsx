@@ -244,14 +244,29 @@ export function QuickEditTrademarkDialog({ open, onOpenChange, trademark, isAr }
             </div>
             <Input className="mt-2" placeholder="https://…/logo.png" value={form.image_url} onChange={set('image_url')} />
 
-            {form.image_url && (
-              <img
-                src={form.image_url}
-                alt=""
-                className="mt-2 max-h-24 object-contain rounded border border-border p-2 bg-background"
-                onError={(e) => ((e.currentTarget.style.display = 'none'))}
-              />
+            {(preview || form.image_url) && (
+              <div className="mt-2 flex items-center gap-3">
+                <div className="relative shrink-0 rounded-lg border border-border bg-[conic-gradient(at_50%_50%,hsl(var(--muted))_0deg,transparent_90deg,hsl(var(--muted))_180deg,transparent_270deg)] bg-[length:16px_16px] p-2">
+                  <img
+                    src={preview ?? form.image_url}
+                    alt=""
+                    className="max-h-24 w-24 object-contain"
+                    onError={(e) => ((e.currentTarget.style.display = 'none'))}
+                  />
+                  {uploading && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-background/70 rounded-lg">
+                      <Loader2 className="w-5 h-5 animate-spin text-primary" />
+                    </div>
+                  )}
+                </div>
+                <p className="text-[11px] text-muted-foreground">
+                  {uploading
+                    ? isAr ? 'جارٍ الرفع والتنسيق…' : 'Uploading & optimizing…'
+                    : isAr ? 'معاينة · يتم تصغير الصورة إلى 512px وضغطها WebP.' : 'Preview · auto-resized to 512px and WebP-encoded.'}
+                </p>
+              </div>
             )}
+
           </Field>
         </div>
 
