@@ -2,15 +2,10 @@
 // Keeps analytics_settings table restricted to admins while still letting
 // the public site bootstrap GA4 / GTM scripts.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { buildCors } from "../_shared/cors.ts";
 
 const GA4_RE = /^G-[A-Z0-9]{6,}$/;
 const GTM_RE = /^GTM-[A-Z0-9]{4,}$/;
-
-const cors = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-  "Access-Control-Allow-Methods": "GET, OPTIONS",
-};
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: cors });
