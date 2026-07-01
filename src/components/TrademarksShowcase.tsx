@@ -279,6 +279,14 @@ export function TrademarksShowcase() {
           </div>
         </div>
       </div>
+      {canEdit && (
+        <QuickEditTrademarkDialog
+          open={editOpen}
+          onOpenChange={setEditOpen}
+          trademark={current}
+          isAr={isAr}
+        />
+      )}
     </section>
   );
 }
