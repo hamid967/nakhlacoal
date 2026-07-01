@@ -80,9 +80,13 @@ Deno.serve(async (req) => {
     }
     const userId: string = authData.user.id;
 
-    // Rate limit: per-user + per-IP (ad-hoc in-memory, best-effort)
-    const ip = (req.headers.get("x-forwarded-for") ?? "").split(",")[0].trim() || "unknown";
-    if (rateLimited(`u:${userId}`) || rateLimited(`ip:${ip}`)) {
+    // Durable rate limit: 5 orders/min per user, 10/min per IP.
+    const ip = clientIp(req);
+    const [userOk, ipOk] = await Promise.all([
+      checkRateLimit(`order:user:${userId}`, 5, 60),
+      checkRateLimit(`order:ip:${ip}`, 10, 60),
+    ]);
+    if (!userOk || !ipOk) {
       return new Response(JSON.stringify({ error: "rate_limited" }), {
         status: 429,
         headers: { ...corsHeaders, "Content-Type": "application/json", "Retry-After": "60" },
