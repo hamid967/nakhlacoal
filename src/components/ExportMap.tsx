@@ -59,8 +59,79 @@ export function ExportMap() {
   const isAr = i18n.language?.startsWith('ar');
   const [hover, setHover] = useState<Point | null>(null);
   const [selected, setSelected] = useState<Point | null>(null);
+  const [focusIdx, setFocusIdx] = useState(0);
+  const pointRefs = useRef<Array<SVGGElement | null>>([]);
+
+  // Pre-sort by longitude so ArrowRight/Left move geographically (LTR reading).
+  // In RTL locales we mirror the horizontal direction.
+  const orderedIdx = POINTS.map((_, i) => i).sort(
+    (a, b) => POINTS[a].lng - POINTS[b].lng
+  );
+  const posInOrder = (i: number) => orderedIdx.indexOf(i);
+
+  const focusPoint = (i: number) => {
+    const clamped = (i + POINTS.length) % POINTS.length;
+    setFocusIdx(clamped);
+    pointRefs.current[clamped]?.focus();
+  };
+
+  const handleKey = (e: React.KeyboardEvent<SVGGElement>, i: number) => {
+    const horiz = isAr ? -1 : 1;
+    const cur = posInOrder(i);
+    switch (e.key) {
+      case 'ArrowRight':
+        e.preventDefault();
+        focusPoint(orderedIdx[(cur + horiz + POINTS.length) % POINTS.length]);
+        break;
+      case 'ArrowLeft':
+        e.preventDefault();
+        focusPoint(orderedIdx[(cur - horiz + POINTS.length) % POINTS.length]);
+        break;
+      case 'ArrowDown': {
+        e.preventDefault();
+        // Nearest point below current by latitude
+        const cy = POINTS[i].lat;
+        const below = POINTS
+          .map((p, idx) => ({ idx, d: cy - p.lat }))
+          .filter((x) => x.d > 0.5)
+          .sort((a, b) => a.d - b.d)[0];
+        if (below) focusPoint(below.idx);
+        break;
+      }
+      case 'ArrowUp': {
+        e.preventDefault();
+        const cy = POINTS[i].lat;
+        const above = POINTS
+          .map((p, idx) => ({ idx, d: p.lat - cy }))
+          .filter((x) => x.d > 0.5)
+          .sort((a, b) => a.d - b.d)[0];
+        if (above) focusPoint(above.idx);
+        break;
+      }
+      case 'Home':
+        e.preventDefault();
+        focusPoint(orderedIdx[0]);
+        break;
+      case 'End':
+        e.preventDefault();
+        focusPoint(orderedIdx[orderedIdx.length - 1]);
+        break;
+      case 'Enter':
+      case ' ':
+        e.preventDefault();
+        setSelected(POINTS[i]);
+        break;
+      case 'Escape':
+        if (selected) {
+          e.preventDefault();
+          setSelected(null);
+        }
+        break;
+    }
+  };
 
   const o = project(ORIGIN.lat, ORIGIN.lng);
+
 
   return (
     <section className="relative py-20 md:py-28 bg-[hsl(var(--dark))] overflow-hidden">
