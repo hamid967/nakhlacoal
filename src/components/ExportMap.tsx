@@ -223,37 +223,75 @@ export function ExportMap() {
               </text>
             </g>
 
-            {POINTS.map((p) => {
+            {POINTS.map((p, i) => {
               const d = project(p.lat, p.lng);
               const isActive = hover?.id === p.id || selected?.id === p.id;
+              const isFocused = focusIdx === i;
               return (
                 <g
                   key={p.id}
+                  ref={(el) => (pointRefs.current[i] = el)}
                   transform={`translate(${d.x} ${d.y})`}
                   onMouseEnter={() => setHover(p)}
                   onMouseLeave={() => setHover((h) => (h?.id === p.id ? null : h))}
-                  onFocus={() => setHover(p)}
-                  onBlur={() => setHover(null)}
-                  onClick={() => setSelected(p)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      setSelected(p);
-                    }
+                  onFocus={() => {
+                    setHover(p);
+                    setFocusIdx(i);
                   }}
-                  tabIndex={0}
+                  onBlur={() => setHover(null)}
+                  onClick={() => {
+                    setFocusIdx(i);
+                    setSelected(p);
+                  }}
+                  onKeyDown={(e) => handleKey(e, i)}
+                  tabIndex={isFocused ? 0 : -1}
                   role="button"
-                  aria-label={`${isAr ? p.cityAr : p.cityEn} — ${isAr ? 'اعرض تفاصيل الشحن' : 'View shipment details'}`}
-                  style={{ cursor: 'pointer', outline: 'none' }}
+                  aria-label={`${isAr ? p.cityAr : p.cityEn} — ${isAr ? 'اعرض تفاصيل الشحن' : 'View shipment details'} (${i + 1}/${POINTS.length})`}
+                  aria-pressed={selected?.id === p.id}
+                  className="focus:outline-none [&:focus-visible_.focus-ring]:opacity-100"
+                  style={{ cursor: 'pointer' }}
                 >
                   <circle r="14" fill="url(#glow)" opacity={isActive ? 1 : 0.6} />
                   <circle r={isActive ? 5.5 : 4} fill="hsl(46 72% 62%)">
                     <animate attributeName="opacity" values="1;0.6;1" dur="2.4s" repeatCount="indefinite" />
                   </circle>
                   <circle r="1.6" fill="hsl(0 0% 4%)" />
+                  {/* High-contrast focus ring — visible only when keyboard-focused */}
+                  <circle
+                    className="focus-ring"
+                    r="12"
+                    fill="none"
+                    stroke="hsl(0 0% 100%)"
+                    strokeWidth="2"
+                    opacity="0"
+                    style={{ transition: 'opacity 0.15s' }}
+                  />
+                  <circle
+                    className="focus-ring"
+                    r="14"
+                    fill="none"
+                    stroke="hsl(46 72% 62%)"
+                    strokeWidth="1.5"
+                    opacity="0"
+                    style={{ transition: 'opacity 0.15s' }}
+                  />
+                  {isFocused && (
+                    <text
+                      x="0"
+                      y="-20"
+                      textAnchor="middle"
+                      fill="hsl(46 72% 62%)"
+                      fontSize="11"
+                      fontWeight="700"
+                      style={{ paintOrder: 'stroke', stroke: 'hsl(0 0% 0%)', strokeWidth: 3 }}
+                    >
+                      {isAr ? p.cityAr : p.cityEn}
+                    </text>
+                  )}
                 </g>
               );
             })}
+
           </svg>
 
           {hover && !selected && (
