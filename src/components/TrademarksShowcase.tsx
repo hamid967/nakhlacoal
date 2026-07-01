@@ -1,9 +1,14 @@
 import { useState, useCallback, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion, type Transition } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Hash, Tag, Calendar, CalendarOff, User, Package, FileText } from 'lucide-react';
 import { useTrademarks } from '@/hooks/useTrademarks';
 import { Flame, Clock, Sun, Leaf, Globe2 } from 'lucide-react';
 import { useDir, SectionHeader } from '@/components/ui-lux';
+
+// Unified motion tokens — one easing, one duration, GPU-friendly transforms only.
+const EASE = [0.22, 1, 0.36, 1] as const; // easeOutExpo-ish, smooth on low-end CPUs
+const DURATION = 0.35;
+const SLIDE_TRANSITION: Transition = { duration: DURATION, ease: EASE };
 
 /**
  * Coverflow-style 3D trademarks slider (CSS transforms only — no WebGL).
