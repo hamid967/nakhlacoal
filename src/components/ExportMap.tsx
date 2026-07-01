@@ -61,6 +61,7 @@ export function ExportMap() {
   const [selected, setSelected] = useState<Point | null>(null);
   const [focusIdx, setFocusIdx] = useState(0);
   const pointRefs = useRef<Array<SVGGElement | null>>([]);
+  const [guide, setGuide] = useState<'points' | 'arcs' | 'selection' | 'terms' | null>(null);
 
   // Pre-sort by longitude so ArrowRight/Left move geographically (LTR reading).
   // In RTL locales we mirror the horizontal direction.
