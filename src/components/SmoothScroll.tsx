@@ -51,6 +51,16 @@ export function SmoothScroll() {
     };
     lenis.on('scroll', onScroll);
 
+    // Kick the RAF loop on user input so the very first wheel/touch animates.
+    const onInput = () => {
+      start();
+      window.clearTimeout(idleTimer);
+      idleTimer = window.setTimeout(stop, 1200);
+    };
+    window.addEventListener('wheel', onInput, { passive: true });
+    window.addEventListener('touchstart', onInput, { passive: true });
+
+
     // Lenis disables native scroll on <html>, which breaks keyboard scrolling
     // (Arrow keys, PageUp/Down, Space, Home/End). Re-implement it manually.
     const onKey = (e: KeyboardEvent) => {
