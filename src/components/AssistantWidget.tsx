@@ -528,13 +528,24 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
         >
           <MessageCircle className="w-5 h-5 sm:w-4 sm:h-4" />
         </a>
+        {userId && (
+          <button
+            onClick={() => setThreadsOpen(v => !v)}
+            className="relative p-2 sm:p-1.5 rounded-lg hover:bg-white/10 active:bg-white/15 transition shrink-0"
+            aria-label="محادثاتي السابقة"
+            aria-expanded={threadsOpen}
+            title="محادثاتي السابقة"
+          >
+            <History className="w-5 h-5 sm:w-4 sm:h-4 text-cream" />
+          </button>
+        )}
         <button
-          onClick={() => { setMessages([greet]); setPendingOrder(null); setInput(''); inputRef.current?.focus(); }}
+          onClick={startNewThread}
           className="relative p-2 sm:p-1.5 rounded-lg hover:bg-white/10 active:bg-white/15 transition shrink-0 hidden sm:inline-flex"
           aria-label="محادثة جديدة"
           title="بدء محادثة جديدة"
         >
-          <Sparkles className="w-4 h-4 text-gold-hi" />
+          <Plus className="w-4 h-4 text-gold-hi" />
         </button>
         <button
           onClick={() => { onClose(); navigate('/assistant'); }}
