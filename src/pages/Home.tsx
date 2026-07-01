@@ -254,16 +254,11 @@ export default function Home() {
       <Suspense fallback={<SectionSkeleton variant="grid" />}>
         <TrademarksShowcase />
       </Suspense>
-      <LuxSection tone="dark">
-        <div className="container"><SectionNumber index={7} /></div>
-        <SectionHeader
-          eyebrow={isAr ? 'آراء عملائنا' : 'Customer voices'}
-          title={isAr ? 'ثقة تتجدد مع كل تجربة' : 'Trusted with every order'}
-        />
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {reviews.map((r, i) => <TestimonialCard key={i} {...r} index={i} />)}
-        </div>
-      </LuxSection>
+
+      {/* 7.5 — Testimonials Marquee */}
+      <Suspense fallback={<SectionSkeleton variant="band" />}>
+        <TestimonialsMarquee />
+      </Suspense>
 
       {/* 8 — FAQ + location + CTA */}
       <Suspense fallback={<SectionSkeleton variant="band" />}>
