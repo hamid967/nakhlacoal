@@ -327,6 +327,7 @@ Deno.serve(async (req) => {
 
     // Up to 3 tool-loop iterations before final streamed answer.
     let toolLoopUpstream: Response | null = null;
+    const usedTools: Array<{ name: string; args: Record<string, unknown>; result: unknown }> = [];
     for (let i = 0; i < 3; i++) {
       const preflight = await gwCall(false);
       if (!preflight.ok) { toolLoopUpstream = preflight; break; }
@@ -360,7 +361,9 @@ Deno.serve(async (req) => {
       for (const tc of toolCalls) {
         let parsed: Record<string, unknown> = {};
         try { parsed = JSON.parse(tc?.function?.arguments ?? "{}"); } catch { /* ignore */ }
-        const result = await execTool(tc?.function?.name ?? "", parsed);
+        const name = tc?.function?.name ?? "";
+        const result = await execTool(name, parsed);
+        usedTools.push({ name, args: parsed, result });
         workingMessages.push({
           role: "tool",
           tool_call_id: tc.id,
@@ -368,6 +371,7 @@ Deno.serve(async (req) => {
         });
       }
     }
+
 
     // Final streaming answer (tools already resolved, or fallthrough after 3 loops).
     const upstream = toolLoopUpstream ?? await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
