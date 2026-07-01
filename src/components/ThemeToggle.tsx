@@ -77,10 +77,27 @@ export function ThemeToggle() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        aria-label="تخصيص الألوان والخطوط"
-        className="w-10 h-10 rounded-full inline-flex items-center justify-center text-foreground/70 hover:text-gold-hi hover:bg-gold/10 transition-all"
+        aria-label="تخصيص الألوان والخطوط والثيم"
+        title="الثيم · الألوان · الخطوط"
+        className="relative w-10 h-10 rounded-full inline-flex items-center justify-center text-foreground/80 hover:text-gold-hi transition-all group focus:outline-none focus-visible:ring-2 focus-visible:ring-gold/60"
       >
-        <Palette className="w-4 h-4" />
+        <span
+          aria-hidden="true"
+          className="absolute inset-0 rounded-full opacity-70 group-hover:opacity-100 transition-opacity"
+          style={{
+            background:
+              'conic-gradient(from 0deg, #c9a84c, #064e3b, #8b5a2b, #f0d78c, #c9a84c)',
+            padding: 1.5,
+            WebkitMask:
+              'linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)',
+            WebkitMaskComposite: 'xor',
+            maskComposite: 'exclude',
+            animation: 'spin 8s linear infinite',
+          }}
+        />
+        <span className="absolute inset-[3px] rounded-full bg-background/60 backdrop-blur-sm" aria-hidden="true" />
+        <Palette className="relative w-4 h-4" />
+        <Sparkles className="relative absolute -top-0.5 -right-0.5 w-2.5 h-2.5 text-gold animate-pulse" aria-hidden="true" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-72 p-2">
         <div className="flex items-center justify-between px-1 pb-1">
