@@ -21,9 +21,11 @@ export function ProtectedRoute({ children, requireRole }: Props) {
 
   if (!user) {
     const target = location.pathname + location.search + location.hash;
+    const isPortal = location.pathname.startsWith('/portal');
+    const loginPath = isPortal ? '/portal/login' : '/auth';
     return (
       <Navigate
-        to={`/auth?from=${encodeURIComponent(target)}`}
+        to={`${loginPath}?from=${encodeURIComponent(target)}`}
         state={{ from: target }}
         replace
       />

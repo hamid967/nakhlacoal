@@ -80,6 +80,7 @@ const PortalPlaceholder = lazy(() => import('@/portal/pages/Placeholder'));
 const PortalNewOrder = lazy(() => import('@/portal/pages/NewOrder'));
 const PortalShipments = lazy(() => import('@/portal/pages/Shipments'));
 const PortalShipmentDetail = lazy(() => import('@/portal/pages/ShipmentDetail'));
+const PortalLogin = lazy(() => import('@/portal/pages/Login'));
 
 const queryClient = new QueryClient();
 
@@ -156,6 +157,7 @@ export default function App() {
                   <Route path="trademarks" element={<AdminTrademarks />} />
                   <Route path="*" element={<AdminPlaceholder />} />
                 </Route>
+                <Route path="/portal/login" element={<PortalLogin />} />
                 <Route path="/portal" element={<ProtectedRoute><PortalLayout /></ProtectedRoute>}>
                   <Route index element={<PortalDashboard />} />
                   <Route path="orders" element={<PortalOrders />} />
