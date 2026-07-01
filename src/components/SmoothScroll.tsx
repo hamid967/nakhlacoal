@@ -47,7 +47,7 @@ export function SmoothScroll() {
     const onScroll = () => {
       start();
       window.clearTimeout(idleTimer);
-      idleTimer = window.setTimeout(stop, 250);
+      idleTimer = window.setTimeout(stop, 1200);
     };
     lenis.on('scroll', onScroll);
 
