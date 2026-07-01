@@ -158,8 +158,8 @@ export function ExportMap() {
           </h2>
           <p className={`mt-4 text-[hsl(var(--foreground))]/60 max-w-xl mx-auto ${isAr ? 'font-arabic' : ''}`}>
             {isAr
-              ? 'انقر على أي وجهة ذهبية لعرض تفاصيل الشحن الكاملة في اللوحة الجانبية.'
-              : 'Click any gold destination to open the full shipment details in the side panel.'}
+              ? 'انقر على أي وجهة ذهبية أو استخدم الأسهم ← → ↑ ↓ ثم Enter لعرض تفاصيل الشحن.'
+              : 'Click any gold destination, or use ← → ↑ ↓ arrows then Enter to open shipment details.'}
           </p>
         </div>
 
