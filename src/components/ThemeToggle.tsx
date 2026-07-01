@@ -172,31 +172,37 @@ export function ThemeToggle() {
 
 
 
+        <div role="radiogroup" aria-labelledby="pc-theme-label">
         {themeKeys.map((k) => {
           const isAuto = k === 'auto';
           const meta = isAuto ? null : THEMES[k];
+          const label = isAuto ? 'تلقائي (نظام التشغيل)' : meta!.name;
+          const selected = theme === k;
           return (
             <button
               key={k}
               onClick={() => pickTheme(k)}
-              className="w-full flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-muted text-right cursor-pointer"
+              role="radio"
+              aria-checked={selected}
+              aria-label={`ثيم ${label}${selected ? ' — مفعّل' : ''}`}
+              className="w-full flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-muted text-right cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-gold/60"
             >
               {isAuto ? (
-                <Monitor className="w-3.5 h-3.5 text-muted-foreground" />
+                <Monitor className="w-3.5 h-3.5 text-muted-foreground" aria-hidden="true" />
               ) : (
-                <div className="flex gap-0.5">
+                <div className="flex gap-0.5" aria-hidden="true">
                   {meta!.swatches.map((c) => (
                     <span key={c} className="w-3 h-3 rounded-full border border-border" style={{ background: c }} />
                   ))}
                 </div>
               )}
-              <span className="flex-1 text-sm">
-                {isAuto ? 'تلقائي (نظام التشغيل)' : meta!.name}
-              </span>
-              {theme === k && <Check className="w-3.5 h-3.5 text-gold" />}
+              <span className="flex-1 text-sm">{label}</span>
+              {selected && <Check className="w-3.5 h-3.5 text-gold" aria-hidden="true" />}
             </button>
           );
         })}
+        </div>
+
 
         <DropdownMenuSeparator className="my-2" />
         <DropdownMenuLabel className="text-xs">الوضع</DropdownMenuLabel>
