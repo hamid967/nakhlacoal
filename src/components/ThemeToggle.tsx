@@ -80,14 +80,20 @@ function applyFont(f: FontKey) {
 export function ThemeToggle() {
   const [theme, setTheme] = useState<ThemeKey>(DEFAULT_THEME);
   const [font, setFont] = useState<FontKey>(DEFAULT_FONT);
+  const [hue, setHue] = useState<number>(DEFAULT_HUE);
+  const savedHueRef = useRef<number>(DEFAULT_HUE);
   const reduceMotion = useReducedMotion();
 
 
   useEffect(() => {
     const t = (localStorage.getItem(STORAGE_KEY) as ThemeKey) || DEFAULT_THEME;
     const f = (localStorage.getItem(FONT_KEY) as FontKey) || DEFAULT_FONT;
-    setTheme(t); setFont(f);
+    const hRaw = localStorage.getItem(HUE_KEY);
+    const h = hRaw ? Number(hRaw) : DEFAULT_HUE;
+    setTheme(t); setFont(f); setHue(h);
+    savedHueRef.current = h;
     applyTheme(t); applyFont(f);
+    if (hRaw) applyHue(h);
   }, []);
 
   // Re-apply on system change while in auto
@@ -102,9 +108,18 @@ export function ThemeToggle() {
   const pickTheme = (t: ThemeKey) => { setTheme(t); applyTheme(t); localStorage.setItem(STORAGE_KEY, t); };
   const pickFont  = (f: FontKey)  => { setFont(f);  applyFont(f);  localStorage.setItem(FONT_KEY, f); };
 
+  // Live preview: update CSS var without persisting.
+  const previewHue = (h: number) => { setHue(h); applyHue(h); };
+  const saveHue = () => { savedHueRef.current = hue; localStorage.setItem(HUE_KEY, String(hue)); };
+  const cancelHuePreview = () => { setHue(savedHueRef.current); applyHue(localStorage.getItem(HUE_KEY) ? savedHueRef.current : null); };
+
   const reset = () => {
     pickTheme(DEFAULT_THEME);
     pickFont(DEFAULT_FONT);
+    setHue(DEFAULT_HUE);
+    savedHueRef.current = DEFAULT_HUE;
+    localStorage.removeItem(HUE_KEY);
+    applyHue(null);
   };
 
   const themeKeys: ThemeKey[] = ['auto', 'emerald', 'noir', 'sand'];
