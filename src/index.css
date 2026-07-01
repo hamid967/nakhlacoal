@@ -10,59 +10,60 @@
 
 @layer base {
   :root {
-    /* ============= Noir & Gold palette =============
-       #0B0B0B canvas · #D4AF37 gold · #1B1B1B surface · #FFFFFF ink */
-    --background: 0 0% 4%;                /* #0B0B0B */
-    --foreground: 0 0% 100%;              /* #FFFFFF */
-    --surface: 0 0% 11%;                  /* #1B1B1B */
-    --surface-2: 0 0% 9%;
-    --surface-3: 0 0% 14%;
+    /* ============= Emerald Palm palette — matched to Palm Charcoal logo =============
+       #F5F0E0 paper · #064E3B deep emerald ink · #0D7A5F living emerald · #C9A84C palm gold */
+    --background: 44 55% 92%;             /* #F5F0E0 warm paper */
+    --foreground: 160 78% 12%;            /* deep emerald ink */
+    --surface: 44 50% 96%;                /* raised card */
+    --surface-2: 42 40% 88%;              /* recessed panel */
+    --surface-3: 40 32% 82%;              /* deepest cream */
 
-    /* Dark editorial sections */
-    --dark: 0 0% 4%;                      /* #0B0B0B */
-    --dark-2: 0 0% 0%;
-    --dark-foreground: 0 0% 100%;
+    /* Dark editorial sections (hero, footer, dark bands) */
+    --dark: 160 78% 10%;                  /* #04382A near-black emerald */
+    --dark-2: 162 82% 6%;                 /* deepest emerald */
+    --dark-foreground: 44 55% 94%;        /* paper on emerald */
 
-    /* Primary spectrum — metallic gold */
-    --gold: 46 65% 52%;                   /* #D4AF37 */
-    --gold-hi: 46 72% 62%;
-    --gold-lo: 42 55% 38%;
-    --gold-ink: 46 65% 52%;
+    /* Primary spectrum — palm gold */
+    --gold: 43 55% 54%;                   /* #C9A84C */
+    --gold-hi: 43 68% 66%;                /* highlight */
+    --gold-lo: 40 55% 38%;                /* AA on cream */
+    --gold-ink: 40 60% 30%;               /* text-safe gold */
 
-    /* Jade secondary (kept as muted gold tint) */
-    --jade: 46 40% 40%;
+    /* Jade secondary — living emerald */
+    --jade: 163 80% 26%;                  /* #0D7A5F */
 
     /* Functional aliases (shadcn) */
-    --card: 0 0% 11%;
-    --card-foreground: 0 0% 100%;
-    --popover: 0 0% 11%;
-    --popover-foreground: 0 0% 100%;
-    --primary: 46 65% 52%;
-    --primary-foreground: 0 0% 4%;
-    --secondary: 0 0% 14%;
-    --secondary-foreground: 0 0% 100%;
-    --muted: 0 0% 14%;
-    --muted-foreground: 0 0% 72%;
-    --accent: 46 65% 52%;
-    --accent-foreground: 0 0% 4%;
-    --destructive: 0 70% 50%;
-    --destructive-foreground: 0 0% 100%;
-    --brand-whatsapp: 142 70% 49%;
-    --brand-whatsapp-hover: 142 74% 42%;
-    --border: 46 30% 24%;
-    --input: 0 0% 16%;
-    --ring: 46 65% 52%;
+    --card: 44 50% 96%;
+    --card-foreground: 160 78% 12%;
+    --popover: 44 50% 96%;
+    --popover-foreground: 160 78% 12%;
+    --primary: 163 80% 26%;               /* emerald as primary action */
+    --primary-foreground: 44 55% 94%;
+    --secondary: 42 40% 88%;
+    --secondary-foreground: 160 78% 12%;
+    --muted: 42 40% 88%;
+    --muted-foreground: 160 25% 30%;
+    --accent: 43 55% 54%;                 /* gold accent */
+    --accent-foreground: 160 78% 12%;
+    --destructive: 0 65% 45%;
+    --destructive-foreground: 44 55% 94%;
+    --brand-whatsapp: 142 70% 39%;
+    --brand-whatsapp-hover: 142 74% 32%;
+    --border: 160 20% 72%;
+    --input: 42 40% 90%;
+    --ring: 163 80% 26%;
 
     --radius: 0.25rem;
 
     /* Curated gradients & shadows */
-    --gradient-gold: linear-gradient(135deg, hsl(46 72% 62%) 0%, hsl(46 65% 52%) 50%, hsl(42 55% 38%) 100%);
-    --gradient-ember: radial-gradient(ellipse at 50% 100%, hsl(46 72% 62% / 0.28), transparent 60%);
+    --gradient-gold: linear-gradient(135deg, hsl(43 68% 66%) 0%, hsl(43 55% 54%) 50%, hsl(40 55% 38%) 100%);
+    --gradient-ember: radial-gradient(ellipse at 50% 100%, hsl(43 68% 66% / 0.35), transparent 60%);
     --gradient-night: linear-gradient(180deg, hsl(var(--dark)) 0%, hsl(var(--dark-2)) 100%);
-    --shadow-luxe: 0 35px 60px -25px hsl(0 0% 0% / 0.7), 0 4px 16px -6px hsl(0 0% 0% / 0.5);
+    --shadow-luxe: 0 30px 60px -25px hsl(160 78% 10% / 0.35), 0 4px 16px -6px hsl(160 78% 10% / 0.18);
     --shadow-gold: 0 14px 36px -10px hsl(var(--gold) / 0.45);
     --ease-luxe: cubic-bezier(0.16, 1, 0.3, 1);
   }
+
 
 
   /* ============= Theme variants (toggleable) ============= */
