@@ -96,7 +96,9 @@ async function auditRoute(context, route) {
 
   const meta = await page.evaluate(() => ({
     title: document.title || "",
-    desc: document.querySelector('meta[name="description"]')?.getAttribute("content") || "",
+    desc: (document.querySelector('meta[name="description"][data-rh="true"]')?.getAttribute("content")
+      || document.querySelector('meta[name="description"]')?.getAttribute("content")
+      || ""),
     lang: document.documentElement.lang || "",
     h1Count: document.querySelectorAll("h1").length,
     imgsNoAlt: [...document.images].filter((i) => !i.getAttribute("alt")).length,
