@@ -8,7 +8,7 @@ import { OrderModal } from './OrderModal';
 import { QuoteBuilder } from './QuoteBuilder';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCart } from '@/contexts/CartContext';
-import logo from '@/assets/palm-charcoal-logo.png';
+import { BrandLogo } from '@/components/BrandLogo';
 
 type MegaItem = { to: string; titleAr: string; titleEn: string; descAr?: string; descEn?: string };
 
