@@ -636,6 +636,26 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
               </div>
             )}
             <div className="max-w-[85%]">
+              {m.role === 'assistant' && tools.length > 0 && (
+                <div className="mb-1.5 space-y-1">
+                  {tools.map((t, i) => {
+                    const meta = TOOL_META[t.name] ?? { icon: '🛠️', label: t.name };
+                    return (
+                      <details key={i} className="rounded-lg border border-gold/30 bg-gold/5 text-[11px] font-arabic">
+                        <summary className="cursor-pointer select-none px-2 py-1 flex items-center gap-1.5 hover:bg-gold/10 rounded-lg">
+                          <span>{meta.icon}</span>
+                          <span className="font-semibold text-foreground">{meta.label}</span>
+                          <CheckCircle2 className="w-3 h-3 text-emerald-600 ms-auto" />
+                        </summary>
+                        <pre className="px-2 pb-2 pt-1 text-[10px] leading-tight overflow-x-auto text-muted-foreground whitespace-pre-wrap break-all">
+{JSON.stringify(t.result, null, 2).slice(0, 800)}
+                        </pre>
+                      </details>
+                    );
+                  })}
+                </div>
+              )}
+
               {m.role === 'user' ? (
                 <div className="rounded-2xl rounded-tr-sm bg-primary text-primary-foreground px-3 py-2 text-sm whitespace-pre-wrap">
                   {m.content}
