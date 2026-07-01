@@ -62,20 +62,18 @@ export function SmoothScroll() {
       if (e.ctrlKey || e.metaKey || e.altKey) return;
 
       const el = (e.target as HTMLElement) ?? null;
-      // Skip when focus is in any editable/interactive control — let the browser handle it.
+      // Skip when focus is inside an editable control — let the browser handle it.
       if (el) {
         const tag = el.tagName;
         if (
           tag === 'INPUT' ||
           tag === 'TEXTAREA' ||
           tag === 'SELECT' ||
-          tag === 'BUTTON' ||
-          tag === 'A' ||
           el.isContentEditable ||
-          el.getAttribute('role') === 'textbox' ||
-          el.closest('input, textarea, select, [contenteditable="true"], [role="textbox"], [role="combobox"], [role="listbox"], [role="menu"], [role="dialog"]')
+          el.closest('input, textarea, select, [contenteditable="true"], [role="textbox"], [role="combobox"], [role="listbox"], [role="menu"], [role="menuitem"], [role="dialog"]')
         ) return;
       }
+
 
       const vh = window.innerHeight;
       const y = lenis.scroll;
@@ -92,7 +90,9 @@ export function SmoothScroll() {
         default: return;
       }
       e.preventDefault();
+      start(); // ensure the RAF loop is running so scrollTo animates
       lenis.scrollTo(target, { duration: 0.4 });
+
     };
     window.addEventListener('keydown', onKey, { passive: false });
 
