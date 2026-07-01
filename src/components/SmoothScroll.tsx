@@ -28,13 +28,9 @@ export function SmoothScroll() {
 
     const loop = (time: number) => {
       lenis.raf(time);
-      // Bail out if scrolling too fast — let the browser handle it natively to avoid jank.
-      if (Math.abs(lenis.velocity) > 80) {
-        stop();
-        return;
-      }
       raf = requestAnimationFrame(loop);
     };
+
 
     const start = () => {
       if (running) return;
@@ -51,9 +47,19 @@ export function SmoothScroll() {
     const onScroll = () => {
       start();
       window.clearTimeout(idleTimer);
-      idleTimer = window.setTimeout(stop, 250);
+      idleTimer = window.setTimeout(stop, 1200);
     };
     lenis.on('scroll', onScroll);
+
+    // Kick the RAF loop on user input so the very first wheel/touch animates.
+    const onInput = () => {
+      start();
+      window.clearTimeout(idleTimer);
+      idleTimer = window.setTimeout(stop, 1200);
+    };
+    window.addEventListener('wheel', onInput, { passive: true });
+    window.addEventListener('touchstart', onInput, { passive: true });
+
 
     // Lenis disables native scroll on <html>, which breaks keyboard scrolling
     // (Arrow keys, PageUp/Down, Space, Home/End). Re-implement it manually.
@@ -105,10 +111,13 @@ export function SmoothScroll() {
       stop();
       window.clearTimeout(idleTimer);
       window.removeEventListener('keydown', onKey);
+      window.removeEventListener('wheel', onInput);
+      window.removeEventListener('touchstart', onInput);
       document.removeEventListener('visibilitychange', onVisibility);
       lenis.destroy();
       lenisInstance = null;
     };
+
   }, []);
 
   return null;
