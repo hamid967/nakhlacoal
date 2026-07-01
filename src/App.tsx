@@ -158,7 +158,7 @@ export default function App() {
                   <Route path="*" element={<AdminPlaceholder />} />
                 </Route>
                 <Route path="/portal/login" element={<PortalLogin />} />
-                <Route path="/portal" element={<ProtectedRoute><PortalLayout /></ProtectedRoute>}>
+                <Route path="/portal" element={<ProtectedRoute requireAnyRole={['customer','user','wholesale','distributor']}><PortalLayout /></ProtectedRoute>}>
                   <Route index element={<PortalDashboard />} />
                   <Route path="orders" element={<PortalOrders />} />
                   <Route path="orders/new" element={<PortalNewOrder />} />
