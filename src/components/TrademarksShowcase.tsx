@@ -73,7 +73,7 @@ export function TrademarksShowcase() {
               {isAr ? 'تأسست 2010 — ملف 2060' : 'Est. 2010 — Dossier 2060'}
             </span>
           </div>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl text-emerald font-bold font-arabic leading-tight">
+          <h2 id="trademarks-title" className="text-4xl md:text-5xl lg:text-6xl text-emerald font-bold font-arabic leading-tight">
             {isAr ? 'علاماتنا التجارية المسجلة' : 'Our Registered Trademarks'}
           </h2>
           <div className="w-24 h-px bg-gold mx-auto mt-5" />
