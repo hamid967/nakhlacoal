@@ -53,7 +53,15 @@ export function TrademarksShowcase() {
   ];
 
   return (
-    <section dir={isAr ? 'rtl' : 'ltr'} className="relative section overflow-hidden bg-cream/40">
+    <section
+      dir={isAr ? 'rtl' : 'ltr'}
+      className="relative section overflow-hidden bg-cream/40"
+      aria-labelledby="trademarks-title"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocus={() => setPaused(true)}
+      onBlur={() => setPaused(false)}
+    >
       {/* Soft palm-leaf wash background */}
       <div aria-hidden className="pointer-events-none absolute inset-0 opacity-[0.06] bg-[radial-gradient(circle_at_20%_10%,hsl(var(--emerald))_0%,transparent_45%),radial-gradient(circle_at_80%_90%,hsl(var(--gold))_0%,transparent_50%)]" />
 
