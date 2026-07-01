@@ -483,7 +483,7 @@ export function ExportMap() {
               >
                 {isAr ? item.descAr : item.descEn}
               </p>
-            </div>
+            </button>
           ))}
         </div>
 
