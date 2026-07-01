@@ -40,6 +40,10 @@ export default {
           ink: "hsl(var(--gold-ink))",
         },
         jade: "hsl(var(--jade))",
+        whatsapp: {
+          DEFAULT: "hsl(var(--brand-whatsapp))",
+          hover: "hsl(var(--brand-whatsapp-hover))",
+        },
         dark: {
           DEFAULT: "hsl(var(--dark))",
           2: "hsl(var(--dark-2))",
