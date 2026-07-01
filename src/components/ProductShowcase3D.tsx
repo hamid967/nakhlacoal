@@ -25,8 +25,12 @@ export function ProductShowcase3D() {
   return (
     <section className="relative py-24 md:py-32 bg-[#0B0B0B] overflow-hidden isolate">
       {/* Ambient gold glow */}
-      <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[70%] bg-[radial-gradient(ellipse_at_center,hsl(46_72%_62%/0.12),transparent_65%)] pointer-events-none" />
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent,rgba(0,0,0,0.6))] pointer-events-none" />
+      {!lowPerf && (
+        <>
+          <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[70%] bg-[radial-gradient(ellipse_at_center,hsl(46_72%_62%/0.12),transparent_65%)] pointer-events-none" />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent,rgba(0,0,0,0.6))] pointer-events-none" />
+        </>
+      )}
 
       <div className="container relative">
         <div className="text-center mb-14 md:mb-20">
