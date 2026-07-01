@@ -258,7 +258,7 @@ export function OrderModal({ open, onOpenChange }: { open: boolean; onOpenChange
               type="button"
               onClick={submit}
               disabled={submitting}
-              className="py-2.5 px-5 rounded-full bg-[#25D366] text-white font-medium inline-flex items-center gap-2 hover:opacity-90 transition disabled:opacity-50"
+              className="py-2.5 px-5 rounded-full bg-whatsapp text-white font-medium inline-flex items-center gap-2 hover:opacity-90 transition disabled:opacity-50"
             >
               <MessageCircle className="w-4 h-4" />
               {submitting ? (isAr ? 'جارٍ الإرسال…' : 'Sending…') : (isAr ? 'إرسال عبر واتساب' : 'Send via WhatsApp')}

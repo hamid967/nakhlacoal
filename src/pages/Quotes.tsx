@@ -136,7 +136,7 @@ export default function Quotes() {
                     ))}
                   </ul>
                   <div className="flex flex-wrap gap-2">
-                    <Button size="sm" onClick={() => resend(q, 'whatsapp')} className="bg-[#25D366] hover:bg-[#1eb858] text-white">
+                    <Button size="sm" onClick={() => resend(q, 'whatsapp')} className="bg-whatsapp hover:bg-whatsapp-hover text-white">
                       <MessageCircle className="size-4 ms-1" /> واتساب
                     </Button>
                     <Button size="sm" variant="outline" onClick={() => resend(q, 'email')}>

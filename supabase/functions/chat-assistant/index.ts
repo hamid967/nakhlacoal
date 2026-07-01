@@ -1,6 +1,7 @@
 // Palm Charcoal AI Order Assistant — streaming chat that collects order info
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { buildCors } from "../_shared/cors.ts";
+import { checkRateLimit, clientIp } from "../_shared/rate-limit.ts";
 
 /**
  * Optional, non-blocking identity resolution.
@@ -149,6 +150,17 @@ Deno.serve(async (req) => {
 
     const userId = await resolveUserId(req);
     if (userId) console.log("[chat-assistant] user:", userId);
+
+    // Durable rate limit: 30 requests/min per IP, 60/min per signed-in user.
+    const ip = clientIp(req);
+    const ipOk = await checkRateLimit(`chat:ip:${ip}`, 30, 60);
+    const userOk = userId ? await checkRateLimit(`chat:user:${userId}`, 60, 60) : true;
+    if (!ipOk || !userOk) {
+      return new Response(JSON.stringify({ error: "rate_limited" }), {
+        status: 429,
+        headers: { ...corsHeaders, "Content-Type": "application/json", "Retry-After": "60" },
+      });
+    }
 
     const raw = Array.isArray(body?.messages) ? body.messages : [];
     const ALLOWED_ROLES = ["user", "assistant", "system"] as const;

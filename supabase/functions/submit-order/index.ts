@@ -1,6 +1,7 @@
 // Palm Charcoal — persist a finalized order from the AI assistant
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { z } from "npm:zod@3.23.8";
+import { checkRateLimit, clientIp } from "../_shared/rate-limit.ts";
 
 const ALLOWED_ORIGINS = new Set<string>([
   "https://nakhlacoal.lovable.app",
@@ -23,16 +24,8 @@ function buildCors(req: Request) {
 }
 const MAX_BODY_BYTES = 32_000;
 
-// Ad-hoc in-memory rate limit (per isolate). 5 req / 60s per key.
-const RL_WINDOW_MS = 60_000;
-const RL_MAX = 5;
-const rlBuckets = new Map<string, number[]>();
-function rateLimited(key: string): boolean {
-  const now = Date.now();
-  const arr = (rlBuckets.get(key) ?? []).filter((t) => now - t < RL_WINDOW_MS);
-  if (arr.length >= RL_MAX) { rlBuckets.set(key, arr); return true; }
-  arr.push(now); rlBuckets.set(key, arr); return false;
-}
+// Durable rate limits live in Postgres via `check_rate_limit` (see _shared/rate-limit.ts).
+
 
 const OrderSchema = z.object({
   product_type: z.string().trim().min(2).max(80),
@@ -87,9 +80,13 @@ Deno.serve(async (req) => {
     }
     const userId: string = authData.user.id;
 
-    // Rate limit: per-user + per-IP (ad-hoc in-memory, best-effort)
-    const ip = (req.headers.get("x-forwarded-for") ?? "").split(",")[0].trim() || "unknown";
-    if (rateLimited(`u:${userId}`) || rateLimited(`ip:${ip}`)) {
+    // Durable rate limit: 5 orders/min per user, 10/min per IP.
+    const ip = clientIp(req);
+    const [userOk, ipOk] = await Promise.all([
+      checkRateLimit(`order:user:${userId}`, 5, 60),
+      checkRateLimit(`order:ip:${ip}`, 10, 60),
+    ]);
+    if (!userOk || !ipOk) {
       return new Response(JSON.stringify({ error: "rate_limited" }), {
         status: 429,
         headers: { ...corsHeaders, "Content-Type": "application/json", "Retry-After": "60" },

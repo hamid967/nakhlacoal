@@ -164,10 +164,11 @@ export default function Products() {
             <div className="relative">
               <Search className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/40 ${isAr ? 'right-4' : 'left-4'}`} />
               <input
-                type="text"
+                type="search"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder={isAr ? 'ابحث عن منتج...' : 'Search products...'}
+                aria-label={isAr ? 'ابحث عن منتج' : 'Search products'}
                 className={`glass-strip w-full rounded-xl py-3 text-sm focus:outline-none focus:border-gold/60 transition-colors ${isAr ? 'pr-11 pl-4 text-right font-arabic' : 'pl-11 pr-4'}`}
               />
             </div>

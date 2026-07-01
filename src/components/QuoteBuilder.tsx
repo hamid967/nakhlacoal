@@ -212,7 +212,7 @@ export function QuoteForm({ initialSlug, compact = false }: { initialSlug?: stri
 
       {/* Actions */}
       <div className="flex flex-col sm:flex-row gap-2 pt-2">
-        <Button onClick={sendWhatsApp} className="flex-1 bg-[#25D366] hover:bg-[#1eb858] text-white">
+        <Button onClick={sendWhatsApp} className="flex-1 bg-whatsapp hover:bg-whatsapp-hover text-white">
           <MessageCircle className="size-4 ms-1" /> إرسال عبر واتساب
         </Button>
         <Button onClick={sendEmail} variant="outline" className="flex-1">
