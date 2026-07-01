@@ -26,6 +26,9 @@ const PressLogos = lazy(() => import('@/components/PressLogos').then((m) => ({ d
 const AwardsRibbon = lazy(() => import('@/components/AwardsRibbon').then((m) => ({ default: m.AwardsRibbon })));
 const PartnersConstellation = lazy(() => import('@/components/PartnersConstellation').then((m) => ({ default: m.PartnersConstellation })));
 const StoryFilm = lazy(() => import('@/components/StoryFilm').then((m) => ({ default: m.StoryFilm })));
+const InsightsEditorial = lazy(() => import('@/components/InsightsEditorial').then((m) => ({ default: m.InsightsEditorial })));
+const SustainabilityReport = lazy(() => import('@/components/SustainabilityReport').then((m) => ({ default: m.SustainabilityReport })));
+const CareersInvite = lazy(() => import('@/components/CareersInvite').then((m) => ({ default: m.CareersInvite })));
 
 
 
@@ -278,6 +281,17 @@ export default function Home() {
       {/* 7.8 — Story film */}
       <Suspense fallback={<SectionSkeleton variant="film" label={isAr ? 'جارٍ تحميل قصّتنا' : 'Loading story'} />}>
         <StoryFilm />
+      </Suspense>
+
+      {/* Batch 4 — Insights · Sustainability · Careers */}
+      <Suspense fallback={<SectionSkeleton variant="grid" label={isAr ? 'جارٍ تحميل الرؤى' : 'Loading insights'} />}>
+        <InsightsEditorial />
+      </Suspense>
+      <Suspense fallback={<SectionSkeleton variant="grid" label={isAr ? 'جارٍ تحميل الاستدامة' : 'Loading sustainability'} />}>
+        <SustainabilityReport />
+      </Suspense>
+      <Suspense fallback={<SectionSkeleton variant="band" label={isAr ? 'جارٍ تحميل الوظائف' : 'Loading careers'} />}>
+        <CareersInvite />
       </Suspense>
 
       {/* 8 — FAQ + location + CTA */}
