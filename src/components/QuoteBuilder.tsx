@@ -151,6 +151,7 @@ export function QuoteForm({ initialSlug, compact = false }: { initialSlug?: stri
             <div className="col-span-12 sm:col-span-5">
               <Label className="text-xs">المنتج</Label>
               <select
+                aria-label="اختر المنتج"
                 value={line.slug}
                 onChange={(e) => updateLine(i, { slug: e.target.value })}
                 className="w-full mt-1 h-10 rounded-md border bg-background px-2 text-sm"
@@ -162,24 +163,27 @@ export function QuoteForm({ initialSlug, compact = false }: { initialSlug?: stri
             </div>
             <div className="col-span-5 sm:col-span-3">
               <Label className="text-xs">الكمية</Label>
-              <Input type="number" min={1} value={line.qty} onChange={(e) => updateLine(i, { qty: Math.max(1, +e.target.value || 1) })} className="mt-1" />
+              <Input aria-label="الكمية" type="number" min={1} value={line.qty} onChange={(e) => updateLine(i, { qty: Math.max(1, +e.target.value || 1) })} className="mt-1" />
             </div>
             <div className="col-span-4 sm:col-span-2">
               <Label className="text-xs">الوحدة</Label>
               <select
+                aria-label="وحدة القياس"
                 value={line.unit}
                 onChange={(e) => updateLine(i, { unit: e.target.value as Line['unit'] })}
                 className="w-full mt-1 h-10 rounded-md border bg-background px-2 text-sm"
               >
                 {availableUnits(line.slug).map((u) => <option key={u} value={u}>{unitAr(u)}</option>)}
               </select>
+
             </div>
             <div className="col-span-3 sm:col-span-2 flex items-center justify-between gap-1">
               <div className="text-sm font-semibold text-gold whitespace-nowrap">{fmt(line.lineTotal)} ر.س</div>
               {computed.items.length > 1 && (
-                <Button size="icon" variant="ghost" onClick={() => setLines((ls) => ls.filter((_, idx) => idx !== i))}>
+                <Button aria-label="حذف المنتج" size="icon" variant="ghost" onClick={() => setLines((ls) => ls.filter((_, idx) => idx !== i))}>
                   <Trash2 className="size-4" />
                 </Button>
+
               )}
             </div>
           </div>
@@ -198,11 +202,12 @@ export function QuoteForm({ initialSlug, compact = false }: { initialSlug?: stri
 
       {/* Customer */}
       <div className={`grid gap-3 ${compact ? 'grid-cols-1' : 'grid-cols-1 sm:grid-cols-2'}`}>
-        <div><Label>الاسم *</Label><Input value={customer.name} onChange={(e) => setCustomer({ ...customer, name: e.target.value })} /></div>
-        <div><Label>الجوال *</Label><Input value={customer.phone} onChange={(e) => setCustomer({ ...customer, phone: e.target.value })} placeholder="05xxxxxxxx" /></div>
-        <div><Label>البريد</Label><Input type="email" value={customer.email} onChange={(e) => setCustomer({ ...customer, email: e.target.value })} /></div>
-        <div><Label>المنشأة</Label><Input value={customer.company} onChange={(e) => setCustomer({ ...customer, company: e.target.value })} /></div>
-        <div className="sm:col-span-2"><Label>المدينة</Label><Input value={customer.city} onChange={(e) => setCustomer({ ...customer, city: e.target.value })} /></div>
+        <div><Label>الاسم *</Label><Input aria-label="الاسم" value={customer.name} onChange={(e) => setCustomer({ ...customer, name: e.target.value })} /></div>
+        <div><Label>الجوال *</Label><Input aria-label="رقم الجوال" value={customer.phone} onChange={(e) => setCustomer({ ...customer, phone: e.target.value })} placeholder="05xxxxxxxx" /></div>
+        <div><Label>البريد</Label><Input aria-label="البريد الإلكتروني" type="email" value={customer.email} onChange={(e) => setCustomer({ ...customer, email: e.target.value })} /></div>
+        <div><Label>المنشأة</Label><Input aria-label="اسم المنشأة" value={customer.company} onChange={(e) => setCustomer({ ...customer, company: e.target.value })} /></div>
+        <div className="sm:col-span-2"><Label>المدينة</Label><Input aria-label="المدينة" value={customer.city} onChange={(e) => setCustomer({ ...customer, city: e.target.value })} /></div>
+
       </div>
 
       {/* Actions */}
