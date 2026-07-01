@@ -51,6 +51,7 @@ createRoot(document.getElementById("root")!).render(
         }}
       >
         <App />
+        <DevErrorPanel />
       </BrowserRouter>
     </HelmetProvider>
   </ErrorBoundary>
