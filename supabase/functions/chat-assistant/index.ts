@@ -321,6 +321,26 @@ Deno.serve(async (req) => {
           });
           return { url: `${SITE_URL}/quote?${p.toString()}` };
         }
+        if (name === "remember_preference") {
+          if (!userId || !dbClient) return { error: "يجب تسجيل الدخول لحفظ التفضيلات" };
+          const key = String(args.key ?? "").trim().slice(0, 60);
+          const value = String(args.value ?? "").trim().slice(0, 500);
+          if (!key || !value) return { error: "key و value مطلوبان" };
+          const { error } = await dbClient.from("chat_memory").upsert(
+            { user_id: userId, key, value, updated_at: new Date().toISOString() },
+            { onConflict: "user_id,key" },
+          );
+          if (error) return { error: error.message };
+          return { saved: true, key, value };
+        }
+        if (name === "recall_preferences") {
+          if (!userId || !dbClient) return { preferences: [] };
+          const { data, error } = await dbClient
+            .from("chat_memory").select("key,value").eq("user_id", userId).limit(50);
+          if (error) return { error: error.message };
+          return { preferences: data ?? [] };
+        }
+
         return { error: `unknown tool: ${name}` };
       } catch (e) {
         return { error: String((e as Error).message ?? e) };
