@@ -7,6 +7,12 @@
     <!-- meta description is owned per-route via react-helmet-async (SEO.tsx) -->
     <meta name="author" content="Palm Charcoal Co." />
     <meta name="theme-color" content="#0B0B0B" />
+
+    <!-- Security headers (meta-level). Prefer setting these as HTTP headers at the edge/CDN where possible. -->
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta http-equiv="Permissions-Policy" content="geolocation=(self), camera=(), microphone=(), payment=(), usb=(), interest-cohort=()" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; form-action 'self'; img-src 'self' data: blob: https:; font-src 'self' data: https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; connect-src 'self' https: wss:; frame-src 'self' https://www.google.com https://www.youtube.com https://www.google.com/maps/; media-src 'self' https: blob: data:; worker-src 'self' blob:; manifest-src 'self'; upgrade-insecure-requests" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
     <!-- canonical is owned per-route via react-helmet-async (SEO.tsx) -->
     <link rel="alternate" hreflang="ar" href="https://alnakhlacoal.com/?lang=ar" />
     <link rel="alternate" hreflang="en" href="https://alnakhlacoal.com/?lang=en" />
