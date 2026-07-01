@@ -271,7 +271,7 @@ export function LuxNav() {
 
         >
           <div className="flex items-center justify-between mb-10">
-            <img decoding="async" loading="eager" fetchpriority="high" src={logo} alt="Palm Charcoal" width={48} height={48} className="h-12 w-auto" />
+            <img decoding="async" loading="eager" {...({ fetchpriority: "high" } as any)} src={logo} alt="Palm Charcoal" width={48} height={48} className="h-12 w-auto" />
             <button
               className="w-11 h-11 rounded-full border-luxe flex items-center justify-center text-gold"
               onClick={() => setOpen(false)}
