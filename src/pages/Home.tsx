@@ -18,6 +18,10 @@ import { AudienceTracks } from '@/components/AudienceTracks';
 import { GlowingCubes } from '@/components/GlowingCubes';
 import { StatsGrid } from '@/components/StatsGrid';
 import { ExportMap } from '@/components/ExportMap';
+const ProductShowcase3D = lazy(() => import('@/components/ProductShowcase3D').then((m) => ({ default: m.ProductShowcase3D })));
+const TestimonialsMarquee = lazy(() => import('@/components/TestimonialsMarquee').then((m) => ({ default: m.TestimonialsMarquee })));
+const CertificationsWall = lazy(() => import('@/components/CertificationsWall').then((m) => ({ default: m.CertificationsWall })));
+const CinematicCTA = lazy(() => import('@/components/CinematicCTA').then((m) => ({ default: m.CinematicCTA })));
 
 
 
