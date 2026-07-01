@@ -116,6 +116,7 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [quoteOpen, setQuoteOpen] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
+  const [conversationId, setConversationId] = useState<string | null>(null);
   const hydratedFromCloud = useRef(false);
   const abortRef = useRef<AbortController | null>(null);
 
@@ -129,7 +130,7 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
     supabase.auth.getUser().then(({ data }) => { if (active) setUserId(data.user?.id ?? null); });
     const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
       setUserId(session?.user?.id ?? null);
-      if (!session?.user) hydratedFromCloud.current = false;
+      if (!session?.user) { hydratedFromCloud.current = false; setConversationId(null); }
     });
     return () => { active = false; sub.subscription.unsubscribe(); };
   }, []);
@@ -137,20 +138,47 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
   useEffect(() => {
     if (!userId || hydratedFromCloud.current) return;
     (async () => {
-      const { data } = await supabase
+      hydratedFromCloud.current = true;
+      // 1) Latest pending order (unchanged behaviour)
+      const { data: pending } = await supabase
         .from('pending_orders')
         .select('data, form')
         .eq('user_id', userId)
         .maybeSingle();
-      hydratedFromCloud.current = true;
-      if (data?.data && Object.keys(data.data as object).length) {
-        setPendingOrder(data.data as Record<string, any>);
+      if (pending?.data && Object.keys(pending.data as object).length) {
+        setPendingOrder(pending.data as Record<string, any>);
       }
-      if (data?.form && Object.keys(data.form as object).length) {
-        setFormData(f => ({ ...f, ...(data.form as typeof f) }));
+      if (pending?.form && Object.keys(pending.form as object).length) {
+        setFormData(f => ({ ...f, ...(pending.form as typeof f) }));
+      }
+      // 2) Latest chat conversation → restore messages across devices
+      const { data: conv } = await supabase
+        .from('chat_conversations')
+        .select('id')
+        .eq('user_id', userId)
+        .order('updated_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (conv?.id) {
+        setConversationId(conv.id);
+        const { data: rows } = await supabase
+          .from('chat_messages')
+          .select('id, role, content')
+          .eq('conversation_id', conv.id)
+          .order('created_at', { ascending: true })
+          .limit(100);
+        if (rows && rows.length) {
+          const restored: Msg[] = rows.map(r => ({
+            id: r.id as string,
+            role: (r.role as 'user' | 'assistant'),
+            content: r.content as string,
+          }));
+          setMessages([greet, ...restored]);
+        }
       }
     })();
   }, [userId]);
+
 
   useEffect(() => { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(messages)); }, [messages]);
 
@@ -257,9 +285,16 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
       const resp = await fetch(`${baseUrl}/functions/v1/chat-assistant`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', apikey: anon, Authorization: `Bearer ${anon}` },
-        body: JSON.stringify({ messages: [...messages, userMsg].map(m => ({ role: m.role, content: m.content })) }),
+        body: JSON.stringify({
+          messages: [...messages, userMsg].map(m => ({ role: m.role, content: m.content })),
+          conversation_id: conversationId ?? undefined,
+        }),
         signal: ac.signal,
       });
+      // Capture the server-assigned conversation id (first turn for signed-in users).
+      const returnedConv = resp.headers.get('X-Conversation-Id');
+      if (returnedConv && returnedConv !== conversationId) setConversationId(returnedConv);
+
       if (!resp.ok) {
         if (resp.status === 429) {
           triggerOfflineOrder('⚡ المساعد مشغول حالياً، لكن يمكنك إكمال طلبك الآن مباشرة.');
