@@ -187,6 +187,85 @@ export function ThemeToggle() {
         })}
 
         <DropdownMenuSeparator className="my-2" />
+        <DropdownMenuLabel className="text-xs">الوضع</DropdownMenuLabel>
+        <div className="flex gap-1 px-1 pb-1" role="group" aria-label="اختر الوضع">
+          <button
+            onClick={() => pickTheme('emerald')}
+            aria-pressed={theme === 'emerald'}
+            className={`flex-1 inline-flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-md text-xs border transition ${
+              theme === 'emerald' ? 'border-gold text-gold bg-muted' : 'border-border text-muted-foreground hover:bg-muted'
+            }`}
+          >
+            <Sun className="w-3.5 h-3.5" /> فاتح
+          </button>
+          <button
+            onClick={() => pickTheme('noir')}
+            aria-pressed={theme === 'noir'}
+            className={`flex-1 inline-flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-md text-xs border transition ${
+              theme === 'noir' ? 'border-gold text-gold bg-muted' : 'border-border text-muted-foreground hover:bg-muted'
+            }`}
+          >
+            <Moon className="w-3.5 h-3.5" /> داكن
+          </button>
+          <button
+            onClick={() => pickTheme('auto')}
+            aria-pressed={theme === 'auto'}
+            className={`flex-1 inline-flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-md text-xs border transition ${
+              theme === 'auto' ? 'border-gold text-gold bg-muted' : 'border-border text-muted-foreground hover:bg-muted'
+            }`}
+          >
+            <Monitor className="w-3.5 h-3.5" /> تلقائي
+          </button>
+        </div>
+
+        <DropdownMenuSeparator className="my-2" />
+        <DropdownMenuLabel className="text-xs flex items-center justify-between">
+          <span>درجة اللون الأساسي</span>
+          <span
+            className="w-4 h-4 rounded-full border border-border"
+            style={{ background: `hsl(${hue} 78% 32%)` }}
+            aria-hidden="true"
+          />
+        </DropdownMenuLabel>
+        <div className="px-2 pb-2">
+          <input
+            type="range"
+            min={0}
+            max={360}
+            value={hue}
+            onChange={(e) => previewHue(Number(e.target.value))}
+            aria-label="درجة اللون الأساسي (Hue)"
+            className="w-full h-2 rounded-full appearance-none cursor-pointer"
+            style={{
+              background:
+                'linear-gradient(to right, hsl(0 80% 45%), hsl(60 80% 45%), hsl(120 70% 35%), hsl(180 70% 40%), hsl(240 70% 50%), hsl(300 70% 45%), hsl(360 80% 45%))',
+            }}
+          />
+          <div className="mt-2 flex items-center justify-between gap-2">
+            <button
+              onClick={() => previewHue(hue)}
+              className="inline-flex items-center gap-1 text-[11px] px-2 py-1 rounded-md border border-border text-muted-foreground hover:text-gold hover:border-gold transition"
+            >
+              <Eye className="w-3 h-3" /> معاينة
+            </button>
+            <div className="flex items-center gap-1">
+              <button
+                onClick={cancelHuePreview}
+                className="text-[11px] px-2 py-1 rounded-md text-muted-foreground hover:text-foreground"
+              >
+                إلغاء
+              </button>
+              <button
+                onClick={saveHue}
+                className="text-[11px] px-2.5 py-1 rounded-md bg-gold text-dark font-semibold hover:bg-gold-hi transition"
+              >
+                حفظ
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <DropdownMenuSeparator className="my-2" />
         <DropdownMenuLabel className="text-xs">الخطوط</DropdownMenuLabel>
 
         {(Object.keys(FONTS) as FontKey[]).map((k) => (
