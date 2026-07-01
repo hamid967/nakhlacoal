@@ -223,6 +223,48 @@ export function ExportMap() {
               );
             })}
 
+            {/* Progressive gold arc for the currently-selected destination */}
+            {selected && (() => {
+              const d = project(selected.lat, selected.lng);
+              const mx = (o.x + d.x) / 2;
+              const my = (o.y + d.y) / 2 - 60;
+              const path = `M ${o.x} ${o.y} Q ${mx} ${my} ${d.x} ${d.y}`;
+              return (
+                <g key={`sel-${selected.id}`} filter="url(#goldGlow)">
+                  {/* Soft halo underlay */}
+                  <motion.path
+                    d={path}
+                    fill="none"
+                    stroke="hsl(46 90% 70%)"
+                    strokeWidth="6"
+                    strokeLinecap="round"
+                    strokeOpacity="0.25"
+                    initial={{ pathLength: 0 }}
+                    animate={{ pathLength: 1 }}
+                    transition={{ duration: 1.4, ease: 'easeInOut' }}
+                  />
+                  {/* Main gold stroke */}
+                  <motion.path
+                    d={path}
+                    fill="none"
+                    stroke="url(#arcHot)"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                    initial={{ pathLength: 0, opacity: 0 }}
+                    animate={{ pathLength: 1, opacity: 1 }}
+                    transition={{ duration: 1.4, ease: 'easeInOut' }}
+                  />
+                  {/* Sparkle traveling along the path */}
+                  <circle r="3.5" fill="hsl(46 100% 85%)">
+                    <animateMotion dur="1.6s" repeatCount="indefinite" path={path} rotate="auto" />
+                    <animate attributeName="opacity" values="0;1;0" dur="1.6s" repeatCount="indefinite" />
+                  </circle>
+                </g>
+              );
+            })()}
+
+
+
             <g transform={`translate(${o.x} ${o.y})`}>
               <circle r="22" fill="url(#glow)" />
               <circle r="6" fill="hsl(46 72% 62%)" />
