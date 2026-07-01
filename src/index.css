@@ -171,11 +171,12 @@
   /* Global keyboard focus ring — visible on Tab, hidden on mouse click */
   :where(a, button, [role="button"], [role="link"], [role="menuitem"], [role="tab"],
          input, select, textarea, summary, [tabindex]:not([tabindex="-1"]))
-    :focus-visible {
-    outline: 2px solid hsl(var(--ring, var(--primary)));
+    :is(:focus-visible) {
+    outline: 2px solid hsl(var(--ring));
     outline-offset: 2px;
     border-radius: 6px;
   }
+
   :focus:not(:focus-visible) { outline: none; }
 
 
