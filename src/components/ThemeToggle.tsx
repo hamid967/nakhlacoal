@@ -48,9 +48,24 @@ function ensureFontLoaded(f: FontKey) {
 
 const STORAGE_KEY = 'pc-theme';
 const FONT_KEY = 'pc-font';
+const HUE_KEY = 'pc-hue';
+const DEFAULT_HUE = 158; // emerald
 
 function resolveAuto(): Exclude<ThemeKey, 'auto'> {
   return window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'noir' : 'emerald';
+}
+function applyHue(h: number | null) {
+  const root = document.documentElement;
+  if (h === null) {
+    root.style.removeProperty('--primary');
+    root.style.removeProperty('--ring');
+    root.style.removeProperty('--accent');
+    return;
+  }
+  // Apply as HSL tokens (project uses `hsl(var(--primary))`).
+  root.style.setProperty('--primary', `${h} 78% 32%`);
+  root.style.setProperty('--ring', `${h} 60% 45%`);
+  root.style.setProperty('--accent', `${h} 55% 50%`);
 }
 function applyTheme(t: ThemeKey) {
   const eff = t === 'auto' ? resolveAuto() : t;
