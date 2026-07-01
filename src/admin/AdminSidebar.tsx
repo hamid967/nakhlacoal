@@ -15,6 +15,7 @@ const groups: Group[] = [
   { title: 'نظرة عامة', items: [
     { to: '/admin', label: 'لوحة القيادة', icon: LayoutDashboard },
     { to: '/admin/reports', label: 'التقارير', icon: BarChart3 },
+    { to: '/admin/web-vitals', label: 'أداء الويب', icon: Gauge },
   ]},
   { title: 'الكتالوج', items: [
     { to: '/admin/products', label: 'المنتجات', icon: Package },
