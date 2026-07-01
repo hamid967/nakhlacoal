@@ -200,8 +200,8 @@ export function TrademarksShowcase() {
         </div>
 
         {/* Notes strip */}
-        <div className="mt-6 max-w-4xl mx-auto flex items-start gap-3 text-sm text-foreground/70 bg-background/60 border border-gold/15 rounded-2xl p-4">
-          <FileText className="w-4 h-4 text-gold mt-0.5 shrink-0" />
+        <div className="mt-6 max-w-4xl mx-auto flex items-start gap-3 text-sm text-foreground/85 bg-background/80 border border-gold/25 rounded-2xl p-4">
+          <FileText aria-hidden="true" className="w-4 h-4 text-gold mt-0.5 shrink-0" />
           <p className="leading-relaxed font-arabic">
             <span className="text-gold font-semibold me-2">{isAr ? 'ملاحظات:' : 'Notes:'}</span>
             {current.descriptionAr}
@@ -209,47 +209,50 @@ export function TrademarksShowcase() {
         </div>
 
         {/* Trademark dots */}
-        <div role="tablist" className="flex justify-center gap-1.5 mt-8">
+        <div role="tablist" aria-label={isAr ? 'اختيار العلامة التجارية' : 'Select trademark'} className="flex justify-center gap-1.5 mt-8">
           {trademarks.map((t, i) => (
             <button
-              key={i}
+              key={t.id ?? i}
+              type="button"
               role="tab"
               aria-selected={i === active}
+              aria-controls="trademarks-slide"
+              tabIndex={i === active ? 0 : -1}
               onClick={() => setActive(i)}
-              aria-label={`${t.nameEn} (${i + 1} / ${trademarks.length})`}
-              className="inline-flex items-center justify-center h-11 w-11 group"
+              aria-label={`${isAr ? t.nameAr : t.nameEn} (${i + 1} ${isAr ? 'من' : 'of'} ${trademarks.length})`}
+              className="inline-flex items-center justify-center h-11 w-11 group rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               <span
                 aria-hidden="true"
-                className={`block h-2 rounded-full transition-all ${i === active ? 'w-8 bg-gold' : 'w-2 bg-gold/30 group-hover:bg-gold/60'}`}
+                className={`block h-2 rounded-full transition-all ${i === active ? 'w-8 bg-gold' : 'w-2 bg-gold/50 group-hover:bg-gold/80'}`}
               />
             </button>
           ))}
         </div>
 
         {/* Feature chips */}
-        <div className="mt-10 grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4">
+        <ul className="mt-10 grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4 list-none p-0">
           {features.map((f, i) => (
-            <div key={i} className="bg-background border border-gold/20 rounded-xl px-4 py-3 flex items-center gap-3 hover:border-gold/50 hover:-translate-y-0.5 transition-all">
-              <span className="w-9 h-9 rounded-lg bg-gold/10 text-gold flex items-center justify-center shrink-0">
+            <li key={i} className="bg-background border border-gold/25 rounded-xl px-4 py-3 flex items-center gap-3 hover:border-gold/60 hover:-translate-y-0.5 transition-all">
+              <span aria-hidden="true" className="w-9 h-9 rounded-lg bg-gold/15 text-gold flex items-center justify-center shrink-0">
                 <f.icon className="w-4 h-4" />
               </span>
               <div>
                 <p className="font-arabic text-sm font-semibold text-emerald leading-tight">{f.title}</p>
-                <p className="text-[11px] text-foreground/60 leading-tight mt-0.5">{f.desc}</p>
+                <p className="text-[12px] text-foreground/80 leading-tight mt-0.5">{f.desc}</p>
               </div>
-            </div>
+            </li>
           ))}
-        </div>
+        </ul>
 
         {/* Editorial footer tag */}
         <div className="mt-10 flex justify-center">
-          <div className="inline-flex items-center gap-3 text-emerald/60">
-            <span className="w-8 h-px bg-gold/40" />
-            <span className="text-[10px] uppercase tracking-[0.28em] font-medium">
+          <div className="inline-flex items-center gap-3 text-emerald/85">
+            <span aria-hidden="true" className="w-8 h-px bg-gold/60" />
+            <span className="text-[11px] uppercase tracking-[0.28em] font-medium">
               {isAr ? 'إرث سعودي أصيل' : 'Authentic Saudi Legacy'}
             </span>
-            <span className="w-8 h-px bg-gold/40" />
+            <span aria-hidden="true" className="w-8 h-px bg-gold/60" />
           </div>
         </div>
       </div>
