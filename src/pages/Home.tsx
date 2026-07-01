@@ -251,12 +251,12 @@ export default function Home() {
       </Suspense>
 
       {/* 6.6 — Press mentions */}
-      <Suspense fallback={<SectionSkeleton variant="band" />}>
+      <Suspense fallback={<SectionSkeleton variant="press" label={isAr ? 'جارٍ تحميل شعارات الصحافة' : 'Loading press logos'} />}>
         <PressLogos />
       </Suspense>
 
       {/* 6.7 — Awards ribbon */}
-      <Suspense fallback={<SectionSkeleton variant="band" />}>
+      <Suspense fallback={<SectionSkeleton variant="awards" label={isAr ? 'جارٍ تحميل الجوائز' : 'Loading awards'} />}>
         <AwardsRibbon />
       </Suspense>
 
@@ -266,7 +266,7 @@ export default function Home() {
       </Suspense>
 
       {/* 7.3 — Partner constellation */}
-      <Suspense fallback={<SectionSkeleton variant="grid" />}>
+      <Suspense fallback={<SectionSkeleton variant="constellation" label={isAr ? 'جارٍ تحميل شبكة الشركاء' : 'Loading partners'} />}>
         <PartnersConstellation />
       </Suspense>
 
@@ -276,7 +276,7 @@ export default function Home() {
       </Suspense>
 
       {/* 7.8 — Story film */}
-      <Suspense fallback={<SectionSkeleton variant="band" />}>
+      <Suspense fallback={<SectionSkeleton variant="film" label={isAr ? 'جارٍ تحميل قصّتنا' : 'Loading story'} />}>
         <StoryFilm />
       </Suspense>
 
