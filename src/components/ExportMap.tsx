@@ -1,40 +1,53 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
+import { Ship, Clock, Package, MapPin, Anchor } from 'lucide-react';
 
 /**
  * Interactive Export Map — lightweight SVG equirectangular projection.
- * No external map dependency, no CLS, GPU-only animations.
- * Origin: Jeddah, KSA. Destinations rendered as pulsing gold dots with
- * an on-hover / on-focus tooltip.
+ * Click a destination to open a side panel with shipment details.
  */
 
-type Point = { id: string; lat: number; lng: number; cityAr: string; cityEn: string; noteAr: string; noteEn: string };
+type Point = {
+  id: string;
+  lat: number;
+  lng: number;
+  cityAr: string;
+  cityEn: string;
+  countryAr: string;
+  countryEn: string;
+  noteAr: string;
+  noteEn: string;
+  transitDays: number;
+  port: string;
+  incoterm: string;
+  monthlyTons: number;
+  frequencyAr: string;
+  frequencyEn: string;
+};
 
-const ORIGIN: Point = {
+const ORIGIN = {
   id: 'origin',
   lat: 21.485811,
   lng: 39.192505,
   cityAr: 'جدة · المقر',
   cityEn: 'Jeddah · HQ',
-  noteAr: 'مركز التصنيع والتصدير',
-  noteEn: 'Manufacturing & export hub',
 };
 
 const POINTS: Point[] = [
-  { id: 'uae', lat: 25.276987, lng: 55.296249, cityAr: 'دبي', cityEn: 'Dubai', noteAr: 'موزّع رئيسي — الإمارات', noteEn: 'Primary distributor — UAE' },
-  { id: 'kw', lat: 29.375859, lng: 47.977405, cityAr: 'الكويت', cityEn: 'Kuwait City', noteAr: 'سلاسل مطاعم', noteEn: 'Restaurant chains' },
-  { id: 'qa', lat: 25.276987, lng: 51.520008, cityAr: 'الدوحة', cityEn: 'Doha', noteAr: 'فنادق فاخرة', noteEn: 'Luxury hotels' },
-  { id: 'om', lat: 23.588, lng: 58.3829, cityAr: 'مسقط', cityEn: 'Muscat', noteAr: 'موزّع تجزئة', noteEn: 'Retail distributor' },
-  { id: 'jo', lat: 31.9539, lng: 35.9106, cityAr: 'عمّان', cityEn: 'Amman', noteAr: 'شركاء مطاعم', noteEn: 'Restaurant partners' },
-  { id: 'eg', lat: 30.0444, lng: 31.2357, cityAr: 'القاهرة', cityEn: 'Cairo', noteAr: 'أسواق جملة', noteEn: 'Wholesale market' },
-  { id: 'tr', lat: 41.0082, lng: 28.9784, cityAr: 'إسطنبول', cityEn: 'Istanbul', noteAr: 'أسواق الشيشة', noteEn: 'Shisha market' },
-  { id: 'de', lat: 52.52, lng: 13.405, cityAr: 'برلين', cityEn: 'Berlin', noteAr: 'توزيع أوروبي', noteEn: 'EU distribution' },
-  { id: 'uk', lat: 51.5074, lng: -0.1278, cityAr: 'لندن', cityEn: 'London', noteAr: 'مقاهي بريميوم', noteEn: 'Premium lounges' },
-  { id: 'sg', lat: 1.3521, lng: 103.8198, cityAr: 'سنغافورة', cityEn: 'Singapore', noteAr: 'بوابة آسيا', noteEn: 'Asia gateway' },
+  { id: 'uae', lat: 25.276987, lng: 55.296249, cityAr: 'دبي', cityEn: 'Dubai', countryAr: 'الإمارات', countryEn: 'UAE', noteAr: 'موزّع رئيسي — الإمارات', noteEn: 'Primary distributor — UAE', transitDays: 4, port: 'Jebel Ali', incoterm: 'CIF', monthlyTons: 42, frequencyAr: 'أسبوعيًا', frequencyEn: 'Weekly' },
+  { id: 'kw', lat: 29.375859, lng: 47.977405, cityAr: 'الكويت', cityEn: 'Kuwait City', countryAr: 'الكويت', countryEn: 'Kuwait', noteAr: 'سلاسل مطاعم', noteEn: 'Restaurant chains', transitDays: 6, port: 'Shuwaikh', incoterm: 'CFR', monthlyTons: 18, frequencyAr: 'كل أسبوعين', frequencyEn: 'Bi-weekly' },
+  { id: 'qa', lat: 25.276987, lng: 51.520008, cityAr: 'الدوحة', cityEn: 'Doha', countryAr: 'قطر', countryEn: 'Qatar', noteAr: 'فنادق فاخرة', noteEn: 'Luxury hotels', transitDays: 5, port: 'Hamad', incoterm: 'CIF', monthlyTons: 22, frequencyAr: 'أسبوعيًا', frequencyEn: 'Weekly' },
+  { id: 'om', lat: 23.588, lng: 58.3829, cityAr: 'مسقط', cityEn: 'Muscat', countryAr: 'عُمان', countryEn: 'Oman', noteAr: 'موزّع تجزئة', noteEn: 'Retail distributor', transitDays: 6, port: 'Sohar', incoterm: 'FOB', monthlyTons: 14, frequencyAr: 'شهريًا', frequencyEn: 'Monthly' },
+  { id: 'jo', lat: 31.9539, lng: 35.9106, cityAr: 'عمّان', cityEn: 'Amman', countryAr: 'الأردن', countryEn: 'Jordan', noteAr: 'شركاء مطاعم', noteEn: 'Restaurant partners', transitDays: 7, port: 'Aqaba', incoterm: 'CIF', monthlyTons: 12, frequencyAr: 'شهريًا', frequencyEn: 'Monthly' },
+  { id: 'eg', lat: 30.0444, lng: 31.2357, cityAr: 'القاهرة', cityEn: 'Cairo', countryAr: 'مصر', countryEn: 'Egypt', noteAr: 'أسواق جملة', noteEn: 'Wholesale market', transitDays: 3, port: 'Sokhna', incoterm: 'CFR', monthlyTons: 30, frequencyAr: 'أسبوعيًا', frequencyEn: 'Weekly' },
+  { id: 'tr', lat: 41.0082, lng: 28.9784, cityAr: 'إسطنبول', cityEn: 'Istanbul', countryAr: 'تركيا', countryEn: 'Turkey', noteAr: 'أسواق الشيشة', noteEn: 'Shisha market', transitDays: 12, port: 'Ambarli', incoterm: 'CIF', monthlyTons: 20, frequencyAr: 'كل أسبوعين', frequencyEn: 'Bi-weekly' },
+  { id: 'de', lat: 52.52, lng: 13.405, cityAr: 'برلين', cityEn: 'Berlin', countryAr: 'ألمانيا', countryEn: 'Germany', noteAr: 'توزيع أوروبي', noteEn: 'EU distribution', transitDays: 22, port: 'Hamburg', incoterm: 'DAP', monthlyTons: 16, frequencyAr: 'شهريًا', frequencyEn: 'Monthly' },
+  { id: 'uk', lat: 51.5074, lng: -0.1278, cityAr: 'لندن', cityEn: 'London', countryAr: 'المملكة المتحدة', countryEn: 'United Kingdom', noteAr: 'مقاهي بريميوم', noteEn: 'Premium lounges', transitDays: 24, port: 'Felixstowe', incoterm: 'DAP', monthlyTons: 10, frequencyAr: 'شهريًا', frequencyEn: 'Monthly' },
+  { id: 'sg', lat: 1.3521, lng: 103.8198, cityAr: 'سنغافورة', cityEn: 'Singapore', countryAr: 'سنغافورة', countryEn: 'Singapore', noteAr: 'بوابة آسيا', noteEn: 'Asia gateway', transitDays: 18, port: 'PSA', incoterm: 'CIF', monthlyTons: 24, frequencyAr: 'كل أسبوعين', frequencyEn: 'Bi-weekly' },
 ];
 
-// Equirectangular projection into 1000×500 viewBox.
 const project = (lat: number, lng: number) => {
   const x = ((lng + 180) / 360) * 1000;
   const y = ((90 - lat) / 180) * 500;
@@ -45,6 +58,7 @@ export function ExportMap() {
   const { i18n } = useTranslation();
   const isAr = i18n.language?.startsWith('ar');
   const [hover, setHover] = useState<Point | null>(null);
+  const [selected, setSelected] = useState<Point | null>(null);
 
   const o = project(ORIGIN.lat, ORIGIN.lng);
 
@@ -73,8 +87,8 @@ export function ExportMap() {
           </h2>
           <p className={`mt-4 text-[hsl(var(--foreground))]/60 max-w-xl mx-auto ${isAr ? 'font-arabic' : ''}`}>
             {isAr
-              ? 'مرّر فوق النقاط الذهبية لعرض الوجهات ووسائل التوزيع.'
-              : 'Hover the gold points to explore destinations and distribution partners.'}
+              ? 'انقر على أي وجهة ذهبية لعرض تفاصيل الشحن الكاملة في اللوحة الجانبية.'
+              : 'Click any gold destination to open the full shipment details in the side panel.'}
           </p>
         </div>
 
@@ -94,13 +108,11 @@ export function ExportMap() {
               </linearGradient>
             </defs>
 
-            {/* Dotted world grid — abstract, no external topology */}
             <g fill="hsl(0 0% 100% / 0.10)">
               {Array.from({ length: 40 }).map((_, r) =>
                 Array.from({ length: 80 }).map((_, c) => {
                   const x = 15 + c * 12.2;
                   const y = 20 + r * 12;
-                  // Landmass-ish mask via sine — purely aesthetic
                   const in1 =
                     Math.sin((x + y) * 0.02) + Math.cos(x * 0.015) + Math.sin(y * 0.03) > 0.4;
                   return in1 ? <circle key={`${r}-${c}`} cx={x} cy={y} r={0.9} /> : null;
@@ -108,7 +120,6 @@ export function ExportMap() {
               )}
             </g>
 
-            {/* Arcs from Jeddah to each destination */}
             {POINTS.map((p, i) => {
               const d = project(p.lat, p.lng);
               const mx = (o.x + d.x) / 2;
@@ -129,7 +140,6 @@ export function ExportMap() {
               );
             })}
 
-            {/* Origin — Jeddah */}
             <g transform={`translate(${o.x} ${o.y})`}>
               <circle r="22" fill="url(#glow)" />
               <circle r="6" fill="hsl(46 72% 62%)" />
@@ -142,10 +152,9 @@ export function ExportMap() {
               </text>
             </g>
 
-            {/* Destination points */}
             {POINTS.map((p) => {
               const d = project(p.lat, p.lng);
-              const isActive = hover?.id === p.id;
+              const isActive = hover?.id === p.id || selected?.id === p.id;
               return (
                 <g
                   key={p.id}
@@ -154,9 +163,16 @@ export function ExportMap() {
                   onMouseLeave={() => setHover((h) => (h?.id === p.id ? null : h))}
                   onFocus={() => setHover(p)}
                   onBlur={() => setHover(null)}
+                  onClick={() => setSelected(p)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      setSelected(p);
+                    }
+                  }}
                   tabIndex={0}
                   role="button"
-                  aria-label={isAr ? p.cityAr : p.cityEn}
+                  aria-label={`${isAr ? p.cityAr : p.cityEn} — ${isAr ? 'اعرض تفاصيل الشحن' : 'View shipment details'}`}
                   style={{ cursor: 'pointer', outline: 'none' }}
                 >
                   <circle r="14" fill="url(#glow)" opacity={isActive ? 1 : 0.6} />
@@ -169,8 +185,7 @@ export function ExportMap() {
             })}
           </svg>
 
-          {/* Tooltip */}
-          {hover && (
+          {hover && !selected && (
             <motion.div
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
@@ -178,7 +193,7 @@ export function ExportMap() {
               className="pointer-events-none absolute top-4 end-4 max-w-[240px] rounded-xl border border-[hsl(var(--gold))]/40 bg-black/85 backdrop-blur px-4 py-3 shadow-[0_20px_40px_-16px_hsl(0_0%_0%/0.9)]"
             >
               <div className="text-[10px] tracking-[0.3em] uppercase text-[hsl(var(--gold-hi))]">
-                {isAr ? 'وجهة تصدير' : 'Export destination'}
+                {isAr ? 'انقر للتفاصيل' : 'Click for details'}
               </div>
               <div className={`mt-1 text-lg text-[hsl(var(--foreground))] ${isAr ? 'font-arabic font-bold' : 'font-semibold'}`}>
                 {isAr ? hover.cityAr : hover.cityEn}
@@ -189,7 +204,6 @@ export function ExportMap() {
             </motion.div>
           )}
 
-          {/* Legend */}
           <div className="mt-4 flex flex-wrap items-center gap-4 text-xs text-[hsl(var(--foreground))]/60">
             <span className="inline-flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-[hsl(var(--gold))] shadow-[0_0_10px_hsl(46_72%_62%/0.8)]" />
@@ -202,6 +216,117 @@ export function ExportMap() {
           </div>
         </div>
       </div>
+
+      <Sheet open={!!selected} onOpenChange={(o) => !o && setSelected(null)}>
+        <SheetContent
+          side={isAr ? 'left' : 'right'}
+          className="bg-[hsl(var(--dark))] border-[hsl(var(--gold))]/30 text-[hsl(var(--foreground))] w-full sm:max-w-md"
+        >
+          {selected && (
+            <>
+              <SheetHeader className={isAr ? 'text-right' : 'text-left'}>
+                <div className="text-[10px] tracking-[0.35em] uppercase text-[hsl(var(--gold-hi))]">
+                  {isAr ? 'تفاصيل الشحن' : 'Shipment details'}
+                </div>
+                <SheetTitle className={`text-2xl text-[hsl(var(--foreground))] ${isAr ? 'font-arabic' : 'font-display'}`}>
+                  {isAr ? selected.cityAr : selected.cityEn}
+                  <span className="block text-sm text-[hsl(var(--foreground))]/60 font-normal mt-1">
+                    {isAr ? selected.countryAr : selected.countryEn}
+                  </span>
+                </SheetTitle>
+                <SheetDescription className={`text-[hsl(var(--foreground))]/70 ${isAr ? 'font-arabic' : ''}`}>
+                  {isAr ? selected.noteAr : selected.noteEn}
+                </SheetDescription>
+              </SheetHeader>
+
+              <div className="mt-8 grid grid-cols-2 gap-3">
+                <DetailCard
+                  icon={<Clock className="w-4 h-4" />}
+                  label={isAr ? 'مدة العبور' : 'Transit time'}
+                  value={isAr ? `${selected.transitDays} يوم` : `${selected.transitDays} days`}
+                  isAr={isAr}
+                />
+                <DetailCard
+                  icon={<Anchor className="w-4 h-4" />}
+                  label={isAr ? 'ميناء الوصول' : 'Port of arrival'}
+                  value={selected.port}
+                  isAr={isAr}
+                />
+                <DetailCard
+                  icon={<Package className="w-4 h-4" />}
+                  label={isAr ? 'الحجم الشهري' : 'Monthly volume'}
+                  value={isAr ? `${selected.monthlyTons} طن` : `${selected.monthlyTons} tons`}
+                  isAr={isAr}
+                />
+                <DetailCard
+                  icon={<Ship className="w-4 h-4" />}
+                  label={isAr ? 'التردد' : 'Frequency'}
+                  value={isAr ? selected.frequencyAr : selected.frequencyEn}
+                  isAr={isAr}
+                />
+                <DetailCard
+                  icon={<MapPin className="w-4 h-4" />}
+                  label={isAr ? 'شرط التسليم' : 'Incoterm'}
+                  value={selected.incoterm}
+                  isAr={isAr}
+                />
+                <DetailCard
+                  icon={<MapPin className="w-4 h-4" />}
+                  label={isAr ? 'المنشأ' : 'Origin'}
+                  value={isAr ? 'جدة' : 'Jeddah'}
+                  isAr={isAr}
+                />
+              </div>
+
+              <div className="mt-8 rounded-xl border border-[hsl(var(--gold))]/25 bg-black/40 p-4">
+                <div className={`text-xs text-[hsl(var(--foreground))]/60 ${isAr ? 'font-arabic' : ''}`}>
+                  {isAr
+                    ? 'للحصول على عرض سعر مخصّص لهذه الوجهة، تواصل مع فريق التصدير.'
+                    : 'For a custom quote to this destination, contact our export team.'}
+                </div>
+                <a
+                  href={`https://wa.me/966540060095?text=${encodeURIComponent(
+                    isAr
+                      ? `مرحبًا، أرغب بعرض سعر شحن إلى ${selected.cityAr} (${selected.countryAr}).`
+                      : `Hello, I'd like a shipping quote to ${selected.cityEn} (${selected.countryEn}).`
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-3 inline-flex items-center justify-center w-full rounded-lg bg-[hsl(var(--gold))] text-black font-medium py-2.5 text-sm hover:brightness-110 transition"
+                >
+                  {isAr ? 'اطلب عرض سعر عبر واتساب' : 'Request a WhatsApp quote'}
+                </a>
+              </div>
+            </>
+          )}
+        </SheetContent>
+      </Sheet>
     </section>
+  );
+}
+
+function DetailCard({
+  icon,
+  label,
+  value,
+  isAr,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  isAr: boolean;
+}) {
+  return (
+    <div className="rounded-xl border border-[hsl(var(--gold))]/20 bg-black/40 p-3">
+      <div className="flex items-center gap-1.5 text-[hsl(var(--gold-hi))]">
+        {icon}
+        <span className={`text-[10px] tracking-[0.2em] uppercase ${isAr ? 'font-arabic' : ''}`}>
+          {label}
+        </span>
+      </div>
+      <div className={`mt-1.5 text-sm text-[hsl(var(--foreground))] font-medium ${isAr ? 'font-arabic' : ''}`}>
+        {value}
+      </div>
+    </div>
   );
 }
