@@ -297,3 +297,11 @@
 .admin-shell .a-tag { display:inline-flex; align-items:center; gap:.35rem; padding:.2rem .55rem; border-radius:6px; font-size:12px; font-weight:500; background:var(--a-surface-2); color:var(--a-text); border:1px solid var(--a-border); }
 .admin-shell .a-tag button { color:var(--a-text-muted); display:inline-flex; }
 .admin-shell .a-tag button:hover { color:var(--a-text); }
+
+/* Realtime highlight — pulses a newly-arrived order row */
+@keyframes a-row-pulse {
+  0%   { background: rgba(4,120,87,.22); box-shadow: inset 3px 0 0 var(--a-palm); }
+  60%  { background: rgba(4,120,87,.10); box-shadow: inset 3px 0 0 var(--a-palm); }
+  100% { background: transparent;         box-shadow: inset 3px 0 0 transparent; }
+}
+.admin-shell tr.a-row-highlight > td { animation: a-row-pulse 3.2s ease-out both; }
