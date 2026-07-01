@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { SEO } from '@/components/SEO';
-import { Loader2, MessageSquare, Users, Sparkles, TrendingUp } from 'lucide-react';
+import { Loader2, MessageSquare, Users, Sparkles, TrendingUp, Radio } from 'lucide-react';
 import {
   ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid,
   BarChart, Bar,
@@ -37,6 +37,9 @@ export default function ChatAnalytics() {
   const [loading, setLoading] = useState(true);
   const [days, setDays] = useState(30);
   const [selected, setSelected] = useState<string | null>(null);
+  const [live, setLive] = useState(false);
+  const pulse = useRef<number>(0);
+  const [pulseKey, setPulseKey] = useState(0);
 
   useEffect(() => {
     (async () => {
@@ -49,6 +52,32 @@ export default function ChatAnalytics() {
       setMsgs((m.data as Message[]) || []);
       setLoading(false);
     })();
+
+    const channel = supabase
+      .channel('admin-chat-analytics')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_messages' }, (payload) => {
+        setMsgs((prev) => {
+          const row = payload.new as Message;
+          if (prev.some((m) => m.id === row.id)) return prev;
+          return [row, ...prev];
+        });
+        pulse.current += 1;
+        setPulseKey((k) => k + 1);
+      })
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_conversations' }, (payload) => {
+        setConvs((prev) => {
+          const row = payload.new as Conversation;
+          if (prev.some((c) => c.id === row.id)) return prev;
+          return [row, ...prev];
+        });
+      })
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'chat_conversations' }, (payload) => {
+        const row = payload.new as Conversation;
+        setConvs((prev) => prev.map((c) => (c.id === row.id ? row : c)));
+      })
+      .subscribe((status) => setLive(status === 'SUBSCRIBED'));
+
+    return () => { supabase.removeChannel(channel); };
   }, []);
 
   const filteredConvs = useMemo(() => {
@@ -116,8 +145,19 @@ export default function ChatAnalytics() {
       <header className="flex flex-wrap items-end justify-between gap-4 mb-6">
         <div>
           <p className="text-xs tracking-[0.3em] text-emerald-700/70">ADMIN · AI ASSISTANT</p>
-          <h1 className="a-display text-3xl mt-2" style={{ color: 'var(--a-palm)' }}>تحليلات المساعد الذكي</h1>
-          <p className="text-sm mt-1" style={{ color: 'var(--a-text-muted)' }}>محادثات العملاء مع مساعد فحم النخلة AI.</p>
+          <h1 className="a-display text-3xl mt-2 flex items-center gap-3" style={{ color: 'var(--a-palm)' }}>
+            تحليلات المساعد الذكي
+            <span
+              key={pulseKey}
+              className={`inline-flex items-center gap-1.5 text-[10px] font-normal px-2 py-1 rounded-full transition ${live ? 'animate-pulse' : 'opacity-50'}`}
+              style={{ background: live ? 'rgba(26,74,0,0.12)' : 'var(--a-soft)', color: live ? '#1A4A00' : 'var(--a-text-muted)' }}
+              title={live ? 'متصل مباشرة' : 'غير متصل'}
+            >
+              <Radio className="w-3 h-3" />
+              {live ? 'مباشر' : 'غير متصل'}
+            </span>
+          </h1>
+          <p className="text-sm mt-1" style={{ color: 'var(--a-text-muted)' }}>محادثات العملاء مع مساعد فحم النخلة AI — تحديث فوري.</p>
         </div>
         <div className="flex gap-1 p-1 rounded-full a-glass">
           {PERIODS.map((p) => (
