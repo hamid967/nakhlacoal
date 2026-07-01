@@ -38,7 +38,7 @@ export function CinematicCTA() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(0,0,0,0.85))]" />
       </div>
 
-      <div className="container relative text-center">
+      <div className="container relative z-10 text-center">
         <motion.span
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
