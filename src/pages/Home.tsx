@@ -245,6 +245,11 @@ export default function Home() {
       </LuxSection>
       <Certifications />
 
+      {/* 6.5 — Certifications Wall (Apple-style Noir) */}
+      <Suspense fallback={<SectionSkeleton variant="grid" />}>
+        <CertificationsWall />
+      </Suspense>
+
       {/* 7 — Social proof: trademarks + testimonials */}
       <Suspense fallback={<SectionSkeleton variant="grid" />}>
         <TrademarksShowcase />
