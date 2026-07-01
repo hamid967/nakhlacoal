@@ -28,6 +28,8 @@ interface Props {
 export function QuickEditTrademarkDialog({ open, onOpenChange, trademark, isAr }: Props) {
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [preview, setPreview] = useState<string | null>(null);
+
 
   const [form, setForm] = useState({
     name_ar: '',
