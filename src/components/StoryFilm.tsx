@@ -1,11 +1,54 @@
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Play } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import factory from '@/assets/slide-coconut-factory.jpg';
 
-export function StoryFilm() {
+interface StoryFilmProps {
+  /** Optional cinematic background video. When omitted or on slow networks, the poster image is used. */
+  videoSrc?: string;
+}
+
+/**
+ * Detect slow / data-saver connections so we can skip the heavy video
+ * and serve the poster instead.
+ */
+function isSlowNetwork(): boolean {
+  if (typeof navigator === 'undefined') return false;
+  const c = (navigator as any).connection;
+  if (!c) return false;
+  if (c.saveData) return true;
+  const et = c.effectiveType as string | undefined;
+  return et === 'slow-2g' || et === '2g' || et === '3g';
+}
+
+export function StoryFilm({ videoSrc }: StoryFilmProps) {
   const { i18n } = useTranslation();
   const isAr = i18n.language === 'ar';
+
+  const holderRef = useRef<HTMLDivElement | null>(null);
+  const [inView, setInView] = useState(false);
+  const [canPlayVideo, setCanPlayVideo] = useState(false);
+
+  // Lazy-mount: only observe visibility to trigger video load
+  useEffect(() => {
+    if (!videoSrc || !holderRef.current) return;
+    if (isSlowNetwork()) return; // stay on poster fallback
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setInView(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: '200px' }
+    );
+    io.observe(holderRef.current);
+    return () => io.disconnect();
+  }, [videoSrc]);
+
+  const showVideo = !!videoSrc && inView && !isSlowNetwork();
 
   return (
     <section className="relative z-0 isolate py-24 md:py-32 bg-[#0B0B0B] overflow-hidden">
@@ -19,19 +62,48 @@ export function StoryFilm() {
           </h2>
         </div>
 
-        <div className="relative rounded-3xl overflow-hidden border border-[hsl(var(--gold))]/20 shadow-[0_20px_80px_-40px_hsl(46_90%_50%/0.4)]">
-          {/* Ken Burns still image */}
-          <motion.img
-            src={factory}
-            alt={isAr ? 'مصنع فحم النخلة' : 'Palm Charcoal facility'}
-            className="w-full h-[420px] md:h-[600px] object-cover"
-            initial={{ scale: 1.08 }}
-            whileInView={{ scale: 1 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 12, ease: 'easeOut' }}
-            loading="lazy"
-            decoding="async"
-          />
+        <div
+          ref={holderRef}
+          className="relative rounded-3xl overflow-hidden border border-[hsl(var(--gold))]/20 shadow-[0_20px_80px_-40px_hsl(46_90%_50%/0.4)]"
+        >
+          {showVideo ? (
+            <video
+              className="w-full h-[420px] md:h-[600px] object-cover"
+              poster={factory}
+              src={videoSrc}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="none"
+              onCanPlay={() => setCanPlayVideo(true)}
+              aria-label={isAr ? 'مصنع فحم النخلة' : 'Palm Charcoal facility'}
+            />
+          ) : (
+            <motion.img
+              src={factory}
+              alt={isAr ? 'مصنع فحم النخلة' : 'Palm Charcoal facility'}
+              className="w-full h-[420px] md:h-[600px] object-cover"
+              initial={{ scale: 1.08 }}
+              whileInView={{ scale: 1 }}
+              viewport={{ once: true, margin: '-80px' }}
+              transition={{ duration: 12, ease: 'easeOut' }}
+              loading="lazy"
+              decoding="async"
+            />
+          )}
+
+          {/* Poster overlay while video buffers */}
+          {showVideo && !canPlayVideo && (
+            <img
+              src={factory}
+              alt=""
+              aria-hidden
+              className="absolute inset-0 w-full h-full object-cover"
+              loading="lazy"
+              decoding="async"
+            />
+          )}
 
           {/* Cinematic vignettes */}
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(0,0,0,0.75)_100%)] pointer-events-none" />
