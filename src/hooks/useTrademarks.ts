@@ -30,7 +30,7 @@ const mapRow = (r: any): Trademark => ({
   descriptionAr: r.description_ar ?? '',
   goodsAr: r.goods_ar ?? '',
   colors: r.colors ?? [],
-  image: imageById[r.id] ?? tm0,
+  image: r.image_url || imageById[r.id] || tm0,
 });
 
 const sortItems = (a: any, b: any) =>
