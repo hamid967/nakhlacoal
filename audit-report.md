@@ -1,6 +1,6 @@
 # Palm Charcoal — Audit Report
 
-Base: `http://localhost:8080` · Generated: 2026-07-01T18:04:57.228Z
+Base: `http://localhost:8080` · Generated: 2026-07-01T18:06:38.385Z
 
 ## Summary
 
@@ -15,19 +15,19 @@ Base: `http://localhost:8080` · Generated: 2026-07-01T18:04:57.228Z
 
 | Route | Status | DCL (ms) | Findings |
 |---|---|---|---|
-| / | 200 | 647 | 5 |
-| /products | 200 | 479 | 4 |
-| /quality | 200 | 463 | 4 |
-| /trademarks | 200 | 522 | 3 |
-| /wholesale | 200 | 491 | 6 |
-| /quote | 200 | 466 | 3 |
-| /checkout | 200 | 447 | 4 |
-| /about | 200 | 470 | 3 |
-| /contact | 200 | 460 | 4 |
-| /auth | 200 | 461 | 6 |
-| /portal/login | 200 | 434 | 2 |
-| /faq | 200 | 472 | 5 |
-| /pricing | 200 | 507 | 5 |
+| / | 200 | 549 | 5 |
+| /products | 200 | 453 | 4 |
+| /quality | 200 | 441 | 4 |
+| /trademarks | 200 | 485 | 3 |
+| /wholesale | 200 | 490 | 6 |
+| /quote | 200 | 474 | 3 |
+| /checkout | 200 | 495 | 4 |
+| /about | 200 | 501 | 3 |
+| /contact | 200 | 453 | 4 |
+| /auth | 200 | 525 | 6 |
+| /portal/login | 200 | 572 | 2 |
+| /faq | 200 | 529 | 5 |
+| /pricing | 200 | 487 | 5 |
 
 ## P1 — 28 finding(s)
 
