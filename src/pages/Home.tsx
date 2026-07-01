@@ -190,7 +190,7 @@ export default function Home() {
             <p className="text-base md:text-lg leading-relaxed text-foreground/75 mb-8 font-arabic max-w-2xl">
               {isAr ? 'فحم النخلة هو الخيار الأمثل لعشاق الجودة. نحرص على تقديم فحم طبيعي ١٠٠٪ يتم إنتاجه بأحدث التقنيات وبمعايير عالمية ليمنحك أفضل تجربة.' : 'Palm Charcoal is the first choice for quality lovers — 100% natural, latest tech, international standards.'}
             </p>
-            <LuxButton to="/about" variant="ghost" withArrow>{isAr ? 'تعرف علينا أكثر' : 'Learn more'}</LuxButton>
+            <LuxButton to="/about" variant="ghost" withArrow>{isAr ? 'تعرف على قصة فحم النخلة' : 'Read our story'}</LuxButton>
           </ScrollReveal>
 
           <ScrollReveal delay={150} className="lg:col-span-5">
