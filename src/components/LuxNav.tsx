@@ -94,13 +94,14 @@ export function LuxNav() {
           <Link to="/" className="group flex items-center gap-3 shrink-0" aria-label="Palm Charcoal">
             <span className="relative">
               <span className="absolute inset-0 rounded-full bg-gold/25 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-              <img decoding="async" loading="eager" {...({ fetchpriority: "high" } as any)}
-                src={logo}
+              <BrandLogo
+                eager
                 alt="فحم النخلة Palm Charcoal"
                 width={56}
                 height={56}
                 className={`relative w-auto transition-all duration-700 group-hover:scale-105 ${scrolled ? 'h-9 md:h-10' : 'h-11 md:h-12'}`}
               />
+
             </span>
             <span className={`hidden sm:inline lux-emerald-wordmark font-bold transition-all duration-500 ${scrolled ? 'text-xl' : 'text-2xl xl:text-[1.65rem]'}`}>
               فحم النخلة
