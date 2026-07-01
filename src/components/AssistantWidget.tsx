@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Send, Loader2, Sparkles, X, Maximize2, CheckCircle2, MessageCircle, FileText, User, Phone, MapPin, Truck, Warehouse } from 'lucide-react';
+import { Send, Loader2, Sparkles, X, Maximize2, CheckCircle2, MessageCircle, FileText, User, Phone, MapPin, Truck, Warehouse, History, Plus } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { QuoteBuilder } from './QuoteBuilder';
 import { quoteForItems, formatSAR } from '@/data/inventory';
@@ -117,6 +117,9 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
   const [quoteOpen, setQuoteOpen] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
   const [conversationId, setConversationId] = useState<string | null>(null);
+  const [threads, setThreads] = useState<Array<{ id: string; title: string | null; preview: string | null; updated_at: string }>>([]);
+  const [threadsOpen, setThreadsOpen] = useState(false);
+  const [threadsLoading, setThreadsLoading] = useState(false);
   const hydratedFromCloud = useRef(false);
   const abortRef = useRef<AbortController | null>(null);
 
@@ -178,6 +181,46 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
       }
     })();
   }, [userId]);
+
+  // Load thread list for signed-in users (refreshed when panel opens or convId changes).
+  const loadThreads = async () => {
+    if (!userId) return;
+    setThreadsLoading(true);
+    const { data } = await supabase
+      .from('chat_conversations')
+      .select('id, title, last_message_preview, updated_at')
+      .eq('user_id', userId)
+      .order('updated_at', { ascending: false })
+      .limit(30);
+    setThreads((data ?? []).map((r: any) => ({ id: r.id, title: r.title, preview: r.last_message_preview, updated_at: r.updated_at })));
+    setThreadsLoading(false);
+  };
+  useEffect(() => { if (threadsOpen) loadThreads(); }, [threadsOpen, userId, conversationId]);
+
+  const switchThread = async (id: string) => {
+    setThreadsOpen(false);
+    if (id === conversationId) return;
+    setConversationId(id);
+    const { data: rows } = await supabase
+      .from('chat_messages')
+      .select('id, role, content')
+      .eq('conversation_id', id)
+      .order('created_at', { ascending: true })
+      .limit(200);
+    const restored: Msg[] = (rows ?? []).map((r: any) => ({ id: r.id, role: r.role, content: r.content }));
+    setMessages([greet, ...restored]);
+    setPendingOrder(null);
+    setTimeout(() => scrollRef.current?.scrollTo({ top: 9e9 }), 60);
+  };
+
+  const startNewThread = () => {
+    setThreadsOpen(false);
+    setConversationId(null);
+    setMessages([greet]);
+    setPendingOrder(null);
+    setInput('');
+    inputRef.current?.focus();
+  };
 
 
   useEffect(() => { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(messages)); }, [messages]);
@@ -485,13 +528,24 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
         >
           <MessageCircle className="w-5 h-5 sm:w-4 sm:h-4" />
         </a>
+        {userId && (
+          <button
+            onClick={() => setThreadsOpen(v => !v)}
+            className="relative p-2 sm:p-1.5 rounded-lg hover:bg-white/10 active:bg-white/15 transition shrink-0"
+            aria-label="محادثاتي السابقة"
+            aria-expanded={threadsOpen}
+            title="محادثاتي السابقة"
+          >
+            <History className="w-5 h-5 sm:w-4 sm:h-4 text-cream" />
+          </button>
+        )}
         <button
-          onClick={() => { setMessages([greet]); setPendingOrder(null); setInput(''); inputRef.current?.focus(); }}
+          onClick={startNewThread}
           className="relative p-2 sm:p-1.5 rounded-lg hover:bg-white/10 active:bg-white/15 transition shrink-0 hidden sm:inline-flex"
           aria-label="محادثة جديدة"
           title="بدء محادثة جديدة"
         >
-          <Sparkles className="w-4 h-4 text-gold-hi" />
+          <Plus className="w-4 h-4 text-gold-hi" />
         </button>
         <button
           onClick={() => { onClose(); navigate('/assistant'); }}
@@ -510,6 +564,47 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
       <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
         {liveStatus}
       </div>
+
+      {/* Threads panel (signed-in users) */}
+      {threadsOpen && userId && (
+        <div className="absolute inset-x-0 top-[57px] bottom-0 z-10 bg-background/98 backdrop-blur-sm border-t border-gold/25 flex flex-col font-arabic animate-in slide-in-from-top-2 duration-200">
+          <div className="flex items-center justify-between px-3 py-2 border-b border-gold/20">
+            <p className="text-xs font-semibold text-foreground flex items-center gap-1.5">
+              <History className="w-3.5 h-3.5 text-gold" /> محادثاتي السابقة
+            </p>
+            <div className="flex items-center gap-1">
+              <button onClick={startNewThread} className="text-[11px] px-2 py-1 rounded-md bg-gold text-dark font-semibold hover:bg-gold/90 inline-flex items-center gap-1">
+                <Plus className="w-3 h-3" /> جديدة
+              </button>
+              <button onClick={() => setThreadsOpen(false)} className="p-1 rounded-md hover:bg-muted" aria-label="إغلاق القائمة">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+          <div className="flex-1 overflow-y-auto p-2 space-y-1">
+            {threadsLoading ? (
+              <div className="flex items-center justify-center py-6 text-xs text-muted-foreground gap-2">
+                <Loader2 className="w-3.5 h-3.5 animate-spin" /> جارٍ التحميل…
+              </div>
+            ) : threads.length === 0 ? (
+              <p className="text-center text-xs text-muted-foreground py-6">لا توجد محادثات محفوظة بعد.</p>
+            ) : threads.map(t => {
+              const active = t.id === conversationId;
+              return (
+                <button
+                  key={t.id}
+                  onClick={() => switchThread(t.id)}
+                  className={`w-full text-right px-2.5 py-2 rounded-lg border transition ${active ? 'border-gold bg-gold/10' : 'border-border/60 hover:border-gold/40 hover:bg-muted/50'}`}
+                >
+                  <p className="text-[12px] font-semibold text-foreground truncate">{t.title || 'محادثة'}</p>
+                  {t.preview && <p className="text-[10px] text-muted-foreground line-clamp-1 mt-0.5">{t.preview}</p>}
+                  <p className="text-[9px] text-muted-foreground/70 mt-0.5">{new Date(t.updated_at).toLocaleString('ar-SA', { dateStyle: 'short', timeStyle: 'short' })}</p>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
 
       {/* Messages */}
