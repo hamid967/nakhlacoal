@@ -56,6 +56,11 @@ export function QuickEditTrademarkDialog({ open, onOpenChange, trademark, isAr }
       expires_hijri: trademark.expiresHijri,
       image_url: /^https?:\/\//.test(trademark.image) ? trademark.image : '',
     });
+    setPreview((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return null;
+    });
+
   }, [open, trademark]);
 
   const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
