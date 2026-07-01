@@ -182,6 +182,46 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
     })();
   }, [userId]);
 
+  // Load thread list for signed-in users (refreshed when panel opens or convId changes).
+  const loadThreads = async () => {
+    if (!userId) return;
+    setThreadsLoading(true);
+    const { data } = await supabase
+      .from('chat_conversations')
+      .select('id, title, last_message_preview, updated_at')
+      .eq('user_id', userId)
+      .order('updated_at', { ascending: false })
+      .limit(30);
+    setThreads((data ?? []).map((r: any) => ({ id: r.id, title: r.title, preview: r.last_message_preview, updated_at: r.updated_at })));
+    setThreadsLoading(false);
+  };
+  useEffect(() => { if (threadsOpen) loadThreads(); }, [threadsOpen, userId, conversationId]);
+
+  const switchThread = async (id: string) => {
+    setThreadsOpen(false);
+    if (id === conversationId) return;
+    setConversationId(id);
+    const { data: rows } = await supabase
+      .from('chat_messages')
+      .select('id, role, content')
+      .eq('conversation_id', id)
+      .order('created_at', { ascending: true })
+      .limit(200);
+    const restored: Msg[] = (rows ?? []).map((r: any) => ({ id: r.id, role: r.role, content: r.content }));
+    setMessages([greet, ...restored]);
+    setPendingOrder(null);
+    setTimeout(() => scrollRef.current?.scrollTo({ top: 9e9 }), 60);
+  };
+
+  const startNewThread = () => {
+    setThreadsOpen(false);
+    setConversationId(null);
+    setMessages([greet]);
+    setPendingOrder(null);
+    setInput('');
+    inputRef.current?.focus();
+  };
+
 
   useEffect(() => { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(messages)); }, [messages]);
 
