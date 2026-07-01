@@ -68,8 +68,18 @@ export function CartProvider({ children }: { children: ReactNode }) {
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
 
+const noopCart: CartCtx = {
+  items: [],
+  count: 0,
+  subtotal: 0,
+  add: () => {},
+  remove: () => {},
+  setQty: () => {},
+  clear: () => {},
+  open: false,
+  setOpen: () => {},
+};
+
 export function useCart() {
-  const v = useContext(Ctx);
-  if (!v) throw new Error('useCart must be used within CartProvider');
-  return v;
+  return useContext(Ctx) ?? noopCart;
 }
