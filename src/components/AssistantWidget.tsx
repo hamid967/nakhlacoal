@@ -65,6 +65,18 @@ function extractOrder(text: string): { order: Record<string, any> | null; clean:
   try { return { order: JSON.parse(m[1]), clean: text.replace(m[0], '').trim() }; }
   catch { return { order: null, clean: text }; }
 }
+type ToolActivity = { name: string; args: Record<string, any>; result: any };
+function extractTools(text: string): { tools: ToolActivity[]; clean: string } {
+  const m = text.match(/<<TOOLS>>([\s\S]*?)<<END>>\n?/);
+  if (!m) return { tools: [], clean: text };
+  try { return { tools: JSON.parse(m[1]) as ToolActivity[], clean: text.replace(m[0], '') }; }
+  catch { return { tools: [], clean: text.replace(m[0], '') }; }
+}
+const TOOL_META: Record<string, { icon: string; label: string }> = {
+  check_inventory: { icon: '📦', label: 'فحص المخزون' },
+  track_order: { icon: '🚚', label: 'تتبع الطلب' },
+  create_quote_link: { icon: '📄', label: 'إنشاء عرض سعر' },
+};
 const buildWa = (o: Record<string, any>) => [
   '🌴 *طلب جديد — فحم النخلة*', '',
   `*المنتج:* ${o.product_type}`,
@@ -611,8 +623,10 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-3 py-3 space-y-3 bg-muted/20">
         {messages.map((m, idx) => {
           const isLastAssistant = m.role === 'assistant' && idx === messages.length - 1;
-          const showTyping = isLastAssistant && streaming && !m.content;
-          const { chips, clean } = m.role === 'assistant' ? extractQuickReplies(m.content) : { chips: [], clean: m.content };
+          const { tools, clean: afterTools } = m.role === 'assistant' ? extractTools(m.content) : { tools: [], clean: m.content };
+          const showTyping = isLastAssistant && streaming && !afterTools;
+          const { chips, clean } = m.role === 'assistant' ? extractQuickReplies(afterTools) : { chips: [], clean: afterTools };
+
           const showChips = isLastAssistant && !streaming && chips.length > 0 && !pendingOrder;
           return (
           <div key={m.id} className={`flex gap-2 ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
@@ -622,6 +636,26 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
               </div>
             )}
             <div className="max-w-[85%]">
+              {m.role === 'assistant' && tools.length > 0 && (
+                <div className="mb-1.5 space-y-1">
+                  {tools.map((t, i) => {
+                    const meta = TOOL_META[t.name] ?? { icon: '🛠️', label: t.name };
+                    return (
+                      <details key={i} className="rounded-lg border border-gold/30 bg-gold/5 text-[11px] font-arabic">
+                        <summary className="cursor-pointer select-none px-2 py-1 flex items-center gap-1.5 hover:bg-gold/10 rounded-lg">
+                          <span>{meta.icon}</span>
+                          <span className="font-semibold text-foreground">{meta.label}</span>
+                          <CheckCircle2 className="w-3 h-3 text-emerald-600 ms-auto" />
+                        </summary>
+                        <pre className="px-2 pb-2 pt-1 text-[10px] leading-tight overflow-x-auto text-muted-foreground whitespace-pre-wrap break-all">
+{JSON.stringify(t.result, null, 2).slice(0, 800)}
+                        </pre>
+                      </details>
+                    );
+                  })}
+                </div>
+              )}
+
               {m.role === 'user' ? (
                 <div className="rounded-2xl rounded-tr-sm bg-primary text-primary-foreground px-3 py-2 text-sm whitespace-pre-wrap">
                   {m.content}
