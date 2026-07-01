@@ -117,6 +117,9 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
   const [quoteOpen, setQuoteOpen] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
   const [conversationId, setConversationId] = useState<string | null>(null);
+  const [threads, setThreads] = useState<Array<{ id: string; title: string | null; preview: string | null; updated_at: string }>>([]);
+  const [threadsOpen, setThreadsOpen] = useState(false);
+  const [threadsLoading, setThreadsLoading] = useState(false);
   const hydratedFromCloud = useRef(false);
   const abortRef = useRef<AbortController | null>(null);
 
