@@ -180,9 +180,10 @@ export function QuoteForm({ initialSlug, compact = false }: { initialSlug?: stri
             <div className="col-span-3 sm:col-span-2 flex items-center justify-between gap-1">
               <div className="text-sm font-semibold text-gold whitespace-nowrap">{fmt(line.lineTotal)} ر.س</div>
               {computed.items.length > 1 && (
-                <Button size="icon" variant="ghost" onClick={() => setLines((ls) => ls.filter((_, idx) => idx !== i))}>
+                <Button aria-label="حذف المنتج" size="icon" variant="ghost" onClick={() => setLines((ls) => ls.filter((_, idx) => idx !== i))}>
                   <Trash2 className="size-4" />
                 </Button>
+
               )}
             </div>
           </div>
