@@ -82,14 +82,23 @@ async function auditRoute(context, route) {
   }
   const timing = Date.now() - t0;
   try { await page.waitForSelector("h1, main, [role=main]", { timeout: 3000 }); } catch {}
-  await page.waitForTimeout(500);
+  // Wait for react-helmet-async to hydrate per-route <meta name=description>.
+  try {
+    await page.waitForFunction(() => {
+      const m = document.querySelector('meta[name="description"][data-rh="true"]');
+      return !!m && (m.getAttribute('content') || '').length > 20;
+    }, { timeout: 5000 });
+  } catch {}
+  await page.waitForTimeout(300);
 
   if (status >= 400) findings.push({ rule: "http_error", detail: `HTTP ${status}` });
   if (timing > 8000) findings.push({ rule: "slow_dcl", detail: `DCL ${timing}ms` });
 
   const meta = await page.evaluate(() => ({
     title: document.title || "",
-    desc: document.querySelector('meta[name="description"]')?.getAttribute("content") || "",
+    desc: (document.querySelector('meta[name="description"][data-rh="true"]')?.getAttribute("content")
+      || document.querySelector('meta[name="description"]')?.getAttribute("content")
+      || ""),
     lang: document.documentElement.lang || "",
     h1Count: document.querySelectorAll("h1").length,
     imgsNoAlt: [...document.images].filter((i) => !i.getAttribute("alt")).length,

@@ -1,0 +1,404 @@
+{
+  "base": "http://localhost:8080",
+  "generatedAt": "2026-07-01T18:06:38.383Z",
+  "results": [
+    {
+      "route": "/",
+      "status": 200,
+      "timing": 549,
+      "meta": {
+        "title": "فحم النخلة | الفحم السعودي الفاخر",
+        "desc": "فحم طبيعي ١٠٠٪ — احتراق أطول، حرارة أعلى، ورماد أقل.",
+        "lang": "ar",
+        "h1Count": 2,
+        "imgsNoAlt": 3,
+        "cspMeta": true
+      },
+      "findings": [
+        {
+          "rule": "short_desc",
+          "detail": "52 chars"
+        },
+        {
+          "rule": "multiple_h1",
+          "detail": "2 h1s"
+        },
+        {
+          "rule": "img_no_alt",
+          "detail": "3 imgs"
+        },
+        {
+          "rule": "csp_meta"
+        },
+        {
+          "rule": "console_error",
+          "detail": "The Content Security Policy directive 'frame-ancestors' is ignored when delivered via a <meta> element."
+        }
+      ]
+    },
+    {
+      "route": "/products",
+      "status": 200,
+      "timing": 453,
+      "meta": {
+        "title": "المنتجات — فحم النخلة",
+        "desc": "تشكيلة فاخرة من الفحم السعودي للشواء والشيشة والتصدير.",
+        "lang": "ar",
+        "h1Count": 1,
+        "imgsNoAlt": 3,
+        "cspMeta": true
+      },
+      "findings": [
+        {
+          "rule": "short_desc",
+          "detail": "54 chars"
+        },
+        {
+          "rule": "img_no_alt",
+          "detail": "3 imgs"
+        },
+        {
+          "rule": "csp_meta"
+        },
+        {
+          "rule": "console_error",
+          "detail": "The Content Security Policy directive 'frame-ancestors' is ignored when delivered via a <meta> element."
+        }
+      ]
+    },
+    {
+      "route": "/quality",
+      "status": 200,
+      "timing": 441,
+      "meta": {
+        "title": "الجودة — فحم النخلة",
+        "desc": "كل دفعة من فحم النخلة مقيسة ومعتمدة. مختبر متكامل، تحليلات حية، وشهادات دولية.",
+        "lang": "ar",
+        "h1Count": 1,
+        "imgsNoAlt": 3,
+        "cspMeta": true
+      },
+      "findings": [
+        {
+          "rule": "short_desc",
+          "detail": "78 chars"
+        },
+        {
+          "rule": "img_no_alt",
+          "detail": "3 imgs"
+        },
+        {
+          "rule": "csp_meta"
+        },
+        {
+          "rule": "console_error",
+          "detail": "The Content Security Policy directive 'frame-ancestors' is ignored when delivered via a <meta> element."
+        }
+      ]
+    },
+    {
+      "route": "/trademarks",
+      "status": 200,
+      "timing": 485,
+      "meta": {
+        "title": "العلامات التجارية المسجلة | فحم النخلة، نخلان، المركاز، النخلتين، باعشن",
+        "desc": "خمس علامات تجارية سعودية مسجلة رسمياً لدى الهيئة السعودية للملكية الفكرية لمؤسسة محمد عبدالله باعشن التجارية — فحم النخلة، نخلان، المركاز، النخلتين، وباعشن، مع أرقام التسجيل وتواريخ الحماية.",
+        "lang": "ar",
+        "h1Count": 1,
+        "imgsNoAlt": 3,
+        "cspMeta": true
+      },
+      "findings": [
+        {
+          "rule": "img_no_alt",
+          "detail": "3 imgs"
+        },
+        {
+          "rule": "csp_meta"
+        },
+        {
+          "rule": "console_error",
+          "detail": "The Content Security Policy directive 'frame-ancestors' is ignored when delivered via a <meta> element."
+        }
+      ]
+    },
+    {
+      "route": "/wholesale",
+      "status": 200,
+      "timing": 490,
+      "meta": {
+        "title": "تسجيل الدخول | فحم النخلة",
+        "desc": "بوابة دخول آمنة لعملاء وشركاء فحم النخلة.",
+        "lang": "ar",
+        "h1Count": 2,
+        "imgsNoAlt": 4,
+        "cspMeta": true
+      },
+      "findings": [
+        {
+          "rule": "short_desc",
+          "detail": "41 chars"
+        },
+        {
+          "rule": "multiple_h1",
+          "detail": "2 h1s"
+        },
+        {
+          "rule": "img_no_alt",
+          "detail": "4 imgs"
+        },
+        {
+          "rule": "csp_meta"
+        },
+        {
+          "rule": "console_error",
+          "detail": "The Content Security Policy directive 'frame-ancestors' is ignored when delivered via a <meta> element."
+        },
+        {
+          "rule": "duplicate_desc",
+          "detail": "shared with /auth"
+        }
+      ]
+    },
+    {
+      "route": "/quote",
+      "status": 200,
+      "timing": 474,
+      "meta": {
+        "title": "عرض سعر فوري | فحم النخلة — Palm Charcoal",
+        "desc": "احصل على عرض سعر فوري لأنواع الفحم الفاخر مع مساعد فحم النخلة الذكي. شامل الضريبة، التسعير الجملة، وإرسال مباشر عبر واتساب.",
+        "lang": "ar",
+        "h1Count": 1,
+        "imgsNoAlt": 3,
+        "cspMeta": true
+      },
+      "findings": [
+        {
+          "rule": "img_no_alt",
+          "detail": "3 imgs"
+        },
+        {
+          "rule": "csp_meta"
+        },
+        {
+          "rule": "console_error",
+          "detail": "The Content Security Policy directive 'frame-ancestors' is ignored when delivered via a <meta> element."
+        }
+      ]
+    },
+    {
+      "route": "/checkout",
+      "status": 200,
+      "timing": 495,
+      "meta": {
+        "title": "إتمام الطلب",
+        "desc": "أكمل شراء منتجات فحم النخلة بأمان ودفع مبسّط.",
+        "lang": "ar",
+        "h1Count": 1,
+        "imgsNoAlt": 3,
+        "cspMeta": true
+      },
+      "findings": [
+        {
+          "rule": "short_desc",
+          "detail": "45 chars"
+        },
+        {
+          "rule": "img_no_alt",
+          "detail": "3 imgs"
+        },
+        {
+          "rule": "csp_meta"
+        },
+        {
+          "rule": "console_error",
+          "detail": "The Content Security Policy directive 'frame-ancestors' is ignored when delivered via a <meta> element."
+        }
+      ]
+    },
+    {
+      "route": "/about",
+      "status": 200,
+      "timing": 501,
+      "meta": {
+        "title": "من نحن — فحم النخلة",
+        "desc": "علامة سعودية متخصصة في إنتاج واستيراد وتوريد الفحم الطبيعي عالي الجودة، من سوق الفحم بجدة البلد إلى العالم.",
+        "lang": "ar",
+        "h1Count": 1,
+        "imgsNoAlt": 3,
+        "cspMeta": true
+      },
+      "findings": [
+        {
+          "rule": "img_no_alt",
+          "detail": "3 imgs"
+        },
+        {
+          "rule": "csp_meta"
+        },
+        {
+          "rule": "console_error",
+          "detail": "The Content Security Policy directive 'frame-ancestors' is ignored when delivered via a <meta> element."
+        }
+      ]
+    },
+    {
+      "route": "/contact",
+      "status": 200,
+      "timing": 453,
+      "meta": {
+        "title": "تواصل معنا — فحم النخلة",
+        "desc": "مكتب التصدير لدينا يرد خلال يوم عمل واحد.",
+        "lang": "ar",
+        "h1Count": 1,
+        "imgsNoAlt": 3,
+        "cspMeta": true
+      },
+      "findings": [
+        {
+          "rule": "short_desc",
+          "detail": "41 chars"
+        },
+        {
+          "rule": "img_no_alt",
+          "detail": "3 imgs"
+        },
+        {
+          "rule": "csp_meta"
+        },
+        {
+          "rule": "console_error",
+          "detail": "The Content Security Policy directive 'frame-ancestors' is ignored when delivered via a <meta> element."
+        }
+      ]
+    },
+    {
+      "route": "/auth",
+      "status": 200,
+      "timing": 525,
+      "meta": {
+        "title": "تسجيل الدخول | فحم النخلة",
+        "desc": "بوابة دخول آمنة لعملاء وشركاء فحم النخلة.",
+        "lang": "ar",
+        "h1Count": 2,
+        "imgsNoAlt": 4,
+        "cspMeta": true
+      },
+      "findings": [
+        {
+          "rule": "short_desc",
+          "detail": "41 chars"
+        },
+        {
+          "rule": "multiple_h1",
+          "detail": "2 h1s"
+        },
+        {
+          "rule": "img_no_alt",
+          "detail": "4 imgs"
+        },
+        {
+          "rule": "csp_meta"
+        },
+        {
+          "rule": "console_error",
+          "detail": "The Content Security Policy directive 'frame-ancestors' is ignored when delivered via a <meta> element."
+        },
+        {
+          "rule": "duplicate_desc",
+          "detail": "shared with /wholesale"
+        }
+      ]
+    },
+    {
+      "route": "/portal/login",
+      "status": 200,
+      "timing": 572,
+      "meta": {
+        "title": "بوابة العملاء — دخول | فحم النخلة",
+        "desc": "بوابة عملاء فحم النخلة: سجّل الدخول أو أنشئ حسابك لإدارة الطلبات والشحنات والفواتير بأمان.",
+        "lang": "ar",
+        "h1Count": 1,
+        "imgsNoAlt": 0,
+        "cspMeta": true
+      },
+      "findings": [
+        {
+          "rule": "csp_meta"
+        },
+        {
+          "rule": "console_error",
+          "detail": "The Content Security Policy directive 'frame-ancestors' is ignored when delivered via a <meta> element."
+        }
+      ]
+    },
+    {
+      "route": "/faq",
+      "status": 200,
+      "timing": 529,
+      "meta": {
+        "title": "صفحة غير موجودة | فحم النخلة",
+        "desc": "الصفحة غير موجودة.",
+        "lang": "ar",
+        "h1Count": 1,
+        "imgsNoAlt": 3,
+        "cspMeta": true
+      },
+      "findings": [
+        {
+          "rule": "short_desc",
+          "detail": "18 chars"
+        },
+        {
+          "rule": "img_no_alt",
+          "detail": "3 imgs"
+        },
+        {
+          "rule": "csp_meta"
+        },
+        {
+          "rule": "console_error",
+          "detail": "The Content Security Policy directive 'frame-ancestors' is ignored when delivered via a <meta> element."
+        },
+        {
+          "rule": "duplicate_desc",
+          "detail": "shared with /pricing"
+        }
+      ]
+    },
+    {
+      "route": "/pricing",
+      "status": 200,
+      "timing": 487,
+      "meta": {
+        "title": "صفحة غير موجودة | فحم النخلة",
+        "desc": "الصفحة غير موجودة.",
+        "lang": "ar",
+        "h1Count": 1,
+        "imgsNoAlt": 3,
+        "cspMeta": true
+      },
+      "findings": [
+        {
+          "rule": "short_desc",
+          "detail": "18 chars"
+        },
+        {
+          "rule": "img_no_alt",
+          "detail": "3 imgs"
+        },
+        {
+          "rule": "csp_meta"
+        },
+        {
+          "rule": "console_error",
+          "detail": "The Content Security Policy directive 'frame-ancestors' is ignored when delivered via a <meta> element."
+        },
+        {
+          "rule": "duplicate_desc",
+          "detail": "shared with /faq"
+        }
+      ]
+    }
+  ]
+}
