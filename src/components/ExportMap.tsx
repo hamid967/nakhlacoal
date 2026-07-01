@@ -310,13 +310,23 @@ export function ExportMap() {
                   aria-label={`${isAr ? p.cityAr : p.cityEn} — ${isAr ? 'اعرض تفاصيل الشحن' : 'View shipment details'} (${i + 1}/${POINTS.length})`}
                   aria-pressed={selected?.id === p.id}
                   className="focus:outline-none [&:focus-visible_.focus-ring]:opacity-100"
-                  style={{ cursor: 'pointer' }}
+                  style={{
+                    cursor: 'pointer',
+                    opacity: guide === 'arcs' ? 0.35 : 1,
+                    transition: 'opacity 0.25s',
+                  }}
                 >
-                  <circle r="14" fill="url(#glow)" opacity={isActive ? 1 : 0.6} />
-                  <circle r={isActive ? 5.5 : 4} fill="hsl(46 72% 62%)">
+                  <circle
+                    r={guide === 'points' ? 20 : 14}
+                    fill="url(#glow)"
+                    opacity={isActive || guide === 'points' ? 1 : 0.6}
+                    style={{ transition: 'r 0.25s, opacity 0.25s' }}
+                  />
+                  <circle r={isActive || guide === 'points' ? 6 : 4} fill="hsl(46 72% 62%)" style={{ transition: 'r 0.25s' }}>
                     <animate attributeName="opacity" values="1;0.6;1" dur="2.4s" repeatCount="indefinite" />
                   </circle>
                   <circle r="1.6" fill="hsl(0 0% 4%)" />
+
                   {/* High-contrast focus ring — visible only when keyboard-focused */}
                   <circle
                     className="focus-ring"
