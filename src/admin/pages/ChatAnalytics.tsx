@@ -37,6 +37,9 @@ export default function ChatAnalytics() {
   const [loading, setLoading] = useState(true);
   const [days, setDays] = useState(30);
   const [selected, setSelected] = useState<string | null>(null);
+  const [live, setLive] = useState(false);
+  const pulse = useRef<number>(0);
+  const [pulseKey, setPulseKey] = useState(0);
 
   useEffect(() => {
     (async () => {
@@ -49,6 +52,32 @@ export default function ChatAnalytics() {
       setMsgs((m.data as Message[]) || []);
       setLoading(false);
     })();
+
+    const channel = supabase
+      .channel('admin-chat-analytics')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_messages' }, (payload) => {
+        setMsgs((prev) => {
+          const row = payload.new as Message;
+          if (prev.some((m) => m.id === row.id)) return prev;
+          return [row, ...prev];
+        });
+        pulse.current += 1;
+        setPulseKey((k) => k + 1);
+      })
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_conversations' }, (payload) => {
+        setConvs((prev) => {
+          const row = payload.new as Conversation;
+          if (prev.some((c) => c.id === row.id)) return prev;
+          return [row, ...prev];
+        });
+      })
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'chat_conversations' }, (payload) => {
+        const row = payload.new as Conversation;
+        setConvs((prev) => prev.map((c) => (c.id === row.id ? row : c)));
+      })
+      .subscribe((status) => setLive(status === 'SUBSCRIBED'));
+
+    return () => { supabase.removeChannel(channel); };
   }, []);
 
   const filteredConvs = useMemo(() => {
