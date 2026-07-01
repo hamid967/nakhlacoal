@@ -72,6 +72,8 @@ const noopCart: CartCtx = {
   items: [],
   count: 0,
   subtotal: 0,
+  vat: 0,
+  total: 0,
   add: () => {},
   remove: () => {},
   setQty: () => {},
