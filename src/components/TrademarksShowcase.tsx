@@ -152,6 +152,17 @@ export function TrademarksShowcase() {
               >
                 <ChevronRight aria-hidden="true" className="w-5 h-5" />
               </button>
+              {canEdit && (
+                <button
+                  type="button"
+                  onClick={() => setEditOpen(true)}
+                  aria-label={isAr ? 'تعديل سريع' : 'Quick edit'}
+                  className="absolute top-4 end-4 z-30 inline-flex items-center gap-1.5 rounded-full bg-emerald text-cream text-xs font-medium px-3 py-1.5 shadow-md hover:bg-emerald/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                >
+                  <Pencil aria-hidden="true" className="w-3.5 h-3.5" />
+                  {isAr ? 'تعديل' : 'Edit'}
+                </button>
+              )}
               <img
                 src={current.image}
                 alt={isAr ? current.nameAr : current.nameEn}
