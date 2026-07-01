@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { SEO } from '@/components/SEO';
-import { Loader2, MessageSquare, Users, Sparkles, TrendingUp } from 'lucide-react';
+import { Loader2, MessageSquare, Users, Sparkles, TrendingUp, Radio } from 'lucide-react';
 import {
   ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid,
   BarChart, Bar,
