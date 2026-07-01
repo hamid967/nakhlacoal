@@ -28,6 +28,8 @@ interface Props {
 export function QuickEditTrademarkDialog({ open, onOpenChange, trademark, isAr }: Props) {
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [preview, setPreview] = useState<string | null>(null);
+
 
   const [form, setForm] = useState({
     name_ar: '',
@@ -54,56 +56,113 @@ export function QuickEditTrademarkDialog({ open, onOpenChange, trademark, isAr }
       expires_hijri: trademark.expiresHijri,
       image_url: /^https?:\/\//.test(trademark.image) ? trademark.image : '',
     });
+    setPreview((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return null;
+    });
+
   }, [open, trademark]);
 
   const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     setForm((f) => ({ ...f, [k]: e.target.value }));
 
+  const ACCEPTED = ['image/png', 'image/jpeg', 'image/webp', 'image/svg+xml'];
+  const MAX_DIM = 512;
+
+  const normalize = (file: File): Promise<{ blob: Blob; ext: string; contentType: string; width: number; height: number }> =>
+    new Promise((resolve, reject) => {
+      // SVG: keep as-is (vector).
+      if (file.type === 'image/svg+xml') {
+        resolve({ blob: file, ext: 'svg', contentType: 'image/svg+xml', width: 0, height: 0 });
+        return;
+      }
+      const img = new Image();
+      const objUrl = URL.createObjectURL(file);
+      img.onload = () => {
+        const scale = Math.min(1, MAX_DIM / Math.max(img.width, img.height));
+        const w = Math.max(1, Math.round(img.width * scale));
+        const h = Math.max(1, Math.round(img.height * scale));
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          URL.revokeObjectURL(objUrl);
+          reject(new Error('canvas'));
+          return;
+        }
+        ctx.imageSmoothingQuality = 'high';
+        ctx.drawImage(img, 0, 0, w, h);
+        canvas.toBlob(
+          (blob) => {
+            URL.revokeObjectURL(objUrl);
+            if (!blob) return reject(new Error('encode'));
+            resolve({ blob, ext: 'webp', contentType: 'image/webp', width: w, height: h });
+          },
+          'image/webp',
+          0.92,
+        );
+      };
+      img.onerror = () => {
+        URL.revokeObjectURL(objUrl);
+        reject(new Error('decode'));
+      };
+      img.src = objUrl;
+    });
+
   const onUpload = async (file: File) => {
     if (!file) return;
-    if (!file.type.startsWith('image/')) {
-      toast({ title: isAr ? 'ملف غير صالح' : 'Invalid file', description: isAr ? 'اختر ملف صورة.' : 'Please choose an image.', variant: 'destructive' });
+    if (!ACCEPTED.includes(file.type)) {
+      toast({ title: isAr ? 'صيغة غير مدعومة' : 'Unsupported format', description: 'PNG · JPG · WEBP · SVG', variant: 'destructive' });
       return;
     }
     if (file.size > 4 * 1024 * 1024) {
       toast({ title: isAr ? 'الحجم كبير' : 'File too large', description: isAr ? 'الحد الأقصى 4MB.' : 'Max 4MB.', variant: 'destructive' });
       return;
     }
+    // Instant local preview before upload finishes.
+    const localPreview = URL.createObjectURL(file);
+    setPreview(localPreview);
     setUploading(true);
-    const ext = (file.name.split('.').pop() || 'png').toLowerCase();
-    const path = `${trademark.id}/${Date.now()}.${ext}`;
-    const { error: upErr } = await supabase.storage
-      .from(LOGO_BUCKET)
-      .upload(path, file, { cacheControl: '31536000', upsert: true, contentType: file.type });
-    if (upErr) {
-      setUploading(false);
-      toast({ title: isAr ? 'فشل الرفع' : 'Upload failed', description: upErr.message, variant: 'destructive' });
-      return;
-    }
-    // Try public URL first (works when bucket is public); fall back to a long-lived signed URL.
-    const { data: pub } = supabase.storage.from(LOGO_BUCKET).getPublicUrl(path);
-    let url = pub?.publicUrl ?? '';
     try {
-      const head = await fetch(url, { method: 'HEAD' });
-      if (!head.ok) url = '';
-    } catch {
-      url = '';
-    }
-    if (!url) {
-      const { data: signed, error: signErr } = await supabase.storage
+      const { blob, ext, contentType, width, height } = await normalize(file);
+      const path = `${trademark.id}/${Date.now()}.${ext}`;
+      const { error: upErr } = await supabase.storage
         .from(LOGO_BUCKET)
-        .createSignedUrl(path, SIGNED_URL_TTL);
-      if (signErr || !signed) {
-        setUploading(false);
-        toast({ title: isAr ? 'تعذّر إنشاء الرابط' : 'URL error', description: signErr?.message ?? '', variant: 'destructive' });
-        return;
+        .upload(path, blob, { cacheControl: '31536000', upsert: true, contentType });
+      if (upErr) throw upErr;
+      const { data: pub } = supabase.storage.from(LOGO_BUCKET).getPublicUrl(path);
+      let url = pub?.publicUrl ?? '';
+      try {
+        const head = await fetch(url, { method: 'HEAD' });
+        if (!head.ok) url = '';
+      } catch {
+        url = '';
       }
-      url = signed.signedUrl;
+      if (!url) {
+        const { data: signed, error: signErr } = await supabase.storage
+          .from(LOGO_BUCKET)
+          .createSignedUrl(path, SIGNED_URL_TTL);
+        if (signErr || !signed) throw signErr ?? new Error('sign');
+        url = signed.signedUrl;
+      }
+      setForm((f) => ({ ...f, image_url: url }));
+      toast({
+        title: isAr ? 'تم رفع الشعار' : 'Logo uploaded',
+        description: width ? `${width}×${height} · ${ext.toUpperCase()}` : ext.toUpperCase(),
+      });
+    } catch (e) {
+      toast({ title: isAr ? 'فشل الرفع' : 'Upload failed', description: (e as Error).message, variant: 'destructive' });
+    } finally {
+      setUploading(false);
+      setPreview((prev) => {
+        if (prev) URL.revokeObjectURL(prev);
+        return null;
+      });
     }
-    setForm((f) => ({ ...f, image_url: url }));
-    setUploading(false);
-    toast({ title: isAr ? 'تم رفع الشعار' : 'Logo uploaded' });
+
   };
+
 
   const onSave = async () => {
 
@@ -195,14 +254,29 @@ export function QuickEditTrademarkDialog({ open, onOpenChange, trademark, isAr }
             </div>
             <Input className="mt-2" placeholder="https://…/logo.png" value={form.image_url} onChange={set('image_url')} />
 
-            {form.image_url && (
-              <img
-                src={form.image_url}
-                alt=""
-                className="mt-2 max-h-24 object-contain rounded border border-border p-2 bg-background"
-                onError={(e) => ((e.currentTarget.style.display = 'none'))}
-              />
+            {(preview || form.image_url) && (
+              <div className="mt-2 flex items-center gap-3">
+                <div className="relative shrink-0 rounded-lg border border-border bg-[conic-gradient(at_50%_50%,hsl(var(--muted))_0deg,transparent_90deg,hsl(var(--muted))_180deg,transparent_270deg)] bg-[length:16px_16px] p-2">
+                  <img
+                    src={preview ?? form.image_url}
+                    alt=""
+                    className="max-h-24 w-24 object-contain"
+                    onError={(e) => ((e.currentTarget.style.display = 'none'))}
+                  />
+                  {uploading && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-background/70 rounded-lg">
+                      <Loader2 className="w-5 h-5 animate-spin text-primary" />
+                    </div>
+                  )}
+                </div>
+                <p className="text-[11px] text-muted-foreground">
+                  {uploading
+                    ? isAr ? 'جارٍ الرفع والتنسيق…' : 'Uploading & optimizing…'
+                    : isAr ? 'معاينة · يتم تصغير الصورة إلى 512px وضغطها WebP.' : 'Preview · auto-resized to 512px and WebP-encoded.'}
+                </p>
+              </div>
             )}
+
           </Field>
         </div>
 
