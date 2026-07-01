@@ -101,9 +101,18 @@ export function TrademarksShowcase() {
         </div>
 
         {/* ================= Bento Grid ================= */}
+        <div
+          role="region"
+          aria-roledescription={isAr ? 'شرائح متحركة' : 'carousel'}
+          aria-label={isAr ? 'علاماتنا التجارية' : 'Our trademarks'}
+        >
         <AnimatePresence mode="wait">
           <motion.div
             key={current.id}
+            id="trademarks-slide"
+            role="group"
+            aria-roledescription={isAr ? 'شريحة' : 'slide'}
+            aria-label={`${isAr ? current.nameAr : current.nameEn} — ${active + 1} / ${total}`}
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -6 }}
@@ -112,20 +121,24 @@ export function TrademarksShowcase() {
           >
             {/* Logo main card — 8×3 */}
             <div className="md:col-span-8 md:row-span-3 relative bg-background rounded-3xl border border-gold/25 shadow-xl shadow-emerald/5 flex flex-col items-center justify-center p-8 overflow-hidden group">
-              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,hsl(var(--gold)/0.06),transparent_60%)]" />
+              <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,hsl(var(--gold)/0.06),transparent_60%)]" />
               <button
+                type="button"
                 onClick={() => go(-1)}
-                aria-label={isAr ? 'السابق' : 'Previous'}
-                className="absolute start-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-cream/80 border border-gold/40 hover:border-gold hover:bg-gold/10 transition flex items-center justify-center text-gold"
+                aria-label={isAr ? 'العلامة السابقة' : 'Previous trademark'}
+                aria-controls="trademarks-slide"
+                className="absolute start-4 top-1/2 -translate-y-1/2 z-20 min-w-11 min-h-11 w-11 h-11 rounded-full bg-cream border border-gold/50 hover:border-gold hover:bg-gold/15 transition flex items-center justify-center text-emerald focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
-                <ChevronLeft className="w-5 h-5" />
+                <ChevronLeft aria-hidden="true" className="w-5 h-5" />
               </button>
               <button
+                type="button"
                 onClick={() => go(1)}
-                aria-label={isAr ? 'التالي' : 'Next'}
-                className="absolute end-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-cream/80 border border-gold/40 hover:border-gold hover:bg-gold/10 transition flex items-center justify-center text-gold"
+                aria-label={isAr ? 'العلامة التالية' : 'Next trademark'}
+                aria-controls="trademarks-slide"
+                className="absolute end-4 top-1/2 -translate-y-1/2 z-20 min-w-11 min-h-11 w-11 h-11 rounded-full bg-cream border border-gold/50 hover:border-gold hover:bg-gold/15 transition flex items-center justify-center text-emerald focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
-                <ChevronRight className="w-5 h-5" />
+                <ChevronRight aria-hidden="true" className="w-5 h-5" />
               </button>
               <img
                 src={current.image}
