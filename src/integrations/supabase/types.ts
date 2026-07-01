@@ -43,6 +43,7 @@ export type Database = {
           created_at: string
           id: string
           last_message_preview: string | null
+          summary: string | null
           title: string | null
           updated_at: string
           user_id: string
@@ -51,6 +52,7 @@ export type Database = {
           created_at?: string
           id?: string
           last_message_preview?: string | null
+          summary?: string | null
           title?: string | null
           updated_at?: string
           user_id: string
@@ -59,9 +61,37 @@ export type Database = {
           created_at?: string
           id?: string
           last_message_preview?: string | null
+          summary?: string | null
           title?: string | null
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      chat_memory: {
+        Row: {
+          created_at: string
+          id: string
+          key: string
+          updated_at: string
+          user_id: string
+          value: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          key: string
+          updated_at?: string
+          user_id: string
+          value: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          key?: string
+          updated_at?: string
+          user_id?: string
+          value?: string
         }
         Relationships: []
       }
