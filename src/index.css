@@ -145,6 +145,23 @@
     font-weight: 700;
   }
 
+  /* Live font override — set by ThemeToggle for any picked font (incl. Tajawal/Cairo/Amiri) */
+  html[style*="--pc-font-family"] body,
+  html[style*="--pc-font-family"] h1,
+  html[style*="--pc-font-family"] h2,
+  html[style*="--pc-font-family"] h3,
+  html[style*="--pc-font-family"] h4,
+  html[style*="--pc-font-family"] h5,
+  html[style*="--pc-font-family"] h6,
+  html[style*="--pc-font-family"] p,
+  html[style*="--pc-font-family"] button,
+  html[style*="--pc-font-family"] input,
+  html[style*="--pc-font-family"] textarea,
+  html[style*="--pc-font-family"] select,
+  html[style*="--pc-font-family"] a {
+    font-family: var(--pc-font-family) !important;
+  }
+
 
   * {
     @apply border-border;
