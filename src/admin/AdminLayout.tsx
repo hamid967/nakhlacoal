@@ -6,6 +6,7 @@ import { AdminTopbar } from './AdminTopbar';
 import './admin.css';
 import { useVitalsAlerts } from './useVitalsAlerts';
 import { useRealtimeOrders } from './useRealtimeOrders';
+import { useRealtimeConversations } from './useRealtimeConversations';
 
 export default function AdminLayout() {
   const [collapsed, setCollapsed] = useState(false);
@@ -19,6 +20,8 @@ export default function AdminLayout() {
   useEffect(() => { localStorage.setItem('admin-theme', theme); }, [theme]);
   useVitalsAlerts();
   useRealtimeOrders();
+  useRealtimeConversations();
+
 
   return (
     <div className="admin-shell" data-theme={theme} dir="rtl">
