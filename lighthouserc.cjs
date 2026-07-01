@@ -6,7 +6,11 @@ module.exports = {
     collect: {
       startServerCommand: 'npm run build && npm run preview -- --port 4173',
       startServerReadyPattern: 'Local:',
-      url: ['http://localhost:4173/'],
+      url: [
+        'http://localhost:4173/',
+        'http://localhost:4173/products',
+        'http://localhost:4173/faq',
+      ],
       numberOfRuns: 3,
       settings: {
         preset: 'desktop',
