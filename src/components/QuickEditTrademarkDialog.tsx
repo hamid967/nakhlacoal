@@ -26,7 +26,7 @@ interface Props {
  * refreshes the showcase automatically.
  */
 export function QuickEditTrademarkDialog({ open, onOpenChange, trademark, isAr }: Props) {
-  const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [form, setForm] = useState({
     name_ar: '',
     name_en: '',
