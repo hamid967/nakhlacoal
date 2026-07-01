@@ -378,7 +378,90 @@ export function ExportMap() {
             </span>
           </div>
         </div>
+
+        {/* Guide / Legend — explains icons, values, and route semantics */}
+        <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {[
+            {
+              swatch: (
+                <span className="relative inline-flex w-6 h-6 items-center justify-center">
+                  <span className="absolute inset-0 rounded-full bg-[hsl(46_72%_62%/0.25)]" />
+                  <span className="w-2 h-2 rounded-full bg-[hsl(var(--gold))] shadow-[0_0_10px_hsl(46_72%_62%/0.9)]" />
+                </span>
+              ),
+              titleAr: 'وجهة تصدير نشطة',
+              titleEn: 'Active export destination',
+              descAr: 'نقطة ذهبية متوهّجة تمثّل ميناء تفريغ نصدّر إليه شحنات منتظمة. انقر لعرض التفاصيل.',
+              descEn: 'A glowing gold point marks a discharge port we ship to on a recurring basis. Click to view details.',
+            },
+            {
+              swatch: (
+                <span
+                  className="inline-block w-8 h-0"
+                  style={{ borderTop: '2px dashed hsl(46 72% 62% / 0.7)' }}
+                />
+              ),
+              titleAr: 'مسار شحن معياري',
+              titleEn: 'Standard shipping arc',
+              descAr: 'خط منقّط ذهبي يربط جدة بكل وجهة، يمثّل قناة تصدير قائمة عبر البحر أو الجو.',
+              descEn: 'A dashed gold arc from Jeddah to each port represents an established sea or air export lane.',
+            },
+            {
+              swatch: (
+                <span className="relative inline-block w-10 h-2 rounded-full bg-gradient-to-r from-[hsl(46_95%_78%)] to-[hsl(46_80%_60%/0.4)] shadow-[0_0_14px_hsl(46_90%_70%/0.8)]" />
+              ),
+              titleAr: 'مسار مضاء عند التحديد',
+              titleEn: 'Highlighted route on selection',
+              descAr: 'عند اختيار وجهة يُرسم مسارها تدريجيًا بلون ذهبي متوهّج مع شرارة متحرّكة توضح اتجاه الشحن.',
+              descEn: 'Selecting a port draws its lane progressively in glowing gold, with a moving sparkle showing shipping direction.',
+            },
+            {
+              swatch: (
+                <span className="inline-flex items-center gap-1 text-[10px] tracking-[0.25em] text-[hsl(var(--gold-hi))]">
+                  <span className="rounded border border-[hsl(var(--gold))]/50 px-1.5 py-0.5">CIF</span>
+                  <span className="rounded border border-[hsl(var(--gold))]/50 px-1.5 py-0.5">FOB</span>
+                </span>
+              ),
+              titleAr: 'قيم وأرقام الشحن',
+              titleEn: 'Shipment values & terms',
+              descAr: 'مدة العبور بالأيام، الحجم الشهري بالأطنان، تردّد الشحنات، وشرط التسليم Incoterm (CIF/FOB/DAP).',
+              descEn: 'Transit time (days), monthly volume (tons), shipping frequency, and the Incoterm (CIF/FOB/DAP) used per lane.',
+            },
+          ].map((item, i) => (
+            <div
+              key={i}
+              className="rounded-2xl border border-[hsl(var(--gold))]/20 bg-black/40 p-4 transition hover:border-[hsl(var(--gold))]/50"
+            >
+              <div className="flex items-center gap-3 min-h-[2rem]">{item.swatch}</div>
+              <div
+                className={`mt-3 text-sm font-semibold text-[hsl(var(--foreground))] ${
+                  isAr ? 'font-arabic' : ''
+                }`}
+              >
+                {isAr ? item.titleAr : item.titleEn}
+              </div>
+              <p
+                className={`mt-1.5 text-xs leading-relaxed text-[hsl(var(--foreground))]/65 ${
+                  isAr ? 'font-arabic' : ''
+                }`}
+              >
+                {isAr ? item.descAr : item.descEn}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        <p
+          className={`mt-6 text-center text-xs text-[hsl(var(--foreground))]/50 ${
+            isAr ? 'font-arabic' : ''
+          }`}
+        >
+          {isAr
+            ? 'ملاحظة: الأرقام تقديرية للأحجام المعتادة وقد تختلف بحسب الموسم وحجم الطلب.'
+            : 'Note: Figures are indicative averages; actual volumes vary by season and order size.'}
+        </p>
       </div>
+
 
       <Sheet open={!!selected} onOpenChange={(o) => !o && setSelected(null)}>
         <SheetContent
