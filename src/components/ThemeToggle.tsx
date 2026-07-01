@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { Palette, Check, RotateCcw, Monitor, Zap, Sparkles } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { Palette, Check, RotateCcw, Monitor, Zap, Sparkles, Sun, Moon, Eye } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -48,9 +48,24 @@ function ensureFontLoaded(f: FontKey) {
 
 const STORAGE_KEY = 'pc-theme';
 const FONT_KEY = 'pc-font';
+const HUE_KEY = 'pc-hue';
+const DEFAULT_HUE = 158; // emerald
 
 function resolveAuto(): Exclude<ThemeKey, 'auto'> {
   return window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'noir' : 'emerald';
+}
+function applyHue(h: number | null) {
+  const root = document.documentElement;
+  if (h === null) {
+    root.style.removeProperty('--primary');
+    root.style.removeProperty('--ring');
+    root.style.removeProperty('--accent');
+    return;
+  }
+  // Apply as HSL tokens (project uses `hsl(var(--primary))`).
+  root.style.setProperty('--primary', `${h} 78% 32%`);
+  root.style.setProperty('--ring', `${h} 60% 45%`);
+  root.style.setProperty('--accent', `${h} 55% 50%`);
 }
 function applyTheme(t: ThemeKey) {
   const eff = t === 'auto' ? resolveAuto() : t;
@@ -65,14 +80,20 @@ function applyFont(f: FontKey) {
 export function ThemeToggle() {
   const [theme, setTheme] = useState<ThemeKey>(DEFAULT_THEME);
   const [font, setFont] = useState<FontKey>(DEFAULT_FONT);
+  const [hue, setHue] = useState<number>(DEFAULT_HUE);
+  const savedHueRef = useRef<number>(DEFAULT_HUE);
   const reduceMotion = useReducedMotion();
 
 
   useEffect(() => {
     const t = (localStorage.getItem(STORAGE_KEY) as ThemeKey) || DEFAULT_THEME;
     const f = (localStorage.getItem(FONT_KEY) as FontKey) || DEFAULT_FONT;
-    setTheme(t); setFont(f);
+    const hRaw = localStorage.getItem(HUE_KEY);
+    const h = hRaw ? Number(hRaw) : DEFAULT_HUE;
+    setTheme(t); setFont(f); setHue(h);
+    savedHueRef.current = h;
     applyTheme(t); applyFont(f);
+    if (hRaw) applyHue(h);
   }, []);
 
   // Re-apply on system change while in auto
@@ -87,9 +108,18 @@ export function ThemeToggle() {
   const pickTheme = (t: ThemeKey) => { setTheme(t); applyTheme(t); localStorage.setItem(STORAGE_KEY, t); };
   const pickFont  = (f: FontKey)  => { setFont(f);  applyFont(f);  localStorage.setItem(FONT_KEY, f); };
 
+  // Live preview: update CSS var without persisting.
+  const previewHue = (h: number) => { setHue(h); applyHue(h); };
+  const saveHue = () => { savedHueRef.current = hue; localStorage.setItem(HUE_KEY, String(hue)); };
+  const cancelHuePreview = () => { setHue(savedHueRef.current); applyHue(localStorage.getItem(HUE_KEY) ? savedHueRef.current : null); };
+
   const reset = () => {
     pickTheme(DEFAULT_THEME);
     pickFont(DEFAULT_FONT);
+    setHue(DEFAULT_HUE);
+    savedHueRef.current = DEFAULT_HUE;
+    localStorage.removeItem(HUE_KEY);
+    applyHue(null);
   };
 
   const themeKeys: ThemeKey[] = ['auto', 'emerald', 'noir', 'sand'];
@@ -155,6 +185,85 @@ export function ThemeToggle() {
             </button>
           );
         })}
+
+        <DropdownMenuSeparator className="my-2" />
+        <DropdownMenuLabel className="text-xs">الوضع</DropdownMenuLabel>
+        <div className="flex gap-1 px-1 pb-1" role="group" aria-label="اختر الوضع">
+          <button
+            onClick={() => pickTheme('emerald')}
+            aria-pressed={theme === 'emerald'}
+            className={`flex-1 inline-flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-md text-xs border transition ${
+              theme === 'emerald' ? 'border-gold text-gold bg-muted' : 'border-border text-muted-foreground hover:bg-muted'
+            }`}
+          >
+            <Sun className="w-3.5 h-3.5" /> فاتح
+          </button>
+          <button
+            onClick={() => pickTheme('noir')}
+            aria-pressed={theme === 'noir'}
+            className={`flex-1 inline-flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-md text-xs border transition ${
+              theme === 'noir' ? 'border-gold text-gold bg-muted' : 'border-border text-muted-foreground hover:bg-muted'
+            }`}
+          >
+            <Moon className="w-3.5 h-3.5" /> داكن
+          </button>
+          <button
+            onClick={() => pickTheme('auto')}
+            aria-pressed={theme === 'auto'}
+            className={`flex-1 inline-flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-md text-xs border transition ${
+              theme === 'auto' ? 'border-gold text-gold bg-muted' : 'border-border text-muted-foreground hover:bg-muted'
+            }`}
+          >
+            <Monitor className="w-3.5 h-3.5" /> تلقائي
+          </button>
+        </div>
+
+        <DropdownMenuSeparator className="my-2" />
+        <DropdownMenuLabel className="text-xs flex items-center justify-between">
+          <span>درجة اللون الأساسي</span>
+          <span
+            className="w-4 h-4 rounded-full border border-border"
+            style={{ background: `hsl(${hue} 78% 32%)` }}
+            aria-hidden="true"
+          />
+        </DropdownMenuLabel>
+        <div className="px-2 pb-2">
+          <input
+            type="range"
+            min={0}
+            max={360}
+            value={hue}
+            onChange={(e) => previewHue(Number(e.target.value))}
+            aria-label="درجة اللون الأساسي (Hue)"
+            className="w-full h-2 rounded-full appearance-none cursor-pointer"
+            style={{
+              background:
+                'linear-gradient(to right, hsl(0 80% 45%), hsl(60 80% 45%), hsl(120 70% 35%), hsl(180 70% 40%), hsl(240 70% 50%), hsl(300 70% 45%), hsl(360 80% 45%))',
+            }}
+          />
+          <div className="mt-2 flex items-center justify-between gap-2">
+            <button
+              onClick={() => previewHue(hue)}
+              className="inline-flex items-center gap-1 text-[11px] px-2 py-1 rounded-md border border-border text-muted-foreground hover:text-gold hover:border-gold transition"
+            >
+              <Eye className="w-3 h-3" /> معاينة
+            </button>
+            <div className="flex items-center gap-1">
+              <button
+                onClick={cancelHuePreview}
+                className="text-[11px] px-2 py-1 rounded-md text-muted-foreground hover:text-foreground"
+              >
+                إلغاء
+              </button>
+              <button
+                onClick={saveHue}
+                className="text-[11px] px-2.5 py-1 rounded-md bg-gold text-dark font-semibold hover:bg-gold-hi transition"
+              >
+                حفظ
+              </button>
+            </div>
+          </div>
+        </div>
 
         <DropdownMenuSeparator className="my-2" />
         <DropdownMenuLabel className="text-xs">الخطوط</DropdownMenuLabel>
