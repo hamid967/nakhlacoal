@@ -1,256 +1,160 @@
 {
   "base": "http://localhost:8080",
-  "generatedAt": "2026-07-01T18:22:53.518Z",
+  "generatedAt": "2026-07-01T18:25:29.142Z",
   "results": [
     {
       "route": "/",
       "status": 200,
-      "timing": 589,
+      "timing": 708,
       "meta": {
         "title": "فحم النخلة | الفحم السعودي الفاخر",
         "desc": "فحم النخلة السعودي الفاخر من نخيل المدينة المنورة — احتراق أطول، حرارة أعلى، رماد أقل، ودخان نقي. مصنّع ومصدَّر لأفخم المطاعم والفنادق والشيشة عالميًا.",
         "lang": "ar",
-        "h1Count": 2,
-        "imgsNoAlt": 3,
-        "cspMeta": true
+        "h1Count": 1,
+        "imgsNoAlt": 0,
+        "cspMeta": false
       },
-      "findings": [
-        {
-          "rule": "multiple_h1",
-          "detail": "2 h1s"
-        },
-        {
-          "rule": "img_no_alt",
-          "detail": "3 imgs"
-        },
-        {
-          "rule": "csp_meta"
-        }
-      ]
+      "findings": []
     },
     {
       "route": "/products",
       "status": 200,
-      "timing": 490,
+      "timing": 517,
       "meta": {
         "title": "المنتجات — فحم النخلة",
         "desc": "تشكيلة فاخرة من الفحم السعودي: فحم شواء، فحم شيشة، فحم بخور، وفحم صناعي. سبع عائلات منتجات معتمدة للتصدير بأعلى معايير الجودة السعودية.",
         "lang": "ar",
         "h1Count": 1,
-        "imgsNoAlt": 3,
-        "cspMeta": true
+        "imgsNoAlt": 0,
+        "cspMeta": false
       },
-      "findings": [
-        {
-          "rule": "img_no_alt",
-          "detail": "3 imgs"
-        },
-        {
-          "rule": "csp_meta"
-        }
-      ]
+      "findings": []
     },
     {
       "route": "/quality",
       "status": 200,
-      "timing": 476,
+      "timing": 490,
       "meta": {
         "title": "الجودة — فحم النخلة",
         "desc": "كل دفعة من فحم النخلة مقيسة ومعتمدة في مختبرنا الداخلي: قيمة حرارية، نسبة الرماد، الرطوبة، والمواد المتطايرة — مع شهادات ISO ومطابقة للمعايير السعودية والدولية للتصدير.",
         "lang": "ar",
         "h1Count": 1,
-        "imgsNoAlt": 3,
-        "cspMeta": true
+        "imgsNoAlt": 0,
+        "cspMeta": false
       },
-      "findings": [
-        {
-          "rule": "img_no_alt",
-          "detail": "3 imgs"
-        },
-        {
-          "rule": "csp_meta"
-        }
-      ]
+      "findings": []
     },
     {
       "route": "/trademarks",
       "status": 200,
-      "timing": 566,
+      "timing": 482,
       "meta": {
         "title": "العلامات التجارية المسجلة | فحم النخلة، نخلان، المركاز، النخلتين، باعشن",
         "desc": "خمس علامات تجارية سعودية مسجلة رسمياً لدى الهيئة السعودية للملكية الفكرية لمؤسسة محمد عبدالله باعشن التجارية — فحم النخلة، نخلان، المركاز، النخلتين، وباعشن، مع أرقام التسجيل وتواريخ الحماية.",
         "lang": "ar",
         "h1Count": 1,
-        "imgsNoAlt": 3,
-        "cspMeta": true
+        "imgsNoAlt": 0,
+        "cspMeta": false
       },
-      "findings": [
-        {
-          "rule": "img_no_alt",
-          "detail": "3 imgs"
-        },
-        {
-          "rule": "csp_meta"
-        }
-      ]
+      "findings": []
     },
     {
       "route": "/wholesale",
       "status": 200,
-      "timing": 442,
+      "timing": 497,
       "meta": {
         "title": "الجملة والتسعير — فحم النخلة",
         "desc": "باقات جملة ديناميكية للمطاعم والمقاهي والموزّعين والتصدير مع تسعير فوري وطلب عرض سعر.",
         "lang": "ar",
         "h1Count": 1,
-        "imgsNoAlt": 3,
-        "cspMeta": true
+        "imgsNoAlt": 0,
+        "cspMeta": false
       },
-      "findings": [
-        {
-          "rule": "img_no_alt",
-          "detail": "3 imgs"
-        },
-        {
-          "rule": "csp_meta"
-        }
-      ]
+      "findings": []
     },
     {
       "route": "/quote",
       "status": 200,
-      "timing": 469,
+      "timing": 463,
       "meta": {
         "title": "عرض سعر فوري | فحم النخلة — Palm Charcoal",
         "desc": "احصل على عرض سعر فوري لأنواع الفحم الفاخر مع مساعد فحم النخلة الذكي. شامل الضريبة، التسعير الجملة، وإرسال مباشر عبر واتساب.",
         "lang": "ar",
         "h1Count": 1,
-        "imgsNoAlt": 3,
-        "cspMeta": true
+        "imgsNoAlt": 0,
+        "cspMeta": false
       },
-      "findings": [
-        {
-          "rule": "img_no_alt",
-          "detail": "3 imgs"
-        },
-        {
-          "rule": "csp_meta"
-        }
-      ]
+      "findings": []
     },
     {
       "route": "/checkout",
       "status": 200,
-      "timing": 518,
+      "timing": 508,
       "meta": {
         "title": "إتمام الطلب",
-        "desc": "أكمل شراء منتجات فحم النخلة بأمان ودفع مبسّط.",
+        "desc": "أكمل شراء منتجات فحم النخلة بأمان — إدخال بيانات الشحن، اختيار طريقة الدفع، وإصدار الفاتورة الضريبية إلكترونيًا.",
         "lang": "ar",
         "h1Count": 1,
-        "imgsNoAlt": 3,
-        "cspMeta": true
+        "imgsNoAlt": 0,
+        "cspMeta": false
       },
-      "findings": [
-        {
-          "rule": "short_desc",
-          "detail": "45 chars"
-        },
-        {
-          "rule": "img_no_alt",
-          "detail": "3 imgs"
-        },
-        {
-          "rule": "csp_meta"
-        }
-      ]
+      "findings": []
     },
     {
       "route": "/about",
       "status": 200,
-      "timing": 473,
+      "timing": 501,
       "meta": {
         "title": "من نحن — فحم النخلة",
         "desc": "علامة سعودية متخصصة في إنتاج واستيراد وتوريد الفحم الطبيعي عالي الجودة، من سوق الفحم بجدة البلد إلى العالم.",
         "lang": "ar",
         "h1Count": 1,
-        "imgsNoAlt": 3,
-        "cspMeta": true
+        "imgsNoAlt": 0,
+        "cspMeta": false
       },
-      "findings": [
-        {
-          "rule": "img_no_alt",
-          "detail": "3 imgs"
-        },
-        {
-          "rule": "csp_meta"
-        }
-      ]
+      "findings": []
     },
     {
       "route": "/contact",
       "status": 200,
-      "timing": 519,
+      "timing": 478,
       "meta": {
         "title": "تواصل معنا — فحم النخلة",
         "desc": "تواصل مع فريق مبيعات فحم النخلة في جدة — واتساب 0540060095 والبريد mab355@gmail.com. عروض للجملة والتصدير والفنادق والمطاعم خلال ساعات العمل.",
         "lang": "ar",
         "h1Count": 1,
-        "imgsNoAlt": 3,
-        "cspMeta": true
+        "imgsNoAlt": 0,
+        "cspMeta": false
       },
-      "findings": [
-        {
-          "rule": "img_no_alt",
-          "detail": "3 imgs"
-        },
-        {
-          "rule": "csp_meta"
-        }
-      ]
+      "findings": []
     },
     {
       "route": "/auth",
       "status": 200,
-      "timing": 440,
+      "timing": 491,
       "meta": {
         "title": "تسجيل الدخول | فحم النخلة",
         "desc": "بوابة دخول آمنة لعملاء وشركاء فحم النخلة — إدارة الطلبات، عروض الأسعار، الفواتير، وتتبّع الشحنات لتجّار الجملة والموزّعين والمصدّرين.",
         "lang": "ar",
-        "h1Count": 2,
-        "imgsNoAlt": 4,
-        "cspMeta": true
+        "h1Count": 1,
+        "imgsNoAlt": 0,
+        "cspMeta": false
       },
-      "findings": [
-        {
-          "rule": "multiple_h1",
-          "detail": "2 h1s"
-        },
-        {
-          "rule": "img_no_alt",
-          "detail": "4 imgs"
-        },
-        {
-          "rule": "csp_meta"
-        }
-      ]
+      "findings": []
     },
     {
       "route": "/portal/login",
       "status": 200,
-      "timing": 413,
+      "timing": 425,
       "meta": {
         "title": "بوابة العملاء — دخول | فحم النخلة",
         "desc": "بوابة عملاء فحم النخلة: سجّل الدخول أو أنشئ حسابك لإدارة الطلبات والشحنات والفواتير بأمان.",
         "lang": "ar",
         "h1Count": 1,
         "imgsNoAlt": 0,
-        "cspMeta": true
+        "cspMeta": false
       },
-      "findings": [
-        {
-          "rule": "csp_meta"
-        }
-      ]
+      "findings": []
     }
   ]
 }
