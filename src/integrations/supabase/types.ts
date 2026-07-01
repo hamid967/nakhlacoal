@@ -517,6 +517,27 @@ export type Database = {
         }
         Relationships: []
       }
+      rate_limits: {
+        Row: {
+          bucket_key: string
+          hits: number
+          updated_at: string
+          window_start: string
+        }
+        Insert: {
+          bucket_key: string
+          hits?: number
+          updated_at?: string
+          window_start?: string
+        }
+        Update: {
+          bucket_key?: string
+          hits?: number
+          updated_at?: string
+          window_start?: string
+        }
+        Relationships: []
+      }
       shipments: {
         Row: {
           carrier: string
@@ -772,6 +793,10 @@ export type Database = {
       }
     }
     Functions: {
+      check_rate_limit: {
+        Args: { _key: string; _max: number; _window_seconds: number }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
