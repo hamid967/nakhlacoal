@@ -565,6 +565,47 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
         {liveStatus}
       </div>
 
+      {/* Threads panel (signed-in users) */}
+      {threadsOpen && userId && (
+        <div className="absolute inset-x-0 top-[57px] bottom-0 z-10 bg-background/98 backdrop-blur-sm border-t border-gold/25 flex flex-col font-arabic animate-in slide-in-from-top-2 duration-200">
+          <div className="flex items-center justify-between px-3 py-2 border-b border-gold/20">
+            <p className="text-xs font-semibold text-foreground flex items-center gap-1.5">
+              <History className="w-3.5 h-3.5 text-gold" /> محادثاتي السابقة
+            </p>
+            <div className="flex items-center gap-1">
+              <button onClick={startNewThread} className="text-[11px] px-2 py-1 rounded-md bg-gold text-dark font-semibold hover:bg-gold/90 inline-flex items-center gap-1">
+                <Plus className="w-3 h-3" /> جديدة
+              </button>
+              <button onClick={() => setThreadsOpen(false)} className="p-1 rounded-md hover:bg-muted" aria-label="إغلاق القائمة">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+          <div className="flex-1 overflow-y-auto p-2 space-y-1">
+            {threadsLoading ? (
+              <div className="flex items-center justify-center py-6 text-xs text-muted-foreground gap-2">
+                <Loader2 className="w-3.5 h-3.5 animate-spin" /> جارٍ التحميل…
+              </div>
+            ) : threads.length === 0 ? (
+              <p className="text-center text-xs text-muted-foreground py-6">لا توجد محادثات محفوظة بعد.</p>
+            ) : threads.map(t => {
+              const active = t.id === conversationId;
+              return (
+                <button
+                  key={t.id}
+                  onClick={() => switchThread(t.id)}
+                  className={`w-full text-right px-2.5 py-2 rounded-lg border transition ${active ? 'border-gold bg-gold/10' : 'border-border/60 hover:border-gold/40 hover:bg-muted/50'}`}
+                >
+                  <p className="text-[12px] font-semibold text-foreground truncate">{t.title || 'محادثة'}</p>
+                  {t.preview && <p className="text-[10px] text-muted-foreground line-clamp-1 mt-0.5">{t.preview}</p>}
+                  <p className="text-[9px] text-muted-foreground/70 mt-0.5">{new Date(t.updated_at).toLocaleString('ar-SA', { dateStyle: 'short', timeStyle: 'short' })}</p>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
 
       {/* Messages */}
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-3 py-3 space-y-3 bg-muted/20">
