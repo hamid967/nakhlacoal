@@ -188,6 +188,11 @@ export default function Home() {
         </div>
       </LuxSection>
 
+      {/* 4.5 — Product Showcase 3D (Noir + Gold) */}
+      <Suspense fallback={<SectionSkeleton variant="band" />}>
+        <ProductShowcase3D />
+      </Suspense>
+
       <SectionDivider flip />
 
       {/* 5 — Brand timeline (process + journey) */}
