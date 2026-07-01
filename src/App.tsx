@@ -15,7 +15,7 @@ import { CartDrawer } from '@/components/CartDrawer';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import TrackingLoader from '@/components/TrackingLoader';
-import { SmoothScroll } from '@/components/SmoothScroll';
+// SmoothScroll import removed to restore native mouse/keyboard scrolling
 
 // Home is loaded eagerly because it's the LCP route.
 import Home from '@/pages/Home';
