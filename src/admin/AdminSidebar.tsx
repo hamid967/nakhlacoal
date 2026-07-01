@@ -16,6 +16,7 @@ const groups: Group[] = [
     { to: '/admin', label: 'لوحة القيادة', icon: LayoutDashboard },
     { to: '/admin/reports', label: 'التقارير', icon: BarChart3 },
     { to: '/admin/web-vitals', label: 'أداء الويب', icon: Gauge },
+    { to: '/admin/chats', label: 'محادثات المساعد', icon: MessageSquare },
   ]},
   { title: 'الكتالوج', items: [
     { to: '/admin/products', label: 'المنتجات', icon: Package },
