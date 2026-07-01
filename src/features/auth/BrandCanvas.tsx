@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from 'framer-motion';
-import logo from '@/assets/palm-charcoal-logo.png';
+import { BrandLogo } from '@/components/BrandLogo';
 import canvasImg from '@/assets/intro-palm-bg.jpg';
 
 interface Props {
@@ -38,7 +38,7 @@ export function BrandCanvas({ isAr }: Props) {
         transition={{ delay: 0.2, duration: 0.8 }}
         className="flex items-center gap-3"
       >
-        <img decoding="async" loading="eager" {...({ fetchpriority: "high" } as any)} src={logo} alt="Palm Charcoal" className="h-12 w-12 object-contain" />
+        <BrandLogo eager alt="Palm Charcoal" className="h-12 w-12 object-contain" />
         <div className="leading-tight">
           <div className="font-serif text-xl text-foreground">
             {isAr ? 'فحم النخلة' : 'Palm Charcoal'}

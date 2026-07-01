@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { products } from '@/data/products';
 import { INVENTORY } from '@/data/inventory';
 import { brand } from '@/lib/brand';
-import logo from '@/assets/palm-charcoal-logo.png';
+import { BrandLogo } from '@/components/BrandLogo';
 import { Button } from '@/components/ui/button';
 import { Download, Printer } from 'lucide-react';
 import { SEO } from '@/components/SEO';
@@ -55,7 +55,7 @@ export default function Catalog() {
       <div className="catalog-page mx-auto max-w-[860px] px-10 py-12">
         {/* Cover */}
         <section className="catalog-cover text-center pb-12 border-b-2 border-emerald-800">
-          <img decoding="async" loading="lazy" src={logo} alt="Palm Charcoal" className="w-32 h-32 mx-auto mb-6 object-contain" />
+          <BrandLogo alt="Palm Charcoal" className="w-32 h-32 mx-auto mb-6 object-contain" />
           <h1 className="text-5xl font-bold text-emerald-900 mb-2">
             {isAr ? 'فحم النخلة' : 'Palm Charcoal'}
           </h1>

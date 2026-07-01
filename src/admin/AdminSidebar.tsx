@@ -6,7 +6,7 @@ import {
   Search, ShieldCheck, KeyRound, Settings as SettingsIcon, ScrollText,
   Sparkles, ChevronLeft, Gauge,
 } from 'lucide-react';
-import logo from '@/assets/palm-charcoal-logo.png';
+import { BrandLogo } from '@/components/BrandLogo';
 
 type Item = { to: string; label: string; icon: any; badge?: string };
 type Group = { title: string; items: Item[] };
@@ -65,7 +65,7 @@ export function AdminSidebar({ collapsed, onToggle }: { collapsed: boolean; onTo
       style={{ width: collapsed ? 78 : 270, borderInlineEnd: '1px solid var(--a-border)' }}
     >
       <div className="flex items-center gap-2 px-4 h-16 border-b" style={{ borderColor: 'var(--a-border)' }}>
-        <img decoding="async" loading="lazy" src={logo} alt="Palm Charcoal" className="w-9 h-9 rounded-xl object-contain" style={{ background: 'var(--a-surface-2)' }} />
+        <BrandLogo alt="Palm Charcoal" className="w-9 h-9 rounded-xl object-contain" />
         {!collapsed && (
           <div className="leading-tight">
             <div className="a-display text-lg" style={{ color: 'var(--a-palm)' }}>فحم النخلة</div>

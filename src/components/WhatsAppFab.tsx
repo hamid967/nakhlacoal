@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Sparkles, X } from 'lucide-react';
 import { AssistantWidget } from './AssistantWidget';
-import logo from '@/assets/palm-charcoal-logo.png';
+import { BrandLogo } from '@/components/BrandLogo';
 
 export function WhatsAppFab() {
   const { i18n } = useTranslation();
@@ -70,13 +70,13 @@ export function WhatsAppFab() {
           {/* inner subtle glow */}
           <span className="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_50%_30%,hsl(var(--gold-hi)/0.28),transparent_65%)]" />
           <span className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ${open ? 'opacity-0 scale-50 rotate-45' : 'opacity-100 scale-100 rotate-0'}`}>
-            <img
-              src={logo}
+            <BrandLogo
               alt=""
               width={44}
               height={44}
               className="w-[44px] h-[44px] object-contain drop-shadow-[0_0_10px_hsl(var(--gold-hi)/0.65)]"
             />
+
           </span>
           <span className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ${open ? 'opacity-100 scale-100 rotate-0' : 'opacity-0 scale-50 -rotate-90'}`}>
             <X className="w-6 h-6 text-gold-hi" />

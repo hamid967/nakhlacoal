@@ -4,7 +4,7 @@ import {
   FileText, Package, Award, BookOpen, BadgeCheck, Heart, Bell, Headphones,
   MessageSquare, MapPinned, User, Settings as SettingsIcon, LogOut, ChevronLeft,
 } from 'lucide-react';
-import logo from '@/assets/palm-charcoal-logo.png';
+import { BrandLogo } from '@/components/BrandLogo';
 import { useAuth } from '@/contexts/AuthContext';
 
 type Item = { to?: string; label: string; icon: any; badge?: string; action?: 'signout' };
@@ -59,7 +59,7 @@ export function PortalSidebar({ collapsed, onToggle }: { collapsed: boolean; onT
       style={{ width: collapsed ? 78 : 270, borderInlineEnd: '1px solid var(--a-border)' }}
     >
       <div className="flex items-center gap-2 px-4 h-16 border-b" style={{ borderColor: 'var(--a-border)' }}>
-        <img decoding="async" loading="lazy" src={logo} alt="Palm Charcoal" className="w-9 h-9 rounded-xl object-contain" style={{ background: 'var(--a-surface-2)' }} />
+        <BrandLogo alt="Palm Charcoal" className="w-9 h-9 rounded-xl object-contain" />
         {!collapsed && (
           <div className="leading-tight">
             <div className="a-display text-lg" style={{ color: 'var(--a-palm)' }}>فحم النخلة</div>
