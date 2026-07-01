@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Palette, Check, RotateCcw, Monitor, Zap } from 'lucide-react';
+import { Palette, Check, RotateCcw, Monitor, Zap, Sparkles } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
