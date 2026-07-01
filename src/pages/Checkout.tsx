@@ -39,7 +39,7 @@ export default function Checkout() {
   if (items.length === 0) {
     return (
       <div className="min-h-[60vh] grid place-items-center px-4">
-        <SeoHead title={isAr ? 'إتمام الطلب' : 'Checkout'} noindex />
+        <SeoHead title={isAr ? 'إتمام الطلب' : 'Checkout'} description={isAr ? 'أكمل شراء منتجات فحم النخلة بأمان ودفع مبسّط.' : 'Securely complete your Palm Charcoal purchase with fast checkout.'} noindex />
         <div className="text-center">
           <h1 className="text-2xl font-display mb-2">{isAr ? 'سلتك فارغة' : 'Your cart is empty'}</h1>
           <button onClick={() => navigate('/products')} className="mt-4 px-6 py-3 rounded-xl bg-[hsl(var(--gold-hi))] text-[hsl(var(--ink))] font-bold">
