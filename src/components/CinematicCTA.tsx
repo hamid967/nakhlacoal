@@ -8,7 +8,7 @@ export function CinematicCTA() {
   const isAr = i18n.language === 'ar';
 
   return (
-    <section className="relative py-32 md:py-40 bg-[#0B0B0B] overflow-hidden isolate">
+    <section className="relative z-0 isolate pt-32 pb-40 md:py-40 bg-[#0B0B0B] overflow-hidden">
       {/* Cinematic background layers */}
       <div className="absolute inset-0">
         {/* base radial */}
