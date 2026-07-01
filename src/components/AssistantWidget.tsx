@@ -133,6 +133,34 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
   const [threadsOpen, setThreadsOpen] = useState(false);
   const [threadsLoading, setThreadsLoading] = useState(false);
   const hydratedFromCloud = useRef(false);
+  const [listening, setListening] = useState(false);
+  const recognitionRef = useRef<any>(null);
+  const voiceSupported = typeof window !== 'undefined' && !!((window as any).SpeechRecognition || (window as any).webkitSpeechRecognition);
+
+  const toggleVoice = () => {
+    if (!voiceSupported) { toast.error('المتصفح لا يدعم الإدخال الصوتي'); return; }
+    if (listening) { recognitionRef.current?.stop(); return; }
+    const SR: any = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const rec = new SR();
+    rec.lang = 'ar-SA';
+    rec.interimResults = true;
+    rec.continuous = false;
+    let finalText = '';
+    rec.onresult = (e: any) => {
+      let interim = '';
+      for (let i = e.resultIndex; i < e.results.length; i++) {
+        const t = e.results[i][0].transcript;
+        if (e.results[i].isFinal) finalText += t; else interim += t;
+      }
+      setInput((finalText + interim).trim());
+    };
+    rec.onerror = (e: any) => { setListening(false); if (e.error !== 'aborted' && e.error !== 'no-speech') toast.error('تعذّر الاستماع'); };
+    rec.onend = () => { setListening(false); recognitionRef.current = null; inputRef.current?.focus(); };
+    recognitionRef.current = rec;
+    setListening(true);
+    try { rec.start(); } catch { setListening(false); }
+  };
+
   const abortRef = useRef<AbortController | null>(null);
 
   useEffect(() => () => { abortRef.current?.abort(); }, []);
