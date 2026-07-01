@@ -263,7 +263,7 @@ export function TrademarksShowcase() {
 function MetaCol({ label, value, mono }: { label: string; value: string; mono?: boolean }) {
   return (
     <div className="text-center min-w-0">
-      <div className="text-gold text-[10px] uppercase tracking-widest mb-1">{label}</div>
+      <div className="text-gold text-[11px] uppercase tracking-widest mb-1 font-semibold">{label}</div>
       <div className={`text-cream font-medium truncate ${mono ? 'font-mono text-xs tracking-wider uppercase' : 'font-arabic text-sm'}`}>{value}</div>
     </div>
   );
