@@ -13,7 +13,8 @@ type Variant =
   | 'awards'
   | 'constellation'
   | 'film'
-  | 'cases';
+  | 'cases'
+  | 'map';
 
 const HEIGHTS: Record<Variant, string> = {
   hero: 'min-h-[70vh]',
@@ -25,6 +26,7 @@ const HEIGHTS: Record<Variant, string> = {
   constellation: 'min-h-[520px]',
   film: 'min-h-[640px]',
   cases: 'min-h-[560px]',
+  map: 'min-h-[600px]',
 };
 
 function BaseWrap({
