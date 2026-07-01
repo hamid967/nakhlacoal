@@ -20,7 +20,8 @@
     "test:visual": "node tests/visual/intro.spec.mjs",
     "test:intro": "python tests/visual/intro_visual_test.py",
     "test:intro:update": "UPDATE_SNAPSHOTS=1 python tests/visual/intro_visual_test.py",
-    "test:skeletons:live": "node scripts/skeleton-drift.mjs"
+    "test:skeletons:live": "node scripts/skeleton-drift.mjs",
+    "audit:bot": "node scripts/audit-bot.mjs"
   },
   "dependencies": {
     "@fontsource/cormorant-garamond": "^5.2.11",
