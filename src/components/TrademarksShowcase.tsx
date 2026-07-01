@@ -1,9 +1,14 @@
 import { useState, useCallback, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion, type Transition } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Hash, Tag, Calendar, CalendarOff, User, Package, FileText } from 'lucide-react';
 import { useTrademarks } from '@/hooks/useTrademarks';
 import { Flame, Clock, Sun, Leaf, Globe2 } from 'lucide-react';
 import { useDir, SectionHeader } from '@/components/ui-lux';
+
+// Unified motion tokens — one easing, one duration, GPU-friendly transforms only.
+const EASE = [0.22, 1, 0.36, 1] as const; // easeOutExpo-ish, smooth on low-end CPUs
+const DURATION = 0.35;
+const SLIDE_TRANSITION: Transition = { duration: DURATION, ease: EASE };
 
 /**
  * Coverflow-style 3D trademarks slider (CSS transforms only — no WebGL).
@@ -11,6 +16,7 @@ import { useDir, SectionHeader } from '@/components/ui-lux';
  */
 export function TrademarksShowcase() {
   const { isAr } = useDir();
+  const prefersReduced = useReducedMotion();
   const { trademarks, loading, syncing, status, error } = useTrademarks();
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -106,17 +112,18 @@ export function TrademarksShowcase() {
           aria-roledescription={isAr ? 'شرائح متحركة' : 'carousel'}
           aria-label={isAr ? 'علاماتنا التجارية' : 'Our trademarks'}
         >
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={current.id}
             id="trademarks-slide"
             role="group"
             aria-roledescription={isAr ? 'شريحة' : 'slide'}
             aria-label={`${isAr ? current.nameAr : current.nameEn} — ${active + 1} / ${total}`}
-            initial={{ opacity: 0, y: 12 }}
+            initial={prefersReduced ? false : { opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -6 }}
-            transition={{ duration: 0.45 }}
+            exit={prefersReduced ? { opacity: 0 } : { opacity: 0, y: -4 }}
+            transition={SLIDE_TRANSITION}
+            style={{ willChange: 'transform, opacity' }}
             className="grid grid-cols-1 md:grid-cols-12 gap-4 auto-rows-[160px]"
           >
             {/* Logo main card — 8×3 */}
