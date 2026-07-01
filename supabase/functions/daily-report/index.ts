@@ -1,13 +1,10 @@
 // Aggregates yesterday's sales + low-stock into public.daily_reports
 // Scheduled via pg_cron (see scheduled SQL in project setup).
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
+import { buildCors } from "../_shared/cors.ts";
 
 Deno.serve(async (req) => {
+  const corsHeaders = buildCors(req, "GET, POST, OPTIONS");
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
   const supabase = createClient(
