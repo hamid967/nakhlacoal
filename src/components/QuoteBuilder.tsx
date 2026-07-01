@@ -151,6 +151,7 @@ export function QuoteForm({ initialSlug, compact = false }: { initialSlug?: stri
             <div className="col-span-12 sm:col-span-5">
               <Label className="text-xs">المنتج</Label>
               <select
+                aria-label="اختر المنتج"
                 value={line.slug}
                 onChange={(e) => updateLine(i, { slug: e.target.value })}
                 className="w-full mt-1 h-10 rounded-md border bg-background px-2 text-sm"
@@ -162,17 +163,19 @@ export function QuoteForm({ initialSlug, compact = false }: { initialSlug?: stri
             </div>
             <div className="col-span-5 sm:col-span-3">
               <Label className="text-xs">الكمية</Label>
-              <Input type="number" min={1} value={line.qty} onChange={(e) => updateLine(i, { qty: Math.max(1, +e.target.value || 1) })} className="mt-1" />
+              <Input aria-label="الكمية" type="number" min={1} value={line.qty} onChange={(e) => updateLine(i, { qty: Math.max(1, +e.target.value || 1) })} className="mt-1" />
             </div>
             <div className="col-span-4 sm:col-span-2">
               <Label className="text-xs">الوحدة</Label>
               <select
+                aria-label="وحدة القياس"
                 value={line.unit}
                 onChange={(e) => updateLine(i, { unit: e.target.value as Line['unit'] })}
                 className="w-full mt-1 h-10 rounded-md border bg-background px-2 text-sm"
               >
                 {availableUnits(line.slug).map((u) => <option key={u} value={u}>{unitAr(u)}</option>)}
               </select>
+
             </div>
             <div className="col-span-3 sm:col-span-2 flex items-center justify-between gap-1">
               <div className="text-sm font-semibold text-gold whitespace-nowrap">{fmt(line.lineTotal)} ر.س</div>
