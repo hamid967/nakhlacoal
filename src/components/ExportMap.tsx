@@ -461,10 +461,10 @@ export function ExportMap() {
               onFocus={() => setGuide(item.hint)}
               onBlur={() => setGuide((g) => (g === item.hint ? null : g))}
               aria-pressed={guide === item.hint}
-              className={`text-start rounded-2xl border p-4 transition ${
+              className={`text-start rounded-2xl border p-4 transition outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--gold))] focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
                 guide === item.hint
-                  ? 'border-[hsl(var(--gold))]/70 bg-black/60 shadow-[0_0_30px_-8px_hsl(46_90%_60%/0.5)]'
-                  : 'border-[hsl(var(--gold))]/20 bg-black/40 hover:border-[hsl(var(--gold))]/50'
+                  ? 'border-[hsl(var(--gold))]/70 bg-black/60 shadow-[0_0_30px_-8px_hsl(46_90%_60%/0.5)] ring-1 ring-[hsl(var(--gold))]/60'
+                  : 'border-[hsl(var(--gold))]/20 bg-black/40 hover:border-[hsl(var(--gold))]/60 hover:shadow-[0_0_24px_-10px_hsl(46_90%_60%/0.45)]'
               }`}
             >
 
