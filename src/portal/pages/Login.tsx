@@ -6,6 +6,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Loader2, Mail, Lock, User, Phone, Shield, ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
 import { BrandLogo } from '@/components/BrandLogo';
+import { Helmet } from 'react-helmet-async';
 
 const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const phoneRe = /^(\+?966|0)?5\d{8}$/;
@@ -106,6 +107,12 @@ export default function PortalLogin() {
   };
 
   return (
+    <>
+    <Helmet>
+      <title>بوابة العملاء — دخول | فحم النخلة</title>
+      <meta name="description" content="بوابة عملاء فحم النخلة: سجّل الدخول أو أنشئ حسابك لإدارة الطلبات والشحنات والفواتير بأمان." />
+      <meta name="robots" content="noindex, nofollow" />
+    </Helmet>
     <main
       dir="rtl"
       className="min-h-screen flex items-center justify-center px-4 py-10 font-arabic relative overflow-hidden"
@@ -264,6 +271,7 @@ export default function PortalLogin() {
         </div>
       </div>
     </main>
+    </>
   );
 }
 

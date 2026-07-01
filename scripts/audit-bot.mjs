@@ -82,7 +82,16 @@ async function auditRoute(context, route) {
   }
   const timing = Date.now() - t0;
   try { await page.waitForSelector("h1, main, [role=main]", { timeout: 3000 }); } catch {}
-  await page.waitForTimeout(500);
+  // Wait for react-helmet-async to hydrate per-route <meta name=description>.
+  // The static index.html description starts with "فحم النخلة — مصنع سعودي".
+  // Poll up to 5s for the tag to change to a route-specific description.
+  try {
+    await page.waitForFunction(() => {
+      const d = document.querySelector('meta[name="description"]')?.getAttribute('content') || '';
+      return d && !d.startsWith('فحم النخلة — مصنع سعودي');
+    }, { timeout: 5000 });
+  } catch {}
+  await page.waitForTimeout(300);
 
   if (status >= 400) findings.push({ rule: "http_error", detail: `HTTP ${status}` });
   if (timing > 8000) findings.push({ rule: "slow_dcl", detail: `DCL ${timing}ms` });
