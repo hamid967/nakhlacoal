@@ -40,7 +40,6 @@ import {
   TrustItem,
   Stat,
   ProductCard,
-  TestimonialCard,
   CtaBand,
 } from '@/components/ui-lux';
 
