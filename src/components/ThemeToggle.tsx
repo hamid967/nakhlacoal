@@ -284,23 +284,32 @@ export function ThemeToggle() {
         </div>
 
         <DropdownMenuSeparator className="my-2" />
-        <DropdownMenuLabel className="text-xs">الخطوط</DropdownMenuLabel>
+        <DropdownMenuLabel className="text-xs" id="pc-font-label">الخطوط</DropdownMenuLabel>
 
-        {(Object.keys(FONTS) as FontKey[]).map((k) => (
-          <button
-            key={k}
-            onClick={() => pickFont(k)}
-            className="w-full flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-muted text-right cursor-pointer"
-          >
-            <span className="flex-1">
-              <span className="block text-sm" style={{ fontFamily: FONTS[k].cssFamily }}>
-                {FONTS[k].sample}
+        <div role="radiogroup" aria-labelledby="pc-font-label">
+        {(Object.keys(FONTS) as FontKey[]).map((k) => {
+          const selected = font === k;
+          return (
+            <button
+              key={k}
+              onClick={() => pickFont(k)}
+              role="radio"
+              aria-checked={selected}
+              aria-label={`خط ${FONTS[k].name}${selected ? ' — مفعّل' : ''}`}
+              className="w-full flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-muted text-right cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-gold/60"
+            >
+              <span className="flex-1">
+                <span className="block text-sm" style={{ fontFamily: FONTS[k].cssFamily }}>
+                  {FONTS[k].sample}
+                </span>
+                <span className="block text-[10px] text-muted-foreground">{FONTS[k].name}</span>
               </span>
-              <span className="block text-[10px] text-muted-foreground">{FONTS[k].name}</span>
-            </span>
-            {font === k && <Check className="w-3.5 h-3.5 text-gold" />}
-          </button>
-        ))}
+              {selected && <Check className="w-3.5 h-3.5 text-gold" aria-hidden="true" />}
+            </button>
+          );
+        })}
+        </div>
+
 
         <DropdownMenuSeparator className="my-2" />
         <DropdownMenuLabel className="text-xs">الحركة</DropdownMenuLabel>
