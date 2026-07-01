@@ -265,6 +265,12 @@ export default function Home() {
         <FaqSection />
         <LocationSection />
       </Suspense>
+
+      {/* 8.5 — Cinematic CTA (Noir + Gold) */}
+      <Suspense fallback={<SectionSkeleton variant="band" />}>
+        <CinematicCTA />
+      </Suspense>
+
       <CtaBand
         title={isAr ? 'جاهز لتجربة الفحم الفاخر؟' : 'Ready to taste the premium difference?'}
         lead={isAr ? 'تواصل معنا الآن واحصل على عرض خاص لجملة وتجزئة وتصدير.' : 'Contact us for wholesale, retail and export offers.'}
