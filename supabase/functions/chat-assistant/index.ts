@@ -410,9 +410,15 @@ Deno.serve(async (req) => {
     let assistantAcc = "";
 
     const stream = new ReadableStream({
+      start(controller) {
+        if (usedTools.length > 0) {
+          controller.enqueue(encoder.encode(`<<TOOLS>>${JSON.stringify(usedTools)}<<END>>\n`));
+        }
+      },
       async pull(controller) {
         const { done, value } = await reader.read();
         if (done) {
+
           // Persist the full assistant reply once streaming completes.
           if (dbClient && conversationId && assistantAcc.trim()) {
             try {
