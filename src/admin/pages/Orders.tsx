@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -85,6 +85,33 @@ export default function AdminOrders() {
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const pageRows = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
+  // Highlight handling: when arriving from a realtime toast (?highlight=<id>),
+  // clear filters, jump to the row's page, scroll it into view, and pulse it.
+  const highlightId = sp.get('highlight');
+  const rowRefs = useRef<Record<string, HTMLTableRowElement | null>>({});
+  const [pulseId, setPulseId] = useState<string | null>(null);
+  useEffect(() => {
+    if (!highlightId || loading) return;
+    const idx = filtered.findIndex((o) => o.id === highlightId);
+    if (idx < 0) {
+      // Row may be filtered out — reset filters so it becomes visible.
+      if (status !== 'all' || qDebounced) { setStatus('all'); setQ(''); }
+      return;
+    }
+    const targetPage = Math.floor(idx / PAGE_SIZE) + 1;
+    if (page !== targetPage) { setPage(targetPage); return; }
+    setPulseId(highlightId);
+    requestAnimationFrame(() => {
+      rowRefs.current[highlightId]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+    const t = setTimeout(() => {
+      setPulseId(null);
+      const next = new URLSearchParams(sp); next.delete('highlight'); setSp(next, { replace: true });
+    }, 3200);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [highlightId, loading, filtered, page]);
 
   function toggleSort(k: SortKey) {
     if (sortKey === k) setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'));
@@ -203,9 +230,11 @@ export default function AdminOrders() {
               {pageRows.map((o) => (
                 <tr
                   key={o.id}
-                  className="a-fade-up cursor-pointer"
+                  ref={(el) => { rowRefs.current[o.id] = el; }}
+                  className={`a-fade-up cursor-pointer ${pulseId === o.id ? 'a-row-highlight' : ''}`}
                   onClick={() => setActive(o)}
                   data-active={active?.id === o.id}
+                  data-highlight={pulseId === o.id || undefined}
                 >
                   <td>
                     <div className="font-semibold">#{o.id.slice(0, 8)}</div>
