@@ -7,6 +7,11 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# Cancel stale runs on the same ref (e.g. rapid PR pushes) to save CI minutes.
+concurrency:
+  group: lhci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   skeletons:
     name: Skeleton height budget (vitest)
@@ -23,10 +28,10 @@ jobs:
         run: npx vitest run src/components/__tests__/SectionSkeleton.heights.test.tsx --reporter=verbose
 
   lhci:
-    name: Home — CLS & DCL budgets
+    name: Lighthouse — performance budgets (/, /products, /faq)
     needs: skeletons
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
 
@@ -43,7 +48,21 @@ jobs:
         run: npm i -g @lhci/cli@0.14.x
 
       - name: Run Lighthouse CI (autorun)
+        id: lhci
         run: lhci autorun --config=./lighthouserc.cjs
         env:
+          # Optional: PR check + inline comment via the LHCI GitHub App
+          # (add LHCI_GITHUB_APP_TOKEN in repo Settings → Secrets to enable).
+          # Without it, results still upload to temporary-public-storage and
+          # a link is printed in the job log.
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
 
+      # Always upload the raw reports so failures are debuggable locally.
+      - name: Upload Lighthouse reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-reports-${{ github.run_id }}
+          path: .lighthouseci/
+          retention-days: 14
+          if-no-files-found: ignore
