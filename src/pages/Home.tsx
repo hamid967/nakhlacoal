@@ -22,6 +22,10 @@ const ProductShowcase3D = lazy(() => import('@/components/ProductShowcase3D').th
 const TestimonialsMarquee = lazy(() => import('@/components/TestimonialsMarquee').then((m) => ({ default: m.TestimonialsMarquee })));
 const CertificationsWall = lazy(() => import('@/components/CertificationsWall').then((m) => ({ default: m.CertificationsWall })));
 const CinematicCTA = lazy(() => import('@/components/CinematicCTA').then((m) => ({ default: m.CinematicCTA })));
+const PressLogos = lazy(() => import('@/components/PressLogos').then((m) => ({ default: m.PressLogos })));
+const AwardsRibbon = lazy(() => import('@/components/AwardsRibbon').then((m) => ({ default: m.AwardsRibbon })));
+const PartnersConstellation = lazy(() => import('@/components/PartnersConstellation').then((m) => ({ default: m.PartnersConstellation })));
+const StoryFilm = lazy(() => import('@/components/StoryFilm').then((m) => ({ default: m.StoryFilm })));
 
 
 
@@ -246,14 +250,34 @@ export default function Home() {
         <CertificationsWall />
       </Suspense>
 
+      {/* 6.6 — Press mentions */}
+      <Suspense fallback={<SectionSkeleton variant="band" />}>
+        <PressLogos />
+      </Suspense>
+
+      {/* 6.7 — Awards ribbon */}
+      <Suspense fallback={<SectionSkeleton variant="band" />}>
+        <AwardsRibbon />
+      </Suspense>
+
       {/* 7 — Social proof: trademarks + testimonials */}
       <Suspense fallback={<SectionSkeleton variant="grid" />}>
         <TrademarksShowcase />
       </Suspense>
 
+      {/* 7.3 — Partner constellation */}
+      <Suspense fallback={<SectionSkeleton variant="grid" />}>
+        <PartnersConstellation />
+      </Suspense>
+
       {/* 7.5 — Testimonials Marquee */}
       <Suspense fallback={<SectionSkeleton variant="band" />}>
         <TestimonialsMarquee />
+      </Suspense>
+
+      {/* 7.8 — Story film */}
+      <Suspense fallback={<SectionSkeleton variant="band" />}>
+        <StoryFilm />
       </Suspense>
 
       {/* 8 — FAQ + location + CTA */}
@@ -266,6 +290,7 @@ export default function Home() {
       <Suspense fallback={<SectionSkeleton variant="band" />}>
         <CinematicCTA />
       </Suspense>
+
 
       <CtaBand
         title={isAr ? 'جاهز لتجربة الفحم الفاخر؟' : 'Ready to taste the premium difference?'}
