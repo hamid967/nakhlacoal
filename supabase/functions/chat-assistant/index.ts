@@ -121,6 +121,7 @@ const SYSTEM_PROMPT = `أنت **مساعد فحم النخلة** — مستشا�
 <<END>>`;
 
 Deno.serve(async (req) => {
+  const corsHeaders = buildCors(req, "POST, OPTIONS");
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
