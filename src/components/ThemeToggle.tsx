@@ -11,7 +11,7 @@ import { useReducedMotion, setReducedMotion } from '@/hooks/useReducedMotion';
 
 
 type ThemeKey = 'auto' | 'emerald' | 'noir' | 'sand';
-type FontKey = 'classic' | 'modern' | 'editorial';
+type FontKey = 'classic' | 'modern' | 'editorial' | 'tajawal' | 'cairo' | 'amiri';
 
 const DEFAULT_THEME: ThemeKey = 'auto';
 const DEFAULT_FONT: FontKey = 'classic';
@@ -22,11 +22,29 @@ const THEMES: Record<Exclude<ThemeKey, 'auto'>, { name: string; swatches: string
   sand:    { name: 'رمل ونحاس', swatches: ['#8b5a2b', '#c97a3a', '#faf3e7'] },
 };
 
-const FONTS: Record<FontKey, { name: string; sample: string; cssFamily: string }> = {
+const FONTS: Record<FontKey, { name: string; sample: string; cssFamily: string; googleHref?: string }> = {
   classic:   { name: 'كلاسيكي',  sample: 'فحم النخلة · Palm Charcoal',  cssFamily: "'Reem Kufi','IBM Plex Sans Arabic','Cormorant Garamond',serif" },
   modern:    { name: 'عصري',     sample: 'فحم النخلة · Palm Charcoal',  cssFamily: "'IBM Plex Sans Arabic',system-ui,sans-serif" },
   editorial: { name: 'تحريري',   sample: 'فحم النخلة · Palm Charcoal',  cssFamily: "'Cormorant Garamond',serif" },
+  tajawal:   { name: 'تجول',     sample: 'فحم النخلة · Palm Charcoal',  cssFamily: "'Tajawal',system-ui,sans-serif",
+               googleHref: 'https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap' },
+  cairo:     { name: 'القاهرة',  sample: 'فحم النخلة · Palm Charcoal',  cssFamily: "'Cairo',system-ui,sans-serif",
+               googleHref: 'https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap' },
+  amiri:     { name: 'أميري',    sample: 'فحم النخلة · Palm Charcoal',  cssFamily: "'Amiri',serif",
+               googleHref: 'https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap' },
 };
+
+function ensureFontLoaded(f: FontKey) {
+  const href = FONTS[f].googleHref;
+  if (!href) return;
+  const id = `pc-font-${f}`;
+  if (document.getElementById(id)) return;
+  const link = document.createElement('link');
+  link.id = id;
+  link.rel = 'stylesheet';
+  link.href = href;
+  document.head.appendChild(link);
+}
 
 const STORAGE_KEY = 'pc-theme';
 const FONT_KEY = 'pc-font';
