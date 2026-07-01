@@ -112,7 +112,7 @@ export default function Home() {
       
       <SEO
         title={isAr ? 'فحم النخلة | الفحم السعودي الفاخر' : 'Palm Charcoal | Premium Saudi Charcoal'}
-        description={isAr ? 'فحم طبيعي ١٠٠٪ — احتراق أطول، حرارة أعلى، ورماد أقل.' : '100% natural charcoal — longer burn, higher heat, less ash.'}
+        description={isAr ? 'فحم النخلة السعودي الفاخر من نخيل المدينة المنورة — احتراق أطول، حرارة أعلى، رماد أقل، ودخان نقي. مصنّع ومصدَّر لأفخم المطاعم والفنادق والشيشة عالميًا.' : 'Palm Charcoal — premium Saudi date-palm charcoal delivering longer burn, higher heat, and lower ash. Trusted by luxury restaurants, hotels, and hookah lounges worldwide.'}
         path="/"
         jsonLd={productsLd}
         preloadImages={[
@@ -123,9 +123,7 @@ export default function Home() {
 
       {/* 1 — HERO (single, 3D slider only — no particles overlay) + trust strip */}
       <div id="hero" className="relative pt-24 md:pt-28 scroll-mt-24">
-        <h1 className="sr-only">
-          {isAr ? 'فحم النخلة — الفحم السعودي الفاخر' : 'Palm Charcoal — Premium Saudi Charcoal'}
-        </h1>
+        {/* BrandHero provides the visible <h1>; no sr-only duplicate needed. */}
         <Suspense fallback={<SectionSkeleton variant="hero" label={isAr ? 'جارٍ تحميل الواجهة' : 'Loading hero'} />}>
           <BrandHero />
         </Suspense>

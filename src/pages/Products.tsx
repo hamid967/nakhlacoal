@@ -130,7 +130,7 @@ export default function Products() {
     <>
       <SEO
         title={isAr ? 'المنتجات — فحم النخلة' : 'Products — Palm Charcoal'}
-        description={isAr ? 'تشكيلة فاخرة من الفحم السعودي للشواء والشيشة والتصدير.' : 'Premium Saudi charcoal for grilling, shisha, and export.'}
+        description={isAr ? 'تشكيلة فاخرة من الفحم السعودي: فحم شواء، فحم شيشة، فحم بخور، وفحم صناعي. سبع عائلات منتجات معتمدة للتصدير بأعلى معايير الجودة السعودية.' : 'Curated Saudi charcoal collection: BBQ, hookah, incense, and industrial grades. Seven certified export-ready product families crafted to international quality standards.'}
         path="/products"
       />
       <PageIntro number={2}
