@@ -57,6 +57,7 @@ function tpl(orderId: string, status: string, customer: string, summary: string)
 }
 
 Deno.serve(async (req) => {
+  const corsHeaders = buildCors(req);
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
 
   try {
