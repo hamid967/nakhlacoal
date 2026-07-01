@@ -678,6 +678,48 @@ export type Database = {
         }
         Relationships: []
       }
+      web_vitals: {
+        Row: {
+          created_at: string
+          id: string
+          metric_name: string
+          metric_value: number
+          navigation_type: string | null
+          path: string
+          rating: string | null
+          session_id: string | null
+          user_agent: string | null
+          webgl: boolean | null
+          webgl_reason: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          metric_name: string
+          metric_value: number
+          navigation_type?: string | null
+          path: string
+          rating?: string | null
+          session_id?: string | null
+          user_agent?: string | null
+          webgl?: boolean | null
+          webgl_reason?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          metric_name?: string
+          metric_value?: number
+          navigation_type?: string | null
+          path?: string
+          rating?: string | null
+          session_id?: string | null
+          user_agent?: string | null
+          webgl?: boolean | null
+          webgl_reason?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       trademarks_public: {

@@ -1,32 +1,49 @@
 /**
- * Lightweight perf telemetry — Core Web Vitals + WebGL fallback tag.
- * Logs to console in dev; in prod, posts to `navigator.sendBeacon('/vitals')`
- * if available (silently no-ops otherwise — wire to your analytics later).
+ * Real User Monitoring — Core Web Vitals ingestion.
+ * Dev: logs to console. Prod: inserts anonymously into `public.web_vitals`
+ * (RLS validates the payload). Failures are swallowed — telemetry must never
+ * break the page.
  */
 import { onCLS, onFCP, onINP, onLCP, onTTFB, type Metric } from 'web-vitals';
+import { supabase } from '@/integrations/supabase/client';
 import { hasWebGL, webglDisabledReason } from './hasWebGL';
 
-type Payload = Metric & { webgl: boolean; webglReason: string | null; path: string };
+const SESSION_KEY = '__wv_sid__';
+function sessionId(): string {
+  try {
+    let sid = sessionStorage.getItem(SESSION_KEY);
+    if (!sid) {
+      sid = Math.random().toString(36).slice(2) + Date.now().toString(36);
+      sessionStorage.setItem(SESSION_KEY, sid);
+    }
+    return sid;
+  } catch {
+    return 'no-session';
+  }
+}
 
-function send(metric: Metric) {
-  const payload: Payload = {
-    ...metric,
+async function send(metric: Metric) {
+  const row = {
+    metric_name: metric.name,
+    metric_value: Math.max(0, Math.round(metric.value * 100) / 100),
+    rating: metric.rating,
+    path: location.pathname.slice(0, 512),
     webgl: hasWebGL(),
-    webglReason: webglDisabledReason(),
-    path: typeof location !== 'undefined' ? location.pathname : '',
+    webgl_reason: webglDisabledReason(),
+    navigation_type: metric.navigationType,
+    session_id: sessionId(),
+    user_agent: navigator.userAgent.slice(0, 512),
   };
 
   if (import.meta.env.DEV) {
-     
-    console.info(`[vitals] ${metric.name} = ${metric.value.toFixed(1)} (${metric.rating})`, payload);
+    console.info(`[vitals] ${metric.name}=${metric.value.toFixed(1)} (${metric.rating})`, row);
     return;
   }
 
   try {
-    const body = JSON.stringify(payload);
-    if (navigator.sendBeacon) navigator.sendBeacon('/vitals', body);
+    await supabase.from('web_vitals').insert(row);
   } catch {
-    /* swallow — telemetry must never break the page */
+    /* swallow */
   }
 }
 
@@ -36,7 +53,7 @@ export function initWebVitals() {
   started = true;
   onCLS(send);
   onFCP(send);
-  onINP(send); // replaces FID — measures "time to first interaction"
+  onINP(send);
   onLCP(send);
   onTTFB(send);
 }
