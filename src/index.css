@@ -122,6 +122,32 @@
     --ring: 24 70% 50%;
   }
 
+  /* ============= Theme-adaptive brand logo =============
+     Raster logo tuned per theme via CSS filters so it always sits
+     harmoniously on the current background. Override with --logo-filter. */
+  :root { --logo-filter: none; --logo-glow: hsl(var(--gold) / 0.35); }
+  html[data-theme="noir"] {
+    --logo-filter: brightness(1.08) contrast(1.05) saturate(1.1);
+    --logo-glow: hsl(var(--gold) / 0.55);
+  }
+  html[data-theme="sand"] {
+    --logo-filter: contrast(1.05) saturate(0.95);
+    --logo-glow: hsl(var(--gold) / 0.3);
+  }
+  html.dark, html[data-mode="dark"] {
+    --logo-filter: brightness(1.1) contrast(1.05) drop-shadow(0 0 12px hsl(var(--gold) / 0.35));
+    --logo-glow: hsl(var(--gold) / 0.5);
+  }
+  .brand-logo {
+    filter: var(--logo-filter);
+    transition: filter 0.5s var(--ease-luxe, ease);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .brand-logo { transition: none; }
+  }
+
+
+
   /* Font variants */
   html[data-font="modern"] body,
   html[data-font="modern"][dir="rtl"] body {
