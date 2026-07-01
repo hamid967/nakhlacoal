@@ -176,10 +176,10 @@ export function HomeIntro() {
           <div className="text-[10px] tracking-[0.5em] text-[hsl(var(--gold-ink))] mb-2 font-mono font-semibold">
             EST · 2010 — DOSSIER 2060
           </div>
-          <h1 className={`text-2xl sm:text-4xl md:text-5xl text-primary ${isAr ? 'font-arabic font-bold' : 'font-display font-bold'}`}>
+          <p role="heading" aria-level={2} className={`text-2xl sm:text-4xl md:text-5xl text-primary ${isAr ? 'font-arabic font-bold' : 'font-display font-bold'}`}>
 
             {isAr ? 'علاماتنا التجارية المسجّلة' : 'Our Registered Trademarks'}
-          </h1>
+          </p>
           <div className="flex items-center justify-center gap-3 mt-3">
             <span className="block h-px w-16 bg-gradient-to-r from-transparent to-[hsl(var(--gold))]" />
             <span className="text-[hsl(var(--gold))] rotate-45 inline-block w-2 h-2 border border-[hsl(var(--gold))]" />
