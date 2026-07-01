@@ -65,6 +65,18 @@ function extractOrder(text: string): { order: Record<string, any> | null; clean:
   try { return { order: JSON.parse(m[1]), clean: text.replace(m[0], '').trim() }; }
   catch { return { order: null, clean: text }; }
 }
+type ToolActivity = { name: string; args: Record<string, any>; result: any };
+function extractTools(text: string): { tools: ToolActivity[]; clean: string } {
+  const m = text.match(/<<TOOLS>>([\s\S]*?)<<END>>\n?/);
+  if (!m) return { tools: [], clean: text };
+  try { return { tools: JSON.parse(m[1]) as ToolActivity[], clean: text.replace(m[0], '') }; }
+  catch { return { tools: [], clean: text.replace(m[0], '') }; }
+}
+const TOOL_META: Record<string, { icon: string; label: string }> = {
+  check_inventory: { icon: '📦', label: 'فحص المخزون' },
+  track_order: { icon: '🚚', label: 'تتبع الطلب' },
+  create_quote_link: { icon: '📄', label: 'إنشاء عرض سعر' },
+};
 const buildWa = (o: Record<string, any>) => [
   '🌴 *طلب جديد — فحم النخلة*', '',
   `*المنتج:* ${o.product_type}`,
