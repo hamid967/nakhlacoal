@@ -4,11 +4,43 @@ import { motion } from 'framer-motion';
 import { Search, Plus, Eye, RotateCcw, Download } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { exportQuoteToPdf } from '@/lib/exportQuotePdf';
+import { toast } from '@/hooks/use-toast';
 
 const statusTint: Record<string, string> = {
   new: 'amber', contacted: 'blue', preparing: 'gold', shipped: 'violet',
   delivered: 'green', completed: 'green', cancelled: 'rose',
 };
+
+async function downloadOrderPdf(o: any) {
+  try {
+    const unitPrice = Number(o.unit_price_sar || 0);
+    const qty = Number(o.quantity || 0);
+    const subtotal = Number(o.subtotal_sar ?? qty * unitPrice);
+    const vat = Number(o.vat_amount_sar ?? subtotal * 0.15);
+    const total = Number(o.grand_total_sar ?? subtotal + vat);
+    await exportQuoteToPdf({
+      customer: {
+        name: o.contact_name || '',
+        phone: o.phone || '',
+        email: o.email || undefined,
+        company: o.company_name || undefined,
+        city: o.city || undefined,
+      },
+      items: [{
+        slug: o.product_type || 'order',
+        qty, unit: (o.unit as 'kg' | 'carton' | 'ton') || 'kg',
+        unitPrice, lineTotal: subtotal,
+      }],
+      subtotal, vat, total,
+      createdAt: new Date(o.created_at).getTime(),
+      quoteId: o.id,
+    }, `palm-charcoal-order-${String(o.id).slice(0, 8)}.pdf`);
+  } catch (e) {
+    toast({ title: 'تعذّر إنشاء الملف', description: String((e as Error).message || e), variant: 'destructive' });
+  }
+}
+
 
 export default function PortalOrders() {
   const { user } = useAuth();
@@ -80,7 +112,7 @@ export default function PortalOrders() {
                     <div className="flex gap-2">
                       <Link to={`/portal/orders/${o.id}`} className="a-btn a-btn-ghost" title="عرض"><Eye className="w-3.5 h-3.5" /></Link>
                       <Link to="/portal/orders/new" className="a-btn a-btn-ghost" title="إعادة الطلب"><RotateCcw className="w-3.5 h-3.5" /></Link>
-                      <button className="a-btn a-btn-ghost" title="الفاتورة"><Download className="w-3.5 h-3.5" /></button>
+                      <button onClick={() => downloadOrderPdf(o)} className="a-btn a-btn-ghost" title="تحميل PDF" aria-label="تحميل الفاتورة PDF"><Download className="w-3.5 h-3.5" /></button>
                     </div>
                   </td>
                 </motion.tr>
