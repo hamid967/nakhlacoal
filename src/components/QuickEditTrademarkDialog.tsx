@@ -7,7 +7,11 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from '@/hooks/use-toast';
 import type { Trademark } from '@/data/trademarks';
-import { Loader2, Save } from 'lucide-react';
+import { Loader2, Save, Upload } from 'lucide-react';
+
+const LOGO_BUCKET = 'trademark-logos';
+const SIGNED_URL_TTL = 60 * 60 * 24 * 365 * 10; // 10 years
+
 
 interface Props {
   open: boolean;
@@ -23,6 +27,8 @@ interface Props {
  */
 export function QuickEditTrademarkDialog({ open, onOpenChange, trademark, isAr }: Props) {
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+
   const [form, setForm] = useState({
     name_ar: '',
     name_en: '',
@@ -53,7 +59,54 @@ export function QuickEditTrademarkDialog({ open, onOpenChange, trademark, isAr }
   const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     setForm((f) => ({ ...f, [k]: e.target.value }));
 
+  const onUpload = async (file: File) => {
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      toast({ title: isAr ? 'ملف غير صالح' : 'Invalid file', description: isAr ? 'اختر ملف صورة.' : 'Please choose an image.', variant: 'destructive' });
+      return;
+    }
+    if (file.size > 4 * 1024 * 1024) {
+      toast({ title: isAr ? 'الحجم كبير' : 'File too large', description: isAr ? 'الحد الأقصى 4MB.' : 'Max 4MB.', variant: 'destructive' });
+      return;
+    }
+    setUploading(true);
+    const ext = (file.name.split('.').pop() || 'png').toLowerCase();
+    const path = `${trademark.id}/${Date.now()}.${ext}`;
+    const { error: upErr } = await supabase.storage
+      .from(LOGO_BUCKET)
+      .upload(path, file, { cacheControl: '31536000', upsert: true, contentType: file.type });
+    if (upErr) {
+      setUploading(false);
+      toast({ title: isAr ? 'فشل الرفع' : 'Upload failed', description: upErr.message, variant: 'destructive' });
+      return;
+    }
+    // Try public URL first (works when bucket is public); fall back to a long-lived signed URL.
+    const { data: pub } = supabase.storage.from(LOGO_BUCKET).getPublicUrl(path);
+    let url = pub?.publicUrl ?? '';
+    try {
+      const head = await fetch(url, { method: 'HEAD' });
+      if (!head.ok) url = '';
+    } catch {
+      url = '';
+    }
+    if (!url) {
+      const { data: signed, error: signErr } = await supabase.storage
+        .from(LOGO_BUCKET)
+        .createSignedUrl(path, SIGNED_URL_TTL);
+      if (signErr || !signed) {
+        setUploading(false);
+        toast({ title: isAr ? 'تعذّر إنشاء الرابط' : 'URL error', description: signErr?.message ?? '', variant: 'destructive' });
+        return;
+      }
+      url = signed.signedUrl;
+    }
+    setForm((f) => ({ ...f, image_url: url }));
+    setUploading(false);
+    toast({ title: isAr ? 'تم رفع الشعار' : 'Logo uploaded' });
+  };
+
   const onSave = async () => {
+
     setSaving(true);
     const { error } = await supabase
       .from('trademarks')
@@ -114,11 +167,34 @@ export function QuickEditTrademarkDialog({ open, onOpenChange, trademark, isAr }
             <Textarea rows={3} value={form.description_ar} onChange={set('description_ar')} />
           </Field>
           <Field
-            label={isAr ? 'رابط الشعار (URL)' : 'Logo image URL'}
-            hint={isAr ? 'اترك الحقل فارغاً لاستخدام الشعار الافتراضي.' : 'Leave empty to use the bundled default logo.'}
+            label={isAr ? 'شعار العلامة' : 'Trademark logo'}
+            hint={isAr ? 'ارفع صورة PNG/SVG أو الصق رابطاً مباشراً. اتركه فارغاً لاستخدام الشعار الافتراضي.' : 'Upload PNG/SVG or paste a direct URL. Leave empty for the bundled default.'}
             className="md:col-span-2"
           >
-            <Input placeholder="https://…/logo.png" value={form.image_url} onChange={set('image_url')} />
+            <div className="flex flex-wrap items-center gap-2">
+              <label className="inline-flex items-center gap-2 px-3 py-2 rounded-md border border-border bg-background hover:bg-muted cursor-pointer text-sm">
+                {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+                <span>{isAr ? 'رفع ملف' : 'Upload file'}</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  disabled={uploading}
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (f) onUpload(f);
+                    e.target.value = '';
+                  }}
+                />
+              </label>
+              {form.image_url && (
+                <Button type="button" variant="ghost" size="sm" onClick={() => setForm((f) => ({ ...f, image_url: '' }))} disabled={uploading || saving}>
+                  {isAr ? 'إزالة' : 'Remove'}
+                </Button>
+              )}
+            </div>
+            <Input className="mt-2" placeholder="https://…/logo.png" value={form.image_url} onChange={set('image_url')} />
+
             {form.image_url && (
               <img
                 src={form.image_url}
