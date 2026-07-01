@@ -405,22 +405,35 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
       aria-hidden={!open}
       aria-label="مساعد فحم النخلة"
     >
-      {/* Header */}
-      <header className="flex items-center gap-2 px-3 py-2.5 border-b border-gold/20 bg-dark text-cream">
-        <div className="w-8 h-8 rounded-full bg-background/10 flex items-center justify-center">
-          <img decoding="async" loading="lazy" src={logo} alt="" className="w-6 h-6 object-contain" />
+      {/* Header — refined luxury */}
+      <header
+        className="relative flex items-center gap-2.5 px-3.5 py-3 border-b border-gold/25 text-cream overflow-hidden"
+        style={{
+          background:
+            'linear-gradient(135deg, hsl(var(--dark)) 0%, hsl(0 0% 8%) 55%, hsl(var(--dark)) 100%)',
+        }}
+      >
+        <span className="absolute inset-0 bg-[radial-gradient(circle_at_10%_0%,hsl(var(--gold)/0.18),transparent_55%)] pointer-events-none" aria-hidden />
+        <div
+          className="relative w-9 h-9 rounded-full flex items-center justify-center ring-1 ring-gold/40 shadow-[0_0_18px_-4px_hsl(var(--gold)/0.6)]"
+          style={{ background: 'radial-gradient(circle at 30% 25%, hsl(var(--gold-hi)/0.35), hsl(0 0% 6%) 70%)' }}
+        >
+          <img decoding="async" loading="lazy" src={logo} alt="" className="w-7 h-7 object-contain drop-shadow-[0_0_6px_hsl(var(--gold-hi)/0.5)]" />
         </div>
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-semibold flex items-center gap-1.5 font-arabic">
-            مساعد فحم النخلة <Sparkles className="w-3.5 h-3.5 text-gold-hi" />
+        <div className="relative flex-1 min-w-0">
+          <p className="text-[13px] font-bold flex items-center gap-1.5 font-arabic tracking-wide">
+            <span className="bg-gradient-to-l from-gold-hi via-cream to-gold-hi bg-clip-text text-transparent">
+              مساعد فحم النخلة
+            </span>
+            <Sparkles className="w-3.5 h-3.5 text-gold-hi shrink-0" />
           </p>
-          <p className="text-[10px] opacity-70 flex items-center gap-1">
+          <p className="text-[10px] opacity-80 flex items-center gap-1.5 mt-0.5 font-arabic">
             {streaming ? (
               <><span className="w-1.5 h-1.5 rounded-full bg-gold-hi animate-pulse" /> يكتب الآن…</>
             ) : submitting ? (
               <><Loader2 className="w-3 h-3 animate-spin" /> جارٍ الإرسال…</>
             ) : (
-              <><span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> متصل · مجاني</>
+              <><span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_hsl(142_70%_45%)] animate-pulse" /> متصل · مجاني ٢٤/٧</>
             )}
           </p>
         </div>
@@ -428,7 +441,7 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
           href={waHref}
           target="_blank"
           rel="noreferrer noopener"
-          className="p-1.5 rounded-lg hover:bg-white/10 transition text-[#25D366]"
+          className="relative p-1.5 rounded-lg hover:bg-white/10 transition text-[#25D366]"
           aria-label="واتساب مباشر"
           title="واتساب مباشر"
         >
@@ -436,7 +449,7 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
         </a>
         <button
           onClick={() => { setMessages([greet]); setPendingOrder(null); setInput(''); inputRef.current?.focus(); }}
-          className="p-1.5 rounded-lg hover:bg-white/10 transition"
+          className="relative p-1.5 rounded-lg hover:bg-white/10 transition"
           aria-label="محادثة جديدة"
           title="بدء محادثة جديدة"
         >
@@ -444,13 +457,13 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
         </button>
         <button
           onClick={() => { onClose(); navigate('/assistant'); }}
-          className="p-1.5 rounded-lg hover:bg-white/10 transition"
+          className="relative p-1.5 rounded-lg hover:bg-white/10 transition"
           aria-label="تكبير"
           title="فتح في الشاشة الكاملة"
         >
           <Maximize2 className="w-4 h-4" />
         </button>
-        <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-white/10 transition" aria-label="إغلاق" title="إغلاق">
+        <button onClick={onClose} className="relative p-1.5 rounded-lg hover:bg-white/10 transition" aria-label="إغلاق" title="إغلاق">
           <X className="w-4 h-4" />
         </button>
       </header>
