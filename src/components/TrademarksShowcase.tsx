@@ -49,200 +49,194 @@ export function TrademarksShowcase() {
   ];
 
   return (
-    <section className="relative section overflow-hidden">
+    <section dir={isAr ? 'rtl' : 'ltr'} className="relative section overflow-hidden bg-cream/40">
       {/* Soft palm-leaf wash background */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 opacity-[0.07] bg-[radial-gradient(circle_at_20%_10%,hsl(var(--emerald))_0%,transparent_45%),radial-gradient(circle_at_80%_90%,hsl(var(--gold))_0%,transparent_50%)]" />
+      <div aria-hidden className="pointer-events-none absolute inset-0 opacity-[0.06] bg-[radial-gradient(circle_at_20%_10%,hsl(var(--emerald))_0%,transparent_45%),radial-gradient(circle_at_80%_90%,hsl(var(--gold))_0%,transparent_50%)]" />
 
       <div className="container relative">
-        <SectionHeader
-          eyebrow={isAr ? 'علاماتنا التجارية' : 'Our Trademarks'}
-          title={isAr ? 'شركة فحم النخلة' : 'Palm Charcoal Group'}
-        />
-        <p className="text-center max-w-2xl mx-auto -mt-4 mb-6 text-sm md:text-base text-foreground/70 font-arabic leading-relaxed">
-          {isAr
-            ? 'مجموعة علامات تجارية سعودية مسجلة بجودة عالية، نقدمها لكم بفخر من المملكة إلى العالم.'
-            : 'A registered Saudi trademark family — proudly crafted and delivered worldwide.'}
-        </p>
+        {/* Editorial header */}
+        <div className="text-center mb-10">
+          <div className="inline-block px-4 py-1 border-y border-gold/30 mb-4">
+            <span className="text-gold text-[11px] tracking-[0.28em] font-medium uppercase font-sans">
+              {isAr ? 'تأسست 2010 — ملف 2060' : 'Est. 2010 — Dossier 2060'}
+            </span>
+          </div>
+          <h2 className="text-4xl md:text-5xl lg:text-6xl text-emerald font-bold font-arabic leading-tight">
+            {isAr ? 'علاماتنا التجارية المسجلة' : 'Our Registered Trademarks'}
+          </h2>
+          <div className="w-24 h-px bg-gold mx-auto mt-5" />
+        </div>
 
-        {/* Sync / loading / error status — accessible live region */}
-        <div
-          aria-live="polite"
-          aria-busy={loading || syncing}
-          className="flex justify-center mb-8 min-h-[28px]"
-        >
+        {/* Live-sync status pill */}
+        <div aria-live="polite" aria-busy={loading || syncing} className="flex justify-center mb-8 min-h-[24px]">
           {loading ? (
-            <span className="inline-flex items-center gap-2 text-xs text-foreground/60">
+            <span className="inline-flex items-center gap-2 text-[11px] text-foreground/60">
               <span className="w-2 h-2 rounded-full bg-gold/70 animate-pulse" />
               {isAr ? 'جاري تحميل العلامات…' : 'Loading trademarks…'}
             </span>
           ) : error ? (
-            <span className="inline-flex items-center gap-2 text-xs text-foreground/55">
+            <span className="inline-flex items-center gap-2 text-[11px] text-foreground/55">
               <span className="w-2 h-2 rounded-full bg-foreground/30" />
               {isAr ? 'عرض النسخة المحفوظة' : 'Showing cached version'}
             </span>
           ) : (
             <span className="inline-flex items-center gap-2 text-[11px] text-foreground/55">
-              <span
-                className={`w-2 h-2 rounded-full ${
-                  status === 'live'
-                    ? 'bg-emerald-500 animate-pulse'
-                    : status === 'reconnecting'
-                    ? 'bg-amber-500 animate-pulse'
-                    : 'bg-foreground/30'
-                }`}
-              />
-              {status === 'live'
-                ? isAr ? 'متزامن مباشرة' : 'Live sync'
-                : status === 'reconnecting'
-                ? isAr ? 'إعادة الاتصال…' : 'Reconnecting…'
-                : isAr ? 'غير متصل' : 'Offline'}
+              <span className={`w-2 h-2 rounded-full ${status === 'live' ? 'bg-emerald-500 animate-pulse' : status === 'reconnecting' ? 'bg-amber-500 animate-pulse' : 'bg-foreground/30'}`} />
+              {status === 'live' ? (isAr ? 'متزامن مباشرة' : 'Live sync') : status === 'reconnecting' ? (isAr ? 'إعادة الاتصال…' : 'Reconnecting…') : (isAr ? 'غير متصل' : 'Offline')}
               {syncing && (isAr ? ' • تحديث…' : ' • refreshing…')}
             </span>
           )}
         </div>
 
-        {/* Coverflow stage */}
-        <div className="relative" style={{ perspective: '1400px' }}>
-          {/* Arrows */}
-          <button
-            onClick={() => go(-1)}
-            aria-label="prev"
-            className="absolute start-0 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full clay-card border border-gold/40 hover:border-gold hover:bg-gold/10 transition flex items-center justify-center text-gold"
-          >
-            <ChevronLeft className="w-5 h-5" />
-          </button>
-          <button
-            onClick={() => go(1)}
-            aria-label="next"
-            className="absolute end-0 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full clay-card border border-gold/40 hover:border-gold hover:bg-gold/10 transition flex items-center justify-center text-gold"
-          >
-            <ChevronRight className="w-5 h-5" />
-          </button>
-
-          {/* Cards */}
-          <div className="relative h-[340px] md:h-[420px] flex items-center justify-center" style={{ transformStyle: 'preserve-3d' }}>
-            {trademarks.map((t, i) => {
-              const raw = i - active;
-              const half = total / 2;
-              const off = raw > half ? raw - total : raw < -half ? raw + total : raw;
-              const abs = Math.abs(off);
-              if (abs > 2) return null;
-              const isCenter = off === 0;
-              const spread = window.innerWidth < 768 ? 110 : 220;
-              const x = off * spread;
-              const rotY = off * -22;
-              const z = -abs * 120;
-              const scale = isCenter ? 1.15 : 0.85 - abs * 0.05;
-              const opacity = isCenter ? 1 : 0.55 - abs * 0.15;
-              return (
-                <button
-                  key={t.id}
-                  onClick={() => setActive(i)}
-                  aria-label={t.nameAr}
-                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-700 ease-out focus:outline-none"
-                  style={{
-                    transform: `translate(-50%,-50%) translateX(${x}px) translateZ(${z}px) rotateY(${rotY}deg) scale(${scale})`,
-                    opacity,
-                    zIndex: 20 - abs,
-                  }}
-                >
-                  <div
-                    className={`w-[200px] h-[280px] md:w-[280px] md:h-[360px] rounded-2xl flex items-center justify-center p-6 transition-all duration-500 ${
-                      isCenter
-                        ? 'bg-cream border-2 border-gold shadow-[0_30px_80px_-20px_rgba(180,138,59,0.45),0_0_0_1px_rgba(180,138,59,0.2)_inset]'
-                        : 'bg-cream/85 border border-gold/25 shadow-xl'
-                    }`}
-                  >
-                    <img
-                      src={t.image}
-                      alt={t.nameAr}
-                      loading="lazy"
-                      className="max-w-full max-h-full object-contain drop-shadow-sm"
-                      draggable={false}
-                    />
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Dots */}
-          <div role="tablist" className="flex justify-center gap-1 mt-6">
-            {trademarks.map((t, i) => (
-              <button
-                key={i}
-                role="tab"
-                aria-selected={i === active}
-                onClick={() => setActive(i)}
-                aria-label={`${t.nameEn} (${i + 1} / ${trademarks.length})`}
-                className="inline-flex items-center justify-center h-11 w-11 group"
-              >
-                <span
-                  aria-hidden="true"
-                  className={`block h-2 rounded-full transition-all ${i === active ? 'w-6 bg-gold' : 'w-2 bg-gold/30 group-hover:bg-gold/60'}`}
-                />
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Details card */}
+        {/* ================= Bento Grid ================= */}
         <AnimatePresence mode="wait">
           <motion.div
             key={current.id}
-            initial={{ opacity: 0, y: 14 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.4 }}
-            className="mt-10 max-w-3xl mx-auto clay-card rounded-2xl border border-gold/25 p-6 md:p-8"
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.45 }}
+            className="grid grid-cols-1 md:grid-cols-12 gap-4 auto-rows-[160px]"
           >
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-5 text-sm">
-              <Field icon={Hash}     label={isAr ? 'رقم التسجيل'   : 'Reg. No.'}    value={current.registrationNo} mono />
-              <Field icon={Tag}      label={isAr ? 'فئة العلامة'   : 'Class'}       value={current.niceClass} />
-              <Field icon={Calendar} label={isAr ? 'تاريخ التسجيل' : 'Registered'}  value={current.registeredHijri} />
-              <Field icon={CalendarOff} label={isAr ? 'تاريخ الانتهاء' : 'Expires'} value={current.expiresHijri} />
-              <Field icon={User}     label={isAr ? 'المالك'        : 'Owner'}       value={current.ownerAr} />
-              <Field icon={Package}  label={isAr ? 'النشاط'        : 'Activity'}    value={current.goodsAr} />
-            </div>
-            <div className="mt-5 pt-4 border-t border-gold/15">
-              <div className="flex items-start gap-2 text-xs md:text-sm text-foreground/70">
-                <FileText className="w-4 h-4 text-gold mt-0.5 shrink-0" />
-                <p className="leading-relaxed">
-                  <span className="text-gold/90 font-semibold me-2">{isAr ? 'ملاحظات:' : 'Notes:'}</span>
-                  {current.descriptionAr}
-                </p>
+            {/* Logo main card — 8×3 */}
+            <div className="md:col-span-8 md:row-span-3 relative bg-background rounded-3xl border border-gold/25 shadow-xl shadow-emerald/5 flex flex-col items-center justify-center p-8 overflow-hidden group">
+              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,hsl(var(--gold)/0.06),transparent_60%)]" />
+              <button
+                onClick={() => go(-1)}
+                aria-label={isAr ? 'السابق' : 'Previous'}
+                className="absolute start-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-cream/80 border border-gold/40 hover:border-gold hover:bg-gold/10 transition flex items-center justify-center text-gold"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+              <button
+                onClick={() => go(1)}
+                aria-label={isAr ? 'التالي' : 'Next'}
+                className="absolute end-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-cream/80 border border-gold/40 hover:border-gold hover:bg-gold/10 transition flex items-center justify-center text-gold"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+              <img
+                src={current.image}
+                alt={isAr ? current.nameAr : current.nameEn}
+                loading="lazy"
+                draggable={false}
+                className="max-h-[220px] w-auto object-contain drop-shadow-md transition-transform duration-500 group-hover:scale-[1.03]"
+              />
+              <div className="text-center mt-5">
+                <h3 className="text-2xl md:text-3xl text-emerald font-bold font-arabic">{current.nameAr}</h3>
+                <p className="text-gold text-sm md:text-base tracking-[0.28em] mt-1 font-serif uppercase">{current.nameEn}</p>
               </div>
+            </div>
+
+            {/* Registration — 4×1 */}
+            <div className="md:col-span-4 md:row-span-1 bg-emerald rounded-3xl p-6 flex flex-col justify-between text-cream">
+              <div className="flex justify-between items-start">
+                <span className="text-gold text-[11px] font-medium uppercase tracking-widest">{isAr ? 'رقم التسجيل' : 'Registration No.'}</span>
+                <Hash className="w-4 h-4 text-gold" />
+              </div>
+              <div className="text-2xl font-bold tracking-wider font-mono">#{current.registrationNo}</div>
+            </div>
+
+            {/* Tagline — 4×2 */}
+            <div className="md:col-span-4 md:row-span-2 bg-[hsl(var(--gold)/0.08)] border border-gold/15 rounded-3xl p-7 flex flex-col justify-center">
+              <p className="text-emerald text-lg leading-relaxed font-arabic">
+                {isAr
+                  ? 'مجموعة علامات تجارية سعودية بجودة عالية، نقدمها لكم بفخر من المملكة إلى العالم.'
+                  : 'A registered Saudi trademark family — proudly crafted and delivered worldwide.'}
+              </p>
+              <span className="text-gold italic text-sm mt-3 font-serif">
+                {isAr ? 'إرث سعودي، تميّز عالمي.' : 'Excellence rooted in tradition.'}
+              </span>
+            </div>
+
+            {/* Class / activity — 6×1 */}
+            <div className="md:col-span-6 md:row-span-1 bg-background border border-gold/15 border-s-4 border-s-gold rounded-3xl p-6 flex items-center gap-5">
+              <div className="text-3xl md:text-4xl font-bold text-emerald font-serif shrink-0">
+                {current.niceClass}
+              </div>
+              <div className="w-px self-stretch bg-gold/25" />
+              <div className="min-w-0">
+                <div className="text-[11px] uppercase tracking-widest text-gold">{isAr ? 'النشاط' : 'Activity'}</div>
+                <div className="text-emerald font-medium font-arabic truncate">{current.goodsAr}</div>
+              </div>
+            </div>
+
+            {/* Meta — 6×1 */}
+            <div className="md:col-span-6 md:row-span-1 bg-emerald rounded-3xl p-6 grid grid-cols-3 items-center text-cream/90">
+              <MetaCol label={isAr ? 'المنشأ' : 'Origin'} value={isAr ? 'المملكة' : 'KSA'} />
+              <div className="justify-self-center w-px h-8 bg-cream/15" />
+              <MetaCol label={isAr ? 'الحالة' : 'Status'} value={isAr ? 'موثّقة' : 'Verified'} mono />
+              <MetaCol label={isAr ? 'ينتهي' : 'Expires'} value={current.expiresHijri} />
+              <div className="justify-self-center w-px h-8 bg-cream/15" />
+              <MetaCol label={isAr ? 'المالك' : 'Owner'} value={current.ownerAr} />
             </div>
           </motion.div>
         </AnimatePresence>
 
+        {/* Notes strip */}
+        <div className="mt-6 max-w-4xl mx-auto flex items-start gap-3 text-sm text-foreground/70 bg-background/60 border border-gold/15 rounded-2xl p-4">
+          <FileText className="w-4 h-4 text-gold mt-0.5 shrink-0" />
+          <p className="leading-relaxed font-arabic">
+            <span className="text-gold font-semibold me-2">{isAr ? 'ملاحظات:' : 'Notes:'}</span>
+            {current.descriptionAr}
+          </p>
+        </div>
+
+        {/* Trademark dots */}
+        <div role="tablist" className="flex justify-center gap-1.5 mt-8">
+          {trademarks.map((t, i) => (
+            <button
+              key={i}
+              role="tab"
+              aria-selected={i === active}
+              onClick={() => setActive(i)}
+              aria-label={`${t.nameEn} (${i + 1} / ${trademarks.length})`}
+              className="inline-flex items-center justify-center h-11 w-11 group"
+            >
+              <span
+                aria-hidden="true"
+                className={`block h-2 rounded-full transition-all ${i === active ? 'w-8 bg-gold' : 'w-2 bg-gold/30 group-hover:bg-gold/60'}`}
+              />
+            </button>
+          ))}
+        </div>
+
         {/* Feature chips */}
-        <div className="mt-12 grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4">
+        <div className="mt-10 grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4">
           {features.map((f, i) => (
-            <div key={i} className="clay-card rounded-xl border border-gold/20 px-4 py-3 flex items-center gap-3">
+            <div key={i} className="bg-background border border-gold/20 rounded-xl px-4 py-3 flex items-center gap-3 hover:border-gold/50 hover:-translate-y-0.5 transition-all">
               <span className="w-9 h-9 rounded-lg bg-gold/10 text-gold flex items-center justify-center shrink-0">
                 <f.icon className="w-4 h-4" />
               </span>
-              <div className="text-right rtl:text-right">
-                <p className="font-arabic text-sm font-semibold text-foreground leading-tight">{f.title}</p>
-                <p className="text-[11px] text-foreground/60 leading-tight">{f.desc}</p>
+              <div>
+                <p className="font-arabic text-sm font-semibold text-emerald leading-tight">{f.title}</p>
+                <p className="text-[11px] text-foreground/60 leading-tight mt-0.5">{f.desc}</p>
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Editorial footer tag */}
+        <div className="mt-10 flex justify-center">
+          <div className="inline-flex items-center gap-3 text-emerald/60">
+            <span className="w-8 h-px bg-gold/40" />
+            <span className="text-[10px] uppercase tracking-[0.28em] font-medium">
+              {isAr ? 'إرث سعودي أصيل' : 'Authentic Saudi Legacy'}
+            </span>
+            <span className="w-8 h-px bg-gold/40" />
+          </div>
         </div>
       </div>
     </section>
   );
 }
 
-function Field({ icon: Icon, label, value, mono }: { icon: typeof Hash; label: string; value: string; mono?: boolean }) {
+function MetaCol({ label, value, mono }: { label: string; value: string; mono?: boolean }) {
   return (
-    <div className="flex items-start gap-2">
-      <Icon className="w-4 h-4 text-gold mt-0.5 shrink-0" />
-      <div className="min-w-0">
-        <div className="text-[11px] uppercase tracking-wider text-foreground/55">{label}</div>
-        <div className={`text-sm text-foreground ${mono ? 'font-mono text-gold' : ''} truncate`}>{value}</div>
-      </div>
+    <div className="text-center min-w-0">
+      <div className="text-gold text-[10px] uppercase tracking-widest mb-1">{label}</div>
+      <div className={`text-cream font-medium truncate ${mono ? 'font-mono text-xs tracking-wider uppercase' : 'font-arabic text-sm'}`}>{value}</div>
     </div>
   );
 }
+
