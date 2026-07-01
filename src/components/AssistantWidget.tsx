@@ -76,7 +76,10 @@ const TOOL_META: Record<string, { icon: string; label: string }> = {
   check_inventory: { icon: '📦', label: 'فحص المخزون' },
   track_order: { icon: '🚚', label: 'تتبع الطلب' },
   create_quote_link: { icon: '📄', label: 'إنشاء عرض سعر' },
+  remember_preference: { icon: '🧠', label: 'حفظ تفضيل' },
+  recall_preferences: { icon: '💾', label: 'استرجاع التفضيلات' },
 };
+
 const buildWa = (o: Record<string, any>) => [
   '🌴 *طلب جديد — فحم النخلة*', '',
   `*المنتج:* ${o.product_type}`,
