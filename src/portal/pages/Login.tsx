@@ -45,12 +45,13 @@ export default function PortalLogin() {
     setBusy(true);
     try {
       if (mode === 'signin') {
-        const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
+        const { data, error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
         if (error) throw error;
+        if (!data.session) throw new Error('تعذّر إنشاء الجلسة');
         toast.success('مرحباً بعودتك 🌴');
         navigate(from, { replace: true });
       } else {
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email: email.trim(),
           password,
           options: {
@@ -59,14 +60,20 @@ export default function PortalLogin() {
           },
         });
         if (error) throw error;
-        toast.success('تم إنشاء حسابك — تحقق من بريدك للتفعيل');
-        setMode('signin');
+        if (data.session) {
+          toast.success('تم إنشاء حسابك — مرحباً بك 🌴');
+          navigate(from, { replace: true });
+        } else {
+          toast.success('تم إنشاء حسابك — تحقق من بريدك للتفعيل');
+          setMode('signin');
+        }
       }
     } catch (err: any) {
       const msg = err?.message || 'حدث خطأ';
       toast.error(
         msg.includes('Invalid login') ? 'بيانات الدخول غير صحيحة' :
-        msg.includes('already registered') ? 'البريد مسجّل مسبقاً' :
+        msg.includes('already registered') || msg.includes('already been registered') ? 'البريد مسجّل مسبقاً' :
+        msg.includes('Password') && msg.includes('pwned') ? 'كلمة المرور مكشوفة في تسريبات — اختر أقوى' :
         msg
       );
     } finally { setBusy(false); }
@@ -75,13 +82,16 @@ export default function PortalLogin() {
   const google = async () => {
     setGoogleBusy(true);
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: { redirectTo: `${window.location.origin}${from}` },
+      const result = await lovable.auth.signInWithOAuth('google', {
+        redirect_uri: window.location.origin,
       });
-      if (error) throw error;
+      if (result.error) throw result.error;
+      if (result.redirected) return;
+      toast.success('مرحباً بك 🌴');
+      navigate(from, { replace: true });
     } catch (err: any) {
       toast.error(err?.message || 'تعذّر تسجيل الدخول بجوجل');
+    } finally {
       setGoogleBusy(false);
     }
   };
