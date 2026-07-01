@@ -124,12 +124,16 @@ export function ThemeToggle() {
 
   const themeKeys: ThemeKey[] = ['auto', 'emerald', 'noir', 'sand'];
 
+  const currentThemeName = theme === 'auto' ? 'تلقائي' : THEMES[theme].name;
+  const currentFontName = FONTS[font].name;
+  const triggerLabel = `تخصيص المظهر — الثيم الحالي: ${currentThemeName}، الخط: ${currentFontName}`;
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        aria-label="تخصيص الألوان والخطوط والثيم"
-        title="الثيم · الألوان · الخطوط"
-        className="relative w-10 h-10 rounded-full inline-flex items-center justify-center text-foreground/80 hover:text-gold-hi transition-all group focus:outline-none focus-visible:ring-2 focus-visible:ring-gold/60"
+        aria-label={triggerLabel}
+        title={triggerLabel}
+        className="relative w-10 h-10 rounded-full inline-flex items-center justify-center text-foreground/80 hover:text-gold-hi transition-all group focus:outline-none focus-visible:ring-2 focus-visible:ring-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
       >
         <span
           aria-hidden="true"
@@ -148,16 +152,24 @@ export function ThemeToggle() {
         <span className="absolute inset-[3px] rounded-full bg-background/60 backdrop-blur-sm" aria-hidden="true" />
         <Palette className="relative w-4 h-4" />
         <Sparkles className="relative absolute -top-0.5 -right-0.5 w-2.5 h-2.5 text-gold animate-pulse" aria-hidden="true" />
+        <span className="sr-only" aria-live="polite">{`الثيم الحالي: ${currentThemeName}`}</span>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-72 p-2">
+      <DropdownMenuContent align="end" className="w-72 p-2" aria-label="لوحة تخصيص المظهر">
+        <div className="px-2 py-1.5 mb-1 rounded-md bg-muted/40 border border-border/60 text-[11px] text-muted-foreground flex items-center justify-between">
+          <span>الحالة الحالية</span>
+          <span className="text-foreground font-medium">{currentThemeName} · {currentFontName}</span>
+        </div>
         <div className="flex items-center justify-between px-1 pb-1">
-          <DropdownMenuLabel className="text-xs px-0">لوحة الألوان</DropdownMenuLabel>
+          <DropdownMenuLabel className="text-xs px-0" id="pc-theme-label">لوحة الألوان</DropdownMenuLabel>
           <button
             onClick={reset}
-            className="inline-flex items-center gap-1 text-[10px] text-muted-foreground hover:text-gold transition"
+            aria-label="إعادة تعيين الثيم والألوان والخط إلى الافتراضي"
+            className="inline-flex items-center gap-1 text-[10px] text-muted-foreground hover:text-gold focus-visible:text-gold focus:outline-none focus-visible:ring-1 focus-visible:ring-gold/60 rounded px-1 transition"
           >
-            <RotateCcw className="w-3 h-3" /> إعادة تعيين
+            <RotateCcw className="w-3 h-3" aria-hidden="true" /> إعادة تعيين
           </button>
+        </div>
+
         </div>
 
         {themeKeys.map((k) => {
