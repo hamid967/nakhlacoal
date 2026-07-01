@@ -202,11 +202,12 @@ export function QuoteForm({ initialSlug, compact = false }: { initialSlug?: stri
 
       {/* Customer */}
       <div className={`grid gap-3 ${compact ? 'grid-cols-1' : 'grid-cols-1 sm:grid-cols-2'}`}>
-        <div><Label>الاسم *</Label><Input value={customer.name} onChange={(e) => setCustomer({ ...customer, name: e.target.value })} /></div>
-        <div><Label>الجوال *</Label><Input value={customer.phone} onChange={(e) => setCustomer({ ...customer, phone: e.target.value })} placeholder="05xxxxxxxx" /></div>
-        <div><Label>البريد</Label><Input type="email" value={customer.email} onChange={(e) => setCustomer({ ...customer, email: e.target.value })} /></div>
-        <div><Label>المنشأة</Label><Input value={customer.company} onChange={(e) => setCustomer({ ...customer, company: e.target.value })} /></div>
-        <div className="sm:col-span-2"><Label>المدينة</Label><Input value={customer.city} onChange={(e) => setCustomer({ ...customer, city: e.target.value })} /></div>
+        <div><Label>الاسم *</Label><Input aria-label="الاسم" value={customer.name} onChange={(e) => setCustomer({ ...customer, name: e.target.value })} /></div>
+        <div><Label>الجوال *</Label><Input aria-label="رقم الجوال" value={customer.phone} onChange={(e) => setCustomer({ ...customer, phone: e.target.value })} placeholder="05xxxxxxxx" /></div>
+        <div><Label>البريد</Label><Input aria-label="البريد الإلكتروني" type="email" value={customer.email} onChange={(e) => setCustomer({ ...customer, email: e.target.value })} /></div>
+        <div><Label>المنشأة</Label><Input aria-label="اسم المنشأة" value={customer.company} onChange={(e) => setCustomer({ ...customer, company: e.target.value })} /></div>
+        <div className="sm:col-span-2"><Label>المدينة</Label><Input aria-label="المدينة" value={customer.city} onChange={(e) => setCustomer({ ...customer, city: e.target.value })} /></div>
+
       </div>
 
       {/* Actions */}
