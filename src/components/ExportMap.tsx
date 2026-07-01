@@ -230,14 +230,18 @@ export function ExportMap() {
               );
             })}
 
-            {/* Progressive gold arc for the currently-selected destination */}
-            {selected && (() => {
-              const d = project(selected.lat, selected.lng);
+            {/* Progressive gold arc — for the selected destination OR guide preview */}
+            {(() => {
+              const preview = !selected && guide === 'selection' ? POINTS[0] : null;
+              const target = selected ?? preview;
+              if (!target) return null;
+              const d = project(target.lat, target.lng);
               const mx = (o.x + d.x) / 2;
               const my = (o.y + d.y) / 2 - 60;
               const path = `M ${o.x} ${o.y} Q ${mx} ${my} ${d.x} ${d.y}`;
               return (
-                <g key={`sel-${selected.id}`} filter="url(#goldGlow)">
+                <g key={`sel-${target.id}-${preview ? 'pv' : 'sel'}`} filter="url(#goldGlow)">
+
                   {/* Soft halo underlay */}
                   <motion.path
                     d={path}
