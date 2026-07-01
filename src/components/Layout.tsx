@@ -19,10 +19,16 @@ export function Layout() {
 
   return (
     <div className="min-h-dvh bg-background text-foreground">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:start-3 focus:z-[200] focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground focus:shadow-lg"
+      >
+        تخطَّ إلى المحتوى
+      </a>
       <PromoBanner />
       <LuxNav />
       <TaglineStrip />
-      <main>
+      <main id="main-content" tabIndex={-1}>
         <Outlet />
       </main>
       <LuxFooter />

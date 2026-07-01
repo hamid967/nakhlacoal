@@ -7,7 +7,9 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import { initAnalytics, trackPageView } from '@/lib/analytics';
 
 import { Layout } from '@/components/Layout';
-import { HomeIntro } from '@/components/HomeIntro';
+const HomeIntro = lazy(() =>
+  import('@/components/HomeIntro').then((m) => ({ default: m.HomeIntro })),
+);
 import { CompareBar } from '@/components/CompareBar';
 import { CompareProvider } from '@/contexts/CompareContext';
 import { CartProvider } from '@/contexts/CartContext';
@@ -104,7 +106,9 @@ export default function App() {
             <CartProvider>
               <CartDrawer />
             {/* SmoothScroll removed — was interfering with native mouse/keyboard scrolling */}
-            <HomeIntro />
+            <Suspense fallback={null}>
+              <HomeIntro />
+            </Suspense>
             <AnalyticsTracker />
             <TrackingLoader />
 
