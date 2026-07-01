@@ -61,6 +61,7 @@ export function ExportMap() {
   const [selected, setSelected] = useState<Point | null>(null);
   const [focusIdx, setFocusIdx] = useState(0);
   const pointRefs = useRef<Array<SVGGElement | null>>([]);
+  const [guide, setGuide] = useState<'points' | 'arcs' | 'selection' | 'terms' | null>(null);
 
   // Pre-sort by longitude so ArrowRight/Left move geographically (LTR reading).
   // In RTL locales we mirror the horizontal direction.
@@ -213,24 +214,34 @@ export function ExportMap() {
                   d={`M ${o.x} ${o.y} Q ${mx} ${my} ${d.x} ${d.y}`}
                   fill="none"
                   stroke="url(#arc)"
-                  strokeWidth="1"
+                  strokeWidth={guide === 'arcs' ? 2 : 1}
                   strokeDasharray="3 4"
                   initial={{ pathLength: 0, opacity: 0 }}
                   whileInView={{ pathLength: 1, opacity: 1 }}
                   viewport={{ once: true }}
+                  animate={{
+                    opacity:
+                      guide === 'arcs' ? 1 : guide === 'points' ? 0.15 : guide === 'selection' ? 0.2 : 1,
+                  }}
                   transition={{ duration: 1.8, delay: 0.15 * i, ease: 'easeInOut' }}
+                  style={{ transition: 'stroke-width 0.25s' }}
                 />
+
               );
             })}
 
-            {/* Progressive gold arc for the currently-selected destination */}
-            {selected && (() => {
-              const d = project(selected.lat, selected.lng);
+            {/* Progressive gold arc — for the selected destination OR guide preview */}
+            {(() => {
+              const preview = !selected && guide === 'selection' ? POINTS[0] : null;
+              const target = selected ?? preview;
+              if (!target) return null;
+              const d = project(target.lat, target.lng);
               const mx = (o.x + d.x) / 2;
               const my = (o.y + d.y) / 2 - 60;
               const path = `M ${o.x} ${o.y} Q ${mx} ${my} ${d.x} ${d.y}`;
               return (
-                <g key={`sel-${selected.id}`} filter="url(#goldGlow)">
+                <g key={`sel-${target.id}-${preview ? 'pv' : 'sel'}`} filter="url(#goldGlow)">
+
                   {/* Soft halo underlay */}
                   <motion.path
                     d={path}
@@ -303,13 +314,23 @@ export function ExportMap() {
                   aria-label={`${isAr ? p.cityAr : p.cityEn} — ${isAr ? 'اعرض تفاصيل الشحن' : 'View shipment details'} (${i + 1}/${POINTS.length})`}
                   aria-pressed={selected?.id === p.id}
                   className="focus:outline-none [&:focus-visible_.focus-ring]:opacity-100"
-                  style={{ cursor: 'pointer' }}
+                  style={{
+                    cursor: 'pointer',
+                    opacity: guide === 'arcs' ? 0.35 : 1,
+                    transition: 'opacity 0.25s',
+                  }}
                 >
-                  <circle r="14" fill="url(#glow)" opacity={isActive ? 1 : 0.6} />
-                  <circle r={isActive ? 5.5 : 4} fill="hsl(46 72% 62%)">
+                  <circle
+                    r={guide === 'points' ? 20 : 14}
+                    fill="url(#glow)"
+                    opacity={isActive || guide === 'points' ? 1 : 0.6}
+                    style={{ transition: 'r 0.25s, opacity 0.25s' }}
+                  />
+                  <circle r={isActive || guide === 'points' ? 6 : 4} fill="hsl(46 72% 62%)" style={{ transition: 'r 0.25s' }}>
                     <animate attributeName="opacity" values="1;0.6;1" dur="2.4s" repeatCount="indefinite" />
                   </circle>
                   <circle r="1.6" fill="hsl(0 0% 4%)" />
+
                   {/* High-contrast focus ring — visible only when keyboard-focused */}
                   <circle
                     className="focus-ring"
@@ -381,8 +402,9 @@ export function ExportMap() {
 
         {/* Guide / Legend — explains icons, values, and route semantics */}
         <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {[
+          {([
             {
+              hint: 'points' as const,
               swatch: (
                 <span className="relative inline-flex w-6 h-6 items-center justify-center">
                   <span className="absolute inset-0 rounded-full bg-[hsl(46_72%_62%/0.25)]" />
@@ -395,6 +417,7 @@ export function ExportMap() {
               descEn: 'A glowing gold point marks a discharge port we ship to on a recurring basis. Click to view details.',
             },
             {
+              hint: 'arcs' as const,
               swatch: (
                 <span
                   className="inline-block w-8 h-0"
@@ -407,6 +430,7 @@ export function ExportMap() {
               descEn: 'A dashed gold arc from Jeddah to each port represents an established sea or air export lane.',
             },
             {
+              hint: 'selection' as const,
               swatch: (
                 <span className="relative inline-block w-10 h-2 rounded-full bg-gradient-to-r from-[hsl(46_95%_78%)] to-[hsl(46_80%_60%/0.4)] shadow-[0_0_14px_hsl(46_90%_70%/0.8)]" />
               ),
@@ -416,6 +440,7 @@ export function ExportMap() {
               descEn: 'Selecting a port draws its lane progressively in glowing gold, with a moving sparkle showing shipping direction.',
             },
             {
+              hint: 'terms' as const,
               swatch: (
                 <span className="inline-flex items-center gap-1 text-[10px] tracking-[0.25em] text-[hsl(var(--gold-hi))]">
                   <span className="rounded border border-[hsl(var(--gold))]/50 px-1.5 py-0.5">CIF</span>
@@ -427,11 +452,22 @@ export function ExportMap() {
               descAr: 'مدة العبور بالأيام، الحجم الشهري بالأطنان، تردّد الشحنات، وشرط التسليم Incoterm (CIF/FOB/DAP).',
               descEn: 'Transit time (days), monthly volume (tons), shipping frequency, and the Incoterm (CIF/FOB/DAP) used per lane.',
             },
-          ].map((item, i) => (
-            <div
+          ]).map((item, i) => (
+            <button
+              type="button"
               key={i}
-              className="rounded-2xl border border-[hsl(var(--gold))]/20 bg-black/40 p-4 transition hover:border-[hsl(var(--gold))]/50"
+              onMouseEnter={() => setGuide(item.hint)}
+              onMouseLeave={() => setGuide((g) => (g === item.hint ? null : g))}
+              onFocus={() => setGuide(item.hint)}
+              onBlur={() => setGuide((g) => (g === item.hint ? null : g))}
+              aria-pressed={guide === item.hint}
+              className={`text-start rounded-2xl border p-4 transition ${
+                guide === item.hint
+                  ? 'border-[hsl(var(--gold))]/70 bg-black/60 shadow-[0_0_30px_-8px_hsl(46_90%_60%/0.5)]'
+                  : 'border-[hsl(var(--gold))]/20 bg-black/40 hover:border-[hsl(var(--gold))]/50'
+              }`}
             >
+
               <div className="flex items-center gap-3 min-h-[2rem]">{item.swatch}</div>
               <div
                 className={`mt-3 text-sm font-semibold text-[hsl(var(--foreground))] ${
@@ -447,7 +483,7 @@ export function ExportMap() {
               >
                 {isAr ? item.descAr : item.descEn}
               </p>
-            </div>
+            </button>
           ))}
         </div>
 
