@@ -55,6 +55,33 @@ export function SmoothScroll() {
     };
     lenis.on('scroll', onScroll);
 
+    // Lenis disables native scroll on <html>, which breaks keyboard scrolling
+    // (Arrow keys, PageUp/Down, Space, Home/End). Re-implement it manually.
+    const onKey = (e: KeyboardEvent) => {
+      const tag = (e.target as HTMLElement)?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || (e.target as HTMLElement)?.isContentEditable) return;
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+
+      const vh = window.innerHeight;
+      const y = lenis.scroll;
+      let target: number | null = null;
+      let smooth = true;
+
+      switch (e.key) {
+        case 'ArrowDown':      target = y + 80; break;
+        case 'ArrowUp':        target = y - 80; break;
+        case 'PageDown':       target = y + vh * 0.9; break;
+        case 'PageUp':         target = y - vh * 0.9; break;
+        case ' ':              target = y + (e.shiftKey ? -vh * 0.9 : vh * 0.9); break;
+        case 'Home':           target = 0; break;
+        case 'End':            target = document.documentElement.scrollHeight; break;
+        default: return;
+      }
+      e.preventDefault();
+      lenis.scrollTo(target, { immediate: !smooth, duration: 0.4 });
+    };
+    window.addEventListener('keydown', onKey, { passive: false });
+
     // Pause completely when tab is hidden.
     const onVisibility = () => { if (document.hidden) stop(); };
     document.addEventListener('visibilitychange', onVisibility);
@@ -62,6 +89,7 @@ export function SmoothScroll() {
     return () => {
       stop();
       window.clearTimeout(idleTimer);
+      window.removeEventListener('keydown', onKey);
       document.removeEventListener('visibilitychange', onVisibility);
       lenis.destroy();
       lenisInstance = null;
