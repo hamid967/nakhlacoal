@@ -16,6 +16,8 @@ const TrademarksShowcase = lazy(() => import('@/components/TrademarksShowcase').
 import { Certifications } from '@/components/Certifications';
 import { AudienceTracks } from '@/components/AudienceTracks';
 import { GlowingCubes } from '@/components/GlowingCubes';
+import { StatsGrid } from '@/components/StatsGrid';
+
 
 import { StickyMobileCTA } from '@/components/StickyMobileCTA';
 import { SectionSkeleton } from '@/components/SectionSkeleton';
