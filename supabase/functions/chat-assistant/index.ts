@@ -140,7 +140,7 @@ Deno.serve(async (req) => {
         status: 413, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-    let body: { messages?: unknown };
+    let body: { messages?: unknown; conversation_id?: unknown };
     try { body = JSON.parse(new TextDecoder().decode(rawBytes)); }
     catch {
       return new Response(JSON.stringify({ error: "invalid_json" }), {
@@ -177,6 +177,47 @@ Deno.serve(async (req) => {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+
+    // Persistent conversation for signed-in users (best-effort, non-blocking).
+    // Client passes `conversation_id` (uuid) or omits it — we create one on first turn.
+    let conversationId: string | null =
+      typeof body.conversation_id === "string" && /^[0-9a-f-]{36}$/i.test(body.conversation_id)
+        ? body.conversation_id
+        : null;
+    let dbClient: ReturnType<typeof createClient> | null = null;
+    if (userId) {
+      const url = Deno.env.get("SUPABASE_URL");
+      const svc = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+      if (url && svc) {
+        dbClient = createClient(url, svc);
+        try {
+          if (!conversationId) {
+            const preview = messages[messages.length - 1]?.content.slice(0, 120) ?? "محادثة جديدة";
+            const { data: conv } = await dbClient
+              .from("chat_conversations")
+              .insert({ user_id: userId, title: preview.slice(0, 60), last_message_preview: preview })
+              .select("id").single();
+            conversationId = (conv as { id: string } | null)?.id ?? null;
+          }
+          // Persist the newest user message (index -1 assumed to be user turn).
+          const lastUserMsg = [...messages].reverse().find((m) => m.role === "user");
+          if (conversationId && lastUserMsg) {
+            await dbClient.from("chat_messages").insert({
+              conversation_id: conversationId,
+              user_id: userId,
+              role: "user",
+              content: lastUserMsg.content,
+            });
+            await dbClient.from("chat_conversations")
+              .update({ last_message_preview: lastUserMsg.content.slice(0, 120), updated_at: new Date().toISOString() })
+              .eq("id", conversationId);
+          }
+        } catch (e) {
+          console.warn("[chat-assistant] persist user msg failed:", e);
+        }
+      }
+    }
+
 
     const upstream = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
