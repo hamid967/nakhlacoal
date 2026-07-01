@@ -120,6 +120,11 @@ export default function Home() {
 
       <SectionDivider />
 
+      {/* 1.5 — Glowing Charcoal Cubes (Noir + Gold) */}
+      <GlowingCubes />
+
+
+
       {/* 2 — Audience tracks */}
       <AudienceTracks />
 
