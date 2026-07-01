@@ -259,7 +259,31 @@ Deno.serve(async (req) => {
           },
         },
       },
+      {
+        type: "function",
+        function: {
+          name: "remember_preference",
+          description: "احفظ تفضيلاً دائماً للعميل المسجّل (مثل: preferred_product, usage, city, business_name). يستخدم فقط عندما يذكر العميل معلومة يحتاجها في محادثات مستقبلية.",
+          parameters: {
+            type: "object",
+            properties: {
+              key: { type: "string", description: "مفتاح قصير بالإنجليزية snake_case" },
+              value: { type: "string", description: "القيمة كنص قصير" },
+            },
+            required: ["key", "value"],
+          },
+        },
+      },
+      {
+        type: "function",
+        function: {
+          name: "recall_preferences",
+          description: "استرجع كل التفضيلات المحفوظة للعميل الحالي.",
+          parameters: { type: "object", properties: {} },
+        },
+      },
     ];
+
 
     const SITE_URL = Deno.env.get("SITE_URL") ?? "https://alnakhlacoal.com";
     const publicDb = createClient(
@@ -297,17 +321,52 @@ Deno.serve(async (req) => {
           });
           return { url: `${SITE_URL}/quote?${p.toString()}` };
         }
+        if (name === "remember_preference") {
+          if (!userId || !dbClient) return { error: "يجب تسجيل الدخول لحفظ التفضيلات" };
+          const key = String(args.key ?? "").trim().slice(0, 60);
+          const value = String(args.value ?? "").trim().slice(0, 500);
+          if (!key || !value) return { error: "key و value مطلوبان" };
+          const { error } = await dbClient.from("chat_memory").upsert(
+            { user_id: userId, key, value, updated_at: new Date().toISOString() },
+            { onConflict: "user_id,key" },
+          );
+          if (error) return { error: error.message };
+          return { saved: true, key, value };
+        }
+        if (name === "recall_preferences") {
+          if (!userId || !dbClient) return { preferences: [] };
+          const { data, error } = await dbClient
+            .from("chat_memory").select("key,value").eq("user_id", userId).limit(50);
+          if (error) return { error: error.message };
+          return { preferences: data ?? [] };
+        }
+
         return { error: `unknown tool: ${name}` };
       } catch (e) {
         return { error: String((e as Error).message ?? e) };
       }
     }
 
+    // Load persisted preferences to prime the assistant (signed-in only).
+    let memoryPreamble = "";
+    if (userId && dbClient) {
+      try {
+        const { data: prefs } = await dbClient
+          .from("chat_memory").select("key,value").eq("user_id", userId).limit(50);
+        if (prefs && (prefs as Array<{ key: string; value: string }>).length > 0) {
+          const lines = (prefs as Array<{ key: string; value: string }>)
+            .map((p) => `- ${p.key}: ${p.value}`).join("\n");
+          memoryPreamble = `\n\n## تفضيلات محفوظة للعميل الحالي\n${lines}\nاستخدمها ضمنياً لتخصيص الرد. لا تعيد سؤال العميل عمّا هو مذكور هنا.`;
+        }
+      } catch (e) { console.warn("[chat-assistant] load prefs failed:", e); }
+    }
+
     // ── Preflight: non-streaming call with tools ────────────────────────────
     const workingMessages: Array<Record<string, unknown>> = [
-      { role: "system", content: SYSTEM_PROMPT },
+      { role: "system", content: SYSTEM_PROMPT + memoryPreamble },
       ...messages.slice(-30),
     ];
+
 
     async function gwCall(stream: boolean): Promise<Response> {
       return await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
