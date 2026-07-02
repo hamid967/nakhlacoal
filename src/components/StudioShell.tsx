@@ -91,7 +91,7 @@ export function StudioShell({ children, pageName }: { children: ReactNode; pageN
         </div>
 
         {/* Actions */}
-        <button className="hidden sm:flex items-center gap-1.5 h-8 px-3 rounded-md text-[12px] text-white/80 hover:bg-white/10">
+        <button onClick={() => setPreview(true)} className="hidden sm:flex items-center gap-1.5 h-8 px-3 rounded-md text-[12px] text-white/80 hover:bg-white/10">
           <Eye className="w-3.5 h-3.5" /> Preview
         </button>
         <button className="flex items-center gap-1.5 h-8 px-3.5 rounded-md text-[12px] font-semibold text-black bg-gradient-to-r from-emerald-300 to-emerald-500 hover:from-emerald-200 hover:to-emerald-400 shadow-[0_0_0_1px_rgba(255,255,255,0.15)_inset]">
