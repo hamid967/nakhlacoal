@@ -11,13 +11,16 @@ import "@fontsource/karla/300.css";
 import "@fontsource/karla/400.css";
 import "@fontsource/karla/500.css";
 import "@fontsource/karla/700.css";
-// Editorial pair — DM Serif Display × Fira Sans (+ Amiri for Arabic italic display)
-import "@fontsource/dm-serif-display/400.css";
-import "@fontsource/dm-serif-display/400-italic.css";
-import "@fontsource/fira-sans/300.css";
-import "@fontsource/fira-sans/400.css";
-import "@fontsource/fira-sans/500.css";
-import "@fontsource/fira-sans/700.css";
+// Editorial pair — Syne × Plus Jakarta Sans (+ Amiri for Arabic display italic)
+import "@fontsource/syne/500.css";
+import "@fontsource/syne/600.css";
+import "@fontsource/syne/700.css";
+import "@fontsource/syne/800.css";
+import "@fontsource/plus-jakarta-sans/300.css";
+import "@fontsource/plus-jakarta-sans/400.css";
+import "@fontsource/plus-jakarta-sans/500.css";
+import "@fontsource/plus-jakarta-sans/600.css";
+import "@fontsource/plus-jakarta-sans/700.css";
 import "@fontsource/amiri/400.css";
 import "@fontsource/amiri/400-italic.css";
 import "@fontsource/amiri/700.css";
