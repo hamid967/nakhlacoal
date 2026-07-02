@@ -1,12 +1,19 @@
+import { lazy, Suspense, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams, Navigate } from 'react-router-dom';
-import { ArrowRight, ArrowLeft, ShoppingCart, MessageCircle, Check, Package, Flame, Clock, Wind, Droplets, Thermometer } from 'lucide-react';
+import { ArrowRight, ArrowLeft, ShoppingCart, MessageCircle, Check, Package, Flame, Clock, Wind, Droplets, Thermometer, Download, Globe2, Ship, FileText, Box as BoxIcon, RotateCcw, Image as ImageIcon } from 'lucide-react';
 import { SEO } from '@/components/SEO';
 import { ScrollReveal } from '@/components/ScrollReveal';
 import { CompareToggle } from '@/components/CompareToggle';
 import { products, getProduct } from '@/data/products';
 import { useCart } from '@/contexts/CartContext';
 import { toast } from 'sonner';
+import { exportProductCatalog } from '@/lib/exportProductCatalog';
+import factoryA from '@/assets/slide-coconut-factory.jpg';
+import factoryB from '@/assets/step-carbonize.jpg';
+import factoryC from '@/assets/step-press.jpg';
+import factoryD from '@/assets/step-pack.jpg';
+const ProductViewer3D = lazy(() => import('@/components/ProductViewer3D'));
 
 export default function ProductDetail() {
   const { slug = '' } = useParams();
