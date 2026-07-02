@@ -58,14 +58,14 @@ export function OpeningCtaBadge() {
         <span className="relative flex items-baseline gap-3">
           <span
             className="text-[10px] uppercase tracking-[0.4em]"
-            style={{ color: '#c9a84c', fontFamily: 'Fira Sans, sans-serif' }}
+            style={{ color: '#c9a84c', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
           >
             {isAr ? 'ابدأ التجربة' : 'Begin'}
           </span>
           <span
             className="text-lg md:text-xl"
             style={{
-              fontFamily: isAr ? 'Amiri, serif' : 'DM Serif Display, serif',
+              fontFamily: isAr ? 'Amiri, serif' : 'Syne, serif',
               lineHeight: 1,
               letterSpacing: '-0.01em',
             }}
@@ -74,7 +74,7 @@ export function OpeningCtaBadge() {
           </span>
           <span
             className="hidden md:inline text-[11px] tracking-[0.3em]"
-            style={{ color: 'rgba(245,240,224,0.55)', fontFamily: 'Fira Sans, sans-serif' }}
+            style={{ color: 'rgba(245,240,224,0.55)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
           >
             {isAr ? '· EN / AR' : '· AR / EN'}
           </span>

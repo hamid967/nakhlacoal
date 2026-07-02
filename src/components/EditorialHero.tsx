@@ -5,7 +5,7 @@ import heroCharcoal from '@/assets/hero-charcoal.jpg';
 /**
  * EditorialHero — "Broken-Grid Fragment" direction.
  * Locked palette: Emerald Prestige (#064e3b / #0d7a5f / #c9a84c / #f5f0e0).
- * Locked typography: DM Serif Display × Fira Sans (+ Amiri italic for Arabic display).
+ * Locked typography: Syne × Plus Jakarta Sans (+ Amiri italic for Arabic display).
  * Structure mirrors the selected prototype: oversized decorative word, asymmetric
  * 7/5 grid, floating gold coin, framed image with hover reveal, numbered footer.
  */
