@@ -1003,22 +1003,25 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }}
             rows={1}
-            placeholder={listening ? '🎙️ جارٍ الاستماع…' : 'اكتب رسالتك…'}
+            placeholder={listening || recorder.recording ? '🎙️ جارٍ الاستماع…' : recorder.busy ? '⏳ جارٍ التفريغ…' : 'اكتب رسالتك…'}
             disabled={streaming || submitting}
             className="flex-1 resize-none rounded-lg border border-border bg-muted/30 px-3 py-2.5 text-[16px] sm:text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 max-h-28 min-h-[44px]"
           />
-          {voiceSupported && (
-            <button
-              type="button"
-              onClick={toggleVoice}
-              disabled={streaming || submitting}
-              className={`shrink-0 w-10 h-10 rounded-lg flex items-center justify-center border transition disabled:opacity-50 ${listening ? 'bg-destructive text-destructive-foreground border-destructive animate-pulse' : 'bg-muted/40 border-border hover:bg-muted'}`}
-              aria-label={listening ? 'إيقاف التسجيل' : 'إدخال صوتي'}
-              title={listening ? 'إيقاف التسجيل' : 'إدخال صوتي'}
-            >
-              {listening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
-            </button>
-          )}
+          {(() => {
+            const active = listening || recorder.recording;
+            return (
+              <button
+                type="button"
+                onClick={toggleVoice}
+                disabled={streaming || submitting || recorder.busy}
+                className={`shrink-0 w-10 h-10 rounded-lg flex items-center justify-center border transition disabled:opacity-50 ${active ? 'bg-destructive text-destructive-foreground border-destructive animate-pulse' : 'bg-muted/40 border-border hover:bg-muted'}`}
+                aria-label={active ? 'إيقاف التسجيل' : 'إدخال صوتي'}
+                title={active ? 'إيقاف التسجيل' : 'إدخال صوتي (AR / EN)'}
+              >
+                {active ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+              </button>
+            );
+          })()}
           <button
             onClick={() => { if (streaming) abortRef.current?.abort(); else send(); }}
             disabled={!streaming && (!input.trim() || submitting)}
