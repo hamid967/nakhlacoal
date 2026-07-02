@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react';
+import { useState, useEffect, type ReactNode } from 'react';
 import { Pencil } from 'lucide-react';
 import {
   Layers, Plus, Palette, Image as ImageIcon, Grid3x3, Wand2,
