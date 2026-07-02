@@ -18,6 +18,29 @@ export function StudioShell({ children, pageName }: { children: ReactNode; pageN
   const [inspectorOpen, setInspectorOpen] = useState(true);
   const [preview, setPreview] = useState(false);
 
+  // Editor top bar = 48px, canvas ruler = 24px → 72px anchor offset in editor mode.
+  // In preview mode use the app's own nav offset (96px).
+  // Mobile canvas is denser → smaller offset. Tablet in between.
+  const anchorOffset = preview
+    ? 96
+    : device === 'mobile' ? 84
+    : device === 'tablet' ? 88
+    : 96;
+
+  const canvasPadding =
+    device === 'mobile' ? 'p-2'
+    : device === 'tablet' ? 'p-3'
+    : 'p-3 md:p-5';
+
+  useEffect(() => {
+    document.documentElement.style.setProperty('--studio-anchor-offset', `${anchorOffset}px`);
+    document.documentElement.dataset.studioDevice = preview ? 'preview' : device;
+    return () => {
+      document.documentElement.style.removeProperty('--studio-anchor-offset');
+      delete document.documentElement.dataset.studioDevice;
+    };
+  }, [anchorOffset, device, preview]);
+
   if (preview) {
     return (
       <div className="min-h-screen bg-background" dir={isAr ? 'rtl' : 'ltr'}>
