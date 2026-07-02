@@ -187,7 +187,7 @@ export function CasesShowcase() {
                     src={c.img}
                     alt=""
                     loading="lazy"
-                    className="w-full h-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-105"
+                    className="w-full h-full object-cover transition-transform [transition-duration:1200ms] ease-out group-hover:scale-105"
                     style={{ filter: 'grayscale(0.35) contrast(1.05)' }}
                   />
                   <div
