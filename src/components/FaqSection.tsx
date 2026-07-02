@@ -35,7 +35,7 @@ export function FaqSection() {
   };
 
   return (
-    <LuxSection id="faq" className="section">
+    <LuxSection className="section">
       <Helmet>
         <script type="application/ld+json">{JSON.stringify(faqJsonLd)}</script>
       </Helmet>
