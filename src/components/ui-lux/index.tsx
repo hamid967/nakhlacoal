@@ -57,17 +57,26 @@ export function SectionHeader({
   const { isAr } = useDir();
   const headBlock = (
     <div className={cx(align === 'center' && 'text-center mx-auto max-w-2xl')}>
-      {eyebrow && <span className="eyebrow mb-4">{eyebrow}</span>}
+      {eyebrow && <span className="eyebrow mb-3 md:mb-4">{eyebrow}</span>}
       <h2
         className={cx(
-          'text-3xl md:text-5xl mt-4',
+          'mt-3 md:mt-4 text-balance',
+          'text-2xl sm:text-3xl md:text-4xl lg:text-5xl leading-tight',
           isAr ? 'font-arabic font-bold' : 'font-display font-bold'
         )}
       >
         {title}
       </h2>
+      {/* Gold hairline under title — visual anchor shared by every section */}
+      <span
+        aria-hidden
+        className={cx(
+          'block h-px w-16 md:w-24 mt-4 md:mt-5 bg-gradient-to-r from-transparent via-[hsl(var(--gold))]/60 to-transparent',
+          align === 'center' && 'mx-auto'
+        )}
+      />
       {lead && (
-        <p className="mt-4 text-base md:text-lg text-foreground/70 leading-relaxed font-arabic">
+        <p className="mt-4 md:mt-5 text-sm sm:text-base md:text-lg text-foreground/70 leading-relaxed font-arabic">
           {lead}
         </p>
       )}
@@ -76,7 +85,7 @@ export function SectionHeader({
   return (
     <ScrollReveal
       className={cx(
-        'mb-12 md:mb-14',
+        'mb-10 md:mb-14',
         align === 'between' && 'flex flex-col md:flex-row md:items-end justify-between gap-6'
       )}
     >
