@@ -110,11 +110,42 @@ export default function ProductDetail() {
           </ScrollReveal>
 
           <div className="grid lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-start">
-            {/* Image */}
+            {/* Image / 3D viewer */}
             <ScrollReveal>
               <div className="relative rounded-3xl overflow-hidden border-luxe-strong shimmer-card aspect-square section-dark">
                 <div className="absolute inset-0 ember-glow opacity-40 pointer-events-none" />
-                <img decoding="async" loading="lazy" src={product.image} alt={name} className="relative w-full h-full object-cover" width={1280} height={1280} />
+                {view3D ? (
+                  <Suspense
+                    fallback={
+                      <div className="absolute inset-0 flex items-center justify-center text-gold-hi/70 text-xs uppercase tracking-[0.22em]">
+                        {isAr ? 'جارٍ تحميل العارض ثلاثي الأبعاد…' : 'Loading 3D viewer…'}
+                      </div>
+                    }
+                  >
+                    <ProductViewer3D ariaLabel={name} />
+                  </Suspense>
+                ) : (
+                  <img decoding="async" loading="lazy" src={product.image} alt={name} className="relative w-full h-full object-cover" width={1280} height={1280} />
+                )}
+                {/* Toggle */}
+                <div className="absolute top-3 start-3 flex gap-1.5 bg-black/55 border border-gold/30 rounded-full p-1 backdrop-blur-sm">
+                  <button
+                    type="button"
+                    onClick={() => setView3D(false)}
+                    className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] uppercase tracking-[0.2em] transition-colors ${!view3D ? 'bg-gold text-black' : 'text-gold-hi hover:text-gold'}`}
+                    aria-pressed={!view3D}
+                  >
+                    <ImageIcon className="w-3 h-3" /> {isAr ? 'صورة' : 'Photo'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setView3D(true)}
+                    className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] uppercase tracking-[0.2em] transition-colors ${view3D ? 'bg-gold text-black' : 'text-gold-hi hover:text-gold'}`}
+                    aria-pressed={view3D}
+                  >
+                    <RotateCcw className="w-3 h-3" /> 3D
+                  </button>
+                </div>
               </div>
             </ScrollReveal>
 
