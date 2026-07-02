@@ -9,6 +9,7 @@ import { ScrollScene } from '@/components/ScrollScene';
 const BrandHero = lazy(() => import('@/components/BrandHero').then((m) => ({ default: m.BrandHero })));
 import { EditorialHero } from '@/components/EditorialHero';
 import { EditorialStory } from '@/components/EditorialStory';
+import { CasesShowcase } from '@/components/CasesShowcase';
 const BrandTimeline = lazy(() => import('@/components/BrandTimeline').then((m) => ({ default: m.BrandTimeline })));
 const LocationSection = lazy(() => import('@/components/LocationSection').then((m) => ({ default: m.LocationSection })));
 const FaqSection = lazy(() => import('@/components/FaqSection').then((m) => ({ default: m.FaqSection })));
@@ -198,7 +199,11 @@ export default function Home() {
         <ProductShowcase3D />
       </Suspense>
 
+      {/* 4.7 — Selected Cases (glass cards + framed images + interactive viewer) */}
+      <ScrollScene intensity={0.5}><CasesShowcase /></ScrollScene>
+
       <SectionDivider flip />
+
 
       {/* 5 — Brand timeline (process + journey) */}
       <Suspense fallback={<SectionSkeleton variant="timeline" />}>
