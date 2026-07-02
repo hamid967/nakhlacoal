@@ -24,7 +24,10 @@
     "audit:bot": "node scripts/audit-bot.mjs"
   },
   "dependencies": {
+    "@fontsource/amiri": "^5.2.8",
     "@fontsource/cormorant-garamond": "^5.2.11",
+    "@fontsource/dm-serif-display": "^5.2.8",
+    "@fontsource/fira-sans": "^5.2.7",
     "@fontsource/inter-tight": "^5.2.7",
     "@fontsource/karla": "^5.2.8",
     "@fontsource/tajawal": "^5.2.7",
