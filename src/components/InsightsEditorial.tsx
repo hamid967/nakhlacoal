@@ -82,7 +82,7 @@ export function InsightsEditorial() {
                   alt={lead.title}
                   loading="lazy"
                   decoding="async"
-                  className="w-full h-[300px] md:h-[440px] object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-105"
+                  className="w-full h-[300px] md:h-[440px] object-cover transition-transform [transition-duration:1200ms] ease-out group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
                 <div className="absolute top-4 start-4 text-[10px] tracking-[0.35em] uppercase px-3 py-1 rounded-full border border-[hsl(var(--gold))]/40 text-[hsl(var(--gold-hi,46_95%_78%))] bg-black/50 backdrop-blur-sm">
@@ -129,7 +129,7 @@ export function InsightsEditorial() {
                       alt={a.title}
                       loading="lazy"
                       decoding="async"
-                      className="w-full h-full min-h-[140px] object-cover transition-transform duration-[1000ms] ease-out group-hover:scale-105"
+                      className="w-full h-full min-h-[140px] object-cover transition-transform [transition-duration:1000ms] ease-out group-hover:scale-105"
                     />
                   </div>
                   <div className="col-span-3 p-4 md:p-5 flex flex-col justify-center">
