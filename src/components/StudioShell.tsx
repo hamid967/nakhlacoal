@@ -1,4 +1,5 @@
 import { useState, type ReactNode } from 'react';
+import { Pencil } from 'lucide-react';
 import {
   Layers, Plus, Palette, Image as ImageIcon, Grid3x3, Wand2,
   Monitor, Tablet, Smartphone, Undo2, Redo2, Eye, Rocket,
@@ -15,6 +16,22 @@ export function StudioShell({ children, pageName }: { children: ReactNode; pageN
   const { isAr } = useDir();
   const [device, setDevice] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
   const [inspectorOpen, setInspectorOpen] = useState(true);
+  const [preview, setPreview] = useState(false);
+
+  if (preview) {
+    return (
+      <div className="min-h-screen bg-background" dir={isAr ? 'rtl' : 'ltr'}>
+        {children}
+        <button
+          onClick={() => setPreview(false)}
+          className="fixed bottom-5 end-5 z-[100] flex items-center gap-1.5 h-10 px-4 rounded-full text-[12px] font-semibold text-black bg-gradient-to-r from-emerald-300 to-emerald-500 shadow-[0_10px_30px_-8px_rgba(16,185,129,0.6)] hover:from-emerald-200 hover:to-emerald-400"
+          aria-label={isAr ? 'العودة إلى المحرر' : 'Back to editor'}
+        >
+          <Pencil className="w-3.5 h-3.5" /> {isAr ? 'تحرير' : 'Edit'}
+        </button>
+      </div>
+    );
+  }
 
   const rail = [
     { icon: Layers,     label: isAr ? 'الصفحات' : 'Pages' },
@@ -74,7 +91,7 @@ export function StudioShell({ children, pageName }: { children: ReactNode; pageN
         </div>
 
         {/* Actions */}
-        <button className="hidden sm:flex items-center gap-1.5 h-8 px-3 rounded-md text-[12px] text-white/80 hover:bg-white/10">
+        <button onClick={() => setPreview(true)} className="hidden sm:flex items-center gap-1.5 h-8 px-3 rounded-md text-[12px] text-white/80 hover:bg-white/10">
           <Eye className="w-3.5 h-3.5" /> Preview
         </button>
         <button className="flex items-center gap-1.5 h-8 px-3.5 rounded-md text-[12px] font-semibold text-black bg-gradient-to-r from-emerald-300 to-emerald-500 hover:from-emerald-200 hover:to-emerald-400 shadow-[0_0_0_1px_rgba(255,255,255,0.15)_inset]">
