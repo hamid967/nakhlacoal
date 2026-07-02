@@ -16,6 +16,22 @@ export function StudioShell({ children, pageName }: { children: ReactNode; pageN
   const { isAr } = useDir();
   const [device, setDevice] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
   const [inspectorOpen, setInspectorOpen] = useState(true);
+  const [preview, setPreview] = useState(false);
+
+  if (preview) {
+    return (
+      <div className="min-h-screen bg-background" dir={isAr ? 'rtl' : 'ltr'}>
+        {children}
+        <button
+          onClick={() => setPreview(false)}
+          className="fixed bottom-5 end-5 z-[100] flex items-center gap-1.5 h-10 px-4 rounded-full text-[12px] font-semibold text-black bg-gradient-to-r from-emerald-300 to-emerald-500 shadow-[0_10px_30px_-8px_rgba(16,185,129,0.6)] hover:from-emerald-200 hover:to-emerald-400"
+          aria-label={isAr ? 'العودة إلى المحرر' : 'Back to editor'}
+        >
+          <Pencil className="w-3.5 h-3.5" /> {isAr ? 'تحرير' : 'Edit'}
+        </button>
+      </div>
+    );
+  }
 
   const rail = [
     { icon: Layers,     label: isAr ? 'الصفحات' : 'Pages' },
