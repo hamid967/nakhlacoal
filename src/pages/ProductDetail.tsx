@@ -271,7 +271,113 @@ export default function ProductDetail() {
         </div>
       </section>
 
-      {/* ============= RELATED ============= */}
+      {/* ============= FACTORY GALLERY ============= */}
+      <section className="section section-dark relative overflow-hidden">
+        <div className="absolute inset-0 ember-glow opacity-15 pointer-events-none" />
+        <div className="container">
+          <ScrollReveal>
+            <div className="text-center mb-10 md:mb-14">
+              <span className="eyebrow mb-5">{isAr ? 'من المصنع' : 'From the factory'}</span>
+              <h2 className={`text-3xl sm:text-4xl md:text-5xl mt-4 ${isAr ? 'font-arabic font-bold' : 'font-display'}`}>
+                {isAr ? 'صناعة ' : 'Crafted in '}
+                <span className="text-gold-metal">{isAr ? 'سعودية' : 'Saudi Arabia'}</span>
+              </h2>
+              <div className="mt-3 mx-auto w-24 h-px bg-gradient-to-r from-transparent via-gold to-transparent" />
+            </div>
+          </ScrollReveal>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+            {[
+              { src: factoryA, ar: 'خط الإنتاج', en: 'Production line' },
+              { src: factoryB, ar: 'الكربنة', en: 'Carbonization' },
+              { src: factoryC, ar: 'الكبس', en: 'Pressing' },
+              { src: factoryD, ar: 'التغليف', en: 'Packing' },
+            ].map((img, i) => (
+              <ScrollReveal key={i} delay={i * 70}>
+                <figure className="group relative aspect-square rounded-2xl overflow-hidden border-luxe-strong">
+                  <img
+                    src={img.src}
+                    alt={isAr ? img.ar : img.en}
+                    loading="lazy"
+                    decoding="async"
+                    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                  />
+                  <figcaption className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/85 via-black/50 to-transparent">
+                    <span className="text-[10px] uppercase tracking-[0.22em] text-gold-hi">
+                      {isAr ? img.ar : img.en}
+                    </span>
+                  </figcaption>
+                </figure>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ============= EXPORT INFO ============= */}
+      <section className="section">
+        <div className="container">
+          <ScrollReveal>
+            <div className="text-center mb-10 md:mb-14">
+              <span className="eyebrow mb-5">{isAr ? 'التصدير' : 'Export'}</span>
+              <h2 className={`text-3xl sm:text-4xl md:text-5xl mt-4 ${isAr ? 'font-arabic font-bold' : 'font-display'}`}>
+                {isAr ? 'جاهز ' : 'Ready to '}
+                <span className="text-gold-metal">{isAr ? 'للتصدير عالمياً' : 'ship worldwide'}</span>
+              </h2>
+            </div>
+          </ScrollReveal>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
+            {[
+              { icon: Globe2, label: isAr ? 'المنشأ' : 'Origin', value: isAr ? 'المملكة العربية السعودية' : 'Saudi Arabia' },
+              { icon: FileText, label: isAr ? 'كود HS' : 'HS Code', value: '4402.90' },
+              { icon: BoxIcon, label: isAr ? 'الحاوية' : 'Container', value: isAr ? '20 قدم / 40 قدم HC' : "20 ft / 40 ft HC" },
+              { icon: Ship, label: 'Incoterms', value: 'FOB Jeddah · CIF' },
+            ].map((item, i) => (
+              <ScrollReveal key={i} delay={i * 70}>
+                <div className="p-6 rounded-2xl bg-surface border-luxe hover:border-luxe-strong transition-all duration-500 h-full">
+                  <div className="w-11 h-11 rounded-full bg-gold/10 border-luxe-strong flex items-center justify-center mb-4">
+                    <item.icon className="w-5 h-5 text-gold-hi" />
+                  </div>
+                  <div className="text-[10px] uppercase tracking-[0.22em] text-foreground/50 mb-1">{item.label}</div>
+                  <div className="text-sm font-bold text-gold-hi">{item.value}</div>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+
+          <ScrollReveal delay={200}>
+            <div className="mt-8 p-6 md:p-8 rounded-2xl bg-surface border-luxe grid md:grid-cols-2 gap-6 items-center">
+              <div>
+                <div className="text-[10px] uppercase tracking-[0.22em] text-foreground/50 mb-2">
+                  {isAr ? 'الشحن والدفع' : 'Shipping & payment'}
+                </div>
+                <ul className="text-sm text-foreground/80 space-y-1.5">
+                  <li>• {isAr ? 'مهلة التنفيذ: 15–25 يوماً' : 'Lead time: 15–25 days'}</li>
+                  <li>• {isAr ? 'الدفع: T/T أو L/C' : 'Payment: T/T or L/C at sight'}</li>
+                  <li>• {isAr ? 'شهادات: SASO, ISO 9001, MSDS' : 'Certified: SASO, ISO 9001, MSDS'}</li>
+                  <li>• {isAr ? 'وسم خاص (Private Label) متاح' : 'Private-label available'}</li>
+                </ul>
+              </div>
+              <div className="flex flex-wrap gap-3 md:justify-end">
+                <button
+                  type="button"
+                  onClick={() => {
+                    exportProductCatalog(product, isAr);
+                    toast.success(isAr ? 'تم تنزيل الكتالوج' : 'Catalog downloaded');
+                  }}
+                  className="btn-gold"
+                >
+                  <Download className="w-4 h-4" /> {isAr ? 'تنزيل كتالوج التصدير' : 'Download export catalog'}
+                </button>
+                <Link to="/quote" className="btn-ghost-gold">
+                  <FileText className="w-4 h-4" /> {isAr ? 'طلب عرض سعر FOB' : 'Request FOB quote'}
+                </Link>
+              </div>
+            </div>
+          </ScrollReveal>
+        </div>
+      </section>
+
+
       <section className="section border-t border-gold/10">
         <div className="container">
           <ScrollReveal>
