@@ -131,7 +131,10 @@ export default function Home() {
         <EditorialHero />
         <div className="container mt-8 md:mt-10 grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
           {topStrip.map((f, i) => <TrustItem key={i} icon={f.icon} text={f.text} index={i} />)}
-        </div>
+      </div>
+
+      {/* 1.1 — Opening bilingual CTA badge → /contact */}
+      <OpeningCtaBadge />
       </div>
 
       {/* 1.2 — Editorial Storytelling (asymmetric, scroll-triggered) */}
