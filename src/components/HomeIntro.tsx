@@ -95,8 +95,9 @@ export function HomeIntro() {
       if (sessionStorage.getItem(KEY) === '1') { setPhase('done'); return; }
       sessionStorage.setItem(KEY, '1');
     } catch {}
-    const total = slideMs * SLIDES.length + 800;
-    const t1 = setTimeout(() => setPhase('out'), total - 800);
+    const OUTRO_MS = 1400;
+    const total = slideMs * SLIDES.length + OUTRO_MS;
+    const t1 = setTimeout(() => setPhase('out'), total - OUTRO_MS);
     const t2 = setTimeout(() => setPhase('done'), total);
     return () => { clearTimeout(t1); clearTimeout(t2); };
   }, [slideMs]);
