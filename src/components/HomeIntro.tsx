@@ -133,7 +133,7 @@ export function HomeIntro() {
       className={`fixed inset-0 z-[100] overflow-hidden transition-opacity duration-700 ease-out ${
         phase === 'out' ? 'opacity-0 pointer-events-none' : 'opacity-100'
       }`}
-      style={{ backgroundColor: 'hsl(var(--background))' }}
+      style={{ backgroundColor: '#050301' }}
       aria-hidden
     >
       {/* WebGL cinematic backdrop (Three.js + R3F) — skipped on browsers without WebGL */}
@@ -145,38 +145,38 @@ export function HomeIntro() {
         </WebGLBoundary>
       )}
 
-      {/* Classic paper grain + vignette */}
-      <div className="absolute inset-0 pointer-events-none opacity-[0.15] mix-blend-multiply"
-        style={{ backgroundImage: 'radial-gradient(rgba(60,40,10,0.5) 1px, transparent 1px)', backgroundSize: '3px 3px' }} />
+      {/* Fine film grain (light-on-black) + edge vignette */}
+      <div className="absolute inset-0 pointer-events-none opacity-[0.10] mix-blend-screen"
+        style={{ backgroundImage: 'radial-gradient(rgba(255,190,120,0.55) 1px, transparent 1px)', backgroundSize: '3px 3px' }} />
       <div className="absolute inset-0 pointer-events-none"
-        style={{ background: 'radial-gradient(ellipse at center, transparent 55%, rgba(60,40,10,0.35) 100%)' }} />
+        style={{ background: 'radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.75) 100%)' }} />
 
 
       {/* Skip */}
       <button
         onClick={() => setPhase('done')}
-        className="absolute top-6 end-6 z-20 text-[11px] tracking-[0.3em] uppercase text-primary/70 hover:text-[hsl(var(--gold-hi))] transition-colors font-arabic border border-primary/25 px-3 py-1 rounded-sm bg-white/40 backdrop-blur"
+        className="absolute top-6 end-6 z-20 text-[11px] tracking-[0.3em] uppercase text-[hsl(var(--gold-hi))]/85 hover:text-[hsl(var(--gold-hi))] transition-colors font-arabic border border-[hsl(var(--gold))]/40 px-3 py-1 rounded-sm bg-black/40 backdrop-blur"
       >
         {isAr ? 'تخطي ▸' : 'SKIP ▸'}
       </button>
 
-      {/* Classic ornament corners */}
+      {/* Gold ornament corners */}
       {[
         'top-5 start-5 border-t-2 border-s-2',
         'top-5 end-5 border-t-2 border-e-2',
         'bottom-5 start-5 border-b-2 border-s-2',
         'bottom-5 end-5 border-b-2 border-e-2',
       ].map((c, i) => (
-        <div key={i} className={`absolute ${c} w-12 h-12 border-[hsl(var(--gold))]/70`} />
+        <div key={i} className={`absolute ${c} w-12 h-12 border-[hsl(var(--gold))]/80`} />
       ))}
 
       <div className="relative h-full w-full flex flex-col items-center justify-center gap-5 md:gap-8 px-4 py-10 text-center">
         {/* Heading */}
         <div className="opacity-0 animate-[introUp_0.9s_ease-out_0.2s_forwards]">
-          <div className="text-[10px] tracking-[0.5em] text-[hsl(var(--gold-ink))] mb-2 font-mono font-semibold">
+          <div className="text-[10px] tracking-[0.5em] text-[hsl(var(--gold-hi))] mb-2 font-mono font-semibold">
             EST · 2010 — DOSSIER 2060
           </div>
-          <p role="heading" aria-level={2} className={`text-2xl sm:text-4xl md:text-5xl text-primary ${isAr ? 'font-arabic font-bold' : 'font-display font-bold'}`}>
+          <p role="heading" aria-level={2} className={`text-2xl sm:text-4xl md:text-5xl text-[hsl(var(--gold-hi))] drop-shadow-[0_2px_18px_rgba(255,140,60,0.35)] ${isAr ? 'font-arabic font-bold' : 'font-display font-bold'}`}>
 
             {isAr ? 'علاماتنا التجارية المسجّلة' : 'Our Registered Trademarks'}
           </p>
