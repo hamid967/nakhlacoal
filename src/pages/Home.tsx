@@ -290,11 +290,13 @@ export default function Home() {
         preloadImages={[{ href: heroTrademark, type: 'image/webp', fetchPriority: 'high' }]}
       />
 
-      {SECTIONS.map(({ id, Component, intensity, axis, divider }) => (
-        <Section key={id} intensity={intensity} axis={axis} divider={divider}>
-          <div id={id} className="scroll-mt-24"><Component /></div>
-        </Section>
-      ))}
+      <StudioShell pageName={isAr ? 'الرئيسية' : 'Home'}>
+        {SECTIONS.map(({ id, Component, intensity, axis, divider }) => (
+          <Section key={id} intensity={intensity} axis={axis} divider={divider}>
+            <div id={id} className="scroll-mt-24"><Component /></div>
+          </Section>
+        ))}
+      </StudioShell>
 
       <StickyMobileCTA />
     </>
