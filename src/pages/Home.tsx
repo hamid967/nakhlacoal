@@ -10,6 +10,7 @@ const BrandHero = lazy(() => import('@/components/BrandHero').then((m) => ({ def
 import { EditorialHero } from '@/components/EditorialHero';
 import { EditorialStory } from '@/components/EditorialStory';
 import { CasesShowcase } from '@/components/CasesShowcase';
+import { OpeningCtaBadge } from '@/components/OpeningCtaBadge';
 const BrandTimeline = lazy(() => import('@/components/BrandTimeline').then((m) => ({ default: m.BrandTimeline })));
 const LocationSection = lazy(() => import('@/components/LocationSection').then((m) => ({ default: m.LocationSection })));
 const FaqSection = lazy(() => import('@/components/FaqSection').then((m) => ({ default: m.FaqSection })));
