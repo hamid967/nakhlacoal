@@ -261,7 +261,6 @@ export default function Home() {
     { id: 'certifications',  Component: S(CertificationsWall, 'grid') },
     { id: 'press',           Component: S(PressLogos, 'press') },
     { id: 'awards',          Component: S(AwardsRibbon, 'awards') },
-    { id: 'brands-3d',       Component: S(OurBrands3D, 'grid') },
     { id: 'trademarks',      Component: S(TrademarksShowcase, 'grid') },
     { id: 'partners',        Component: S(PartnersConstellation, 'constellation') },
     { id: 'testimonials',    Component: S(TestimonialsMarquee, 'band') },
