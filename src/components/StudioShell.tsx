@@ -143,7 +143,7 @@ export function StudioShell({ children, pageName }: { children: ReactNode; pageN
         </aside>
 
         {/* Canvas */}
-        <main className="flex-1 min-w-0 p-3 md:p-5">
+        <main className={`flex-1 min-w-0 ${canvasPadding} transition-[padding] duration-300`}>
           <div className={`mx-auto ${canvasMax} transition-[max-width] duration-500`}>
             {/* Canvas frame */}
             <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.6)] bg-background" dir={isAr ? 'rtl' : 'ltr'}>
