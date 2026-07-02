@@ -184,7 +184,7 @@ export default function OurBrands3D() {
         <SectionHeader
           eyebrow={isAr ? 'علاماتنا' : 'OUR BRANDS'}
           title={isAr ? 'خمس علامات تجارية مسجّلة' : 'Five Registered Trademarks'}
-          subtitle={
+          lead={
             isAr
               ? 'محفظة العلامات التجارية الخاصة بمصنع فحم النخلة — كل بطاقة توثّق علامة رسمية بتفاصيلها الكاملة.'
               : 'Al Nakhla Coal trademark portfolio — every card documents an officially registered mark.'
