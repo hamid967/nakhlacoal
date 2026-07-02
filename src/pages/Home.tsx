@@ -131,7 +131,7 @@ export default function Home() {
     );
 
   const HeroBlock = () => (
-    <div id="hero" className="relative scroll-mt-24">
+    <div className="relative">
       <EditorialHero />
       <div className="container mt-8 md:mt-10 grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
         {topStrip.map((f, i) => <TrustItem key={i} icon={f.icon} text={f.text} index={i} />)}
