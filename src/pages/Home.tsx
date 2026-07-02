@@ -7,6 +7,7 @@ import { ScrollReveal } from '@/components/ScrollReveal';
 // Heavy 3D hero — code-split so it doesn't block first paint
 const BrandHero = lazy(() => import('@/components/BrandHero').then((m) => ({ default: m.BrandHero })));
 import { EditorialHero } from '@/components/EditorialHero';
+import { EditorialStory } from '@/components/EditorialStory';
 const BrandTimeline = lazy(() => import('@/components/BrandTimeline').then((m) => ({ default: m.BrandTimeline })));
 const LocationSection = lazy(() => import('@/components/LocationSection').then((m) => ({ default: m.LocationSection })));
 const FaqSection = lazy(() => import('@/components/FaqSection').then((m) => ({ default: m.FaqSection })));
@@ -129,6 +130,9 @@ export default function Home() {
           {topStrip.map((f, i) => <TrustItem key={i} icon={f.icon} text={f.text} index={i} />)}
         </div>
       </div>
+
+      {/* 1.2 — Editorial Storytelling (asymmetric, scroll-triggered) */}
+      <EditorialStory />
 
       <SectionDivider />
 
