@@ -199,7 +199,11 @@ export default function Home() {
         <ProductShowcase3D />
       </Suspense>
 
+      {/* 4.7 — Selected Cases (glass cards + framed images + interactive viewer) */}
+      <ScrollScene intensity={0.5}><CasesShowcase /></ScrollScene>
+
       <SectionDivider flip />
+
 
       {/* 5 — Brand timeline (process + journey) */}
       <Suspense fallback={<SectionSkeleton variant="timeline" />}>
