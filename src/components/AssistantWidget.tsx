@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Send, Loader2, Sparkles, X, Maximize2, CheckCircle2, MessageCircle, FileText, User, Phone, MapPin, Truck, Warehouse, History, Plus, Square, Mic, MicOff } from 'lucide-react';
+import { Send, Loader2, Sparkles, X, Maximize2, CheckCircle2, MessageCircle, FileText, User, Phone, MapPin, Truck, Warehouse, History, Plus, Square, Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
+import { useVoiceRecorder, useVoicePlayer } from '@/hooks/useVoiceIO';
 import ReactMarkdown from 'react-markdown';
 import { QuoteBuilder } from './QuoteBuilder';
 import { quoteForItems, formatSAR } from '@/data/inventory';
@@ -138,12 +139,18 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
   const hydratedFromCloud = useRef(false);
   const [listening, setListening] = useState(false);
   const recognitionRef = useRef<any>(null);
-  const voiceSupported = typeof window !== 'undefined' && !!((window as any).SpeechRecognition || (window as any).webkitSpeechRecognition);
+  void 0; // native SR feature-detected inline in toggleVoice
+
+  // Server-side voice pipeline (works in every browser, incl. Safari / Firefox)
+  const recorder = useVoiceRecorder((text) => setInput((v) => (v ? `${v} ${text}` : text)), 'ar');
+  const player = useVoicePlayer();
 
   const toggleVoice = () => {
-    if (!voiceSupported) { toast.error('المتصفح لا يدعم الإدخال الصوتي'); return; }
-    if (listening) { recognitionRef.current?.stop(); return; }
+    // Prefer native SR (lower latency) when available; otherwise fall back to
+    // MediaRecorder → Lovable AI /audio/transcriptions edge function.
     const SR: any = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SR) { recorder.toggle(); return; }
+    if (listening) { recognitionRef.current?.stop(); return; }
     const rec = new SR();
     rec.lang = 'ar-SA';
     rec.interimResults = true;
@@ -703,6 +710,18 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
                   {isLastAssistant && streaming && clean && (
                     <span className="inline-block w-1.5 h-3.5 align-middle bg-gold/80 ms-0.5 animate-pulse" aria-hidden />
                   )}
+                  {clean && !streaming && (
+                    <button
+                      type="button"
+                      onClick={() => player.speak(m.id, clean, /[\u0600-\u06FF]/.test(clean) ? 'ar' : 'en')}
+                      className="mt-2 inline-flex items-center gap-1 text-[11px] text-foreground/60 hover:text-gold transition"
+                      aria-label={player.playing === m.id ? 'إيقاف الصوت' : 'استمع'}
+                      title={player.playing === m.id ? 'إيقاف الصوت' : 'استمع للرد'}
+                    >
+                      {player.playing === m.id ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
+                      <span>{player.playing === m.id ? 'إيقاف' : 'استمع'}</span>
+                    </button>
+                  )}
                 </div>
               )}
               {showChips && (
@@ -996,22 +1015,25 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }}
             rows={1}
-            placeholder={listening ? '🎙️ جارٍ الاستماع…' : 'اكتب رسالتك…'}
+            placeholder={listening || recorder.recording ? '🎙️ جارٍ الاستماع…' : recorder.busy ? '⏳ جارٍ التفريغ…' : 'اكتب رسالتك…'}
             disabled={streaming || submitting}
             className="flex-1 resize-none rounded-lg border border-border bg-muted/30 px-3 py-2.5 text-[16px] sm:text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 max-h-28 min-h-[44px]"
           />
-          {voiceSupported && (
-            <button
-              type="button"
-              onClick={toggleVoice}
-              disabled={streaming || submitting}
-              className={`shrink-0 w-10 h-10 rounded-lg flex items-center justify-center border transition disabled:opacity-50 ${listening ? 'bg-destructive text-destructive-foreground border-destructive animate-pulse' : 'bg-muted/40 border-border hover:bg-muted'}`}
-              aria-label={listening ? 'إيقاف التسجيل' : 'إدخال صوتي'}
-              title={listening ? 'إيقاف التسجيل' : 'إدخال صوتي'}
-            >
-              {listening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
-            </button>
-          )}
+          {(() => {
+            const active = listening || recorder.recording;
+            return (
+              <button
+                type="button"
+                onClick={toggleVoice}
+                disabled={streaming || submitting || recorder.busy}
+                className={`shrink-0 w-10 h-10 rounded-lg flex items-center justify-center border transition disabled:opacity-50 ${active ? 'bg-destructive text-destructive-foreground border-destructive animate-pulse' : 'bg-muted/40 border-border hover:bg-muted'}`}
+                aria-label={active ? 'إيقاف التسجيل' : 'إدخال صوتي'}
+                title={active ? 'إيقاف التسجيل' : 'إدخال صوتي (AR / EN)'}
+              >
+                {active ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+              </button>
+            );
+          })()}
           <button
             onClick={() => { if (streaming) abortRef.current?.abort(); else send(); }}
             disabled={!streaming && (!input.trim() || submitting)}
