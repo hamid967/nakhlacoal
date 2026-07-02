@@ -189,9 +189,19 @@ export default function ProductDetail() {
 
                 <div className="flex flex-wrap gap-3">
                   <AddToCartButton product={product} isAr={isAr} />
-                  <Link to="/contact" className="btn-ghost-gold">
-                    <ShoppingCart className="w-4 h-4" /> {isAr ? 'اطلب عرض سعر' : 'Request a quote'}
+                  <Link to="/quote" className="btn-ghost-gold">
+                    <FileText className="w-4 h-4" /> {isAr ? 'اطلب عرض سعر' : 'Request a quote'}
                   </Link>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      exportProductCatalog(product, isAr);
+                      toast.success(isAr ? 'تم تنزيل الكتالوج' : 'Catalog downloaded');
+                    }}
+                    className="btn-ghost-gold"
+                  >
+                    <Download className="w-4 h-4" /> {isAr ? 'تنزيل الكتالوج' : 'Download catalog'}
+                  </button>
                   <a
                     href={`https://wa.me/966540060095?text=${waMsg}`}
                     target="_blank"
