@@ -131,8 +131,10 @@ export function HomeIntro() {
 
   return (
     <div
-      className={`fixed inset-0 z-[100] overflow-hidden transition-opacity duration-700 ease-out ${
-        phase === 'out' ? 'opacity-0 pointer-events-none' : 'opacity-100'
+      className={`fixed inset-0 z-[100] overflow-hidden transition-all duration-[1200ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+        phase === 'out'
+          ? 'opacity-0 pointer-events-none scale-[1.06] blur-[6px]'
+          : 'opacity-100 scale-100 blur-0'
       }`}
       style={{ backgroundColor: '#050301' }}
       aria-hidden
@@ -151,6 +153,18 @@ export function HomeIntro() {
         style={{ backgroundImage: 'radial-gradient(rgba(255,190,120,0.55) 1px, transparent 1px)', backgroundSize: '3px 3px' }} />
       <div className="absolute inset-0 pointer-events-none"
         style={{ background: 'radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.75) 100%)' }} />
+
+      {/* Cinematic bridge to Home — gold iris that blooms during out, then dissolves
+          into the app's background token so there's no visible seam. */}
+      <div
+        className="absolute inset-0 pointer-events-none transition-opacity duration-[1200ms] ease-out"
+        style={{
+          opacity: phase === 'out' ? 1 : 0,
+          background:
+            'radial-gradient(ellipse at center, hsl(var(--gold-hi) / 0.35) 0%, hsl(var(--gold) / 0.18) 22%, hsl(var(--background)) 68%)',
+        }}
+      />
+
 
 
       {/* Skip */}
