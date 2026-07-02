@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react';
+import { useState, useEffect, type ReactNode } from 'react';
 import { Pencil } from 'lucide-react';
 import {
   Layers, Plus, Palette, Image as ImageIcon, Grid3x3, Wand2,
@@ -17,6 +17,29 @@ export function StudioShell({ children, pageName }: { children: ReactNode; pageN
   const [device, setDevice] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
   const [inspectorOpen, setInspectorOpen] = useState(true);
   const [preview, setPreview] = useState(false);
+
+  // Editor top bar = 48px, canvas ruler = 24px → 72px anchor offset in editor mode.
+  // In preview mode use the app's own nav offset (96px).
+  // Mobile canvas is denser → smaller offset. Tablet in between.
+  const anchorOffset = preview
+    ? 96
+    : device === 'mobile' ? 84
+    : device === 'tablet' ? 88
+    : 96;
+
+  const canvasPadding =
+    device === 'mobile' ? 'p-2'
+    : device === 'tablet' ? 'p-3'
+    : 'p-3 md:p-5';
+
+  useEffect(() => {
+    document.documentElement.style.setProperty('--studio-anchor-offset', `${anchorOffset}px`);
+    document.documentElement.dataset.studioDevice = preview ? 'preview' : device;
+    return () => {
+      document.documentElement.style.removeProperty('--studio-anchor-offset');
+      delete document.documentElement.dataset.studioDevice;
+    };
+  }, [anchorOffset, device, preview]);
 
   if (preview) {
     return (
@@ -120,7 +143,7 @@ export function StudioShell({ children, pageName }: { children: ReactNode; pageN
         </aside>
 
         {/* Canvas */}
-        <main className="flex-1 min-w-0 p-3 md:p-5">
+        <main className={`flex-1 min-w-0 ${canvasPadding} transition-[padding] duration-300`}>
           <div className={`mx-auto ${canvasMax} transition-[max-width] duration-500`}>
             {/* Canvas frame */}
             <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.6)] bg-background" dir={isAr ? 'rtl' : 'ltr'}>
