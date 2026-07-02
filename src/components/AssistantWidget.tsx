@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Send, Loader2, Sparkles, X, Maximize2, CheckCircle2, MessageCircle, FileText, User, Phone, MapPin, Truck, Warehouse, History, Plus, Square, Mic, MicOff } from 'lucide-react';
+import { Send, Loader2, Sparkles, X, Maximize2, CheckCircle2, MessageCircle, FileText, User, Phone, MapPin, Truck, Warehouse, History, Plus, Square, Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
+import { useVoiceRecorder, useVoicePlayer } from '@/hooks/useVoiceIO';
 import ReactMarkdown from 'react-markdown';
 import { QuoteBuilder } from './QuoteBuilder';
 import { quoteForItems, formatSAR } from '@/data/inventory';
