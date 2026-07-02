@@ -1,6 +1,6 @@
 # Palm Charcoal — Audit Report
 
-Base: `http://localhost:8080` · Generated: 2026-07-01T18:25:29.145Z
+Base: `http://localhost:8080` · Generated: 2026-07-02T04:14:45.373Z
 
 ## Summary
 
@@ -15,14 +15,14 @@ Base: `http://localhost:8080` · Generated: 2026-07-01T18:25:29.145Z
 
 | Route | Status | DCL (ms) | Findings |
 |---|---|---|---|
-| / | 200 | 708 | 0 |
-| /products | 200 | 517 | 0 |
-| /quality | 200 | 490 | 0 |
-| /trademarks | 200 | 482 | 0 |
-| /wholesale | 200 | 497 | 0 |
-| /quote | 200 | 463 | 0 |
-| /checkout | 200 | 508 | 0 |
-| /about | 200 | 501 | 0 |
-| /contact | 200 | 478 | 0 |
-| /auth | 200 | 491 | 0 |
-| /portal/login | 200 | 425 | 0 |
+| / | 200 | 497 | 0 |
+| /products | 200 | 418 | 0 |
+| /quality | 200 | 439 | 0 |
+| /trademarks | 200 | 483 | 0 |
+| /wholesale | 200 | 438 | 0 |
+| /quote | 200 | 424 | 0 |
+| /checkout | 200 | 437 | 0 |
+| /about | 200 | 441 | 0 |
+| /contact | 200 | 461 | 0 |
+| /auth | 200 | 453 | 0 |
+| /portal/login | 200 | 447 | 0 |
