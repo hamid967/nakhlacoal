@@ -122,12 +122,9 @@ export default function Home() {
       />
 
 
-      {/* 1 — HERO (single, 3D slider only — no particles overlay) + trust strip */}
-      <div id="hero" className="relative pt-24 md:pt-28 scroll-mt-24">
-        {/* BrandHero provides the visible <h1>; no sr-only duplicate needed. */}
-        <Suspense fallback={<SectionSkeleton variant="hero" label={isAr ? 'جارٍ تحميل الواجهة' : 'Loading hero'} />}>
-          <BrandHero />
-        </Suspense>
+      {/* 1 — EDITORIAL HERO (Broken-Grid Fragment) + trust strip */}
+      <div id="hero" className="relative scroll-mt-24">
+        <EditorialHero />
         <div className="container mt-8 md:mt-10 grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
           {topStrip.map((f, i) => <TrustItem key={i} icon={f.icon} text={f.text} index={i} />)}
         </div>
