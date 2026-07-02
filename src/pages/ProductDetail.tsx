@@ -16,6 +16,7 @@ import factoryD from '@/assets/step-pack.jpg';
 const ProductViewer3D = lazy(() => import('@/components/ProductViewer3D'));
 
 export default function ProductDetail() {
+  const [view3D, setView3D] = useState(false);
   const { slug = '' } = useParams();
   const { i18n } = useTranslation();
   const isAr = i18n.language?.startsWith('ar') ?? true;
