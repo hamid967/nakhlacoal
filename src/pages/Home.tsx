@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Flame, Clock, Leaf, Wind, ShieldCheck, Award } from 'lucide-react';
 import { SEO } from '@/components/SEO';
 import { ScrollReveal } from '@/components/ScrollReveal';
+import { ScrollScene } from '@/components/ScrollScene';
 
 // Heavy 3D hero — code-split so it doesn't block first paint
 const BrandHero = lazy(() => import('@/components/BrandHero').then((m) => ({ default: m.BrandHero })));
@@ -132,21 +133,17 @@ export default function Home() {
       </div>
 
       {/* 1.2 — Editorial Storytelling (asymmetric, scroll-triggered) */}
-      <EditorialStory />
+      <ScrollScene intensity={0.5} axis="x"><EditorialStory /></ScrollScene>
 
       <SectionDivider />
 
       {/* 1.5 — Glowing Charcoal Cubes (Noir + Gold) */}
-      <GlowingCubes />
-      <StatsGrid />
-      <ExportMap />
-
-
-
-
+      <ScrollScene intensity={0.7} axis="y"><GlowingCubes /></ScrollScene>
+      <ScrollScene intensity={0.4}><StatsGrid /></ScrollScene>
+      <ScrollScene intensity={0.5} axis="y"><ExportMap /></ScrollScene>
 
       {/* 2 — Audience tracks */}
-      <AudienceTracks />
+      <ScrollScene intensity={0.5}><AudienceTracks /></ScrollScene>
 
       <SectionDivider flip />
 
