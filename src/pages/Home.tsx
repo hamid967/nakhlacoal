@@ -18,7 +18,7 @@ const BrandTimeline = lazy(() => import('@/components/BrandTimeline').then((m) =
 const LocationSection = lazy(() => import('@/components/LocationSection').then((m) => ({ default: m.LocationSection })));
 const FaqSection = lazy(() => import('@/components/FaqSection').then((m) => ({ default: m.FaqSection })));
 const TrademarksShowcase = lazy(() => import('@/components/TrademarksShowcase').then((m) => ({ default: m.TrademarksShowcase })));
-const OurBrands3D = lazy(() => import('@/components/OurBrands3D'));
+
 const ProductShowcase3D = lazy(() => import('@/components/ProductShowcase3D').then((m) => ({ default: m.ProductShowcase3D })));
 const TestimonialsMarquee = lazy(() => import('@/components/TestimonialsMarquee').then((m) => ({ default: m.TestimonialsMarquee })));
 const CertificationsWall = lazy(() => import('@/components/CertificationsWall').then((m) => ({ default: m.CertificationsWall })));
@@ -131,7 +131,7 @@ export default function Home() {
     );
 
   const HeroBlock = () => (
-    <div id="hero" className="relative scroll-mt-24">
+    <div className="relative">
       <EditorialHero />
       <div className="container mt-8 md:mt-10 grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
         {topStrip.map((f, i) => <TrustItem key={i} icon={f.icon} text={f.text} index={i} />)}
@@ -169,7 +169,7 @@ export default function Home() {
   );
 
   const ProductsBlock = () => (
-    <LuxSection id="products" tone="surface" className="scroll-mt-24">
+    <LuxSection tone="surface" className="scroll-mt-24">
       <div className="container"><SectionNumber index={4} /></div>
       <SectionHeader
         align="between"
@@ -261,7 +261,6 @@ export default function Home() {
     { id: 'certifications',  Component: S(CertificationsWall, 'grid') },
     { id: 'press',           Component: S(PressLogos, 'press') },
     { id: 'awards',          Component: S(AwardsRibbon, 'awards') },
-    { id: 'brands-3d',       Component: S(OurBrands3D, 'grid') },
     { id: 'trademarks',      Component: S(TrademarksShowcase, 'grid') },
     { id: 'partners',        Component: S(PartnersConstellation, 'constellation') },
     { id: 'testimonials',    Component: S(TestimonialsMarquee, 'band') },
