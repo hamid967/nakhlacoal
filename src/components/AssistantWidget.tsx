@@ -141,10 +141,16 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
   const recognitionRef = useRef<any>(null);
   const voiceSupported = typeof window !== 'undefined' && !!((window as any).SpeechRecognition || (window as any).webkitSpeechRecognition);
 
+  // Server-side voice pipeline (works in every browser, incl. Safari / Firefox)
+  const recorder = useVoiceRecorder((text) => setInput((v) => (v ? `${v} ${text}` : text)), 'ar');
+  const player = useVoicePlayer();
+
   const toggleVoice = () => {
-    if (!voiceSupported) { toast.error('المتصفح لا يدعم الإدخال الصوتي'); return; }
-    if (listening) { recognitionRef.current?.stop(); return; }
+    // Prefer native SR (lower latency) when available; otherwise fall back to
+    // MediaRecorder → Lovable AI /audio/transcriptions edge function.
     const SR: any = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SR) { recorder.toggle(); return; }
+    if (listening) { recognitionRef.current?.stop(); return; }
     const rec = new SR();
     rec.lang = 'ar-SA';
     rec.interimResults = true;
