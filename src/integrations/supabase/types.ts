@@ -191,6 +191,7 @@ export type Database = {
         Row: {
           created_at: string
           grand_total_sar: number
+          id: string
           low_stock_items: Json
           new_customers: number
           orders_count: number
@@ -202,6 +203,7 @@ export type Database = {
         Insert: {
           created_at?: string
           grand_total_sar?: number
+          id?: string
           low_stock_items?: Json
           new_customers?: number
           orders_count?: number
@@ -213,6 +215,7 @@ export type Database = {
         Update: {
           created_at?: string
           grand_total_sar?: number
+          id?: string
           low_stock_items?: Json
           new_customers?: number
           orders_count?: number
