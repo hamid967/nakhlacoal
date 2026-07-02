@@ -30,6 +30,7 @@ const SustainabilityReport = lazy(() => import('@/components/SustainabilityRepor
 const CareersInvite = lazy(() => import('@/components/CareersInvite').then((m) => ({ default: m.CareersInvite })));
 
 import { StickyMobileCTA } from '@/components/StickyMobileCTA';
+import { StudioShell } from '@/components/StudioShell';
 import { SectionSkeleton } from '@/components/SectionSkeleton';
 import { SectionDivider } from '@/components/SectionDivider';
 import { SectionNumber } from '@/components/SectionNumber';
@@ -289,11 +290,13 @@ export default function Home() {
         preloadImages={[{ href: heroTrademark, type: 'image/webp', fetchPriority: 'high' }]}
       />
 
-      {SECTIONS.map(({ id, Component, intensity, axis, divider }) => (
-        <Section key={id} intensity={intensity} axis={axis} divider={divider}>
-          <div id={id} className="scroll-mt-24"><Component /></div>
-        </Section>
-      ))}
+      <StudioShell pageName={isAr ? 'الرئيسية' : 'Home'}>
+        {SECTIONS.map(({ id, Component, intensity, axis, divider }) => (
+          <Section key={id} intensity={intensity} axis={axis} divider={divider}>
+            <div id={id} className="scroll-mt-24"><Component /></div>
+          </Section>
+        ))}
+      </StudioShell>
 
       <StickyMobileCTA />
     </>
