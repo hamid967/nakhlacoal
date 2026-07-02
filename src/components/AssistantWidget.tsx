@@ -710,6 +710,18 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
                   {isLastAssistant && streaming && clean && (
                     <span className="inline-block w-1.5 h-3.5 align-middle bg-gold/80 ms-0.5 animate-pulse" aria-hidden />
                   )}
+                  {clean && !streaming && (
+                    <button
+                      type="button"
+                      onClick={() => player.speak(m.id, clean, /[\u0600-\u06FF]/.test(clean) ? 'ar' : 'en')}
+                      className="mt-2 inline-flex items-center gap-1 text-[11px] text-foreground/60 hover:text-gold transition"
+                      aria-label={player.playing === m.id ? 'إيقاف الصوت' : 'استمع'}
+                      title={player.playing === m.id ? 'إيقاف الصوت' : 'استمع للرد'}
+                    >
+                      {player.playing === m.id ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
+                      <span>{player.playing === m.id ? 'إيقاف' : 'استمع'}</span>
+                    </button>
+                  )}
                 </div>
               )}
               {showChips && (
