@@ -5,39 +5,28 @@ import { SEO } from '@/components/SEO';
 import { ScrollReveal } from '@/components/ScrollReveal';
 import { ScrollScene } from '@/components/ScrollScene';
 
-// Heavy 3D hero — code-split so it doesn't block first paint
-const BrandHero = lazy(() => import('@/components/BrandHero').then((m) => ({ default: m.BrandHero })));
 import { EditorialHero } from '@/components/EditorialHero';
 import { EditorialStory } from '@/components/EditorialStory';
 import { CasesShowcase } from '@/components/CasesShowcase';
 import { OpeningCtaBadge } from '@/components/OpeningCtaBadge';
-const BrandTimeline = lazy(() => import('@/components/BrandTimeline').then((m) => ({ default: m.BrandTimeline })));
-const LocationSection = lazy(() => import('@/components/LocationSection').then((m) => ({ default: m.LocationSection })));
-const FaqSection = lazy(() => import('@/components/FaqSection').then((m) => ({ default: m.FaqSection })));
-
-const TrademarksShowcase = lazy(() => import('@/components/TrademarksShowcase').then((m) => ({ default: m.TrademarksShowcase })));
-
-
-import { Certifications } from '@/components/Certifications';
 import { AudienceTracks } from '@/components/AudienceTracks';
 import { GlowingCubes } from '@/components/GlowingCubes';
 import { StatsGrid } from '@/components/StatsGrid';
 import { ExportMap } from '@/components/ExportMap';
+
+const BrandTimeline = lazy(() => import('@/components/BrandTimeline').then((m) => ({ default: m.BrandTimeline })));
+const LocationSection = lazy(() => import('@/components/LocationSection').then((m) => ({ default: m.LocationSection })));
+const FaqSection = lazy(() => import('@/components/FaqSection').then((m) => ({ default: m.FaqSection })));
+const TrademarksShowcase = lazy(() => import('@/components/TrademarksShowcase').then((m) => ({ default: m.TrademarksShowcase })));
 const ProductShowcase3D = lazy(() => import('@/components/ProductShowcase3D').then((m) => ({ default: m.ProductShowcase3D })));
 const TestimonialsMarquee = lazy(() => import('@/components/TestimonialsMarquee').then((m) => ({ default: m.TestimonialsMarquee })));
 const CertificationsWall = lazy(() => import('@/components/CertificationsWall').then((m) => ({ default: m.CertificationsWall })));
-const CinematicCTA = lazy(() => import('@/components/CinematicCTA').then((m) => ({ default: m.CinematicCTA })));
 const PressLogos = lazy(() => import('@/components/PressLogos').then((m) => ({ default: m.PressLogos })));
 const AwardsRibbon = lazy(() => import('@/components/AwardsRibbon').then((m) => ({ default: m.AwardsRibbon })));
 const PartnersConstellation = lazy(() => import('@/components/PartnersConstellation').then((m) => ({ default: m.PartnersConstellation })));
-const StoryFilm = lazy(() => import('@/components/StoryFilm').then((m) => ({ default: m.StoryFilm })));
 const InsightsEditorial = lazy(() => import('@/components/InsightsEditorial').then((m) => ({ default: m.InsightsEditorial })));
 const SustainabilityReport = lazy(() => import('@/components/SustainabilityReport').then((m) => ({ default: m.SustainabilityReport })));
 const CareersInvite = lazy(() => import('@/components/CareersInvite').then((m) => ({ default: m.CareersInvite })));
-const CaseStudies = lazy(() => import('@/components/CaseStudies').then((m) => ({ default: m.CaseStudies })));
-const GlobalPresence = lazy(() => import('@/components/GlobalPresence').then((m) => ({ default: m.GlobalPresence })));
-
-
 
 import { StickyMobileCTA } from '@/components/StickyMobileCTA';
 import { SectionSkeleton } from '@/components/SectionSkeleton';
