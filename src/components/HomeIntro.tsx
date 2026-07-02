@@ -95,9 +95,8 @@ export function HomeIntro() {
       if (sessionStorage.getItem(KEY) === '1') { setPhase('done'); return; }
       sessionStorage.setItem(KEY, '1');
     } catch {}
-    const OUTRO_MS = 1400;
-    const total = slideMs * SLIDES.length + OUTRO_MS;
-    const t1 = setTimeout(() => setPhase('out'), total - OUTRO_MS);
+    const total = slideMs * SLIDES.length + 800;
+    const t1 = setTimeout(() => setPhase('out'), total - 800);
     const t2 = setTimeout(() => setPhase('done'), total);
     return () => { clearTimeout(t1); clearTimeout(t2); };
   }, [slideMs]);
@@ -131,12 +130,10 @@ export function HomeIntro() {
 
   return (
     <div
-      className={`fixed inset-0 z-[100] overflow-hidden transition-all duration-[1200ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
-        phase === 'out'
-          ? 'opacity-0 pointer-events-none scale-[1.06] blur-[6px]'
-          : 'opacity-100 scale-100 blur-0'
+      className={`fixed inset-0 z-[100] overflow-hidden transition-opacity duration-700 ease-out ${
+        phase === 'out' ? 'opacity-0 pointer-events-none' : 'opacity-100'
       }`}
-      style={{ backgroundColor: '#050301' }}
+      style={{ backgroundColor: 'hsl(var(--background))' }}
       aria-hidden
     >
       {/* WebGL cinematic backdrop (Three.js + R3F) — skipped on browsers without WebGL */}
@@ -148,50 +145,38 @@ export function HomeIntro() {
         </WebGLBoundary>
       )}
 
-      {/* Fine film grain (light-on-black) + edge vignette */}
-      <div className="absolute inset-0 pointer-events-none opacity-[0.10] mix-blend-screen"
-        style={{ backgroundImage: 'radial-gradient(rgba(255,190,120,0.55) 1px, transparent 1px)', backgroundSize: '3px 3px' }} />
+      {/* Classic paper grain + vignette */}
+      <div className="absolute inset-0 pointer-events-none opacity-[0.15] mix-blend-multiply"
+        style={{ backgroundImage: 'radial-gradient(rgba(60,40,10,0.5) 1px, transparent 1px)', backgroundSize: '3px 3px' }} />
       <div className="absolute inset-0 pointer-events-none"
-        style={{ background: 'radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.75) 100%)' }} />
-
-      {/* Cinematic bridge to Home — gold iris that blooms during out, then dissolves
-          into the app's background token so there's no visible seam. */}
-      <div
-        className="absolute inset-0 pointer-events-none transition-opacity duration-[1200ms] ease-out"
-        style={{
-          opacity: phase === 'out' ? 1 : 0,
-          background:
-            'radial-gradient(ellipse at center, hsl(var(--gold-hi) / 0.35) 0%, hsl(var(--gold) / 0.18) 22%, hsl(var(--background)) 68%)',
-        }}
-      />
-
+        style={{ background: 'radial-gradient(ellipse at center, transparent 55%, rgba(60,40,10,0.35) 100%)' }} />
 
 
       {/* Skip */}
       <button
         onClick={() => setPhase('done')}
-        className="absolute top-6 end-6 z-20 text-[11px] tracking-[0.3em] uppercase text-[hsl(var(--gold-hi))]/85 hover:text-[hsl(var(--gold-hi))] transition-colors font-arabic border border-[hsl(var(--gold))]/40 px-3 py-1 rounded-sm bg-black/40 backdrop-blur"
+        className="absolute top-6 end-6 z-20 text-[11px] tracking-[0.3em] uppercase text-primary/70 hover:text-[hsl(var(--gold-hi))] transition-colors font-arabic border border-primary/25 px-3 py-1 rounded-sm bg-white/40 backdrop-blur"
       >
         {isAr ? 'تخطي ▸' : 'SKIP ▸'}
       </button>
 
-      {/* Gold ornament corners */}
+      {/* Classic ornament corners */}
       {[
         'top-5 start-5 border-t-2 border-s-2',
         'top-5 end-5 border-t-2 border-e-2',
         'bottom-5 start-5 border-b-2 border-s-2',
         'bottom-5 end-5 border-b-2 border-e-2',
       ].map((c, i) => (
-        <div key={i} className={`absolute ${c} w-12 h-12 border-[hsl(var(--gold))]/80`} />
+        <div key={i} className={`absolute ${c} w-12 h-12 border-[hsl(var(--gold))]/70`} />
       ))}
 
       <div className="relative h-full w-full flex flex-col items-center justify-center gap-5 md:gap-8 px-4 py-10 text-center">
         {/* Heading */}
         <div className="opacity-0 animate-[introUp_0.9s_ease-out_0.2s_forwards]">
-          <div className="text-[10px] tracking-[0.5em] text-[hsl(var(--gold-hi))] mb-2 font-mono font-semibold">
+          <div className="text-[10px] tracking-[0.5em] text-[hsl(var(--gold-ink))] mb-2 font-mono font-semibold">
             EST · 2010 — DOSSIER 2060
           </div>
-          <p role="heading" aria-level={2} className={`text-2xl sm:text-4xl md:text-5xl text-[hsl(var(--gold-hi))] drop-shadow-[0_2px_18px_rgba(255,140,60,0.35)] ${isAr ? 'font-arabic font-bold' : 'font-display font-bold'}`}>
+          <p role="heading" aria-level={2} className={`text-2xl sm:text-4xl md:text-5xl text-primary ${isAr ? 'font-arabic font-bold' : 'font-display font-bold'}`}>
 
             {isAr ? 'علاماتنا التجارية المسجّلة' : 'Our Registered Trademarks'}
           </p>
@@ -264,10 +249,10 @@ export function HomeIntro() {
 
         {/* Brand name + slide pager */}
         <div className="opacity-0 animate-[introUp_0.7s_ease-out_0.6s_forwards] flex flex-col items-center gap-2">
-          <div className={`text-lg md:text-2xl font-bold text-[hsl(var(--gold-hi))] ${isAr ? 'font-arabic' : 'font-display'}`}>
+          <div className={`text-lg md:text-2xl font-bold text-primary ${isAr ? 'font-arabic' : 'font-display'}`}>
             {isAr ? current.nameAr : current.nameEn}
-            <span className="mx-2 text-[hsl(var(--gold))]">·</span>
-            <span className="text-[hsl(var(--gold))] text-sm md:text-base font-mono font-semibold">#{current.registrationNo}</span>
+            <span className="mx-2 text-[hsl(var(--gold-ink))]">·</span>
+            <span className="text-[hsl(var(--gold-ink))] text-sm md:text-base font-mono font-semibold">#{current.registrationNo}</span>
           </div>
           <div className="flex items-center gap-1.5">
             {SLIDES.map((_, i) => (
@@ -276,7 +261,7 @@ export function HomeIntro() {
                 onClick={() => setActive(i)}
                 aria-label={`slide ${i + 1}`}
                 className={`h-1.5 rounded-full transition-all duration-500 ${
-                  i === active ? 'w-8 bg-[hsl(var(--gold-hi))]' : 'w-2 bg-[hsl(var(--gold))]/30'
+                  i === active ? 'w-8 bg-[hsl(var(--gold-hi))]' : 'w-2 bg-primary/30'
                 }`}
               />
             ))}

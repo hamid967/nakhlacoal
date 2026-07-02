@@ -99,7 +99,7 @@ export function EditorialHero() {
                 src={heroCharcoal}
                 alt={isAr ? 'فحم النخلة الفاخر متوهج بجمر ذهبي' : 'Premium palm charcoal glowing with amber embers'}
                 loading="eager"
-                {...({ fetchpriority: 'high' } as any)}
+                fetchPriority="high"
                 decoding="async"
                 className="aspect-[4/5] w-full bg-[#0a1815] object-cover shadow-2xl grayscale transition-all duration-1000 group-hover:grayscale-0"
               />

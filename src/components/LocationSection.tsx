@@ -23,7 +23,7 @@ export function LocationSection() {
   ];
 
   return (
-    <LuxSection tone="surface">
+    <LuxSection tone="surface" id="location">
       <SectionHeader
         eyebrow={isAr ? 'زورونا' : 'Visit us'}
         title={isAr ? 'سوق الفحم في البلد، جدة' : 'Charcoal Souq, Al-Balad, Jeddah'}

@@ -1111,13 +1111,3 @@ html[data-reduce-motion="1"] .lux-rise { animation: none !important; opacity: 1 
   .glass-strip { backdrop-filter: blur(8px) !important; -webkit-backdrop-filter: blur(8px) !important; }
 }
 
-
-/* ── Studio device-aware anchor offset ─────────────────────────────
-   StudioShell writes --studio-anchor-offset on <html> based on the
-   active device (mobile/tablet/desktop/preview). Section wrappers
-   using scroll-mt-24 will follow this value so in-page #anchor links
-   land correctly regardless of the editor chrome height. */
-:where([data-studio-device]) .scroll-mt-24,
-:where([data-studio-device]) [class*="scroll-mt-"] {
-  scroll-margin-top: var(--studio-anchor-offset, 6rem);
-}

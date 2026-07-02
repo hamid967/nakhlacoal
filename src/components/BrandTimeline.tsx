@@ -16,7 +16,7 @@ export function BrandTimeline() {
   const isAr = i18n.language?.startsWith('ar');
 
   return (
-    <section aria-label={isAr ? 'الخط الزمني للعلامة' : 'Brand timeline'} className="relative">
+    <section id="timeline" aria-label={isAr ? 'الخط الزمني للعلامة' : 'Brand timeline'} className="relative">
       {/* Continuous gold rail running through both sub-sections */}
       <div
         aria-hidden
