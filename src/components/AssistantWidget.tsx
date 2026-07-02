@@ -139,7 +139,7 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
   const hydratedFromCloud = useRef(false);
   const [listening, setListening] = useState(false);
   const recognitionRef = useRef<any>(null);
-  const voiceSupported = typeof window !== 'undefined' && !!((window as any).SpeechRecognition || (window as any).webkitSpeechRecognition);
+  void 0; // native SR feature-detected inline in toggleVoice
 
   // Server-side voice pipeline (works in every browser, incl. Safari / Firefox)
   const recorder = useVoiceRecorder((text) => setInput((v) => (v ? `${v} ${text}` : text)), 'ar');
