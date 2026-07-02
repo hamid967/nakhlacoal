@@ -21,6 +21,9 @@ export default {
         display: ['"Cormorant Garamond"', 'serif'],
         body: ['"IBM Plex Sans Arabic"', 'system-ui', 'sans-serif'],
         arabic: ['"Reem Kufi"', '"IBM Plex Sans Arabic"', 'serif'],
+        editorial: ['"DM Serif Display"', '"Amiri"', 'Georgia', 'serif'],
+        sans: ['"Fira Sans"', '"IBM Plex Sans Arabic"', 'system-ui', 'sans-serif'],
+        amiri: ['"Amiri"', '"DM Serif Display"', 'serif'],
       },
       colors: {
         border: "hsl(var(--border))",
