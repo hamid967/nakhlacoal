@@ -11,6 +11,16 @@ import "@fontsource/karla/300.css";
 import "@fontsource/karla/400.css";
 import "@fontsource/karla/500.css";
 import "@fontsource/karla/700.css";
+// Editorial pair — DM Serif Display × Fira Sans (+ Amiri for Arabic italic display)
+import "@fontsource/dm-serif-display/400.css";
+import "@fontsource/dm-serif-display/400-italic.css";
+import "@fontsource/fira-sans/300.css";
+import "@fontsource/fira-sans/400.css";
+import "@fontsource/fira-sans/500.css";
+import "@fontsource/fira-sans/700.css";
+import "@fontsource/amiri/400.css";
+import "@fontsource/amiri/400-italic.css";
+import "@fontsource/amiri/700.css";
 
 import "./i18n";
 import App from "./App.tsx";
