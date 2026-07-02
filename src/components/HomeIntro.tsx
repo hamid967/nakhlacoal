@@ -261,7 +261,7 @@ export function HomeIntro() {
                 onClick={() => setActive(i)}
                 aria-label={`slide ${i + 1}`}
                 className={`h-1.5 rounded-full transition-all duration-500 ${
-                  i === active ? 'w-8 bg-[hsl(var(--gold-hi))]' : 'w-2 bg-primary/30'
+                  i === active ? 'w-8 bg-[hsl(var(--gold-hi))]' : 'w-2 bg-[hsl(var(--gold))]/30'
                 }`}
               />
             ))}
