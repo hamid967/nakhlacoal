@@ -30,6 +30,7 @@ const SustainabilityReport = lazy(() => import('@/components/SustainabilityRepor
 const CareersInvite = lazy(() => import('@/components/CareersInvite').then((m) => ({ default: m.CareersInvite })));
 
 import { StickyMobileCTA } from '@/components/StickyMobileCTA';
+import { StudioShell } from '@/components/StudioShell';
 import { SectionSkeleton } from '@/components/SectionSkeleton';
 import { SectionDivider } from '@/components/SectionDivider';
 import { SectionNumber } from '@/components/SectionNumber';
