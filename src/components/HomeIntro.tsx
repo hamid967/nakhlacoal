@@ -249,10 +249,10 @@ export function HomeIntro() {
 
         {/* Brand name + slide pager */}
         <div className="opacity-0 animate-[introUp_0.7s_ease-out_0.6s_forwards] flex flex-col items-center gap-2">
-          <div className={`text-lg md:text-2xl font-bold text-primary ${isAr ? 'font-arabic' : 'font-display'}`}>
+          <div className={`text-lg md:text-2xl font-bold text-[hsl(var(--gold-hi))] ${isAr ? 'font-arabic' : 'font-display'}`}>
             {isAr ? current.nameAr : current.nameEn}
-            <span className="mx-2 text-[hsl(var(--gold-ink))]">·</span>
-            <span className="text-[hsl(var(--gold-ink))] text-sm md:text-base font-mono font-semibold">#{current.registrationNo}</span>
+            <span className="mx-2 text-[hsl(var(--gold))]">·</span>
+            <span className="text-[hsl(var(--gold))] text-sm md:text-base font-mono font-semibold">#{current.registrationNo}</span>
           </div>
           <div className="flex items-center gap-1.5">
             {SLIDES.map((_, i) => (
