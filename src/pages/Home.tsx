@@ -121,6 +121,163 @@ export default function Home() {
     </>
   );
 
+  // Wrapped-in-Suspense helper for lazy components
+  const S = (Cmp: React.ComponentType, variant: React.ComponentProps<typeof SectionSkeleton>['variant'] = 'band') =>
+    () => (
+      <Suspense fallback={<SectionSkeleton variant={variant} />}>
+        <Cmp />
+      </Suspense>
+    );
+
+  const HeroBlock = () => (
+    <div id="hero" className="relative scroll-mt-24">
+      <EditorialHero />
+      <div className="container mt-8 md:mt-10 grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
+        {topStrip.map((f, i) => <TrustItem key={i} icon={f.icon} text={f.text} index={i} />)}
+      </div>
+      <OpeningCtaBadge />
+    </div>
+  );
+
+  const WhyBlock = () => (
+    <LuxSection tone="surface">
+      <div className="container"><SectionNumber index={3} /></div>
+      <SectionHeader
+        eyebrow={isAr ? 'لماذا فحم النخلة' : 'Why Palm Charcoal'}
+        title={isAr ? 'تفوّق ملموس في كل تفصيلة' : 'Excellence in every detail'}
+      />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+        {features.map((f, i) => <FeatureCard key={i} icon={f.icon} title={f.title} body={f.body} index={i} />)}
+      </div>
+      <ScrollReveal delay={300}>
+        <div className="mt-12 md:mt-16 rounded-3xl clay-card-dark p-6 md:p-8 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-4 text-center">
+          {[
+            { v: '750°C', l: isAr ? 'حرارة قصوى' : 'Max Heat' },
+            { v: '90', l: isAr ? 'دقيقة احتراق' : 'Min Burn' },
+            { v: '85%', l: isAr ? 'كربون ثابت' : 'Fixed Carbon' },
+            { v: '3%', l: isAr ? 'رماد فقط' : 'Ash Only' },
+          ].map((s, i) => (
+            <div key={i} className={`${i > 0 ? 'md:border-s md:border-gold/15' : ''}`}>
+              <div className="text-3xl md:text-4xl font-bold text-gold-hi font-display leading-none">{s.v}</div>
+              <div className="text-[11px] uppercase tracking-[0.2em] text-background/70 mt-2 font-arabic">{s.l}</div>
+            </div>
+          ))}
+        </div>
+      </ScrollReveal>
+    </LuxSection>
+  );
+
+  const ProductsBlock = () => (
+    <LuxSection id="products" tone="surface" className="scroll-mt-24">
+      <div className="container"><SectionNumber index={4} /></div>
+      <SectionHeader
+        align="between"
+        eyebrow={isAr ? 'منتجاتنا' : 'Our products'}
+        title={isAr ? 'أفضل أنواع الفحم لجميع الاستخدامات' : 'Premium charcoal for every use'}
+        action={
+          <Link to="/products" className="text-gold-lo border-b border-gold/40 hover:border-gold pb-1 text-sm font-arabic shrink-0">
+            {isAr ? 'عرض كل المنتجات' : 'View all products'}
+          </Link>
+        }
+      />
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 md:gap-7">
+        {products.map((p, i) => <ProductCard key={i} {...p} index={i} />)}
+      </div>
+    </LuxSection>
+  );
+
+  const AboutBlock = () => (
+    <LuxSection>
+      <div className="container"><SectionNumber index={6} align="end" /></div>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <ScrollReveal className="lg:col-span-7">
+          <Eyebrow>{isAr ? 'من نحن' : 'Our story'}</Eyebrow>
+          <h2 className={`my-6 ${isAr ? 'font-arabic font-bold' : 'font-display font-bold'}`}>
+            {isAr ? 'الخيار الأمثل لعشاق الجودة' : 'The first choice for quality lovers'}
+          </h2>
+          <p className="text-base md:text-lg leading-relaxed text-foreground/75 mb-8 font-arabic max-w-2xl">
+            {isAr ? 'فحم النخلة هو الخيار الأمثل لعشاق الجودة. نحرص على تقديم فحم طبيعي ١٠٠٪ يتم إنتاجه بأحدث التقنيات وبمعايير عالمية ليمنحك أفضل تجربة.' : 'Palm Charcoal is the first choice for quality lovers — 100% natural, latest tech, international standards.'}
+          </p>
+          <LuxButton to="/about" variant="ghost" withArrow>{isAr ? 'تعرف على قصة فحم النخلة' : 'Read our story'}</LuxButton>
+        </ScrollReveal>
+        <ScrollReveal delay={150} className="lg:col-span-5">
+          <div className="rounded-3xl clay-card p-8 md:p-10">
+            <Stat value="+5" label={isAr ? 'سنوات من الخبرة' : 'years of expertise'} size="lg" />
+            <div className="divider-luxe my-8" />
+            <div className="grid grid-cols-2 gap-6">
+              <Stat value="12+" label={isAr ? 'دولة' : 'Countries'} size="sm" />
+              <Stat
+                value={`${liveOrders.toLocaleString(isAr ? 'ar-SA' : 'en-US')}+`}
+                label={
+                  <span className="inline-flex items-center gap-2">
+                    <span className="relative inline-flex w-2 h-2" aria-hidden>
+                      <span className="absolute inset-0 rounded-full bg-emerald-500/60 animate-ping" />
+                      <span className="relative inline-flex w-2 h-2 rounded-full bg-emerald-500" />
+                    </span>
+                    <span aria-live="polite">{isAr ? 'طلب مُنجز' : 'Orders fulfilled'}</span>
+                  </span>
+                }
+                size="sm"
+              />
+              <Stat value="24/7" label={isAr ? 'دعم' : 'Support'} size="sm" />
+              <Stat value="100%" label={isAr ? 'طبيعي' : 'Natural'} size="sm" />
+            </div>
+          </div>
+        </ScrollReveal>
+      </div>
+    </LuxSection>
+  );
+
+  const CtaBlock = () => (
+    <CtaBand
+      title={isAr ? 'جاهز لتجربة الفحم الفاخر؟' : 'Ready to taste the premium difference?'}
+      lead={isAr ? 'تواصل معنا الآن واحصل على عرض خاص لجملة وتجزئة وتصدير.' : 'Contact us for wholesale, retail and export offers.'}
+      ctaLabel={isAr ? 'تواصل معنا' : 'Contact us'}
+      ctaTo="/contact"
+    />
+  );
+
+  // Single source of truth for section order — edit here to reorder/add/remove
+  const SECTIONS: {
+    id: string;
+    Component: React.ComponentType;
+    intensity?: number;
+    axis?: 'x' | 'y';
+    divider?: boolean;
+  }[] = [
+    { id: 'hero',            Component: HeroBlock,                     intensity: 0, divider: false },
+    { id: 'story',           Component: EditorialStory,                intensity: 0.5, axis: 'x' },
+    { id: 'cubes',           Component: GlowingCubes,                  intensity: 0.7 },
+    { id: 'stats',           Component: StatsGrid,                     intensity: 0.4 },
+    { id: 'export-map',      Component: ExportMap,                     intensity: 0.5 },
+    { id: 'audience',        Component: AudienceTracks },
+    { id: 'why',             Component: WhyBlock },
+    { id: 'products',        Component: ProductsBlock },
+    { id: 'showcase-3d',     Component: S(ProductShowcase3D, 'band') },
+    { id: 'cases',           Component: CasesShowcase },
+    { id: 'timeline',        Component: S(BrandTimeline, 'timeline') },
+    { id: 'about',           Component: AboutBlock },
+    { id: 'certifications',  Component: S(CertificationsWall, 'grid') },
+    { id: 'press',           Component: S(PressLogos, 'press') },
+    { id: 'awards',          Component: S(AwardsRibbon, 'awards') },
+    { id: 'trademarks',      Component: S(TrademarksShowcase, 'grid') },
+    { id: 'partners',        Component: S(PartnersConstellation, 'constellation') },
+    { id: 'testimonials',    Component: S(TestimonialsMarquee, 'band') },
+    { id: 'insights',        Component: S(InsightsEditorial, 'grid') },
+    { id: 'sustainability',  Component: S(SustainabilityReport, 'grid') },
+    { id: 'careers',         Component: S(CareersInvite, 'band') },
+    { id: 'faq',             Component: S(FaqSection, 'band') },
+    { id: 'location',        Component: S(LocationSection, 'band') },
+    { id: 'cta',             Component: CtaBlock, divider: false },
+  ];
+
+  // Guard against accidental duplicate ids
+  if (import.meta.env.DEV) {
+    const ids = SECTIONS.map((s) => s.id);
+    const dupes = ids.filter((id, i) => ids.indexOf(id) !== i);
+    if (dupes.length) console.warn('[Home] duplicate section ids:', dupes);
+  }
+
   return (
     <>
       <SEO
@@ -131,187 +288,11 @@ export default function Home() {
         preloadImages={[{ href: heroTrademark, type: 'image/webp', fetchPriority: 'high' }]}
       />
 
-      {/* 1 — Hero */}
-      <Section intensity={0} divider={false}>
-        <div id="hero" className="relative scroll-mt-24">
-          <EditorialHero />
-          <div className="container mt-8 md:mt-10 grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
-            {topStrip.map((f, i) => <TrustItem key={i} icon={f.icon} text={f.text} index={i} />)}
-          </div>
-          <OpeningCtaBadge />
-        </div>
-      </Section>
-
-      {/* 2 — Storytelling */}
-      <Section intensity={0.5} axis="x"><EditorialStory /></Section>
-
-      {/* 3 — Signature visuals */}
-      <Section intensity={0.7}><GlowingCubes /></Section>
-      <Section intensity={0.4}><StatsGrid /></Section>
-      <Section intensity={0.5}><ExportMap /></Section>
-
-      {/* 4 — Audience tracks */}
-      <Section><AudienceTracks /></Section>
-
-      {/* 5 — Why us */}
-      <Section>
-        <LuxSection tone="surface">
-          <div className="container"><SectionNumber index={3} /></div>
-          <SectionHeader
-            eyebrow={isAr ? 'لماذا فحم النخلة' : 'Why Palm Charcoal'}
-            title={isAr ? 'تفوّق ملموس في كل تفصيلة' : 'Excellence in every detail'}
-          />
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-            {features.map((f, i) => <FeatureCard key={i} icon={f.icon} title={f.title} body={f.body} index={i} />)}
-          </div>
-          <ScrollReveal delay={300}>
-            <div className="mt-12 md:mt-16 rounded-3xl clay-card-dark p-6 md:p-8 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-4 text-center">
-              {[
-                { v: '750°C', l: isAr ? 'حرارة قصوى' : 'Max Heat' },
-                { v: '90', l: isAr ? 'دقيقة احتراق' : 'Min Burn' },
-                { v: '85%', l: isAr ? 'كربون ثابت' : 'Fixed Carbon' },
-                { v: '3%', l: isAr ? 'رماد فقط' : 'Ash Only' },
-              ].map((s, i) => (
-                <div key={i} className={`${i > 0 ? 'md:border-s md:border-gold/15' : ''}`}>
-                  <div className="text-3xl md:text-4xl font-bold text-gold-hi font-display leading-none">{s.v}</div>
-                  <div className="text-[11px] uppercase tracking-[0.2em] text-background/70 mt-2 font-arabic">{s.l}</div>
-                </div>
-              ))}
-            </div>
-          </ScrollReveal>
-        </LuxSection>
-      </Section>
-
-      {/* 6 — Products */}
-      <Section>
-        <LuxSection id="products" tone="surface" className="scroll-mt-24">
-          <div className="container"><SectionNumber index={4} /></div>
-          <SectionHeader
-            align="between"
-            eyebrow={isAr ? 'منتجاتنا' : 'Our products'}
-            title={isAr ? 'أفضل أنواع الفحم لجميع الاستخدامات' : 'Premium charcoal for every use'}
-            action={
-              <Link to="/products" className="text-gold-lo border-b border-gold/40 hover:border-gold pb-1 text-sm font-arabic shrink-0">
-                {isAr ? 'عرض كل المنتجات' : 'View all products'}
-              </Link>
-            }
-          />
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 md:gap-7">
-            {products.map((p, i) => <ProductCard key={i} {...p} index={i} />)}
-          </div>
-        </LuxSection>
-      </Section>
-
-      {/* 7 — 3D showcase */}
-      <Section>
-        <Suspense fallback={<SectionSkeleton variant="band" />}><ProductShowcase3D /></Suspense>
-      </Section>
-
-      {/* 8 — Selected cases (single, deduped) */}
-      <Section><CasesShowcase /></Section>
-
-      {/* 9 — Timeline */}
-      <Section>
-        <Suspense fallback={<SectionSkeleton variant="timeline" />}><BrandTimeline /></Suspense>
-      </Section>
-
-      {/* 10 — About */}
-      <Section>
-        <LuxSection>
-          <div className="container"><SectionNumber index={6} align="end" /></div>
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            <ScrollReveal className="lg:col-span-7">
-              <Eyebrow>{isAr ? 'من نحن' : 'Our story'}</Eyebrow>
-              <h2 className={`my-6 ${isAr ? 'font-arabic font-bold' : 'font-display font-bold'}`}>
-                {isAr ? 'الخيار الأمثل لعشاق الجودة' : 'The first choice for quality lovers'}
-              </h2>
-              <p className="text-base md:text-lg leading-relaxed text-foreground/75 mb-8 font-arabic max-w-2xl">
-                {isAr ? 'فحم النخلة هو الخيار الأمثل لعشاق الجودة. نحرص على تقديم فحم طبيعي ١٠٠٪ يتم إنتاجه بأحدث التقنيات وبمعايير عالمية ليمنحك أفضل تجربة.' : 'Palm Charcoal is the first choice for quality lovers — 100% natural, latest tech, international standards.'}
-              </p>
-              <LuxButton to="/about" variant="ghost" withArrow>{isAr ? 'تعرف على قصة فحم النخلة' : 'Read our story'}</LuxButton>
-            </ScrollReveal>
-            <ScrollReveal delay={150} className="lg:col-span-5">
-              <div className="rounded-3xl clay-card p-8 md:p-10">
-                <Stat value="+5" label={isAr ? 'سنوات من الخبرة' : 'years of expertise'} size="lg" />
-                <div className="divider-luxe my-8" />
-                <div className="grid grid-cols-2 gap-6">
-                  <Stat value="12+" label={isAr ? 'دولة' : 'Countries'} size="sm" />
-                  <Stat
-                    value={`${liveOrders.toLocaleString(isAr ? 'ar-SA' : 'en-US')}+`}
-                    label={
-                      <span className="inline-flex items-center gap-2">
-                        <span className="relative inline-flex w-2 h-2" aria-hidden>
-                          <span className="absolute inset-0 rounded-full bg-emerald-500/60 animate-ping" />
-                          <span className="relative inline-flex w-2 h-2 rounded-full bg-emerald-500" />
-                        </span>
-                        <span aria-live="polite">{isAr ? 'طلب مُنجز' : 'Orders fulfilled'}</span>
-                      </span>
-                    }
-                    size="sm"
-                  />
-                  <Stat value="24/7" label={isAr ? 'دعم' : 'Support'} size="sm" />
-                  <Stat value="100%" label={isAr ? 'طبيعي' : 'Natural'} size="sm" />
-                </div>
-              </div>
-            </ScrollReveal>
-          </div>
-        </LuxSection>
-      </Section>
-
-      {/* 11 — Certifications (unified, single wall) */}
-      <Section>
-        <Suspense fallback={<SectionSkeleton variant="grid" />}><CertificationsWall /></Suspense>
-      </Section>
-
-      {/* 12 — Press & Awards */}
-      <Section>
-        <Suspense fallback={<SectionSkeleton variant="press" />}><PressLogos /></Suspense>
-      </Section>
-      <Section>
-        <Suspense fallback={<SectionSkeleton variant="awards" />}><AwardsRibbon /></Suspense>
-      </Section>
-
-      {/* 13 — Trademarks & Partners */}
-      <Section>
-        <Suspense fallback={<SectionSkeleton variant="grid" />}><TrademarksShowcase /></Suspense>
-      </Section>
-      <Section>
-        <Suspense fallback={<SectionSkeleton variant="constellation" />}><PartnersConstellation /></Suspense>
-      </Section>
-
-      {/* 14 — Testimonials */}
-      <Section>
-        <Suspense fallback={<SectionSkeleton variant="band" />}><TestimonialsMarquee /></Suspense>
-      </Section>
-
-      {/* 15 — Editorial: Insights + Sustainability + Careers */}
-      <Section>
-        <Suspense fallback={<SectionSkeleton variant="grid" />}><InsightsEditorial /></Suspense>
-      </Section>
-      <Section>
-        <Suspense fallback={<SectionSkeleton variant="grid" />}><SustainabilityReport /></Suspense>
-      </Section>
-      <Section>
-        <Suspense fallback={<SectionSkeleton variant="band" />}><CareersInvite /></Suspense>
-      </Section>
-
-      {/* 16 — FAQ + Location */}
-      <Section>
-        <Suspense fallback={<SectionSkeleton variant="band" />}><FaqSection /></Suspense>
-      </Section>
-      <Section>
-        <Suspense fallback={<SectionSkeleton variant="band" />}><LocationSection /></Suspense>
-      </Section>
-
-      {/* 17 — Final CTA (single, deduped) */}
-      <Section divider={false}>
-        <CtaBand
-          title={isAr ? 'جاهز لتجربة الفحم الفاخر؟' : 'Ready to taste the premium difference?'}
-          lead={isAr ? 'تواصل معنا الآن واحصل على عرض خاص لجملة وتجزئة وتصدير.' : 'Contact us for wholesale, retail and export offers.'}
-          ctaLabel={isAr ? 'تواصل معنا' : 'Contact us'}
-          ctaTo="/contact"
-        />
-      </Section>
+      {SECTIONS.map(({ id, Component, intensity, axis, divider }) => (
+        <Section key={id} intensity={intensity} axis={axis} divider={divider}>
+          <div id={id} className="scroll-mt-24"><Component /></div>
+        </Section>
+      ))}
 
       <StickyMobileCTA />
     </>
