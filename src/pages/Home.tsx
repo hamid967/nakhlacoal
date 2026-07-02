@@ -169,7 +169,7 @@ export default function Home() {
   );
 
   const ProductsBlock = () => (
-    <LuxSection id="products" tone="surface" className="scroll-mt-24">
+    <LuxSection tone="surface" className="scroll-mt-24">
       <div className="container"><SectionNumber index={4} /></div>
       <SectionHeader
         align="between"
