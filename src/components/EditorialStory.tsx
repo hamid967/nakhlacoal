@@ -85,7 +85,7 @@ export function EditorialStory() {
         aria-hidden
         className="pointer-events-none absolute -top-6 md:-top-10 inset-x-0 text-center select-none"
         style={{
-          fontFamily: 'DM Serif Display, serif',
+          fontFamily: 'Syne, serif',
           fontSize: 'clamp(90px, 18vw, 260px)',
           lineHeight: 0.9,
           color: 'rgba(201,168,76,0.06)',
@@ -148,7 +148,7 @@ export function EditorialStory() {
               <span className="h-px flex-1" style={{ background: 'rgba(201,168,76,0.35)' }} />
               <span
                 className="text-[10px] uppercase tracking-[0.35em]"
-                style={{ color: '#c9a84c', fontFamily: 'Fira Sans, sans-serif' }}
+                style={{ color: '#c9a84c', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
               >
                 {isAr ? 'صنع في المملكة' : 'Made in KSA'}
               </span>
@@ -160,7 +160,7 @@ export function EditorialStory() {
             <div className="flex items-center gap-3 mb-6">
               <span
                 className="text-[10px] uppercase tracking-[0.4em]"
-                style={{ color: '#c9a84c', fontFamily: 'Fira Sans, sans-serif' }}
+                style={{ color: '#c9a84c', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
               >
                 {isAr ? 'فصولٌ من الجمر' : 'Chapters of Ember'}
               </span>
@@ -170,7 +170,7 @@ export function EditorialStory() {
             <h2
               className="mb-10 md:mb-14"
               style={{
-                fontFamily: isAr ? 'Amiri, serif' : 'DM Serif Display, serif',
+                fontFamily: isAr ? 'Amiri, serif' : 'Syne, serif',
                 fontSize: 'clamp(36px, 5vw, 68px)',
                 lineHeight: 1.05,
                 letterSpacing: '-0.02em',
@@ -235,7 +235,7 @@ export function EditorialStory() {
                     <div className="flex items-baseline gap-4 mb-2">
                       <span
                         style={{
-                          fontFamily: 'Fira Sans, sans-serif',
+                          fontFamily: 'Plus Jakarta Sans, sans-serif',
                           fontVariantNumeric: 'tabular-nums',
                           color: '#c9a84c',
                           fontSize: '12px',
@@ -254,7 +254,7 @@ export function EditorialStory() {
                     <h3
                       className="mb-2"
                       style={{
-                        fontFamily: isAr ? 'Amiri, serif' : 'DM Serif Display, serif',
+                        fontFamily: isAr ? 'Amiri, serif' : 'Syne, serif',
                         fontSize: 'clamp(22px, 2.4vw, 32px)',
                         lineHeight: 1.15,
                       }}
@@ -264,7 +264,7 @@ export function EditorialStory() {
                     <p
                       className="max-w-xl"
                       style={{
-                        fontFamily: isAr ? 'IBM Plex Sans Arabic, sans-serif' : 'Fira Sans, sans-serif',
+                        fontFamily: isAr ? 'IBM Plex Sans Arabic, sans-serif' : 'Plus Jakarta Sans, sans-serif',
                         color: 'rgba(245,240,224,0.75)',
                         fontSize: '16px',
                         lineHeight: 1.7,

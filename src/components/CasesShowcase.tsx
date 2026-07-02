@@ -99,7 +99,7 @@ export function CasesShowcase() {
         aria-hidden
         className="pointer-events-none absolute -top-4 md:-top-8 inset-x-0 text-center select-none"
         style={{
-          fontFamily: 'DM Serif Display, serif',
+          fontFamily: 'Syne, serif',
           fontSize: 'clamp(80px, 16vw, 220px)',
           lineHeight: 0.9,
           color: 'rgba(201,168,76,0.05)',
@@ -117,14 +117,14 @@ export function CasesShowcase() {
               <span className="h-px w-10" style={{ background: 'rgba(201,168,76,0.5)' }} />
               <span
                 className="text-[10px] uppercase tracking-[0.4em]"
-                style={{ color: '#c9a84c', fontFamily: 'Fira Sans, sans-serif' }}
+                style={{ color: '#c9a84c', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
               >
                 {isAr ? 'الأعمال المختارة · ٢٠٢٣–٢٠٢٥' : 'Selected work · 2023–2025'}
               </span>
             </div>
             <h2
               style={{
-                fontFamily: isAr ? 'Amiri, serif' : 'DM Serif Display, serif',
+                fontFamily: isAr ? 'Amiri, serif' : 'Syne, serif',
                 fontSize: 'clamp(36px, 5vw, 68px)',
                 lineHeight: 1.05,
                 letterSpacing: '-0.02em',
@@ -146,7 +146,7 @@ export function CasesShowcase() {
             className="max-w-sm text-sm md:text-base"
             style={{
               color: 'rgba(245,240,224,0.7)',
-              fontFamily: isAr ? 'IBM Plex Sans Arabic, sans-serif' : 'Fira Sans, sans-serif',
+              fontFamily: isAr ? 'IBM Plex Sans Arabic, sans-serif' : 'Plus Jakarta Sans, sans-serif',
               lineHeight: 1.7,
             }}
           >
@@ -212,13 +212,13 @@ export function CasesShowcase() {
                     <div>
                       <div
                         className="text-[10px] uppercase tracking-[0.35em] mb-2"
-                        style={{ color: 'rgba(245,240,224,0.65)', fontFamily: 'Fira Sans, sans-serif' }}
+                        style={{ color: 'rgba(245,240,224,0.65)', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
                       >
                         {c.sector} · {c.year}
                       </div>
                       <div
                         style={{
-                          fontFamily: 'Fira Sans, sans-serif',
+                          fontFamily: 'Plus Jakarta Sans, sans-serif',
                           fontVariantNumeric: 'tabular-nums',
                           color: '#f5f0e0',
                           fontSize: '14px',
@@ -246,7 +246,7 @@ export function CasesShowcase() {
                     <h3
                       className="max-w-md"
                       style={{
-                        fontFamily: isAr ? 'Amiri, serif' : 'DM Serif Display, serif',
+                        fontFamily: isAr ? 'Amiri, serif' : 'Syne, serif',
                         fontSize: 'clamp(22px, 2.4vw, 34px)',
                         lineHeight: 1.15,
                         color: '#f5f0e0',
@@ -257,7 +257,7 @@ export function CasesShowcase() {
                     <div className="text-end shrink-0">
                       <div
                         style={{
-                          fontFamily: 'DM Serif Display, serif',
+                          fontFamily: 'Syne, serif',
                           fontSize: 'clamp(28px, 3vw, 44px)',
                           lineHeight: 1,
                           color: '#c9a84c',
@@ -339,14 +339,14 @@ export function CasesShowcase() {
               <div className="p-8 md:p-12 flex flex-col justify-center">
                 <div
                   className="text-[10px] uppercase tracking-[0.4em] mb-4"
-                  style={{ color: '#c9a84c', fontFamily: 'Fira Sans, sans-serif' }}
+                  style={{ color: '#c9a84c', fontFamily: 'Plus Jakarta Sans, sans-serif' }}
                 >
                   {active.sector} · {active.year}
                 </div>
                 <h3
                   className="mb-2"
                   style={{
-                    fontFamily: 'Fira Sans, sans-serif',
+                    fontFamily: 'Plus Jakarta Sans, sans-serif',
                     color: '#f5f0e0',
                     fontSize: '14px',
                     letterSpacing: '0.06em',
@@ -357,7 +357,7 @@ export function CasesShowcase() {
                 <h2
                   className="mb-6"
                   style={{
-                    fontFamily: isAr ? 'Amiri, serif' : 'DM Serif Display, serif',
+                    fontFamily: isAr ? 'Amiri, serif' : 'Syne, serif',
                     fontSize: 'clamp(28px, 3.4vw, 44px)',
                     lineHeight: 1.1,
                     color: '#f5f0e0',
@@ -368,7 +368,7 @@ export function CasesShowcase() {
                 <p
                   className="mb-8"
                   style={{
-                    fontFamily: isAr ? 'IBM Plex Sans Arabic, sans-serif' : 'Fira Sans, sans-serif',
+                    fontFamily: isAr ? 'IBM Plex Sans Arabic, sans-serif' : 'Plus Jakarta Sans, sans-serif',
                     color: 'rgba(245,240,224,0.8)',
                     fontSize: '16px',
                     lineHeight: 1.8,
@@ -381,7 +381,7 @@ export function CasesShowcase() {
                   <div>
                     <div
                       style={{
-                        fontFamily: 'DM Serif Display, serif',
+                        fontFamily: 'Syne, serif',
                         fontSize: '40px',
                         lineHeight: 1,
                         color: '#c9a84c',

@@ -885,9 +885,9 @@
 }
 
 @layer utilities {
-  .font-display { font-family: 'Cormorant Garamond', serif; }
-  .font-display-ar { font-family: 'Reem Kufi', 'IBM Plex Sans Arabic', serif; }
-  .font-body { font-family: 'Inter Tight', sans-serif; }
+  .font-display { font-family: 'Syne', 'Cormorant Garamond', serif; letter-spacing: -0.02em; }
+  .font-display-ar { font-family: 'Reem Kufi', 'IBM Plex Sans Arabic', sans-serif; }
+  .font-body { font-family: 'Plus Jakarta Sans', 'IBM Plex Sans Arabic', system-ui, sans-serif; }
 
   /* Logical-property helpers for RTL */
   .ps-luxe { padding-inline-start: 1.5rem; }

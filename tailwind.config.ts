@@ -18,12 +18,12 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ['"Cormorant Garamond"', 'serif'],
-        body: ['"IBM Plex Sans Arabic"', 'system-ui', 'sans-serif'],
-        arabic: ['"Reem Kufi"', '"IBM Plex Sans Arabic"', 'serif'],
-        editorial: ['"DM Serif Display"', '"Amiri"', 'Georgia', 'serif'],
-        sans: ['"Fira Sans"', '"IBM Plex Sans Arabic"', 'system-ui', 'sans-serif'],
-        amiri: ['"Amiri"', '"DM Serif Display"', 'serif'],
+        display: ['"Syne"', '"Cormorant Garamond"', 'serif'],
+        body: ['"Plus Jakarta Sans"', '"IBM Plex Sans Arabic"', 'system-ui', 'sans-serif'],
+        arabic: ['"Reem Kufi"', '"IBM Plex Sans Arabic"', 'sans-serif'],
+        editorial: ['"Syne"', '"Amiri"', 'Georgia', 'serif'],
+        sans: ['"Plus Jakarta Sans"', '"IBM Plex Sans Arabic"', 'system-ui', 'sans-serif'],
+        amiri: ['"Amiri"', '"Syne"', 'serif'],
       },
       colors: {
         border: "hsl(var(--border))",
