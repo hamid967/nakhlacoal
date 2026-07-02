@@ -54,7 +54,7 @@ import heroTrademark from '@/assets/trademarks/trademark-0.webp';
 
 
 export default function Home() {
-  const { isAr, Arrow } = useDir();
+  const { isAr } = useDir();
   const liveOrders = useLiveOrderCount(50000);
 
 
