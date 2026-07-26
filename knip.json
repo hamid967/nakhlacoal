@@ -1,0 +1,35 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "entry": [
+    "src/main.tsx",
+    "src/App.tsx",
+    "index.html",
+    "vite.config.ts",
+    "tailwind.config.ts",
+    "vitest.config.ts",
+    "src/**/*.test.{ts,tsx}",
+    "src/**/*.spec.{ts,tsx}",
+    "scripts/**/*.{mjs,js,ts}",
+    "vite-plugins/**/*.{ts,mjs}",
+    "supabase/functions/**/index.ts"
+  ],
+  "project": [
+    "src/**/*.{ts,tsx}"
+  ],
+  "ignore": [
+    "src/integrations/supabase/**",
+    "src/components/ui/**",
+    "src/test/**",
+    "src/**/*.d.ts"
+  ],
+  "ignoreDependencies": [
+    "@fontsource/*",
+    "tailwindcss-animate",
+    "autoprefixer",
+    "postcss"
+  ],
+  "ignoreBinaries": [
+    "playwright",
+    "lhci"
+  ]
+}
