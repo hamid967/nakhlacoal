@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import heroEditorial from '@/assets/design/hero-editorial.jpg';
 import { ResponsiveImage } from './ResponsiveImage';
 import { Eyebrow, GoldCTA, GhostCTA } from './primitives';
+import { BrandIcon } from '@/components/brand/BrandIcon';
 
 /**
  * القسم 1 — Hero Editorial (بارتفاع شاشة كاملة)
@@ -73,6 +74,7 @@ export function EditorialHero() {
         </div>
 
         <div className="hidden lg:flex absolute right-8 bottom-16 flex-col items-center gap-4 text-[10px] uppercase tracking-[0.4em] text-dark-foreground/40">
+          <BrandIcon name="palmMark" size="xl" color="hsl(var(--gold))" title="Palm Charcoal" />
           <span className="h-16 w-px bg-dark-foreground/25" />
           <span style={{ writingMode: 'vertical-rl' }}>Vol. 01 · Origin</span>
         </div>

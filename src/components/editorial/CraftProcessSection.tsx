@@ -53,6 +53,7 @@ export function CraftProcessSection() {
               n={s.n}
               title={isAr ? s.ar : s.en}
               description={isAr ? s.ar_d : s.en_d}
+              icon={<BrandIcon name={s.icon} size="xl" />}
             />
           ))}
         </div>
