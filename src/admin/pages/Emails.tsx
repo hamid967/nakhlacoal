@@ -44,6 +44,57 @@ export default function AdminEmails() {
   const [autoInvoice, setAutoInvoice] = useState<boolean>(true);
   const [savingToggle, setSavingToggle] = useState(false);
 
+  // ---------- Preview state ----------
+  const PREVIEW_TEMPLATES: { key: string; label: string; needsId?: string }[] = [
+    { key: 'order-confirmation', label: 'تأكيد الطلب', needsId: 'معرّف الطلب (اختياري)' },
+    { key: 'shipment-notification', label: 'إشعار الشحن', needsId: 'معرّف الشحنة (اختياري)' },
+    { key: 'invoice-receipt', label: 'إيصال الفاتورة', needsId: 'معرّف الفاتورة (اختياري)' },
+    { key: 'order-new', label: 'حالة الطلب — استلام', needsId: 'معرّف الطلب (اختياري)' },
+    { key: 'order-confirmed', label: 'حالة الطلب — تأكيد', needsId: 'معرّف الطلب (اختياري)' },
+    { key: 'order-shipped', label: 'حالة الطلب — شحن', needsId: 'معرّف الطلب (اختياري)' },
+    { key: 'order-completed', label: 'حالة الطلب — تسليم', needsId: 'معرّف الطلب (اختياري)' },
+    { key: 'order-cancelled', label: 'حالة الطلب — إلغاء', needsId: 'معرّف الطلب (اختياري)' },
+    { key: 'quote-new', label: 'عرض السعر — استلام', needsId: 'معرّف العرض (اختياري)' },
+    { key: 'quote-priced', label: 'عرض السعر — تسعير', needsId: 'معرّف العرض (اختياري)' },
+    { key: 'quote-accepted', label: 'عرض السعر — قبول', needsId: 'معرّف العرض (اختياري)' },
+    { key: 'quote-rejected', label: 'عرض السعر — رفض', needsId: 'معرّف العرض (اختياري)' },
+    { key: 'quote-converted_to_order', label: 'عرض السعر — تحويل لطلب', needsId: 'معرّف العرض (اختياري)' },
+  ];
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewLoading, setPreviewLoading] = useState(false);
+  const [previewTemplate, setPreviewTemplate] = useState<string>('order-confirmation');
+  const [previewEntityId, setPreviewEntityId] = useState<string>('');
+  const [previewResult, setPreviewResult] = useState<{ subject: string; html: string; recipient: string | null; usedSample: boolean; note?: string | null } | null>(null);
+
+  const runPreview = async (template: string, entityId?: string) => {
+    setPreviewLoading(true);
+    setPreviewResult(null);
+    setPreviewTemplate(template);
+    setPreviewEntityId(entityId ?? '');
+    setPreviewOpen(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('preview-email-template', {
+        body: { template, entityId: entityId?.trim() || undefined },
+      });
+      if (error) throw error;
+      if ((data as any)?.ok) {
+        setPreviewResult({
+          subject: (data as any).subject,
+          html: (data as any).html,
+          recipient: (data as any).recipient ?? null,
+          usedSample: !!(data as any).usedSample,
+          note: (data as any).note ?? null,
+        });
+      } else {
+        toast.error((data as any)?.error || 'تعذّر توليد المعاينة');
+      }
+    } catch (e: any) {
+      toast.error(e?.message ?? 'خطأ في المعاينة');
+    } finally {
+      setPreviewLoading(false);
+    }
+  };
+
   const loadSettings = async () => {
     const { data } = await supabase.from('email_settings')
       .select('auto_order_confirmation, auto_shipment_notification, auto_invoice_receipt').eq('id', true).maybeSingle();
