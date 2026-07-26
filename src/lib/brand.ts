@@ -32,3 +32,32 @@ export const brand = {
   // Small stamps / labels used across the site
   lab: 'PALM CHARCOAL CO.',
 } as const
+
+/** Base WhatsApp number (E.164, no plus). Single source of truth. */
+export const WHATSAPP_NUMBER = '966540060085'
+
+/** Default prefilled WhatsApp messages (Arabic-first, English fallback). */
+export const WHATSAPP_MESSAGES = {
+  general:    'السلام عليكم، أرغب بالاستفسار عن فحم النخلة الفاخر.',
+  order:      'السلام عليكم، أرغب بتقديم طلب من فحم النخلة.',
+  quote:      'السلام عليكم، أرغب بطلب عرض سعر لكميات الجملة.',
+  wholesale:  'السلام عليكم، أرغب باستلام قائمة أسعار الجملة (Wholesale).',
+  export:     'Hello Palm Charcoal, I would like to request an export quotation.',
+  support:    'السلام عليكم، أحتاج مساعدة من الدعم الفني لفحم النخلة.',
+  product:    (name: string) => `السلام عليكم، أرغب بالاستفسار عن منتج: ${name}`,
+} as const
+
+/**
+ * Build a WhatsApp deep link with an optional prefilled message.
+ * Usage: `waLink()` · `waLink('quote')` · `waLink(WHATSAPP_MESSAGES.product('كرتون 10 كجم'))`
+ */
+export function waLink(message?: keyof typeof WHATSAPP_MESSAGES | string): string {
+  const base = `https://wa.me/${WHATSAPP_NUMBER}`
+  if (!message) return `${base}?text=${encodeURIComponent(WHATSAPP_MESSAGES.general)}`
+  const raw =
+    typeof message === 'string' && message in WHATSAPP_MESSAGES
+      ? (WHATSAPP_MESSAGES as Record<string, string>)[message]
+      : message
+  return `${base}?text=${encodeURIComponent(raw)}`
+}
+
