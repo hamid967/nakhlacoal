@@ -70,7 +70,7 @@ export default function Unsubscribe() {
       <Helmet><title>إدارة تفضيلات البريد · فحم النخلة</title><meta name="robots" content="noindex,nofollow" /></Helmet>
       <div className="w-full max-w-lg rounded-2xl bg-white border p-8 shadow-sm" style={{ borderColor: '#e8e4d6' }}>
         <div className="text-center mb-6">
-          <div className="text-[11px] tracking-[0.35em] text-emerald-900/70">PALM CHARCOAL</div>
+          <div className="text-[11px] tracking-[0.35em] text-coal/70">PALM CHARCOAL</div>
           <h1 className="text-2xl font-bold mt-2" style={{ color: '#1A4A00' }}>إدارة إشعارات البريد</h1>
         </div>
 
@@ -79,7 +79,7 @@ export default function Unsubscribe() {
           <p className="text-center text-sm text-red-600">الرابط غير صالح أو منتهي الصلاحية.</p>
         )}
         {state === 'done' && (
-          <p className="text-center text-sm text-emerald-800">تم إلغاء اشتراكك من جميع رسائل البريد. يمكنك إعادة تفعيلها من إعدادات حسابك في أي وقت.</p>
+          <p className="text-center text-sm text-coal">تم إلغاء اشتراكك من جميع رسائل البريد. يمكنك إعادة تفعيلها من إعدادات حسابك في أي وقت.</p>
         )}
         {(state === 'ready' || state === 'saved') && prefs && (
           <div className="space-y-4">
@@ -117,7 +117,7 @@ export default function Unsubscribe() {
             </button>
 
             {state === 'saved' && (
-              <p className="text-center text-xs text-emerald-800">تم الحفظ ✓</p>
+              <p className="text-center text-xs text-coal">تم الحفظ ✓</p>
             )}
           </div>
         )}

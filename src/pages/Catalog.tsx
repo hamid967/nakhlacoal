@@ -45,7 +45,7 @@ export default function Catalog() {
             ? 'اضغط "تحميل PDF" ثم اختر "حفظ كملف PDF" من نافذة الطباعة.'
             : 'Click "Download PDF" and choose "Save as PDF" in the print dialog.'}
         </p>
-        <Button onClick={handlePrint} className="bg-emerald-800 hover:bg-emerald-900 text-white">
+        <Button onClick={handlePrint} className="bg-coal hover:bg-coal text-white">
           <Download className="w-4 h-4 mr-2" />
           {isAr ? 'تحميل PDF' : 'Download PDF'}
         </Button>
@@ -53,9 +53,9 @@ export default function Catalog() {
 
       <div className="catalog-page mx-auto max-w-[860px] px-10 py-12">
         {/* Cover */}
-        <section className="catalog-cover text-center pb-12 border-b-2 border-emerald-800">
+        <section className="catalog-cover text-center pb-12 border-b-2 border-coal">
           <BrandLogo alt="Palm Charcoal" className="w-32 h-32 mx-auto mb-6 object-contain" />
-          <h1 className="text-5xl font-bold text-emerald-900 mb-2">
+          <h1 className="text-5xl font-bold text-coal mb-2">
             {isAr ? 'فحم النخلة' : 'Palm Charcoal'}
           </h1>
           <p className="text-2xl text-stone-600 mb-1">
@@ -71,7 +71,7 @@ export default function Catalog() {
 
         {/* Intro */}
         <section className="py-10 page-break">
-          <h2 className="text-2xl font-bold text-emerald-900 mb-4 border-l-4 border-amber-600 pl-3">
+          <h2 className="text-2xl font-bold text-coal mb-4 border-l-4 border-amber-600 pl-3">
             {isAr ? 'عن العلامة' : 'About the Brand'}
           </h2>
           <p className="text-stone-700 leading-relaxed">
@@ -92,7 +92,7 @@ export default function Catalog() {
                   {String(idx + 1).padStart(2, '0')}
                 </span>
                 <div className="flex-1">
-                  <h3 className="text-2xl font-bold text-emerald-900">
+                  <h3 className="text-2xl font-bold text-coal">
                     {isAr ? p.nameAr : p.nameEn}
                   </h3>
                   <p className="text-stone-500 text-sm">
@@ -133,7 +133,7 @@ export default function Catalog() {
                   <span className="bg-amber-50 border border-amber-200 text-amber-900 px-2 py-1 rounded">
                     {isAr ? 'الحد الأدنى للطلب' : 'MOQ'}: {inv.minOrderKg} {isAr ? 'كجم' : 'kg'}
                   </span>
-                  <span className="bg-emerald-50 border border-emerald-200 text-emerald-900 px-2 py-1 rounded">
+                  <span className="bg-sand border border-gold/20 text-coal px-2 py-1 rounded">
                     {isAr ? 'مدة التجهيز' : 'Lead time'}: {inv.leadDays} {isAr ? 'يوم' : 'days'}
                   </span>
                   <span className="bg-stone-50 border border-stone-200 text-stone-700 px-2 py-1 rounded">
@@ -144,11 +144,11 @@ export default function Catalog() {
 
               {tiers && (
                 <div className="mt-4">
-                  <h4 className="text-sm font-semibold text-emerald-900 mb-2">
+                  <h4 className="text-sm font-semibold text-coal mb-2">
                     {isAr ? 'أسعار الجملة (ريال/كجم)' : 'Wholesale Pricing (SAR/kg)'}
                   </h4>
                   <table className="w-full text-xs border border-stone-200">
-                    <thead className="bg-emerald-900 text-white">
+                    <thead className="bg-coal text-white">
                       <tr>
                         <th className="p-2 text-start">{isAr ? 'الكمية (كجم)' : 'Quantity (kg)'}</th>
                         <th className="p-2 text-end">{isAr ? 'السعر/كجم' : 'Price/kg'}</th>
@@ -170,8 +170,8 @@ export default function Catalog() {
         })}
 
         {/* Contact footer */}
-        <section className="mt-12 pt-8 border-t-2 border-emerald-800 text-center">
-          <h2 className="text-xl font-bold text-emerald-900 mb-3">
+        <section className="mt-12 pt-8 border-t-2 border-coal text-center">
+          <h2 className="text-xl font-bold text-coal mb-3">
             {isAr ? 'تواصل معنا' : 'Contact Us'}
           </h2>
           <p className="text-stone-700">WhatsApp: +966 54 006 0085</p>

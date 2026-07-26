@@ -175,15 +175,16 @@
     font-weight: 600;
   }
   html[data-font="editorial"] body {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Manrope', 'IBM Plex Sans Arabic', system-ui, sans-serif;
   }
   html[data-font="editorial"] h1,
   html[data-font="editorial"] h2,
   html[data-font="editorial"] h3,
   html[data-font="editorial"] h4,
   html[data-font="editorial"] h5 {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Manrope', 'IBM Plex Sans Arabic', system-ui, sans-serif;
     font-weight: 700;
+    letter-spacing: -0.02em;
   }
 
   /* Live font override — set by ThemeToggle for any picked font (incl. Tajawal/Cairo/Amiri) */
@@ -710,7 +711,7 @@
     color: hsl(var(--background));
   }
   .lux-emerald-wordmark {
-    font-family: 'Cormorant Garamond', 'Reem Kufi', 'IBM Plex Sans Arabic', serif;
+    font-family: 'Manrope', 'IBM Plex Sans Arabic', system-ui, sans-serif;
     color: hsl(var(--gold-hi));
     letter-spacing: -0.01em;
     line-height: 1;
@@ -898,9 +899,9 @@
 }
 
 @layer utilities {
-  .font-display { font-family: 'Syne', 'Cormorant Garamond', serif; letter-spacing: -0.02em; }
-  .font-display-ar { font-family: 'Reem Kufi', 'IBM Plex Sans Arabic', sans-serif; }
-  .font-body { font-family: 'Plus Jakarta Sans', 'IBM Plex Sans Arabic', system-ui, sans-serif; }
+  .font-display { font-family: 'Manrope', 'IBM Plex Sans Arabic', system-ui, sans-serif; letter-spacing: -0.03em; font-weight: 700; }
+  .font-display-ar { font-family: 'IBM Plex Sans Arabic', 'Manrope', system-ui, sans-serif; font-weight: 700; }
+  .font-body { font-family: 'Manrope', 'IBM Plex Sans Arabic', system-ui, sans-serif; }
 
   /* Logical-property helpers for RTL */
   .ps-luxe { padding-inline-start: 1.5rem; }

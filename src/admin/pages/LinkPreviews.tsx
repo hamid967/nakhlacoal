@@ -344,7 +344,7 @@ export default function AdminLinkPreviews() {
                   <td className="a-mono text-xs whitespace-nowrap">{new Date(b.started_at).toLocaleString('ar-SA')}</td>
                   <td className="a-mono text-[10px] opacity-60">{b.batch_id.slice(0, 8)}</td>
                   <td>{b.total}</td>
-                  <td className="text-emerald-600">{b.ok}</td>
+                  <td className="text-gold">{b.ok}</td>
                   <td className="text-amber-600">{b.warn}</td>
                   <td className="text-rose-600">{b.error}</td>
                   <td>
@@ -416,7 +416,7 @@ export default function AdminLinkPreviews() {
           <div className="flex items-center gap-2 text-xs opacity-70">
             <span>{summary.total} إجمالاً</span>
             <span>·</span>
-            <span className="text-emerald-600">{summary.ok} سليم</span>
+            <span className="text-gold">{summary.ok} سليم</span>
             <span>·</span>
             <span className="text-amber-600">{summary.warn} تحذير</span>
             <span>·</span>

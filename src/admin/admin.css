@@ -11,8 +11,8 @@
   --a-soft: #F1F5F9;
 
   /* Accent — emerald */
-  --a-palm: #047857;        /* emerald-700 */
-  --a-palm-2: #059669;      /* emerald-600 */
+  --a-palm: #047857;        /* gold */
+  --a-palm-2: #059669;      /* gold */
   --a-accent: #047857;
   --a-accent-2: #059669;
   --a-on-palm: #FFFFFF;
@@ -46,8 +46,8 @@
   --a-soft: #1E293B;
 
   /* Lighter emerald for contrast on dark */
-  --a-palm: #10B981;         /* emerald-500 */
-  --a-palm-2: #34D399;       /* emerald-400 */
+  --a-palm: #10B981;         /* sand0 */
+  --a-palm-2: #34D399;       /* gold */
   --a-accent: #10B981;
   --a-accent-2: #34D399;
   --a-gold: #10B981;

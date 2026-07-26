@@ -292,7 +292,7 @@ export default function Assistant() {
               <p className="text-xs text-muted-foreground">يجمع بياناتك ويُرسل الطلب تلقائياً</p>
             </div>
             <span className="hidden sm:flex items-center gap-1.5 text-xs text-muted-foreground">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" /> متصل
+              <span className="w-2 h-2 rounded-full bg-sand0 animate-pulse" /> متصل
             </span>
           </header>
 
@@ -323,7 +323,7 @@ export default function Assistant() {
               </div>
             ))}
             {submitting && (
-              <div className="flex items-center gap-2 text-sm text-emerald-600">
+              <div className="flex items-center gap-2 text-sm text-gold">
                 <CheckCircle2 className="w-4 h-4 animate-pulse" /> جارٍ حفظ الطلب وإرسال الإشعارات...
               </div>
             )}

@@ -116,7 +116,7 @@ export default function AdminTrademarks() {
                 <td className="p-3 font-mono text-xs">{t.registrationNo}</td>
                 <td className="p-3">{t.niceClass}</td>
                 <td className="p-3">—</td>
-                <td className="p-3"><span className="inline-block w-2 h-2 rounded-full bg-emerald-500" /></td>
+                <td className="p-3"><span className="inline-block w-2 h-2 rounded-full bg-sand0" /></td>
                 <td className="p-3 text-end">
                   <div className="inline-flex gap-2">
                     <Button size="sm" variant="outline" onClick={() => openEdit(t.id)} className="gap-1">

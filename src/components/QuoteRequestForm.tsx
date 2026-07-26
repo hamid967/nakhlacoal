@@ -84,8 +84,8 @@ export function QuoteRequestForm() {
 
   if (done) {
     return (
-      <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/5 p-6 text-center">
-        <CheckCircle2 className="size-10 text-emerald-500 mx-auto mb-3" />
+      <div className="rounded-2xl border border-sand0/30 bg-sand0/5 p-6 text-center">
+        <CheckCircle2 className="size-10 text-sand0 mx-auto mb-3" />
         <h4 className="font-bold text-lg mb-1">تم استلام طلبك بنجاح</h4>
         <p className="text-sm text-muted-foreground mb-4">
           رقم الطلب: <span className="font-mono tabular-nums text-foreground">{String(done).slice(0, 8)}</span>

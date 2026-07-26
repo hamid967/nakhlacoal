@@ -89,7 +89,7 @@ export function ProductRecommender() {
           <button
             onClick={() => ask()}
             disabled={loading || !query.trim()}
-            className="bg-emerald-900 hover:bg-emerald-800 disabled:opacity-50 text-white rounded-lg px-6 py-3 text-sm font-medium flex items-center justify-center gap-2 transition"
+            className="bg-coal hover:bg-coal disabled:opacity-50 text-white rounded-lg px-6 py-3 text-sm font-medium flex items-center justify-center gap-2 transition"
           >
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
             {isAr ? 'رشّح لي' : 'Recommend'}
@@ -119,12 +119,12 @@ export function ProductRecommender() {
                   key={`${r.slug}-${i}`}
                   className={`relative p-4 rounded-xl border transition ${
                     isTop
-                      ? 'bg-emerald-900/[0.06] border-emerald-900/20 shadow-sm'
+                      ? 'bg-coal/[0.06] border-coal/20 shadow-sm'
                       : 'bg-foreground/[0.02] border-foreground/10'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-[10px] uppercase tracking-[0.3em] text-emerald-800">
+                    <span className="text-[10px] uppercase tracking-[0.3em] text-coal">
                       {isAr ? `الخيار ${i + 1}` : `Option ${i + 1}`}
                     </span>
                     {isTop && (
@@ -134,7 +134,7 @@ export function ProductRecommender() {
                     )}
                   </div>
                   <img decoding="async" loading="lazy" src={product.image} alt={product.nameEn} className="w-full h-28 object-cover rounded-lg mb-3" />
-                  <h3 className="text-base font-bold text-emerald-900 mb-1">
+                  <h3 className="text-base font-bold text-coal mb-1">
                     {isAr ? product.nameAr : product.nameEn}
                   </h3>
                   <p className="text-xs text-foreground/75 leading-relaxed mb-2">{r.reason}</p>
@@ -144,7 +144,7 @@ export function ProductRecommender() {
                   </div>
                   <Link
                     to={`/products/${product.slug}`}
-                    className="inline-flex items-center gap-1.5 text-xs bg-emerald-900 hover:bg-emerald-800 text-white px-3 py-1.5 rounded-lg transition"
+                    className="inline-flex items-center gap-1.5 text-xs bg-coal hover:bg-coal text-white px-3 py-1.5 rounded-lg transition"
                   >
                     {isAr ? 'عرض المنتج' : 'View'}
                     <ArrowRight className={`w-3.5 h-3.5 ${isAr ? 'rotate-180' : ''}`} />

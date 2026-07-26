@@ -44,11 +44,11 @@ export const brandColors = {
 // 2. TYPOGRAPHY
 // ─────────────────────────────────────────────────────────────
 export const brandFonts = {
-  editorialBold: '"DM Serif Display", "Amiri", Georgia, serif',
-  editorialSans: '"Fira Sans", "IBM Plex Sans Arabic", system-ui, sans-serif',
-  display:       '"Syne", "Cormorant Garamond", serif',
-  body:          '"Plus Jakarta Sans", "IBM Plex Sans Arabic", system-ui, sans-serif',
-  arabic:        '"Reem Kufi", "IBM Plex Sans Arabic", sans-serif',
+  editorialBold: '"Manrope", "IBM Plex Sans Arabic", system-ui, sans-serif',
+  editorialSans: '"Manrope", "IBM Plex Sans Arabic", system-ui, sans-serif',
+  display:       '"Manrope", "IBM Plex Sans Arabic", system-ui, sans-serif',
+  body:          '"Manrope", "IBM Plex Sans Arabic", system-ui, sans-serif',
+  arabic:        '"IBM Plex Sans Arabic", "Manrope", system-ui, sans-serif',
 } as const;
 
 /** Modular type scale (1.25 major-third) in rem. */

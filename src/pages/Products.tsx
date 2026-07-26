@@ -144,7 +144,7 @@ export default function Products() {
           href="/catalog"
           target="_blank"
           rel="noopener"
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-emerald-900 text-white text-sm hover:bg-emerald-800 transition shadow-lg"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-coal text-white text-sm hover:bg-coal transition shadow-lg"
         >
           📄 {isAr ? 'تحميل الكتالوج PDF' : 'Download Catalog (PDF)'}
         </a>
