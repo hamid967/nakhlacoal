@@ -229,6 +229,10 @@ export default function App() {
                   <Route path="addresses" element={<PortalPlaceholder title="العناوين" />} />
                   <Route path="profile" element={<PortalProfile />} />
                   <Route path="settings" element={<PortalSettings />} />
+                  <Route path="wholesale" element={<WholesaleDashboard />} />
+                  <Route path="wholesale/catalog" element={<WholesaleCatalog />} />
+                  <Route path="wholesale/bulk-order" element={<WholesaleBulkOrder />} />
+                  <Route path="wholesale/statement" element={<WholesaleStatement />} />
                   <Route path="*" element={<PortalPlaceholder />} />
                 </Route>
 
