@@ -168,7 +168,7 @@ export async function sendEmail(input: SendEmailInput): Promise<SendEmailResult>
         reply_to: input.replyTo ?? DEFAULT_REPLY_TO,
         to: [input.to],
         subject: input.subject,
-        html: input.html,
+        html: htmlWithUnsub,
         ...(input.attachments && input.attachments.length
           ? { attachments: input.attachments.map((a) => ({
               filename: a.filename,
