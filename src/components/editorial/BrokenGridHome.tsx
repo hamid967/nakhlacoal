@@ -10,6 +10,7 @@ import craftProcess from '@/assets/design/craft-process.jpg';
 import lifestyleMajlis from '@/assets/design/lifestyle-majlis.jpg';
 import textureMacro from '@/assets/design/texture-macro.jpg';
 import qualityLab from '@/assets/design/quality-lab.jpg';
+import { ResponsiveImage } from './ResponsiveImage';
 
 /* Shared eyebrow chip */
 function Eyebrow({ children }: { children: React.ReactNode }) {
@@ -68,13 +69,16 @@ export function BrokenGridHome() {
       <section className="relative min-h-[100vh] bg-dark text-dark-foreground overflow-hidden">
         {/* Image bleed */}
         <div className="absolute inset-y-0 right-0 w-full lg:w-[62%]">
-          <img
-            src={heroEditorial}
+          <ResponsiveImage
+            base="hero-editorial"
+            fallback={heroEditorial}
             alt=""
             className="h-full w-full object-cover opacity-90"
             fetchPriority="high"
+            loading="eager"
             width={1920}
             height={1088}
+            sizes="(max-width: 1024px) 100vw, 62vw"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-dark via-dark/60 to-transparent lg:from-dark lg:via-dark/40" />
         </div>
@@ -136,13 +140,14 @@ export function BrokenGridHome() {
             <div className="absolute -top-16 -left-4 lg:-left-8 z-0">
               <BigNumber n="01" />
             </div>
-            <img
-              src={palmOrigin}
+            <ResponsiveImage
+              base="palm-origin"
+              fallback={palmOrigin}
               alt={isAr ? 'مزارع النخيل السعودية' : 'Saudi palm groves'}
               className="relative z-10 w-full aspect-[16/10] object-cover shadow-luxe"
-              loading="lazy"
               width={1920}
               height={1088}
+              sizes="(max-width: 1024px) 100vw, 58vw"
             />
           </div>
           <div
@@ -213,11 +218,12 @@ export function BrokenGridHome() {
               to="/products"
               className="group relative col-span-12 lg:col-span-7 row-span-2 overflow-hidden bg-dark-2"
             >
-              <img
-                src={productHero}
+              <ResponsiveImage
+                base="product-hero"
+                fallback={productHero}
                 alt=""
                 className="absolute inset-0 h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105"
-                loading="lazy"
+                sizes="(max-width: 1024px) 100vw, 55vw"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-dark via-dark/20 to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-8 lg:p-12">
@@ -235,7 +241,7 @@ export function BrokenGridHome() {
               to="/products"
               className="group relative col-span-6 lg:col-span-3 row-span-1 overflow-hidden bg-dark-2"
             >
-              <img src={packagingImg} alt="" className="absolute inset-0 h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105" loading="lazy" />
+              <ResponsiveImage base="packaging" fallback={packagingImg} alt="" className="absolute inset-0 h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105" sizes="(max-width: 1024px) 50vw, 25vw" />
               <div className="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/30 to-transparent" />
               <div className="absolute bottom-0 p-6">
                 <p className="text-xs uppercase tracking-[0.24em] text-gold">Gift Edition</p>
@@ -261,7 +267,7 @@ export function BrokenGridHome() {
               to="/products"
               className="group relative col-span-12 lg:col-span-5 row-span-1 overflow-hidden bg-dark-2"
             >
-              <img src={textureMacro} alt="" className="absolute inset-0 h-full w-full object-cover opacity-70 transition-transform duration-1000 group-hover:scale-105" loading="lazy" />
+              <ResponsiveImage base="texture-macro" fallback={textureMacro} alt="" className="absolute inset-0 h-full w-full object-cover opacity-70 transition-transform duration-1000 group-hover:scale-105" sizes="(max-width: 1024px) 100vw, 40vw" />
               <div className="absolute inset-0 bg-gradient-to-r from-dark via-dark/40 to-transparent" />
               <div className="absolute inset-y-0 left-0 p-6 lg:p-8 flex flex-col justify-center max-w-xs">
                 <p className="text-xs uppercase tracking-[0.24em] text-gold">Shisha</p>
@@ -275,7 +281,7 @@ export function BrokenGridHome() {
 
       {/* ============ 4 · CRAFT PROCESS ============ */}
       <section className="relative py-24 lg:py-40 overflow-hidden bg-dark-2 text-dark-foreground">
-        <img src={craftProcess} alt="" className="absolute inset-0 h-full w-full object-cover opacity-25" loading="lazy" />
+        <ResponsiveImage base="craft-process" fallback={craftProcess} alt="" className="absolute inset-0 h-full w-full object-cover opacity-25" sizes="100vw" />
         <div className="absolute inset-0 bg-gradient-to-b from-dark-2/70 via-dark-2/85 to-dark-2" />
 
         <div className="relative container" dir={isAr ? 'rtl' : 'ltr'}>
@@ -310,11 +316,12 @@ export function BrokenGridHome() {
       <section className="relative py-24 lg:py-32 bg-background overflow-hidden">
         <div className="container grid grid-cols-12 gap-8 lg:gap-16 items-center" dir={isAr ? 'rtl' : 'ltr'}>
           <div className="col-span-12 lg:col-span-6 relative">
-            <img
-              src={qualityLab}
+            <ResponsiveImage
+              base="quality-lab"
+              fallback={qualityLab}
               alt={isAr ? 'مختبر جودة الفحم' : 'Charcoal quality lab'}
               className="w-full aspect-[4/3] object-cover shadow-luxe"
-              loading="lazy"
+              sizes="(max-width: 1024px) 100vw, 50vw"
             />
             <div className="hidden lg:block absolute -bottom-8 -right-8 bg-dark text-dark-foreground p-6 shadow-luxe max-w-[220px]">
               <p className="text-xs uppercase tracking-[0.24em] text-gold">ISO 9001</p>
@@ -367,14 +374,14 @@ export function BrokenGridHome() {
 
           <div className="grid grid-cols-12 gap-4 lg:gap-6">
             <div className="col-span-12 md:col-span-7 relative overflow-hidden group">
-              <img src={lifestyleMajlis} alt="" className="w-full aspect-[16/10] object-cover transition-transform duration-1000 group-hover:scale-105" loading="lazy" />
+              <ResponsiveImage base="lifestyle-majlis" fallback={lifestyleMajlis} alt="" className="w-full aspect-[16/10] object-cover transition-transform duration-1000 group-hover:scale-105" sizes="(max-width: 768px) 100vw, 58vw" />
             </div>
             <div className="col-span-12 md:col-span-5 grid grid-rows-2 gap-4 lg:gap-6">
               <div className="relative overflow-hidden group">
-                <img src={packagingImg} alt="" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" loading="lazy" />
+                <ResponsiveImage base="packaging" fallback={packagingImg} alt="" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" sizes="(max-width: 768px) 100vw, 40vw" />
               </div>
               <div className="relative overflow-hidden group">
-                <img src={productHero} alt="" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" loading="lazy" />
+                <ResponsiveImage base="product-hero" fallback={productHero} alt="" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" sizes="(max-width: 768px) 100vw, 40vw" />
               </div>
             </div>
           </div>
@@ -384,7 +391,7 @@ export function BrokenGridHome() {
       {/* ============ 7 · TEXTURE FEATURE ============ */}
       <section className="relative bg-dark text-dark-foreground overflow-hidden">
         <div className="relative">
-          <img src={textureMacro} alt="" className="w-full h-[70vh] object-cover opacity-70" loading="lazy" />
+          <ResponsiveImage base="texture-macro" fallback={textureMacro} alt="" className="w-full h-[70vh] object-cover opacity-70" sizes="100vw" />
           <div className="absolute inset-0 bg-gradient-to-t from-dark via-dark/60 to-transparent" />
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-center px-6" dir={isAr ? 'rtl' : 'ltr'}>
