@@ -568,6 +568,7 @@ export default function AdminEmails() {
           </div>
         </div>
       )}
+    </>
   );
 }
 
