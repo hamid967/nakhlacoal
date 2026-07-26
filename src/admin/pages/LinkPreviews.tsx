@@ -135,7 +135,7 @@ export default function AdminLinkPreviews() {
 
   return (
     <div className="a-page">
-      <SEO title="فحص معاينة الروابط — لوحة الأدمن" description="فحص Open Graph و Twitter Cards عبر Facebook Debugger و LinkedIn Post Inspector وتسجيل النتائج." />
+      <SEO title="فحص معاينة الروابط — لوحة الأدمن" description="فحص Open Graph و Twitter Cards عبر Facebook Debugger و LinkedIn Post Inspector وتسجيل النتائج." path="/admin/link-previews" noindex />
 
       <header className="a-page-header">
         <div className="flex items-center gap-3">
