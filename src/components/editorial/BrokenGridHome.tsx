@@ -391,7 +391,7 @@ export function BrokenGridHome() {
       {/* ============ 7 · TEXTURE FEATURE ============ */}
       <section className="relative bg-dark text-dark-foreground overflow-hidden">
         <div className="relative">
-          <img src={textureMacro} alt="" className="w-full h-[70vh] object-cover opacity-70" loading="lazy" />
+          <ResponsiveImage base="texture-macro" fallback={textureMacro} alt="" className="w-full h-[70vh] object-cover opacity-70" sizes="100vw" />
           <div className="absolute inset-0 bg-gradient-to-t from-dark via-dark/60 to-transparent" />
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-center px-6" dir={isAr ? 'rtl' : 'ltr'}>
