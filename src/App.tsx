@@ -246,6 +246,8 @@ export default function App() {
                   <Route path="wholesale/catalog" element={<WholesaleCatalog />} />
                   <Route path="wholesale/bulk-order" element={<WholesaleBulkOrder />} />
                   <Route path="wholesale/statement" element={<WholesaleStatement />} />
+                  <Route path="loyalty" element={<PortalLoyalty />} />
+                  <Route path="referrals" element={<PortalReferrals />} />
                   <Route path="*" element={<PortalPlaceholder />} />
                 </Route>
 
