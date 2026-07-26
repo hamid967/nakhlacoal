@@ -95,6 +95,7 @@ const WholesaleStatement = lazy(() => import('@/portal/pages/wholesale/Statement
 const AdminWholesaleLeads = lazy(() => import('@/admin/pages/wholesale/Leads'));
 const AdminWholesaleAccounts = lazy(() => import('@/admin/pages/wholesale/Accounts'));
 const AdminPriceTiers = lazy(() => import('@/admin/pages/wholesale/PriceTiers'));
+const AdminZatca = lazy(() => import('@/admin/pages/Zatca'));
 
 const PortalLayout = lazy(() => import('@/portal/PortalLayout'));
 const PortalDashboard = lazy(() => import('@/portal/pages/Dashboard'));
