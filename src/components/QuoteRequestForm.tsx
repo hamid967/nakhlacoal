@@ -112,14 +112,27 @@ export function QuoteRequestForm({ initialProduct, initialSku }: QuoteRequestFor
   };
 
   if (done) {
+    const fullId = done;
+    const shortId = String(fullId).slice(0, 8);
     return (
       <div className="rounded-2xl border border-sand0/30 bg-sand0/5 p-6 text-center">
         <CheckCircle2 className="size-10 text-sand0 mx-auto mb-3" />
         <h4 className="font-bold text-lg mb-1">تم استلام طلبك بنجاح</h4>
-        <p className="text-sm text-muted-foreground mb-4">
-          رقم الطلب: <span className="font-mono tabular-nums text-foreground">{String(done).slice(0, 8)}</span>
+        <p className="text-sm text-muted-foreground mb-2">
+          رقم الطلب: <span className="font-mono tabular-nums text-foreground">{shortId}</span>
         </p>
-        <Button variant="outline" size="sm" onClick={() => setDone(null)}>إرسال طلب جديد</Button>
+        <p className="text-[11px] text-muted-foreground mb-4">
+          احتفظ برقم الطلب الكامل لمتابعة الحالة لاحقاً.
+        </p>
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          <a
+            href={`/quote/track?id=${encodeURIComponent(fullId)}`}
+            className="inline-flex items-center rounded-md bg-gold px-3 py-1.5 text-xs font-semibold text-dark hover:bg-gold-hi"
+          >
+            تتبّع الطلب
+          </a>
+          <Button variant="outline" size="sm" onClick={() => setDone(null)}>إرسال طلب جديد</Button>
+        </div>
       </div>
     );
   }
