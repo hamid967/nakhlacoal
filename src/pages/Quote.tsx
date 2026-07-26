@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useSearchParams } from 'react-router-dom';
 import { FileText, Sparkles, MessageCircle, Phone, Mail, Clock, Calculator, Copy, Check, Send } from 'lucide-react';
