@@ -67,8 +67,8 @@ export default function ProductDetail() {
   const [notFound, setNotFound] = useState(false);
   const [selectedVariantId, setSelectedVariantId] = useState<string | null>(null);
   const [activeImage, setActiveImage] = useState<string | null>(null);
-
-  useEffect(() => {
+  const [adding, setAdding] = useState(false);
+  const [added, setAdded] = useState(false);
     if (!slug) return;
     let cancelled = false;
     setLoading(true);
