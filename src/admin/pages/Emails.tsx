@@ -128,6 +128,10 @@ export default function AdminEmails() {
       } else if (row.template === 'shipment-notification' && row.entity_id) {
         fn = 'send-shipment-notification';
         body = { shipmentId: row.entity_id, status: row.metadata?.shipment_status, force: true };
+      } else if (row.template === 'invoice-receipt' && row.entity_id) {
+        fn = 'send-invoice-receipt';
+        body = { invoiceId: row.entity_id, force: true };
+
 
       } else if (row.template === 'test-email') {
         fn = 'send-test-email';
