@@ -52,11 +52,17 @@ export function QuoteRequestForm() {
     }
     setSubmitting(true);
     try {
+      const d = parsed.data;
       const payload = {
-        ...parsed.data,
-        email: parsed.data.email || null,
-        destination: parsed.data.destination || null,
-        notes: parsed.data.notes || null,
+        full_name: d.full_name!,
+        company_name: d.company_name!,
+        phone: d.phone!,
+        email: d.email || null,
+        product: d.product!,
+        quantity: d.quantity!,
+        unit: d.unit || 'كرتون',
+        destination: d.destination || null,
+        notes: d.notes || null,
         user_id: user?.id ?? null,
       };
       const { data, error } = await supabase
