@@ -53,10 +53,15 @@ async def check_route(context, path):
     ))
 
     url = f"{BASE}{path}"
-    resp = await page.goto(url, wait_until="domcontentloaded", timeout=45_000)
-    # Poll for the Layout <main> to mount (lazy chunk + Suspense).
+    resp = await page.goto(url, wait_until="domcontentloaded", timeout=60_000)
+    try:
+        await page.wait_for_load_state("load", timeout=45_000)
+    except Exception:
+        pass
+    # Poll for the Layout <main> to mount (lazy chunk + Suspense; cold dev
+    # compilation can take 30-60s on first hit).
     main_seen = False
-    for _ in range(40):
+    for _ in range(120):
         if await page.locator("main#main-content").count() > 0:
             main_seen = True
             break
