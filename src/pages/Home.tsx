@@ -6,9 +6,9 @@ export default function Home() {
   return (
     <>
       <SEO
-        titleKey="seo.home.title"
-        descriptionKey="seo.home.description"
-        canonical="https://alnakhlacoal.com/"
+        title="فحم النخلة | Palm Charcoal — فحم سعودي فاخر"
+        description="فحم النخلة السعودي الفاخر — كربنة نقية، احتراق طويل، رماد شبه معدوم. من نخيل الجزيرة العربية إلى موائد العالم."
+        path="/"
       />
       <h1 className="sr-only">فحم النخلة | Palm Charcoal — Premium Saudi Charcoal</h1>
       <BrokenGridHome />
@@ -16,3 +16,4 @@ export default function Home() {
     </>
   );
 }
+
