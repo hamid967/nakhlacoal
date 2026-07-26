@@ -3,6 +3,8 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
 import { imagetools } from "vite-imagetools";
+import { visualizer } from "rollup-plugin-visualizer";
+import { VitePWA } from "vite-plugin-pwa";
 import { lcpPreload } from "./vite-plugins/lcp-preload";
 
 // https://vitejs.dev/config/
@@ -27,6 +29,50 @@ export default defineConfig(({ mode }) => ({
     }),
     // Inject <link rel="preload" fetchpriority="high"> for the most likely LCP image
     lcpPreload({ candidates: ['slide-coconut-trees', 'product-coconut', 'hero-charcoal'] }),
+    // Service Worker via Workbox — caches static assets, fonts, images, and Supabase Storage
+    // for near-instant repeat visits. Auto-updates in the background on new deploys.
+    VitePWA({
+      registerType: 'autoUpdate',
+      injectRegister: 'auto',
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,svg,png,webp,avif,woff2}'],
+        navigateFallbackDenylist: [/^\/api/, /^\/admin/, /^\/portal/, /supabase/],
+        runtimeCaching: [
+          {
+            urlPattern: ({ request }) => request.destination === 'image',
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'palm-images',
+              expiration: { maxEntries: 120, maxAgeSeconds: 60 * 60 * 24 * 30 },
+            },
+          },
+          {
+            urlPattern: ({ request }) => request.destination === 'font',
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'palm-fonts',
+              expiration: { maxEntries: 40, maxAgeSeconds: 60 * 60 * 24 * 365 },
+            },
+          },
+          {
+            urlPattern: /^https:\/\/.*\.supabase\.co\/storage\/v1\/object\/public\//,
+            handler: 'StaleWhileRevalidate',
+            options: {
+              cacheName: 'palm-storage',
+              expiration: { maxEntries: 80, maxAgeSeconds: 60 * 60 * 24 * 14 },
+            },
+          },
+        ],
+      },
+      manifest: false, // project ships its own public/manifest.webmanifest
+    }),
+    // Bundle analyzer — writes dist/stats.html on `ANALYZE=1 npm run build`.
+    process.env.ANALYZE ? visualizer({
+      filename: 'dist/stats.html',
+      gzipSize: true,
+      brotliSize: true,
+      template: 'treemap',
+    }) : null,
     mode === "development" && componentTagger(),
   ].filter(Boolean),
   resolve: {
