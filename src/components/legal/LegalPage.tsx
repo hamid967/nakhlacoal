@@ -23,7 +23,7 @@ export function LegalPage({ slug, titleAr, titleEn, descAr, descEn, updatedAt, c
 
   return (
     <div className="min-h-[70vh] bg-[hsl(var(--background))]" dir={isAr ? 'rtl' : 'ltr'}>
-      <SeoHead title={`${title} | ${isAr ? 'فحم النخلة' : 'Palm Charcoal'}`} description={desc} canonical={`https://nakhlacoal.lovable.app/${slug}`} />
+      <SeoHead title={`${title} | ${isAr ? 'فحم النخلة' : 'Palm Charcoal'}`} description={desc} />
       <article className="container max-w-3xl py-16 px-4">
         <header className="mb-10 border-b border-[hsl(var(--gold-hi)/0.2)] pb-6">
           <p className="text-xs uppercase tracking-[0.2em] text-[hsl(var(--gold-hi))]">
