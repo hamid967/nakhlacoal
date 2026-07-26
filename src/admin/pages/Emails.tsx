@@ -41,14 +41,16 @@ export default function AdminEmails() {
   const [runningCron, setRunningCron] = useState(false);
   const [autoConfirm, setAutoConfirm] = useState<boolean>(true);
   const [autoShip, setAutoShip] = useState<boolean>(true);
+  const [autoInvoice, setAutoInvoice] = useState<boolean>(true);
   const [savingToggle, setSavingToggle] = useState(false);
 
   const loadSettings = async () => {
     const { data } = await supabase.from('email_settings')
-      .select('auto_order_confirmation, auto_shipment_notification').eq('id', true).maybeSingle();
+      .select('auto_order_confirmation, auto_shipment_notification, auto_invoice_receipt').eq('id', true).maybeSingle();
     if (data) {
       setAutoConfirm(!!data.auto_order_confirmation);
       setAutoShip((data as any).auto_shipment_notification !== false);
+      setAutoInvoice((data as any).auto_invoice_receipt !== false);
     }
   };
   useEffect(() => { loadSettings(); }, []);
@@ -71,6 +73,16 @@ export default function AdminEmails() {
     if (error) { toast.error('تعذّر حفظ الإعداد'); return; }
     setAutoShip(next);
     toast.success(next ? 'تم تفعيل إشعار الشحن التلقائي' : 'تم تعطيل إشعار الشحن التلقائي');
+  };
+
+  const toggleAutoInvoice = async (next: boolean) => {
+    setSavingToggle(true);
+    const { error } = await supabase.from('email_settings')
+      .upsert({ id: true, auto_invoice_receipt: next, updated_at: new Date().toISOString() } as any);
+    setSavingToggle(false);
+    if (error) { toast.error('تعذّر حفظ الإعداد'); return; }
+    setAutoInvoice(next);
+    toast.success(next ? 'تم تفعيل إرسال إيصال الفاتورة تلقائياً' : 'تم تعطيل إرسال إيصال الفاتورة تلقائياً');
   };
 
 
@@ -116,6 +128,10 @@ export default function AdminEmails() {
       } else if (row.template === 'shipment-notification' && row.entity_id) {
         fn = 'send-shipment-notification';
         body = { shipmentId: row.entity_id, status: row.metadata?.shipment_status, force: true };
+      } else if (row.template === 'invoice-receipt' && row.entity_id) {
+        fn = 'send-invoice-receipt';
+        body = { invoiceId: row.entity_id, force: true };
+
 
       } else if (row.template === 'test-email') {
         fn = 'send-test-email';
@@ -251,6 +267,41 @@ export default function AdminEmails() {
           </span>
         </label>
       </div>
+
+      <div className="a-card p-4 flex items-center justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2 font-semibold" style={{ color: 'var(--a-text)' }}>
+            <BellRing className="w-4 h-4" style={{ color: 'var(--a-palm)' }} />
+            إيصال الفاتورة الضريبية (PDF مرفق تلقائياً)
+          </div>
+          <p className="text-xs mt-1" style={{ color: 'var(--a-text-muted)' }}>
+            يُرسَل للعميل تلقائيًا عند إصدار الفاتورة أو تغيّر حالتها إلى «مُصدرة/مدفوعة»، مع مرفق PDF متوافق مع ZATCA وسجل كامل في email_log.
+          </p>
+        </div>
+        <label className="inline-flex items-center gap-2 cursor-pointer">
+          <span className="text-sm" style={{ color: 'var(--a-text-muted)' }}>
+            {autoInvoice ? 'مُفعّل' : 'معطّل'}
+          </span>
+          <input
+            type="checkbox"
+            className="sr-only peer"
+            checked={autoInvoice}
+            disabled={savingToggle}
+            onChange={(e) => toggleAutoInvoice(e.target.checked)}
+          />
+          <span
+            className="relative w-11 h-6 rounded-full transition-colors"
+            style={{ background: autoInvoice ? 'var(--a-palm)' : '#cbd5e1' }}
+          >
+            <span
+              className="absolute top-0.5 w-5 h-5 rounded-full bg-white shadow transition-all"
+              style={{ [autoInvoice ? 'right' : 'left']: '2px' } as any}
+            />
+          </span>
+        </label>
+      </div>
+
+
 
 
       {/* Filters */}

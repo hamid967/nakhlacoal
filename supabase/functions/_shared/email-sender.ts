@@ -5,6 +5,12 @@ const GATEWAY_URL = 'https://connector-gateway.lovable.dev/resend';
 const DEFAULT_FROM = 'فحم النخلة | Palm Charcoal <no-reply@notify.alnakhlacoal.com>';
 const DEFAULT_REPLY_TO = 'mab355@gmail.com';
 
+export interface EmailAttachment {
+  filename: string;
+  content: string; // base64 encoded
+  content_type?: string;
+}
+
 export interface SendEmailInput {
   template: string;
   to: string;
@@ -17,6 +23,7 @@ export interface SendEmailInput {
   metadata?: Record<string, unknown>;
   triggeredBy?: string | null;
   admin?: SupabaseClient;
+  attachments?: EmailAttachment[];
 }
 
 export interface SendEmailResult {
@@ -76,6 +83,13 @@ export async function sendEmail(input: SendEmailInput): Promise<SendEmailResult>
         to: [input.to],
         subject: input.subject,
         html: input.html,
+        ...(input.attachments && input.attachments.length
+          ? { attachments: input.attachments.map((a) => ({
+              filename: a.filename,
+              content: a.content,
+              ...(a.content_type ? { content_type: a.content_type } : {}),
+            })) }
+          : {}),
       }),
     });
     const body = await r.json().catch(() => ({} as any));
