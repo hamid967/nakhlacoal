@@ -13,7 +13,7 @@ export default function Location() {
     '@type': 'LocalBusiness',
     '@id': 'https://alnakhlacoal.com/location#business',
     name: isAr ? 'فحم النخلة — Palm Charcoal' : 'Palm Charcoal',
-    image: 'https://alnakhlacoal.com/og-image.jpg',
+    image: 'https://alnakhlacoal.com/og-image.png',
     url: 'https://alnakhlacoal.com/location',
     telephone: brand.footer.phone,
     email: brand.footer.email,
