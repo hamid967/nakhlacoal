@@ -58,7 +58,14 @@ const OrderTracking = lazy(() => import('@/pages/OrderTracking'));
 const Catalog = lazy(() => import('@/pages/Catalog'));
 const CampaignLanding = lazy(() => import('@/pages/CampaignLanding'));
 const Checkout = lazy(() => import('@/pages/Checkout'));
+const CheckoutSuccess = lazy(() => import('@/pages/CheckoutSuccess'));
+const CheckoutFailed = lazy(() => import('@/pages/CheckoutFailed'));
+const Privacy = lazy(() => import('@/pages/legal/Privacy'));
+const Terms = lazy(() => import('@/pages/legal/Terms'));
+const RefundPolicy = lazy(() => import('@/pages/legal/RefundPolicy'));
+const ShippingPolicy = lazy(() => import('@/pages/legal/ShippingPolicy'));
 const Unsubscribe = lazy(() => import('@/pages/Unsubscribe'));
+
 
 const AdminLayout = lazy(() => import('@/admin/AdminLayout'));
 const AdminDashboard = lazy(() => import('@/admin/pages/Dashboard'));
@@ -224,7 +231,14 @@ export default function App() {
                   <Route path="/orders/:id" element={<ProtectedRoute><OrderTracking /></ProtectedRoute>} />
                   <Route path="/catalog" element={<Catalog />} />
                   <Route path="/checkout" element={<Checkout />} />
+                  <Route path="/checkout/success" element={<CheckoutSuccess />} />
+                  <Route path="/checkout/failed" element={<CheckoutFailed />} />
+                  <Route path="/privacy" element={<Privacy />} />
+                  <Route path="/terms" element={<Terms />} />
+                  <Route path="/refund-policy" element={<RefundPolicy />} />
+                  <Route path="/shipping-policy" element={<ShippingPolicy />} />
                   <Route path="/track/:id" element={<OrderTracking />} />
+
 
                   <Route path="*" element={<NotFound />} />
                 </Route>

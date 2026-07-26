@@ -1201,10 +1201,12 @@ export type Database = {
           grand_total_sar: number | null
           id: string
           items: Json | null
+          legal_accepted_at: string | null
           notes: string | null
           payment_method: string | null
           phone: string
           postal_code: string | null
+          pricing_snapshot: Json | null
           product_type: string
           quantity: number
           shipping_method: string | null
@@ -1233,10 +1235,12 @@ export type Database = {
           grand_total_sar?: number | null
           id?: string
           items?: Json | null
+          legal_accepted_at?: string | null
           notes?: string | null
           payment_method?: string | null
           phone: string
           postal_code?: string | null
+          pricing_snapshot?: Json | null
           product_type: string
           quantity: number
           shipping_method?: string | null
@@ -1265,10 +1269,12 @@ export type Database = {
           grand_total_sar?: number | null
           id?: string
           items?: Json | null
+          legal_accepted_at?: string | null
           notes?: string | null
           payment_method?: string | null
           phone?: string
           postal_code?: string | null
+          pricing_snapshot?: Json | null
           product_type?: string
           quantity?: number
           shipping_method?: string | null
@@ -1357,6 +1363,7 @@ export type Database = {
           pack_size: number | null
           price: number
           product_id: string
+          reserved_qty: number
           sku: string
           sort_order: number
           stock: number
@@ -1373,6 +1380,7 @@ export type Database = {
           pack_size?: number | null
           price: number
           product_id: string
+          reserved_qty?: number
           sku: string
           sort_order?: number
           stock?: number
@@ -1389,6 +1397,7 @@ export type Database = {
           pack_size?: number | null
           price?: number
           product_id?: string
+          reserved_qty?: number
           sku?: string
           sort_order?: number
           stock?: number
@@ -1789,6 +1798,54 @@ export type Database = {
         }
         Relationships: []
       }
+      stock_reservations: {
+        Row: {
+          created_at: string
+          expires_at: string
+          id: string
+          order_id: string | null
+          qty: number
+          released: boolean
+          session_id: string | null
+          variant_id: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          order_id?: string | null
+          qty: number
+          released?: boolean
+          session_id?: string | null
+          variant_id: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          order_id?: string | null
+          qty?: number
+          released?: boolean
+          session_id?: string | null
+          variant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stock_reservations_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stock_reservations_variant_id_fkey"
+            columns: ["variant_id"]
+            isOneToOne: false
+            referencedRelation: "product_variants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       testimonials: {
         Row: {
           author_name: string
@@ -2068,6 +2125,7 @@ export type Database = {
         Args: { _category: string; _email: string }
         Returns: boolean
       }
+      expire_stock_reservations: { Args: never; Returns: number }
       get_quote_status: {
         Args: { _id: string; _phone: string }
         Returns: {
@@ -2087,6 +2145,10 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      release_order_reservations: {
+        Args: { _order_id: string }
+        Returns: number
       }
     }
     Enums: {

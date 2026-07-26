@@ -139,7 +139,9 @@ export function LuxFooter() {
 
           <FooterCol title={isAr ? 'الدعم' : 'Support'}>
             <FooterLink to="/contact">{isAr ? 'تواصل معنا' : 'Contact'}</FooterLink>
-            <FooterLink to="/shipping-returns">{isAr ? 'الشحن والإرجاع' : 'Shipping & Returns'}</FooterLink>
+            <FooterLink to="/shipping-policy">{isAr ? 'سياسة الشحن' : 'Shipping Policy'}</FooterLink>
+            <FooterLink to="/refund-policy">{isAr ? 'سياسة الاسترجاع' : 'Refund Policy'}</FooterLink>
+
             <FooterLink to="/portal">{isAr ? 'بوابة العملاء' : 'Customer Portal'}</FooterLink>
             <FooterLink to="/auth">{isAr ? 'تسجيل الدخول' : 'Sign In'}</FooterLink>
           </FooterCol>
@@ -217,7 +219,16 @@ export function LuxFooter() {
           <Link to="/terms" className="hover:text-gold-hi transition-colors">
             {isAr ? 'الشروط' : 'Terms'}
           </Link>
+          <span className="h-3 w-px bg-gold/20" />
+          <Link to="/refund-policy" className="hover:text-gold-hi transition-colors">
+            {isAr ? 'الاسترجاع' : 'Refunds'}
+          </Link>
+          <span className="h-3 w-px bg-gold/20" />
+          <Link to="/shipping-policy" className="hover:text-gold-hi transition-colors">
+            {isAr ? 'الشحن' : 'Shipping'}
+          </Link>
         </div>
+
       </div>
     </footer>
   );
