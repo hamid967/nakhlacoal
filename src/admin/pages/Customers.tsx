@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { Users, Search, Plus, Pencil, Trash2, X, Loader2 } from 'lucide-react';
+import { Users, Search, Plus, Pencil, Trash2, X, Loader2, TrendingUp, ShoppingBag, Crown, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
+import { logActivity } from '../lib/activity';
 
 type Customer = {
   id: string;
@@ -34,22 +35,50 @@ const empty: Partial<Customer> = {
   notes: '',
 };
 
+type OrderRow = {
+  id: string; created_at: string; product_type: string | null;
+  quantity: number | null; unit: string | null; status: string | null;
+  contact_name?: string | null; phone?: string | null; email?: string | null;
+  company_name?: string | null;
+};
+
+type Segment = 'vip' | 'loyal' | 'active' | 'new';
+const SEGMENT_META: Record<Segment, { label: string; tint: string; icon: typeof Crown }> = {
+  vip:    { label: 'VIP',     tint: 'gold',   icon: Crown },
+  loyal:  { label: 'منتظم',   tint: 'green',  icon: TrendingUp },
+  active: { label: 'نشط',     tint: 'blue',   icon: ShoppingBag },
+  new:    { label: 'جديد',    tint: 'violet', icon: Sparkles },
+};
+
+function segmentOf(count: number, revenue: number): Segment {
+  if (revenue >= 50000 || count >= 20) return 'vip';
+  if (count >= 5) return 'loyal';
+  if (count >= 1) return 'active';
+  return 'new';
+}
+
 export default function AdminCustomers() {
   const [rows, setRows] = useState<Customer[]>([]);
+  const [allOrders, setAllOrders] = useState<OrderRow[]>([]);
+  const [inv, setInv] = useState<any[]>([]);
   const [q, setQ] = useState('');
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState<Partial<Customer>>(empty);
+  const [detail, setDetail] = useState<Customer | null>(null);
 
   const load = async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from('customers')
-      .select('*')
-      .order('created_at', { ascending: false });
+    const [{ data: cs, error }, { data: os }, { data: iv }] = await Promise.all([
+      supabase.from('customers').select('*').order('created_at', { ascending: false }),
+      supabase.from('orders').select('id, created_at, product_type, quantity, unit, status, contact_name, phone, email, company_name').order('created_at', { ascending: false }).limit(2000),
+      supabase.from('inventory_items').select('*'),
+    ]);
     if (error) toast.error(error.message);
-    setRows((data as Customer[]) || []);
+    setRows((cs as Customer[]) || []);
+    setAllOrders((os as OrderRow[]) || []);
+    setInv(iv || []);
     setLoading(false);
   };
 
