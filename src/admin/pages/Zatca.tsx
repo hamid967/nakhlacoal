@@ -51,6 +51,8 @@ type ZatcaInvoice = {
   cleared_at: string | null;
   created_at: string;
   updated_at: string | null;
+  alerted_at?: string | null;
+  alert_count?: number | null;
 };
 
 const STATUS_COLORS: Record<string, string> = {
