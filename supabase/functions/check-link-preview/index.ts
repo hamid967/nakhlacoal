@@ -64,7 +64,46 @@ function parseMeta(html: string) {
   };
 }
 
-function computeWarnings(meta: ReturnType<typeof parseMeta>) {
+const EXPECTED_W = 1200;
+const EXPECTED_H = 630;
+
+function warnForImage(
+  label: 'og:image' | 'twitter:image',
+  url: string | null | undefined,
+  declaredW: string | null | undefined,
+  declaredH: string | null | undefined,
+  probes: Record<string, ImageProbeResult>,
+): { warnings: string[]; probe: ImageProbeResult | null } {
+  const out: string[] = [];
+  if (!url) return { warnings: out, probe: null };
+  const probe = probes[url] ?? null;
+  if (!probe) return { warnings: out, probe: null };
+  if (!probe.ok) {
+    out.push(`${label} تعذّر جلبه (${probe.error}${probe.httpStatus ? ` — HTTP ${probe.httpStatus}` : ''})`);
+    return { warnings: out, probe };
+  }
+  const { width, height, bytes, format, contentType } = probe.dims;
+  if (width !== EXPECTED_W || height !== EXPECTED_H) {
+    out.push(`${label} أبعاده الفعلية ${width}×${height} (المتوقع ${EXPECTED_W}×${EXPECTED_H})`);
+  }
+  if (declaredW && Number(declaredW) !== width) {
+    out.push(`${label}:width المُعلَن ${declaredW} لا يطابق الفعلي ${width}`);
+  }
+  if (declaredH && Number(declaredH) !== height) {
+    out.push(`${label}:height المُعلَن ${declaredH} لا يطابق الفعلي ${height}`);
+  }
+  if (bytes > 5 * 1024 * 1024) {
+    out.push(`${label} أكبر من 5MB (${Math.round(bytes / 1024)}KB) — قد ترفضه بعض المنصات`);
+  }
+  // Sanity: file format usually implied by URL extension — warn on mismatch that will confuse crawlers.
+  if (contentType && !contentType.toLowerCase().startsWith('image/')) {
+    out.push(`${label} Content-Type غير صحيح (${contentType}) — يجب أن يبدأ بـ image/`);
+  }
+  void format;
+  return { warnings: out, probe };
+}
+
+function computeWarnings(meta: ReturnType<typeof parseMeta>, probes: Record<string, ImageProbeResult> = {}) {
   const warnings: string[] = [];
   if (!meta.ogTitle) warnings.push('og:title مفقود');
   if (!meta.ogDescription) warnings.push('og:description مفقود');
@@ -76,8 +115,13 @@ function computeWarnings(meta: ReturnType<typeof parseMeta>) {
   if (meta.ogImage && meta.twitterImage && meta.ogImage !== meta.twitterImage) {
     warnings.push('og:image لا يطابق twitter:image');
   }
-  if (meta.ogImageWidth && meta.ogImageWidth !== '1200') warnings.push(`og:image:width = ${meta.ogImageWidth} (المتوقع 1200)`);
-  if (meta.ogImageHeight && meta.ogImageHeight !== '630') warnings.push(`og:image:height = ${meta.ogImageHeight} (المتوقع 630)`);
+  // Real-dimension warnings (falls back silently if the image couldn't be probed).
+  warnings.push(
+    ...warnForImage('og:image', meta.ogImage, meta.ogImageWidth, meta.ogImageHeight, probes).warnings,
+  );
+  if (meta.twitterImage && meta.twitterImage !== meta.ogImage) {
+    warnings.push(...warnForImage('twitter:image', meta.twitterImage, null, null, probes).warnings);
+  }
   if (!meta.canonical) warnings.push('canonical مفقود');
   return warnings;
 }
