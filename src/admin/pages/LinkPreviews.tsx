@@ -335,6 +335,7 @@ export default function AdminLinkPreviews() {
                 <th>سليم</th>
                 <th>تحذير</th>
                 <th>خطأ</th>
+                <th className="text-end">تصدير</th>
               </tr>
             </thead>
             <tbody>
@@ -346,10 +347,20 @@ export default function AdminLinkPreviews() {
                   <td className="text-emerald-600">{b.ok}</td>
                   <td className="text-amber-600">{b.warn}</td>
                   <td className="text-rose-600">{b.error}</td>
+                  <td>
+                    <div className="flex items-center justify-end gap-1">
+                      <button className="a-icon-btn" title="تصدير CSV" onClick={() => exportBatch(b.batch_id, 'csv')}>
+                        <FileDown size={14} />
+                      </button>
+                      <button className="a-icon-btn" title="تصدير JSON" onClick={() => exportBatch(b.batch_id, 'json')}>
+                        <FileJson size={14} />
+                      </button>
+                    </div>
+                  </td>
                 </tr>
               ))}
               {batches.length === 0 && (
-                <tr><td colSpan={6} className="text-center py-6 opacity-60">لا توجد فحوصات مجدولة بعد. اضغط «تشغيل الآن» لبدء أول مجموعة.</td></tr>
+                <tr><td colSpan={7} className="text-center py-6 opacity-60">لا توجد فحوصات مجدولة بعد. اضغط «تشغيل الآن» لبدء أول مجموعة.</td></tr>
               )}
             </tbody>
           </table>
