@@ -60,11 +60,27 @@ export default function Products() {
   const minPrice = minParam && !Number.isNaN(Number(minParam)) ? Math.max(0, Number(minParam)) : null;
   const maxPrice = maxParam && !Number.isNaN(Number(maxParam)) ? Math.max(0, Number(maxParam)) : null;
 
+  const PER_PAGE_OPTIONS = [12, 24, 48] as const;
+  const perPageParam = Number(params.get('perPage'));
+  const perPage = (PER_PAGE_OPTIONS as readonly number[]).includes(perPageParam) ? perPageParam : 12;
+  const pageParam = Number(params.get('page'));
+  const page = Number.isInteger(pageParam) && pageParam > 0 ? pageParam : 1;
+
+  const FILTER_KEYS = new Set(['q', 'cat', 'sort', 'min', 'max', 'stock', 'perPage']);
   const setParam = (k: string, v: string | null) => {
     const next = new URLSearchParams(params);
     if (!v || v === 'all' || v === 'featured' || v === '0') next.delete(k);
     else next.set(k, v);
+    // Reset pagination when a filter/sort/search changes
+    if (FILTER_KEYS.has(k)) next.delete('page');
     setParams(next, { replace: true });
+  };
+  const goToPage = (n: number) => {
+    const next = new URLSearchParams(params);
+    if (n <= 1) next.delete('page');
+    else next.set('page', String(n));
+    setParams(next, { replace: false });
+    if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
 
