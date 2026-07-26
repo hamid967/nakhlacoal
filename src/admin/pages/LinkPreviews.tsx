@@ -262,6 +262,55 @@ export default function AdminLinkPreviews() {
         </div>
       </section>
 
+      {/* Scheduled bi-weekly audit */}
+      <section className="a-card mt-4">
+        <div className="flex items-start justify-between flex-wrap gap-3">
+          <div className="flex items-start gap-3">
+            <div className="a-icon-tile"><CalendarClock size={18} /></div>
+            <div>
+              <h2 className="a-h2">الفحص الدوري لخريطة الموقع</h2>
+              <p className="a-sub">يعمل تلقائيًا كل أسبوعين (اليوم 1 و15 من الشهر، 03:00 UTC) ويفحص جميع روابط <code className="a-mono text-xs">sitemap.xml</code>. كل تشغيل يُحفظ كمجموعة موحّدة بتاريخها.</p>
+            </div>
+          </div>
+          <button className="a-btn a-btn-primary" disabled={runningBatch} onClick={runScheduledNow}>
+            {runningBatch ? <Loader2 size={14} className="animate-spin" /> : <PlayCircle size={14} />}
+            <span>تشغيل الآن</span>
+          </button>
+        </div>
+
+        <div className="mt-4 overflow-x-auto">
+          <table className="a-table w-full">
+            <thead>
+              <tr>
+                <th>التاريخ</th>
+                <th>المعرّف</th>
+                <th>الإجمالي</th>
+                <th>سليم</th>
+                <th>تحذير</th>
+                <th>خطأ</th>
+              </tr>
+            </thead>
+            <tbody>
+              {batches.map((b) => (
+                <tr key={b.batch_id}>
+                  <td className="a-mono text-xs whitespace-nowrap">{new Date(b.started_at).toLocaleString('ar-SA')}</td>
+                  <td className="a-mono text-[10px] opacity-60">{b.batch_id.slice(0, 8)}</td>
+                  <td>{b.total}</td>
+                  <td className="text-emerald-600">{b.ok}</td>
+                  <td className="text-amber-600">{b.warn}</td>
+                  <td className="text-rose-600">{b.error}</td>
+                </tr>
+              ))}
+              {batches.length === 0 && (
+                <tr><td colSpan={6} className="text-center py-6 opacity-60">لا توجد فحوصات مجدولة بعد. اضغط «تشغيل الآن» لبدء أول مجموعة.</td></tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+
+
       {/* Result */}
       {result && (
         <section className="a-card mt-4">
