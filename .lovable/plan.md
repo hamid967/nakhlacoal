@@ -1,111 +1,69 @@
-# فحم النخلة — $10K Premium Redesign · Change Manifest & Plan
+# Phase 1 — Foundations Hardening
 
-مرجع: `ALNAKHLA_COAL_LOVABLE_PREMIUM_REDESIGN.md` (872 سطرًا).
-حالة: **بانتظار الاعتماد قبل بدء التنفيذ الفعلي** (Phase 0 من الملف).
+الهدف: إغلاق مخاطر P0 التي رصدها تقرير Phase 0 قبل ربط أي بوابة دفع أو إطلاق تجاري كامل.
 
----
+## نطاق العمل
 
-## 0) ملخّص الفارق بين الحالة الحالية والمستهدف
+### 1) التحقق من السعر من جانب الخادم (Server-side pricing)
+- إنشاء Edge Function `checkout-validate` تعيد حساب `subtotal / VAT / shipping / total` من `product_variants` + `coupons` + `shipping_rates` بدل الاعتماد على قيم المتصفح.
+- تعديل `Checkout.tsx` ليستدعي الدالة قبل إنشاء الطلب، ورفض أي تباين > 0.01 SAR.
+- تخزين snapshot السعر النهائي داخل `orders.pricing_snapshot` (JSONB) للتدقيق.
 
-| المحور | الحالي | المستهدف في الملف |
-|---|---|---|
-| الهوية | Emerald Prestige (كريم + زمردي + ذهبي) | Coal + Palm Gold + Ember + Ivory (داكن أولًا) |
-| الخطوط | DM Serif Display + Plus Jakarta + Reem Kufi | IBM Plex Sans Arabic + Manrope فقط |
-| الصفحة الرئيسية | 8 أقسام editorial | 14 قسم محدد + AnnouncementBar + MegaMenu |
-| المسارات | ~30 مسارًا موجودًا | 20 مسارًا محددًا (بعضها ناقص: `/our-story`, `/sustainability`, `/journal/*`, `/verify-batch`, `/shipping-returns`, `/order-success`) |
-| i18n | RTL/LTR شغّال، لكن كثير من النصوص Hardcoded | كل نص من ملفات ترجمة |
-| المخطط | 27 جدول (orders/invoices/…) | يضيف: `product_variants`, `product_images`, `categories`, `inventory_movements`, `carts/cart_items`, `order_items`, `addresses`, `articles`, `testimonials`, `newsletter_subscribers`, `wholesale_leads`, `export_leads`, `site_settings`, `certifications`, `production_batches` |
-| الدفع | غير مربوط ببوابة فعلية | يجب طبقة Integration حقيقية (بدون محاكاة نجاح) |
-| المكونات | مكتبة editorial جزئية | 31 مكونًا محددًا (AnnouncementBar, MegaMenu, MiniCart, QuantityStepper, VariantSelector, PhoneInput, FilterDrawer …) |
+### 2) حجز المخزون (Inventory reservation)
+- عمود `reserved_qty` على `product_variants` + جدول `stock_reservations(order_id, variant_id, qty, expires_at)`.
+- Trigger على `orders` عند `pending`: يزيد `reserved_qty`؛ عند `paid` يخصمه من `stock_qty`؛ عند `cancelled/expired` يحرره.
+- Cron يمسح الحجوزات المنتهية كل 10 دقائق.
 
----
+### 3) أدوار الموظفين (RBAC توسعة)
+- إضافة `manager`, `accountant`, `warehouse`, `support` إلى enum `app_role`.
+- تحديث RLS على `orders / invoices / shipments / inventory_items` لتقييد كل دور بصلاحياته:
+  - manager: كل شيء عدا حذف
+  - accountant: قراءة + تعديل الفواتير فقط
+  - warehouse: قراءة الطلبات + تحديث الشحنات والمخزون
+  - support: قراءة الطلبات والعملاء فقط
 
-## 1) ما سيُحفظ كما هو (لا يُمَس)
+### 4) الصفحات القانونية (Compliance content)
+- `/privacy` — سياسة الخصوصية بصياغة PDPL السعودي (ثنائي اللغة).
+- `/terms` — شروط الاستخدام والبيع.
+- `/refund-policy` — سياسة الاسترجاع والاستبدال.
+- `/shipping-policy` — سياسة الشحن.
+- روابط في `LuxFooter.tsx` + في checkout كـ checkbox موافقة إجباري.
 
-- كل جداول Supabase الحيّة وسياسات RLS.
-- Edge Functions (email/notifications/ZATCA/invoices/chat-assistant).
-- بيانات المنتجات والطلبات والعملاء الفعلية.
-- `src/integrations/supabase/*` (auto-generated).
-- منطق المصادقة والأدوار (`user_roles`, `has_role`).
-- إعدادات SEO الأساسية والـ Workflows (lhci, security-scan, deadcode).
+### 5) صفحات نتائج الدفع (Payment result stubs)
+- `/checkout/success?order=...` و `/checkout/failed` جاهزتان لأي بوابة دفع لاحقة.
 
-## 2) ما سيُعاد بناؤه
+## تفاصيل تقنية
 
-- `src/index.css`: طبقة Design Tokens جديدة (`--coal-*`, `--palm-gold`, `--ember`, `--sand`, `--ivory`) مع الاحتفاظ بالأسماء الوسيطة (`--background`, `--primary`…) لعدم كسر shadcn.
-- `tailwind.config.ts`: mapping للألوان الجديدة + font-families الجديدة.
-- `index.html`: استبدال الخطوط بـ IBM Plex Sans Arabic + Manrope (font-display: swap).
-- **الصفحة الرئيسية** (`src/pages/Home.tsx` + `src/components/editorial/*`): إعادة تصميم كامل وفق §7 (14 قسمًا) بلغة Coal + Gold.
-- Header + Footer + MegaMenu + AnnouncementBar (§7.1–7.2, 7.14).
-- Product Listing + Product Detail (§8).
-- Cart + Checkout + Order Success + Track Order.
-- صفحات B2B: `/wholesale` + `/export` مع نموذج التأهيل الكامل (§9).
-- لوحة الإدارة: تنظيم موديولات §10 على الموجود حاليًا (بدون إعادة بناء كاملة).
+**جداول جديدة:**
+```text
+stock_reservations (id, order_id FK, variant_id FK, qty, expires_at, created_at)
+```
 
-## 3) ما سيُضاف (جديد)
+**تعديلات جداول:**
+```text
+product_variants  + reserved_qty int default 0
+orders            + pricing_snapshot jsonb, legal_accepted_at timestamptz
+app_role enum     + manager, accountant, warehouse, support
+```
 
-- مسارات: `/our-story`, `/sustainability`, `/journal`, `/journal/[slug]`, `/order-success`, `/shipping-returns`, `/verify-batch`.
-- جداول جديدة (Migration واحدة، غير مدمّرة): `addresses`, `product_variants`, `product_images`, `categories`, `carts`, `cart_items`, `order_items`, `articles`, `testimonials`, `newsletter_subscribers`, `wholesale_leads`, `export_leads`, `site_settings`, `certifications`, `production_batches`, `inventory_movements`.
-- مكوّنات مكتبة الواجهة الـ31 المطلوبة (§17).
-- Schema JSON-LD: Organization, WebSite, BreadcrumbList, Product, Offer, FAQPage, Article.
-- `hreflang` كامل + sitemap ديناميكي متعدد اللغات.
+**Edge Functions:**
+- `checkout-validate` (POST): input = cart items + coupon + shipping_id → output = authoritative totals + signed token يُمرَّر لخطوة إنشاء الطلب.
 
-## 4) ما سيُحذف
+**RLS pattern:** `has_role(auth.uid(),'manager') OR has_role(auth.uid(),'admin')` على كل جدول حساس.
 
-- الثيمات القديمة (`data-theme="noir"`, `"sand"`, hue slider) — تعارض مع هوية Coal الجديدة.
-- أي أصل تصميم "Emerald Prestige" غير مستخدم بعد الترقية (تنظيف dead-code لاحقًا عبر knip).
-- عدم حذف أي بيانات أو Edge Function.
+**اختبارات القبول:**
+1. محاولة تعديل `total_amount` من المتصفح ترفض بـ 400.
+2. طلبان متزامنان على نفس الـ variant الأخير: أحدهما ينجح والآخر يرفض.
+3. مستخدم `accountant` لا يستطيع تعديل `orders.status`.
+4. Checkout بدون قبول الشروط يرفض.
 
-## 5) مخاطر يجب التنبّه لها
+## خارج النطاق
+- بوابة الدفع الحقيقية (Phase 2 مع Moyasar/HyperPay/Tap).
+- ZATCA Phase-2 API integration.
+- B2B wholesale portal (Phase 3).
 
-1. **بوابة الدفع**: الملف يمنع محاكاة نجاح الدفع. Checkout الحالي ينشئ طلبًا بدون charge. الحل: طبقة Integration فارغة + طلب مفاتيح Stripe/Moyasar عند اعتمادها (secret via add_secret).
-2. **بيانات وهمية**: الملف يمنع Lorem / logos / testimonials وهمية. سنعتمد Empty States واضحة حتى يزود المدير محتوى حقيقي.
-3. **الأداء**: Lighthouse ≥90 على الجوال — نحتاج تحسين حزم framer-motion و three.js إن بقيت.
-4. **502 Bad Gateway (P0)**: الملف يذكر خطأ خارجي. الاستضافة عبر Lovable — يُبلَّغ للفريق ولا يُعالج من داخل الكود.
-
----
-
-## 6) الخطة الزمنية (7 مراحل، دفعات قابلة للاعتماد)
-
-كل مرحلة = رسالة/دفعة تنتهي بـ Diff قابل للمراجعة.
-
-### Phase 1 — Foundation (هذه الدفعة إن اعتُمدت)
-- استبدال `src/index.css` بطبقة tokens جديدة (Coal + Palm Gold + Ember + Ivory).
-- تحديث `tailwind.config.ts` بالألوان والخطوط الجديدة.
-- تحميل IBM Plex Sans Arabic + Manrope في `index.html` (preconnect + swap).
-- تحديث `mem://index.md` بالهوية الجديدة.
-- إزالة `data-theme` toggle من `ThemeToggle.tsx` (اختصاره لـ Auto/Light/Dark فقط).
-
-### Phase 2 — Header + Footer + Announcement + MegaMenu
-- `AnnouncementBar` (dismissible + localStorage).
-- إعادة صياغة `LuxNav` بألوان Coal + MegaMenu للمنتجات.
-- Footer وفق §7.14 مع `tel:+966540060085`.
-
-### Phase 3 — Home (14 قسمًا)
-- إعادة بناء `Home.tsx` وأقسام `editorial/*` وفق §7.1–7.14.
-
-### Phase 4 — Commerce
-- `/products` (فلاتر + URL params + skeleton).
-- `/products/[slug]` (Gallery + Variants + Specs Accordion + JSON-LD Product).
-- `/cart`, `/checkout`, `/order-success`, `/track-order`.
-- Migration الجداول التجارية الجديدة.
-
-### Phase 5 — B2B + Content
-- `/wholesale`, `/export` + نموذج التأهيل + جدولا `wholesale_leads`/`export_leads`.
-- `/our-story`, `/sustainability`, `/journal`, `/journal/[slug]`, `/verify-batch`, `/shipping-returns`.
-
-### Phase 6 — Admin polish
-- تنظيم موديولات §10 داخل `AdminLayout` الحالي (لا إعادة بناء).
-- CRUD للمنتجات/المقالات/الشهادات/AnnouncementBar/SEO.
-
-### Phase 7 — Hardening
-- Accessibility (WCAG 2.2 AA) sweep.
-- Performance (LCP/CLS/INP) + budgets.
-- SEO (hreflang + sitemap + robots).
-- QA smoke على 320/375/768/1024/1440/1920.
-- Cross-browser via Playwright.
-
----
-
-## 7) الاعتماد المطلوب
-
-قل **"ابدأ Phase 1"** فقط، وأنفّذ الدفعة الأولى (Foundation) في رسالة واحدة، ثم أنتقل للتي تليها بعد اعتمادك — أو **"ابدأ كل المراحل تباعًا"** لأخوض الدفعات جميعها بدون توقف بينها (يستهلك رصيدًا كبيرًا وقد يستغرق عدة جولات).
+## المخرجات
+- 1 migration واحدة موحّدة للجداول والأدوار وRLS.
+- 1 Edge Function جديدة + نشرها.
+- 4 صفحات قانونية + تحديث Footer وCheckout.
+- تقرير قبول موجز في نهاية التنفيذ.
