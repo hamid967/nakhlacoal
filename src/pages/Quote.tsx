@@ -1,12 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useSearchParams } from 'react-router-dom';
 import { FileText, Sparkles, MessageCircle, Phone, Mail, Clock, Calculator, Copy, Check, Send } from 'lucide-react';
+import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { QuoteForm } from '@/components/QuoteBuilder';
 import { QuoteRequestForm } from '@/components/QuoteRequestForm';
 import { PRICING } from '@/data/pricing';
 import { toast } from 'sonner';
+
+// Strict URL param schemas — reject anything that isn't a clean slug/SKU.
+const SlugSchema = z.string().trim().min(1).max(80).regex(/^[a-z0-9](?:[a-z0-9-]{0,78}[a-z0-9])?$/i);
+const SkuSchema = z.string().trim().min(1).max(64).regex(/^[A-Z0-9](?:[A-Z0-9._-]{0,62}[A-Z0-9])?$/i);
 
 const WHATSAPP_NUMBER = '966540060085';
 const ORDER_EMAIL = 'nakhlacoal@gmail.com';
@@ -28,10 +33,32 @@ const unitAr = (u: string) => ({ kg: 'كجم', carton: 'كرتون', ton: 'طن'
 
 export default function Quote() {
   const [sp] = useSearchParams();
-  const initialSlug = sp.get('product') || undefined;
-  const validSlug = initialSlug && PRICING[initialSlug] ? initialSlug : undefined;
   const [live, setLive] = useState<LiveQuote | null>(null);
   const [copied, setCopied] = useState(false);
+
+  // Validate ?product= and ?variant= against strict schemas AND known catalog data.
+  const { validSlug, validSku, rejected } = useMemo(() => {
+    const rawSlug = sp.get('product');
+    const rawSku = sp.get('variant');
+    const bad: string[] = [];
+
+    const slugParse = rawSlug ? SlugSchema.safeParse(rawSlug) : null;
+    const slug = slugParse?.success && PRICING[slugParse.data] ? slugParse.data : undefined;
+    if (rawSlug && !slug) bad.push('product');
+
+    const skuParse = rawSku ? SkuSchema.safeParse(rawSku) : null;
+    const sku = skuParse?.success ? skuParse.data.toUpperCase() : undefined;
+    if (rawSku && !sku) bad.push('variant');
+
+    return { validSlug: slug, validSku: sku, rejected: bad };
+  }, [sp]);
+
+  useEffect(() => {
+    if (rejected.length) {
+      toast.error(`تم تجاهل باراميترات غير صالحة: ${rejected.join('، ')}`);
+    }
+  }, [rejected]);
+
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'auto' });
@@ -105,6 +132,11 @@ export default function Quote() {
               <FileText className="size-5 text-gold" />
               <h2 className="text-lg font-bold">منشئ عرض السعر</h2>
             </div>
+            {validSku ? (
+              <div className="mb-3 text-xs text-muted-foreground">
+                المنتج المطلوب: <span className="font-mono text-gold">{validSku}</span>
+              </div>
+            ) : null}
             <QuoteForm initialSlug={validSlug} />
 
             {/* Formal request form — persists to backend for sales follow-up */}
