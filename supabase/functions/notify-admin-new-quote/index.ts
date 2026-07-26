@@ -62,10 +62,14 @@ Deno.serve(async (req) => {
 
     const html = brandedShell({
       title: 'طلب عرض سعر جديد',
-      intro: `تم استلام طلب عرض سعر جديد رقم <b>${esc(qid)}</b>. يرجى المراجعة والرد على العميل في أقرب وقت.`,
-      bodyHtml: `<table style="width:100%;border-collapse:collapse;font-family:inherit">${table}</table>`,
-      ctaLabel: 'فتح لوحة الإدارة',
-      ctaUrl: 'https://alnakhlacoal.com/admin/quotes',
+      bodyHtml: `
+        <p style="margin:0 0 16px;color:#333;line-height:1.7">
+          تم استلام طلب عرض سعر جديد رقم <b>${esc(qid)}</b>. يرجى المراجعة والرد على العميل في أقرب وقت.
+        </p>
+        <table style="width:100%;border-collapse:collapse;font-family:inherit;margin-top:8px">${table}</table>
+        <div style="margin-top:24px;text-align:center">
+          <a href="https://alnakhlacoal.com/admin/quotes" style="display:inline-block;background:#1A4A00;color:#f4e4b2;padding:12px 24px;border-radius:10px;text-decoration:none;font-weight:600">فتح لوحة الإدارة</a>
+        </div>`,
     });
 
     const result = await sendEmail({
