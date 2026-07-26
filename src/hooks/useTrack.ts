@@ -23,7 +23,7 @@ export async function track(event: string, properties: Record<string, unknown> =
       session_id: getSessionId(),
       user_id: userData.user?.id ?? null,
       event_name: event,
-      properties,
+      properties: properties as never,
       url: typeof window !== 'undefined' ? window.location.pathname + window.location.search : null,
       referrer: typeof document !== 'undefined' ? document.referrer || null : null,
       user_agent: typeof navigator !== 'undefined' ? navigator.userAgent : null,
