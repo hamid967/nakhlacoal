@@ -54,10 +54,26 @@ export default function AdminQuotes() {
 
   useEffect(() => { load(); }, []);
 
-  const filtered = useMemo(
-    () => (statusFilter ? rows.filter((r) => r.status === statusFilter) : rows),
-    [rows, statusFilter],
-  );
+  const normalizedQuery = query.trim();
+  const digitsQuery = normalizedQuery.replace(/\D/g, '');
+  const filtered = useMemo(() => {
+    let list = rows;
+    if (statusFilter) list = list.filter((r) => r.status === statusFilter);
+    if (normalizedQuery) {
+      const ql = normalizedQuery.toLowerCase();
+      list = list.filter((r) => {
+        const phoneDigits = (r.phone || '').replace(/\D/g, '');
+        const phoneMatch = digitsQuery.length >= 3 && phoneDigits.includes(digitsQuery);
+        const textMatch =
+          (r.full_name || '').toLowerCase().includes(ql) ||
+          (r.company_name || '').toLowerCase().includes(ql) ||
+          (r.email || '').toLowerCase().includes(ql) ||
+          (r.id || '').toLowerCase().startsWith(ql);
+        return phoneMatch || textMatch;
+      });
+    }
+    return list;
+  }, [rows, statusFilter, normalizedQuery, digitsQuery]);
 
   const stats = useMemo(() => {
     const s: Record<string, number> = {};
