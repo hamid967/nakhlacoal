@@ -7,7 +7,7 @@ import {
 } from 'recharts';
 import {
   ShoppingBag, DollarSign, Clock, Building2, Globe2, Users, Package, Warehouse,
-  Plus, FileText, UserPlus, Download, ArrowUpRight, Activity,
+  Plus, FileText, UserPlus, Download, ArrowUpRight, Activity, Calendar, Award,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -206,6 +206,9 @@ export default function AdminDashboard() {
           );
         })}
       </section>
+
+      {/* This-month band + Quotes + Trademark renewals */}
+      <MonthBand orders={orders} quotes={quotes} trademarks={trademarks} priceOf={priceOf} />
 
       {/* Summary cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
