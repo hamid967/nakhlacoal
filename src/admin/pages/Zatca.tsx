@@ -652,8 +652,14 @@ function InvoiceDetail({ z, onCopy }: { z: ZatcaInvoice; onCopy: (t: string) => 
             </div>
           ))}
         </div>
-        <div className="text-[11px] text-muted-foreground mt-1">
-          محاولات الإرسال: <span className="font-semibold text-foreground">{z.attempts}</span>
+        <div className="text-[11px] text-muted-foreground mt-1 flex flex-wrap gap-x-4 gap-y-1">
+          <span>محاولات الإرسال: <span className="font-semibold text-foreground">{z.attempts}</span></span>
+          {z.alerted_at && (
+            <span className="text-red-600 dark:text-red-400">
+              <AlertTriangle className="inline w-3 h-3 ml-1" />
+              أُرسل تنبيه × {z.alert_count ?? 1} · آخرها {new Date(z.alerted_at).toLocaleString('ar-SA')}
+            </span>
+          )}
         </div>
       </div>
 
