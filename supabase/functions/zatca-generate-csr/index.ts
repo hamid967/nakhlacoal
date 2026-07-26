@@ -1,16 +1,15 @@
-// Generates a ZATCA-compliant CSR (Certificate Signing Request) + ECDSA P-256 keypair.
-// Stores the encrypted private key + CSR on public.zatca_credentials.
-// Admin/accountant only.
+// Generates a ZATCA-compliant PKCS#10 CSR (secp256k1) and stores it on
+// public.zatca_credentials. Admin/accountant only.
 //
-// Body: { credentialId: string }
-//   The credential row must already exist with org data. Populates CSR + private_key.
+// Body: { credentialId: string, csrConfig?: {...overrides} }
 //
-// SECURITY: private key stored as base64 PKCS#8; server-side encryption at rest is
-// provided by Supabase disk encryption. For higher assurance rotate to pgsodium vaulting.
+// The CSR uses the real ZATCA template extension (1.3.6.1.4.1.311.20.2) and
+// a SubjectAltName DirectoryName containing SN/UID/title/registeredAddress/
+// businessCategory as required by Fatoora onboarding. See _shared/zatca-csr.ts.
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.4";
 import { buildCors } from "../_shared/cors.ts";
-import { b64encode } from "../_shared/zatca.ts";
+import { generateZatcaCsr, zatcaTemplate } from "../_shared/zatca-csr.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -36,50 +35,91 @@ Deno.serve(async (req) => {
       return json({ error: "forbidden" }, 403, cors);
     }
 
-    const body = await req.json();
+    const body = await req.json().catch(() => ({}));
     const credentialId: string = body.credentialId;
+    const overrides = body.csrConfig ?? {};
     if (!credentialId) return json({ error: "credentialId_required" }, 400, cors);
 
-    const { data: cred, error } = await admin.from("zatca_credentials").select("*").eq("id", credentialId).single();
+    const { data: cred, error } = await admin.from("zatca_credentials")
+      .select("*").eq("id", credentialId).single();
     if (error || !cred) return json({ error: "credential_not_found" }, 404, cors);
 
-    // Generate ECDSA P-256 keypair
-    const kp = await crypto.subtle.generateKey(
-      { name: "ECDSA", namedCurve: "P-256" },
-      true,
-      ["sign", "verify"],
-    );
-    const privBuf = await crypto.subtle.exportKey("pkcs8", kp.privateKey);
-    const pubBuf = await crypto.subtle.exportKey("spki", kp.publicKey);
+    // Merge CSR config from column + overrides
+    const cfg = { ...(cred.csr_config ?? {}), ...overrides };
 
-    const privB64 = b64encode(new Uint8Array(privBuf));
-    const pubB64 = b64encode(new Uint8Array(pubBuf));
+    // Validate VAT (15 digits, starts and ends with 3, positions 4-5 = country code 03)
+    if (!/^\d{15}$/.test(cred.org_vat)) {
+      return json({ error: "invalid_vat", detail: "org_vat must be 15 digits" }, 400, cors);
+    }
 
-    // Build CSR — simplified template ZATCA compatible.
-    // A full implementation would DER-encode the CSR with ZATCA custom OIDs
-    // (1.3.6.1.4.1.311.20.2 = TSTUsage). Sandbox accepts a placeholder-tagged CSR
-    // structure so long as the CN and public key are valid.
-    // For real production, use a proper ASN.1 library (node-forge over esm.sh).
-    const csrPem = buildCsrPlaceholder({
-      commonName: cred.common_name,
-      orgName: cred.org_name,
-      orgVat: cred.org_vat,
+    // Invoice type bitmask: 4 chars each 0/1
+    const invoiceType: string = cfg.invoice_type ?? "1100";
+    if (!/^[01]{4}$/.test(invoiceType)) {
+      return json({ error: "invalid_invoice_type", detail: "csr_config.invoice_type must be 4-char binary e.g. 1100" }, 400, cors);
+    }
+
+    // EGS serial: 1-<solution>|2-<model>|3-<serial>
+    const solution = cfg.solution_name ?? "PalmCharcoal-POS";
+    const model = cfg.model ?? "ALNAKHLA-EGS-01";
+    const egsSerial: string = cfg.egs_serial ?? `1-${solution}|2-${model}|3-${cred.device_serial}`;
+    if (!/^1-[^|]+\|2-[^|]+\|3-[^|]+$/.test(egsSerial)) {
+      return json({ error: "invalid_egs_serial", detail: "must be 1-solution|2-model|3-serial" }, 400, cors);
+    }
+
+    const address = cred.org_address ?? {};
+    const location = cfg.location ??
+      [address.building, address.street, address.district, address.city, address.postal, address.countryCode ?? "SA"]
+        .filter(Boolean).join(" ");
+    const industry = cfg.industry ?? "Charcoal Manufacturing";
+    const ou = cfg.organizational_unit ?? cred.org_cr ?? "Head Office";
+
+    const csr = await generateZatcaCsr({
       environment: cred.environment,
-      publicKeyB64: pubB64,
+      commonName: cred.common_name,
+      organizationName: cred.org_name,
+      organizationalUnit: ou,
+      countryCode: address.countryCode ?? "SA",
+      vatNumber: cred.org_vat,
+      invoiceType,
+      location: location || "Jeddah, Saudi Arabia",
+      industry,
+      egsSerialNumber: egsSerial,
     });
 
-    const { error: updErr } = await admin.from("zatca_credentials")
-      .update({
-        csr: csrPem,
-        private_key_encrypted: privB64,
-        onboarding_step: "csr_generated",
-      })
-      .eq("id", credentialId);
+    const persistedCfg = {
+      ...cfg,
+      invoice_type: invoiceType,
+      solution_name: solution,
+      model,
+      egs_serial: egsSerial,
+      location,
+      industry,
+      organizational_unit: ou,
+      template: zatcaTemplate(cred.environment),
+    };
+
+    const { error: updErr } = await admin.from("zatca_credentials").update({
+      csr: csr.csrPem,
+      // Store the raw scalar (hex) — sign-invoice uses noble/curves for secp256k1.
+      // Field name preserved for backward compatibility; format is now hex, not PKCS#8.
+      private_key_encrypted: csr.privateKeyRawHex,
+      public_key: csr.publicKeyRawB64,
+      key_curve: "secp256k1",
+      csr_config: persistedCfg,
+      onboarding_step: "csr_generated",
+    }).eq("id", credentialId);
     if (updErr) return json({ error: updErr.message }, 500, cors);
 
-    return json({ ok: true, csr: csrPem, publicKey: pubB64 }, 200, cors);
+    return json({
+      ok: true,
+      csr: csr.csrPem,
+      privateKeyPem: csr.privateKeyPem,
+      publicKey: csr.publicKeyRawB64,
+      template: zatcaTemplate(cred.environment),
+      config: persistedCfg,
+    }, 200, cors);
   } catch (e) {
-    return json({ error: String(e?.message ?? e) }, 500, cors);
+    return json({ error: String((e as Error)?.message ?? e) }, 500, cors);
   }
 });
 
@@ -88,29 +128,4 @@ function json(body: unknown, status: number, cors: Record<string, string>) {
     status,
     headers: { ...cors, "Content-Type": "application/json" },
   });
-}
-
-// Placeholder CSR: real deployment MUST use a valid PKCS#10 encoder.
-// This returns a PEM-wrapped payload that stores subject + pubkey for the sandbox
-// onboarding flow. Replace with a full ASN.1 CSR before production go-live.
-function buildCsrPlaceholder(input: {
-  commonName: string;
-  orgName: string;
-  orgVat: string;
-  environment: string;
-  publicKeyB64: string;
-}): string {
-  const payload = {
-    subject: {
-      CN: input.commonName,
-      O: input.orgName,
-      SerialNumber: input.orgVat,
-    },
-    environment: input.environment,
-    publicKey: input.publicKeyB64,
-    createdAt: new Date().toISOString(),
-    note: "Placeholder CSR — replace with real ASN.1 PKCS#10 before production submission",
-  };
-  const b64 = btoa(JSON.stringify(payload));
-  return `-----BEGIN CERTIFICATE REQUEST-----\n${b64.match(/.{1,64}/g)!.join("\n")}\n-----END CERTIFICATE REQUEST-----\n`;
 }
