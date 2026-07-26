@@ -54,10 +54,9 @@ export const WHATSAPP_MESSAGES = {
 export function waLink(message?: keyof typeof WHATSAPP_MESSAGES | string): string {
   const base = `https://wa.me/${WHATSAPP_NUMBER}`
   if (!message) return `${base}?text=${encodeURIComponent(WHATSAPP_MESSAGES.general)}`
-  const raw =
-    typeof message === 'string' && message in WHATSAPP_MESSAGES
-      ? (WHATSAPP_MESSAGES as Record<string, string>)[message]
-      : message
+  const preset = (WHATSAPP_MESSAGES as Record<string, unknown>)[message as string]
+  const raw = typeof preset === 'string' ? preset : (message as string)
   return `${base}?text=${encodeURIComponent(raw)}`
 }
+
 
