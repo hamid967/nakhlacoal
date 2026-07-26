@@ -54,13 +54,19 @@ export default function Products() {
   const q = params.get('q') ?? '';
   const cat = params.get('cat') ?? 'all';
   const sort = (params.get('sort') ?? 'featured') as SortKey;
+  const minParam = params.get('min');
+  const maxParam = params.get('max');
+  const stockOnly = params.get('stock') === '1';
+  const minPrice = minParam && !Number.isNaN(Number(minParam)) ? Math.max(0, Number(minParam)) : null;
+  const maxPrice = maxParam && !Number.isNaN(Number(maxParam)) ? Math.max(0, Number(maxParam)) : null;
 
   const setParam = (k: string, v: string | null) => {
     const next = new URLSearchParams(params);
-    if (!v || v === 'all' || v === 'featured') next.delete(k);
+    if (!v || v === 'all' || v === 'featured' || v === '0') next.delete(k);
     else next.set(k, v);
     setParams(next, { replace: true });
   };
+
 
   // Categories
   useEffect(() => {
