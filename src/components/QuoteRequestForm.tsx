@@ -1,10 +1,19 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { z } from 'zod';
 import { Send, CheckCircle2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
+
+const PRODUCT_LABELS: Record<string, string> = {
+  bbq: 'فحم مشاوي BBQ',
+  coconut: 'فحم جوز الهند',
+  hookah: 'فحم شيشة كيوبس',
+  incense: 'فحم بخور',
+  compressed: 'فحم مضغوط',
+  export: 'فحم تصدير',
+};
 
 const schema = z.object({
   full_name: z.string().trim().min(2, 'الاسم قصير').max(120),
@@ -25,12 +34,29 @@ const initial: FormState = {
   product: '', quantity: '', unit: 'كرتون', destination: '', notes: '',
 };
 
-export function QuoteRequestForm() {
+export interface QuoteRequestFormProps {
+  initialProduct?: string; // slug from URL, e.g. "hookah"
+  initialSku?: string;     // SKU from URL, e.g. "PC-HK-CUBE-1KG"
+}
+
+export function QuoteRequestForm({ initialProduct, initialSku }: QuoteRequestFormProps = {}) {
   const { user } = useAuth();
-  const [values, setValues] = useState<FormState>(initial);
+  const [values, setValues] = useState<FormState>(() => ({
+    ...initial,
+    product: initialProduct ? (PRODUCT_LABELS[initialProduct] ?? initialProduct) : '',
+  }));
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState<string | null>(null);
+
+  // Sync when URL params change while page is mounted
+  useEffect(() => {
+    if (initialProduct) {
+      const label = PRODUCT_LABELS[initialProduct] ?? initialProduct;
+      setValues((s) => (s.product ? s : { ...s, product: label }));
+    }
+  }, [initialProduct]);
+
 
   const set = <K extends keyof FormState>(k: K, v: string) => {
     setValues((s) => ({ ...s, [k]: v }));
@@ -53,6 +79,8 @@ export function QuoteRequestForm() {
     setSubmitting(true);
     try {
       const d = parsed.data;
+      const skuLine = initialSku ? `[SKU: ${initialSku}] ` : '';
+      const notes = `${skuLine}${d.notes || ''}`.trim() || null;
       const payload = {
         full_name: d.full_name!,
         company_name: d.company_name!,
@@ -62,9 +90,10 @@ export function QuoteRequestForm() {
         quantity: d.quantity!,
         unit: d.unit || 'كرتون',
         destination: d.destination || null,
-        notes: d.notes || null,
+        notes,
         user_id: user?.id ?? null,
       };
+
       const { data, error } = await supabase
         .from('quote_requests')
         .insert(payload)
