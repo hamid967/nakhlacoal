@@ -22,6 +22,9 @@ export default {
         body: ['"Plus Jakarta Sans"', '"IBM Plex Sans Arabic"', 'system-ui', 'sans-serif'],
         arabic: ['"Reem Kufi"', '"IBM Plex Sans Arabic"', 'sans-serif'],
         editorial: ['"Syne"', '"Amiri"', 'Georgia', 'serif'],
+        // P1 — Bold Editorial pair: DM Serif Display headings + Fira Sans body
+        'editorial-bold': ['"DM Serif Display"', '"Amiri"', 'Georgia', 'serif'],
+        'editorial-sans': ['"Fira Sans"', '"IBM Plex Sans Arabic"', 'system-ui', 'sans-serif'],
         sans: ['"Plus Jakarta Sans"', '"IBM Plex Sans Arabic"', 'system-ui', 'sans-serif'],
         amiri: ['"Amiri"', '"Syne"', 'serif'],
       },
