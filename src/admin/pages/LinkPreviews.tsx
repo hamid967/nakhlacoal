@@ -3,6 +3,7 @@ import {
   Link as LinkIcon, RefreshCw, ExternalLink, CheckCircle2, AlertTriangle,
   XCircle, Trash2, Loader2, Facebook, Linkedin, Twitter, MessageCircle,
   Send as TelegramIcon, Search as GoogleIcon, CalendarClock, PlayCircle,
+  FileDown, FileJson,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
@@ -182,6 +183,52 @@ export default function AdminLinkPreviews() {
     return { total, ok, warn, error };
   }, [rows]);
 
+  const exportRows = (list: CheckRow[], format: 'csv' | 'json', label: string) => {
+    if (!list.length) { toast.error('لا توجد سجلات للتصدير'); return; }
+    const ts = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+    const filename = `link-preview-${label}-${ts}.${format}`;
+    let blob: Blob;
+    if (format === 'json') {
+      blob = new Blob([JSON.stringify(list, null, 2)], { type: 'application/json;charset=utf-8' });
+    } else {
+      const headers = [
+        'id','created_at','url','tool','status','http_status','source','batch_id',
+        'og_title','og_description','og_image','twitter_card','twitter_image',
+        'canonical','warnings','note',
+      ];
+      const esc = (v: any) => {
+        if (v === null || v === undefined) return '';
+        const s = Array.isArray(v) ? v.join(' | ') : String(v);
+        return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+      };
+      const lines = [
+        headers.join(','),
+        ...list.map((r) => headers.map((h) => esc((r as any)[h])).join(',')),
+      ];
+      // BOM for Excel-friendly UTF-8.
+      blob = new Blob(['\ufeff' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8' });
+    }
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(link.href);
+    toast.success(`تم تصدير ${list.length} سجل (${format.toUpperCase()})`);
+  };
+
+  const exportBatch = async (batchId: string, format: 'csv' | 'json') => {
+    const { data, error } = await supabase
+      .from('link_preview_checks')
+      .select('id,url,tool,status,http_status,og_title,og_description,og_image,twitter_card,twitter_image,canonical,warnings,note,source,batch_id,created_at')
+      .eq('batch_id', batchId)
+      .order('created_at', { ascending: true });
+    if (error) { toast.error('تعذّر جلب سجلات المجموعة'); return; }
+    exportRows((data ?? []) as CheckRow[], format, `batch-${batchId.slice(0, 8)}`);
+  };
+
+
   return (
     <div className="a-page">
       <SEO title="فحص معاينة الروابط — لوحة الأدمن" description="فحص Open Graph و Twitter Cards عبر Facebook Debugger و LinkedIn Post Inspector وتسجيل النتائج." path="/admin/link-previews" noindex />
@@ -288,6 +335,7 @@ export default function AdminLinkPreviews() {
                 <th>سليم</th>
                 <th>تحذير</th>
                 <th>خطأ</th>
+                <th className="text-end">تصدير</th>
               </tr>
             </thead>
             <tbody>
@@ -299,10 +347,20 @@ export default function AdminLinkPreviews() {
                   <td className="text-emerald-600">{b.ok}</td>
                   <td className="text-amber-600">{b.warn}</td>
                   <td className="text-rose-600">{b.error}</td>
+                  <td>
+                    <div className="flex items-center justify-end gap-1">
+                      <button className="a-icon-btn" title="تصدير CSV" onClick={() => exportBatch(b.batch_id, 'csv')}>
+                        <FileDown size={14} />
+                      </button>
+                      <button className="a-icon-btn" title="تصدير JSON" onClick={() => exportBatch(b.batch_id, 'json')}>
+                        <FileJson size={14} />
+                      </button>
+                    </div>
+                  </td>
                 </tr>
               ))}
               {batches.length === 0 && (
-                <tr><td colSpan={6} className="text-center py-6 opacity-60">لا توجد فحوصات مجدولة بعد. اضغط «تشغيل الآن» لبدء أول مجموعة.</td></tr>
+                <tr><td colSpan={7} className="text-center py-6 opacity-60">لا توجد فحوصات مجدولة بعد. اضغط «تشغيل الآن» لبدء أول مجموعة.</td></tr>
               )}
             </tbody>
           </table>
@@ -363,7 +421,13 @@ export default function AdminLinkPreviews() {
             <span className="text-amber-600">{summary.warn} تحذير</span>
             <span>·</span>
             <span className="text-rose-600">{summary.error} خطأ</span>
-            <button className="a-btn a-btn-ghost ms-2" onClick={loadLog} disabled={loadingLog}>
+            <button className="a-btn a-btn-ghost ms-2" onClick={() => exportRows(rows, 'csv', 'log')} disabled={!rows.length}>
+              <FileDown size={14} /> CSV
+            </button>
+            <button className="a-btn a-btn-ghost" onClick={() => exportRows(rows, 'json', 'log')} disabled={!rows.length}>
+              <FileJson size={14} /> JSON
+            </button>
+            <button className="a-btn a-btn-ghost" onClick={loadLog} disabled={loadingLog}>
               {loadingLog ? <Loader2 size={14} className="animate-spin" /> : <RefreshCw size={14} />}
               تحديث
             </button>
