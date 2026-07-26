@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ArrowLeft, ArrowRight, Loader2, MessageCircle, PackageCheck } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, Loader2, MessageCircle, PackageCheck, ShoppingBag } from 'lucide-react';
 import { SEO } from '@/components/SEO';
 import { supabase } from '@/integrations/supabase/client';
 import { brand, waLink } from '@/lib/brand';
+import { addToCart } from '@/lib/cart';
+import { toast } from 'sonner';
 
 type Variant = {
   id: string;
