@@ -25,7 +25,7 @@
     "audit:og": "node scripts/audit-og-tags.mjs",
     "audit:tokens": "node scripts/audit-tokens.mjs",
     "build:analyze": "ANALYZE=1 vite build",
-    "lint:deadcode": "eslint 'src/**/*.{ts,tsx}' --rule '{\"unused-imports/no-unused-imports\":\"error\"}' --no-inline-config --quiet",
+    "lint:deadcode": "eslint --config eslint.deadcode.config.js src",
     "lint:unused": "knip --no-exit-code --reporter compact",
     "lint:unused:strict": "knip"
   },
