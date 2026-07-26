@@ -22,7 +22,18 @@ type CheckRow = {
   canonical: string | null;
   warnings: string[];
   note: string | null;
+  source: string | null;
+  batch_id: string | null;
   created_at: string;
+};
+
+type BatchSummary = {
+  batch_id: string;
+  started_at: string;
+  total: number;
+  ok: number;
+  warn: number;
+  error: number;
 };
 
 type CheckResult = {
