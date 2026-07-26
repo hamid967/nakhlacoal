@@ -8,11 +8,11 @@ import { buildCors } from "../_shared/cors.ts";
 import {
   buildQrTlv,
   buildUblInvoice,
-  b64decode,
   b64encode,
   sha256Base64,
   zatcaBase,
 } from "../_shared/zatca.ts";
+import { zatcaSignSha256 } from "../_shared/zatca-csr.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
