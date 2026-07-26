@@ -1,12 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useSearchParams } from 'react-router-dom';
 import { FileText, Sparkles, MessageCircle, Phone, Mail, Clock, Calculator, Copy, Check, Send } from 'lucide-react';
+import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { QuoteForm } from '@/components/QuoteBuilder';
 import { QuoteRequestForm } from '@/components/QuoteRequestForm';
 import { PRICING } from '@/data/pricing';
 import { toast } from 'sonner';
+
+// Strict URL param schemas — reject anything that isn't a clean slug/SKU.
+const SlugSchema = z.string().trim().min(1).max(80).regex(/^[a-z0-9](?:[a-z0-9-]{0,78}[a-z0-9])?$/i);
+const SkuSchema = z.string().trim().min(1).max(64).regex(/^[A-Z0-9](?:[A-Z0-9._-]{0,62}[A-Z0-9])?$/i);
 
 const WHATSAPP_NUMBER = '966540060085';
 const ORDER_EMAIL = 'nakhlacoal@gmail.com';
