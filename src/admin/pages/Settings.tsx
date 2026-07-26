@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import { Save, Building2, Bell, Palette, Globe2, ShieldCheck, Upload } from 'lucide-react';
+import { Save, Building2, Bell, Palette, Globe2, ShieldCheck, Upload, Mail, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
+
 
 const TABS = [
   { id: 'general', label: 'عام', icon: Building2 },
@@ -110,8 +112,10 @@ export default function AdminSettings() {
             <IntegrationRow name="WhatsApp Business" status="connected" />
             <IntegrationRow name="Google Analytics" status="disconnected" />
             <IntegrationRow name="ZATCA Fatoora" status="connected" />
+            <ResendTestRow />
           </Section>
         )}
+
 
         {tab === 'security' && (
           <Section title="الأمان" description="حماية الحساب والجلسات النشطة.">
@@ -229,3 +233,77 @@ function IntegrationRow({ name, status }: { name: string; status: 'connected' | 
     </div>
   );
 }
+
+function ResendTestRow() {
+  const [email, setEmail] = useState('nakhlacoal@gmail.com');
+  const [sending, setSending] = useState(false);
+
+  const send = async () => {
+    const value = email.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+      toast.error('أدخل بريداً إلكترونياً صحيحاً');
+      return;
+    }
+    setSending(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('send-test-email', {
+        body: { to: value },
+      });
+      if (error) throw error;
+      if ((data as any)?.ok) {
+        toast.success(`تم إرسال بريد الاختبار إلى ${value}`);
+      } else {
+        toast.error('فشل الإرسال — راجع سجلات الخادم');
+      }
+    } catch (e: any) {
+      console.error(e);
+      toast.error(e?.message ?? 'فشل الإرسال');
+    } finally {
+      setSending(false);
+    }
+  };
+
+  return (
+    <div
+      className="mt-4 rounded-xl border p-4"
+      style={{ borderColor: 'var(--a-border)', background: 'var(--a-surface-2)' }}
+    >
+      <div className="flex items-center gap-2 mb-1">
+        <Mail className="w-4 h-4" style={{ color: 'var(--a-palm)' }} />
+        <div className="text-sm font-semibold" style={{ color: 'var(--a-text)' }}>
+          اختبار Resend
+        </div>
+      </div>
+      <p className="text-sm mb-3" style={{ color: 'var(--a-text-muted)' }}>
+        أرسل بريداً تجريبياً للتحقق من النطاق الموثّق قبل تفعيل الإرسال التلقائي للعملاء.
+      </p>
+      <div className="flex flex-col sm:flex-row gap-2">
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="test@example.com"
+          className="a-input flex-1"
+          dir="ltr"
+        />
+        <button
+          type="button"
+          onClick={send}
+          disabled={sending}
+          className="a-btn a-btn-palm justify-center"
+        >
+          {sending ? (
+            <>
+              <Loader2 className="w-4 h-4 animate-spin" /> جاري الإرسال…
+            </>
+          ) : (
+            <>
+              <Mail className="w-4 h-4" /> إرسال بريد اختبار
+            </>
+          )}
+        </button>
+      </div>
+    </div>
+  );
+}
+
