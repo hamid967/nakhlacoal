@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import qualityLab from '@/assets/design/quality-lab.jpg';
 import { ResponsiveImage } from './ResponsiveImage';
-import { Eyebrow, StatCard } from './primitives';
+import { SectionHeader, StatCard } from './primitives';
 import { BrandIcon } from '@/components/brand/BrandIcon';
 import type { BrandIconName } from '@/lib/brandTokens';
 
@@ -46,19 +46,13 @@ export function QualityLabSection() {
         </div>
 
         <div className="col-span-12 lg:col-span-6 space-y-10">
-          <div className="space-y-6">
-            <Eyebrow>{isAr ? 'الجودة' : 'Quality'}</Eyebrow>
-            <h2
-              className="font-editorial-bold leading-[0.95] text-foreground"
-              style={{ fontSize: 'clamp(36px, 4.6vw, 72px)' }}
-            >
-              {isAr ? (
-                <>معايير <span className="italic text-jade">لا تقبل التنازل</span></>
-              ) : (
-                <>Standards <span className="italic text-jade">without compromise</span></>
-              )}
-            </h2>
-          </div>
+          <SectionHeader eyebrow={isAr ? 'الجودة' : 'Quality'} size="md">
+            {isAr ? (
+              <>معايير <span className="italic text-jade">لا تقبل التنازل</span></>
+            ) : (
+              <>Standards <span className="italic text-jade">without compromise</span></>
+            )}
+          </SectionHeader>
 
           <div className="grid grid-cols-2 gap-x-6 gap-y-10">
             {stats.map((s) => (

@@ -3,7 +3,7 @@ import lifestyleMajlis from '@/assets/design/lifestyle-majlis.jpg';
 import packagingImg from '@/assets/design/packaging.jpg';
 import productHero from '@/assets/design/product-hero.jpg';
 import { ResponsiveImage } from './ResponsiveImage';
-import { Eyebrow } from './primitives';
+import { SectionHeader } from './primitives';
 
 /**
  * القسم 6 — Lifestyle Masonry
@@ -17,18 +17,14 @@ export function LifestyleGridSection() {
     <section className="relative bg-surface-2 py-24 lg:py-32 overflow-hidden">
       <div className="container">
         <div className="grid grid-cols-12 gap-6 mb-16 items-end" dir={isAr ? 'rtl' : 'ltr'}>
-          <div className="col-span-12 lg:col-span-7 space-y-6">
-            <Eyebrow>{isAr ? 'التجربة' : 'The Ritual'}</Eyebrow>
-            <h2
-              className="font-editorial-bold leading-[0.95] text-foreground"
-              style={{ fontSize: 'clamp(36px, 4.8vw, 76px)' }}
-            >
+          <div className="col-span-12 lg:col-span-7">
+            <SectionHeader eyebrow={isAr ? 'التجربة' : 'The Ritual'} size="md">
               {isAr ? (
                 <>لحظات <span className="italic text-jade">تُشعلها الجمرة</span></>
               ) : (
                 <>Moments <span className="italic text-jade">the ember creates</span></>
               )}
-            </h2>
+            </SectionHeader>
           </div>
         </div>
 

@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import craftProcess from '@/assets/design/craft-process.jpg';
 import { ResponsiveImage } from './ResponsiveImage';
-import { Eyebrow, ProcessStepCard } from './primitives';
+import { SectionHeader, ProcessStepCard } from './primitives';
 import { BrandIcon } from '@/components/brand/BrandIcon';
 import type { BrandIconName } from '@/lib/brandTokens';
 
@@ -21,7 +21,7 @@ export function CraftProcessSection() {
   ];
 
   return (
-    <section className="relative py-24 lg:py-40 overflow-hidden bg-dark-2 text-dark-foreground">
+    <section className="relative py-24 lg:py-32 overflow-hidden bg-dark-2 text-dark-foreground">
       <ResponsiveImage
         base="craft-process"
         fallback={craftProcess}
@@ -32,18 +32,14 @@ export function CraftProcessSection() {
       <div className="absolute inset-0 bg-gradient-to-b from-dark-2/70 via-dark-2/85 to-dark-2" />
 
       <div className="relative container" dir={isAr ? 'rtl' : 'ltr'}>
-        <div className="max-w-2xl mb-20 space-y-6">
-          <Eyebrow>{isAr ? 'الحرفة' : 'The Craft'}</Eyebrow>
-          <h2
-            className="font-editorial-bold leading-[0.95]"
-            style={{ fontSize: 'clamp(40px, 5.6vw, 88px)' }}
-          >
+        <div className="max-w-2xl mb-20">
+          <SectionHeader eyebrow={isAr ? 'الحرفة' : 'The Craft'} size="lg">
             {isAr ? (
               <>أربع خطوات<br /><span className="italic text-gold">من الجذع إلى الجمرة</span></>
             ) : (
               <>Four steps<br /><span className="italic text-gold">from trunk to ember</span></>
             )}
-          </h2>
+          </SectionHeader>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12 relative">
