@@ -281,7 +281,7 @@ export function BrokenGridHome() {
 
       {/* ============ 4 · CRAFT PROCESS ============ */}
       <section className="relative py-24 lg:py-40 overflow-hidden bg-dark-2 text-dark-foreground">
-        <img src={craftProcess} alt="" className="absolute inset-0 h-full w-full object-cover opacity-25" loading="lazy" />
+        <ResponsiveImage base="craft-process" fallback={craftProcess} alt="" className="absolute inset-0 h-full w-full object-cover opacity-25" sizes="100vw" />
         <div className="absolute inset-0 bg-gradient-to-b from-dark-2/70 via-dark-2/85 to-dark-2" />
 
         <div className="relative container" dir={isAr ? 'rtl' : 'ltr'}>
