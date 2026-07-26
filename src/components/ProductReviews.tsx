@@ -42,8 +42,6 @@ export default function ProductReviews({ productId, isAr }: { productId: string;
       setUserId(uid);
       if (!uid) return;
       // Check if user bought this product
-      const { data: buyer } = await supabase.rpc as never;
-      void buyer;
       const { data: orders } = await supabase
         .from('orders')
         .select('id, order_items(variant_id, product_variants(product_id))')

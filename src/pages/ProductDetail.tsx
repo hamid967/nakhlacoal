@@ -104,6 +104,7 @@ export default function ProductDetail() {
           setProduct(p);
           setSelectedVariantId(p.product_variants[0]?.id ?? null);
           setActiveImage(p.product_images[0]?.url ?? p.hero_image);
+          void track('product_view', { product_id: p.id, slug: p.slug });
         }
         setLoading(false);
       });
