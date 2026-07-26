@@ -240,7 +240,7 @@ Deno.serve(async (req) => {
     durationMs: Date.now() - started,
     status,
     warnings,
-    meta,
+    meta: metaWithProbes,
     fetchError,
     debuggerUrls: Object.fromEntries(
       Object.entries(DEBUGGER_URLS).map(([k, fn]) => [k, fn(target)])
