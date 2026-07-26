@@ -26,7 +26,9 @@ type ProductRow = {
   sort_order: number;
   category_id: string | null;
   categories: { slug: string; name_ar: string; name_en: string } | null;
+  product_variants: { stock: number | null; is_active: boolean }[] | null;
 };
+
 
 type SortKey = 'featured' | 'price_asc' | 'price_desc' | 'name';
 
@@ -52,13 +54,19 @@ export default function Products() {
   const q = params.get('q') ?? '';
   const cat = params.get('cat') ?? 'all';
   const sort = (params.get('sort') ?? 'featured') as SortKey;
+  const minParam = params.get('min');
+  const maxParam = params.get('max');
+  const stockOnly = params.get('stock') === '1';
+  const minPrice = minParam && !Number.isNaN(Number(minParam)) ? Math.max(0, Number(minParam)) : null;
+  const maxPrice = maxParam && !Number.isNaN(Number(maxParam)) ? Math.max(0, Number(maxParam)) : null;
 
   const setParam = (k: string, v: string | null) => {
     const next = new URLSearchParams(params);
-    if (!v || v === 'all' || v === 'featured') next.delete(k);
+    if (!v || v === 'all' || v === 'featured' || v === '0') next.delete(k);
     else next.set(k, v);
     setParams(next, { replace: true });
   };
+
 
   // Categories
   useEffect(() => {
@@ -84,10 +92,11 @@ export default function Products() {
       .from('products')
       .select(
         sel(
-          'id, slug, name_ar, name_en, tagline_ar, tagline_en, hero_image, base_price, currency, is_featured, sort_order, category_id, categories(slug, name_ar, name_en)',
+          'id, slug, name_ar, name_en, tagline_ar, tagline_en, hero_image, base_price, currency, is_featured, sort_order, category_id, categories(slug, name_ar, name_en), product_variants(stock, is_active)',
         ),
       )
       .eq('is_active', true);
+
 
     if (cat !== 'all') query = query.eq('categories.slug', cat);
 
@@ -116,6 +125,13 @@ export default function Products() {
                 (r.tagline_en ?? '').toLowerCase().includes(needle),
             );
           }
+          if (minPrice != null) rows = rows.filter((r) => r.base_price != null && Number(r.base_price) >= minPrice);
+          if (maxPrice != null) rows = rows.filter((r) => r.base_price != null && Number(r.base_price) <= maxPrice);
+          if (stockOnly) {
+            rows = rows.filter((r) =>
+              (r.product_variants ?? []).some((v) => v.is_active && (v.stock ?? 0) > 0),
+            );
+          }
           setItems(rows);
         }
         setLoading(false);
@@ -124,7 +140,8 @@ export default function Products() {
     return () => {
       cancelled = true;
     };
-  }, [cat, sort, q, isAr]);
+  }, [cat, sort, q, isAr, minPrice, maxPrice, stockOnly]);
+
 
   const activeCat = useMemo(
     () => (cat === 'all' ? null : cats.find((c) => c.slug === cat) ?? null),
@@ -239,6 +256,70 @@ export default function Products() {
               </select>
             </div>
           </div>
+
+          {/* Secondary row: price range + availability */}
+          <div className="container pb-4 flex flex-wrap items-center gap-4 border-t border-border/40 pt-3">
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
+                {isAr ? 'السعر (ر.س)' : 'Price (SAR)'}
+              </span>
+              <label htmlFor="price-min" className="sr-only">{isAr ? 'أقل سعر' : 'Min price'}</label>
+              <input
+                id="price-min"
+                type="number"
+                inputMode="numeric"
+                min={0}
+                step={5}
+                value={minParam ?? ''}
+                onChange={(e) => setParam('min', e.target.value.trim() || null)}
+                placeholder={isAr ? 'من' : 'Min'}
+                dir="ltr"
+                className="h-9 w-20 bg-transparent border border-border focus:border-gold focus:ring-2 focus:ring-gold/30 focus:outline-none text-sm px-2 text-foreground"
+              />
+              <span aria-hidden className="text-muted-foreground">—</span>
+              <label htmlFor="price-max" className="sr-only">{isAr ? 'أعلى سعر' : 'Max price'}</label>
+              <input
+                id="price-max"
+                type="number"
+                inputMode="numeric"
+                min={0}
+                step={5}
+                value={maxParam ?? ''}
+                onChange={(e) => setParam('max', e.target.value.trim() || null)}
+                placeholder={isAr ? 'إلى' : 'Max'}
+                dir="ltr"
+                className="h-9 w-20 bg-transparent border border-border focus:border-gold focus:ring-2 focus:ring-gold/30 focus:outline-none text-sm px-2 text-foreground"
+              />
+              {(minParam || maxParam) && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    const next = new URLSearchParams(params);
+                    next.delete('min');
+                    next.delete('max');
+                    setParams(next, { replace: true });
+                  }}
+                  className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground hover:text-foreground"
+                  aria-label={isAr ? 'مسح نطاق السعر' : 'Clear price range'}
+                >
+                  {isAr ? 'مسح' : 'Reset'}
+                </button>
+              )}
+            </div>
+
+            <label className="inline-flex items-center gap-2 cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={stockOnly}
+                onChange={(e) => setParam('stock', e.target.checked ? '1' : null)}
+                className="h-4 w-4 accent-gold cursor-pointer"
+              />
+              <span className="text-xs uppercase tracking-[0.22em] text-foreground/80">
+                {isAr ? 'المتوفر فقط' : 'In stock only'}
+              </span>
+            </label>
+          </div>
+
         </section>
 
         {/* Grid */}
