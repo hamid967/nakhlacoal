@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import {
   Link as LinkIcon, RefreshCw, ExternalLink, CheckCircle2, AlertTriangle,
   XCircle, Trash2, Loader2, Facebook, Linkedin, Twitter, MessageCircle,
-  Send as TelegramIcon, Search as GoogleIcon,
+  Send as TelegramIcon, Search as GoogleIcon, CalendarClock, PlayCircle,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
@@ -22,7 +22,18 @@ type CheckRow = {
   canonical: string | null;
   warnings: string[];
   note: string | null;
+  source: string | null;
+  batch_id: string | null;
   created_at: string;
+};
+
+type BatchSummary = {
+  batch_id: string;
+  started_at: string;
+  total: number;
+  ok: number;
+  warn: number;
+  error: number;
 };
 
 type CheckResult = {
@@ -64,19 +75,57 @@ export default function AdminLinkPreviews() {
 
   const [rows, setRows] = useState<CheckRow[]>([]);
   const [loadingLog, setLoadingLog] = useState(true);
+  const [batches, setBatches] = useState<BatchSummary[]>([]);
+  const [runningBatch, setRunningBatch] = useState(false);
 
   const loadLog = async () => {
     setLoadingLog(true);
     const { data, error } = await supabase
       .from('link_preview_checks')
-      .select('id,url,tool,status,http_status,og_title,og_description,og_image,twitter_card,twitter_image,canonical,warnings,note,created_at')
+      .select('id,url,tool,status,http_status,og_title,og_description,og_image,twitter_card,twitter_image,canonical,warnings,note,source,batch_id,created_at')
       .order('created_at', { ascending: false })
-      .limit(50);
+      .limit(200);
     if (error) toast.error('تعذّر تحميل سجل الفحوصات');
-    setRows((data ?? []) as any);
+    const list = (data ?? []) as CheckRow[];
+    setRows(list);
+
+    // Aggregate scheduled batches client-side (last 12 batches).
+    const map = new Map<string, BatchSummary>();
+    for (const r of list) {
+      if (!r.batch_id || r.source !== 'scheduled') continue;
+      const b = map.get(r.batch_id) ?? {
+        batch_id: r.batch_id, started_at: r.created_at, total: 0, ok: 0, warn: 0, error: 0,
+      };
+      b.total += 1;
+      if (r.status === 'ok') b.ok += 1;
+      else if (r.status === 'warn') b.warn += 1;
+      else b.error += 1;
+      // Keep the earliest timestamp within the batch as "started_at".
+      if (new Date(r.created_at) < new Date(b.started_at)) b.started_at = r.created_at;
+      map.set(r.batch_id, b);
+    }
+    setBatches([...map.values()].sort((a, b) => b.started_at.localeCompare(a.started_at)).slice(0, 12));
+
     setLoadingLog(false);
   };
   useEffect(() => { loadLog(); }, []);
+
+  const runScheduledNow = async () => {
+    setRunningBatch(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('scheduled-link-preview-audit', {
+        body: { source: 'scheduled' },
+      });
+      if (error) throw error;
+      const s = (data as any)?.summary ?? {};
+      toast.success(`تم الفحص الدوري — ${(data as any)?.totalUrls ?? 0} صفحة (سليم ${s.ok ?? 0} / تحذير ${s.warn ?? 0} / خطأ ${s.error ?? 0})`);
+      loadLog();
+    } catch (err: any) {
+      toast.error(err?.message ?? 'تعذّر تشغيل الفحص الدوري');
+    } finally {
+      setRunningBatch(false);
+    }
+  };
 
   const runCheck = async () => {
     if (!/^https?:\/\//i.test(url)) {
@@ -212,6 +261,55 @@ export default function AdminLinkPreviews() {
           })}
         </div>
       </section>
+
+      {/* Scheduled bi-weekly audit */}
+      <section className="a-card mt-4">
+        <div className="flex items-start justify-between flex-wrap gap-3">
+          <div className="flex items-start gap-3">
+            <div className="a-icon-tile"><CalendarClock size={18} /></div>
+            <div>
+              <h2 className="a-h2">الفحص الدوري لخريطة الموقع</h2>
+              <p className="a-sub">يعمل تلقائيًا كل أسبوعين (اليوم 1 و15 من الشهر، 03:00 UTC) ويفحص جميع روابط <code className="a-mono text-xs">sitemap.xml</code>. كل تشغيل يُحفظ كمجموعة موحّدة بتاريخها.</p>
+            </div>
+          </div>
+          <button className="a-btn a-btn-primary" disabled={runningBatch} onClick={runScheduledNow}>
+            {runningBatch ? <Loader2 size={14} className="animate-spin" /> : <PlayCircle size={14} />}
+            <span>تشغيل الآن</span>
+          </button>
+        </div>
+
+        <div className="mt-4 overflow-x-auto">
+          <table className="a-table w-full">
+            <thead>
+              <tr>
+                <th>التاريخ</th>
+                <th>المعرّف</th>
+                <th>الإجمالي</th>
+                <th>سليم</th>
+                <th>تحذير</th>
+                <th>خطأ</th>
+              </tr>
+            </thead>
+            <tbody>
+              {batches.map((b) => (
+                <tr key={b.batch_id}>
+                  <td className="a-mono text-xs whitespace-nowrap">{new Date(b.started_at).toLocaleString('ar-SA')}</td>
+                  <td className="a-mono text-[10px] opacity-60">{b.batch_id.slice(0, 8)}</td>
+                  <td>{b.total}</td>
+                  <td className="text-emerald-600">{b.ok}</td>
+                  <td className="text-amber-600">{b.warn}</td>
+                  <td className="text-rose-600">{b.error}</td>
+                </tr>
+              ))}
+              {batches.length === 0 && (
+                <tr><td colSpan={6} className="text-center py-6 opacity-60">لا توجد فحوصات مجدولة بعد. اضغط «تشغيل الآن» لبدء أول مجموعة.</td></tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+
 
       {/* Result */}
       {result && (

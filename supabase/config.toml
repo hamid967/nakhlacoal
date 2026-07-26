@@ -22,3 +22,6 @@ verify_jwt = false
 
 [functions.email-preferences]
 verify_jwt = false
+
+[functions.scheduled-link-preview-audit]
+verify_jwt = false
