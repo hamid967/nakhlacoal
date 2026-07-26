@@ -366,22 +366,60 @@ export default function Products() {
             </div>
           ) : (
             <>
-              <p className="text-xs text-muted-foreground mb-8">
-                {isAr
-                  ? `${items.length} منتج${activeCat ? ` · ${activeCat.name_ar}` : ''}`
-                  : `${items.length} product${items.length === 1 ? '' : 's'}${activeCat ? ` · ${activeCat.name_en}` : ''}`}
-              </p>
+              {(() => {
+                const totalPages = Math.max(1, Math.ceil(items.length / perPage));
+                const currentPage = Math.min(page, totalPages);
+                const start = (currentPage - 1) * perPage;
+                const pageItems = items.slice(start, start + perPage);
+                const rangeStart = items.length === 0 ? 0 : start + 1;
+                const rangeEnd = start + pageItems.length;
+                return (
+                  <>
+                    <div className="flex flex-wrap items-center justify-between gap-3 mb-8">
+                      <p className="text-xs text-muted-foreground">
+                        {isAr
+                          ? `${rangeStart}–${rangeEnd} من ${items.length} منتج${activeCat ? ` · ${activeCat.name_ar}` : ''}`
+                          : `${rangeStart}–${rangeEnd} of ${items.length} product${items.length === 1 ? '' : 's'}${activeCat ? ` · ${activeCat.name_en}` : ''}`}
+                      </p>
+                      <div className="flex items-center gap-2">
+                        <label htmlFor="per-page" className="text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
+                          {isAr ? 'لكل صفحة' : 'Per page'}
+                        </label>
+                        <select
+                          id="per-page"
+                          value={perPage}
+                          onChange={(e) => setParam('perPage', e.target.value === '12' ? null : e.target.value)}
+                          className="h-9 bg-transparent border border-border focus:border-gold focus:ring-2 focus:ring-gold/30 focus:outline-none text-sm px-2 text-foreground"
+                        >
+                          {PER_PAGE_OPTIONS.map((n) => (
+                            <option key={n} value={n}>{n}</option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
 
-              <ul
-                role="list"
-                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
-              >
-                {items.map((p, i) => (
-                  <li key={p.id}>
-                    <ProductCard product={p} index={i} total={items.length} isAr={isAr} Arrow={Arrow} />
-                  </li>
-                ))}
-              </ul>
+                    <ul
+                      role="list"
+                      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
+                    >
+                      {pageItems.map((p, i) => (
+                        <li key={p.id}>
+                          <ProductCard product={p} index={start + i} total={items.length} isAr={isAr} Arrow={Arrow} />
+                        </li>
+                      ))}
+                    </ul>
+
+                    {totalPages > 1 && (
+                      <Pagination
+                        page={currentPage}
+                        totalPages={totalPages}
+                        onChange={goToPage}
+                        isAr={isAr}
+                      />
+                    )}
+                  </>
+                );
+              })()}
             </>
           )}
         </section>
