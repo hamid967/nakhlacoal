@@ -526,7 +526,7 @@ export default function ZatcaAdmin() {
                       const isOpen = expanded.has(z.id);
                       return (
                         <>
-                          <tr key={z.id} className="border-t hover:bg-muted/30 cursor-pointer" onClick={() => toggleExpanded(z.id)}>
+                          <tr key={z.id} ref={(el) => { rowRefs.current[z.id] = el; }} className="border-t hover:bg-muted/30 cursor-pointer transition-shadow" onClick={() => toggleExpanded(z.id)}>
                             <td className="p-2">
                               {isOpen ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronLeft className="w-3.5 h-3.5" />}
                             </td>
