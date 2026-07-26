@@ -133,7 +133,8 @@ Deno.serve(async (req) => {
         'X-Connection-Api-Key': RESEND_API_KEY,
       },
       body: JSON.stringify({
-        from: 'Palm Charcoal <onboarding@resend.dev>',
+        from: 'فحم النخلة | Palm Charcoal <quotes@notify.alnakhlacoal.com>',
+        reply_to: 'mab355@gmail.com',
         to: [q.email],
         subject,
         html,
