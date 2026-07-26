@@ -26,7 +26,9 @@ type ProductRow = {
   sort_order: number;
   category_id: string | null;
   categories: { slug: string; name_ar: string; name_en: string } | null;
+  product_variants: { stock: number | null; is_active: boolean }[] | null;
 };
+
 
 type SortKey = 'featured' | 'price_asc' | 'price_desc' | 'name';
 
