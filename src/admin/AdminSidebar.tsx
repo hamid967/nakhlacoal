@@ -4,7 +4,7 @@ import {
   Users, Truck, Warehouse, Beaker, FileBadge, Receipt, CreditCard,
   BarChart3, Megaphone, BookOpen, Image as ImageIcon, LayoutTemplate,
   Search, ShieldCheck, KeyRound, Settings as SettingsIcon, ScrollText,
-  Sparkles, ChevronLeft, Gauge, MessageSquare, FileText, Mail,
+  Sparkles, ChevronLeft, Gauge, MessageSquare, FileText, Mail, Link as LinkIcon,
 } from 'lucide-react';
 import { BrandLogo } from '@/components/BrandLogo';
 
@@ -48,6 +48,7 @@ const groups: Group[] = [
     { to: '/admin/ai-center', label: 'مركز الذكاء', icon: Sparkles, badge: 'قريباً' },
     { to: '/admin/website', label: 'محرر الموقع', icon: LayoutTemplate, badge: 'قريباً' },
     { to: '/admin/seo', label: 'السيو', icon: Search, badge: 'قريباً' },
+    { to: '/admin/link-previews', label: 'معاينة الروابط', icon: LinkIcon },
     { to: '/admin/blog', label: 'المعرفة والمدونة', icon: BookOpen, badge: 'قريباً' },
     { to: '/admin/media', label: 'مكتبة الوسائط', icon: ImageIcon, badge: 'قريباً' },
   ]},

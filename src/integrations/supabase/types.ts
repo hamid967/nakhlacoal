@@ -669,6 +669,69 @@ export type Database = {
         }
         Relationships: []
       }
+      link_preview_checks: {
+        Row: {
+          canonical: string | null
+          checked_by: string | null
+          created_at: string
+          http_status: number | null
+          id: string
+          note: string | null
+          og_description: string | null
+          og_image: string | null
+          og_title: string | null
+          og_type: string | null
+          og_url: string | null
+          raw: Json | null
+          status: string
+          tool: string
+          twitter_card: string | null
+          twitter_image: string | null
+          url: string
+          warnings: Json
+        }
+        Insert: {
+          canonical?: string | null
+          checked_by?: string | null
+          created_at?: string
+          http_status?: number | null
+          id?: string
+          note?: string | null
+          og_description?: string | null
+          og_image?: string | null
+          og_title?: string | null
+          og_type?: string | null
+          og_url?: string | null
+          raw?: Json | null
+          status?: string
+          tool?: string
+          twitter_card?: string | null
+          twitter_image?: string | null
+          url: string
+          warnings?: Json
+        }
+        Update: {
+          canonical?: string | null
+          checked_by?: string | null
+          created_at?: string
+          http_status?: number | null
+          id?: string
+          note?: string | null
+          og_description?: string | null
+          og_image?: string | null
+          og_title?: string | null
+          og_type?: string | null
+          og_url?: string | null
+          raw?: Json | null
+          status?: string
+          tool?: string
+          twitter_card?: string | null
+          twitter_image?: string | null
+          url?: string
+          warnings?: Json
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           created_at: string
