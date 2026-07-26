@@ -70,8 +70,12 @@ async def audit(browser, name, w, h):
     await page.wait_for_timeout(300)
 
     heights = await page.evaluate(
-        """() => [...document.querySelectorAll('main > section')]
-              .map(s => Math.round(s.getBoundingClientRect().height))"""
+        """() => {
+            const main = document.querySelector('main') || document.body;
+            const all = [...main.querySelectorAll('section')];
+            const top = all.filter(el => !all.some(o => o !== el && o.contains(el)));
+            return top.map(s => Math.round(s.getBoundingClientRect().height));
+        }"""
     )
 
     errors: list[str] = []
