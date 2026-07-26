@@ -40,11 +40,16 @@ export default function AdminEmails() {
   const [resendingId, setResendingId] = useState<string | null>(null);
   const [runningCron, setRunningCron] = useState(false);
   const [autoConfirm, setAutoConfirm] = useState<boolean>(true);
+  const [autoShip, setAutoShip] = useState<boolean>(true);
   const [savingToggle, setSavingToggle] = useState(false);
 
   const loadSettings = async () => {
-    const { data } = await supabase.from('email_settings').select('auto_order_confirmation').eq('id', true).maybeSingle();
-    if (data) setAutoConfirm(!!data.auto_order_confirmation);
+    const { data } = await supabase.from('email_settings')
+      .select('auto_order_confirmation, auto_shipment_notification').eq('id', true).maybeSingle();
+    if (data) {
+      setAutoConfirm(!!data.auto_order_confirmation);
+      setAutoShip((data as any).auto_shipment_notification !== false);
+    }
   };
   useEffect(() => { loadSettings(); }, []);
 
@@ -57,6 +62,17 @@ export default function AdminEmails() {
     setAutoConfirm(next);
     toast.success(next ? 'تم تفعيل بريد تأكيد الطلب التلقائي' : 'تم تعطيل بريد تأكيد الطلب التلقائي');
   };
+
+  const toggleAutoShip = async (next: boolean) => {
+    setSavingToggle(true);
+    const { error } = await supabase.from('email_settings')
+      .upsert({ id: true, auto_shipment_notification: next, updated_at: new Date().toISOString() } as any);
+    setSavingToggle(false);
+    if (error) { toast.error('تعذّر حفظ الإعداد'); return; }
+    setAutoShip(next);
+    toast.success(next ? 'تم تفعيل إشعار الشحن التلقائي' : 'تم تعطيل إشعار الشحن التلقائي');
+  };
+
 
 
   const load = async () => {
@@ -97,6 +113,10 @@ export default function AdminEmails() {
       } else if (row.template === 'order-confirmation' && row.entity_id) {
         fn = 'send-order-confirmation';
         body = { orderId: row.entity_id };
+      } else if (row.template === 'shipment-notification' && row.entity_id) {
+        fn = 'send-shipment-notification';
+        body = { shipmentId: row.entity_id, status: row.metadata?.shipment_status, force: true };
+
       } else if (row.template === 'test-email') {
         fn = 'send-test-email';
         body = { to: row.recipient };
@@ -194,6 +214,39 @@ export default function AdminEmails() {
             <span
               className="absolute top-0.5 w-5 h-5 rounded-full bg-white shadow transition-all"
               style={{ [autoConfirm ? 'right' : 'left']: '2px' } as any}
+            />
+          </span>
+        </label>
+      </div>
+
+      <div className="a-card p-4 flex items-center justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2 font-semibold" style={{ color: 'var(--a-text)' }}>
+            <BellRing className="w-4 h-4" style={{ color: 'var(--a-palm)' }} />
+            إشعار الشحن التلقائي (مع رقم التتبع)
+          </div>
+          <p className="text-xs mt-1" style={{ color: 'var(--a-text-muted)' }}>
+            يُرسَل للعميل تلقائيًا عند إضافة رقم تتبّع أو تغيّر حالة الشحنة (شُحنت / قيد النقل / خرج للتوصيل / تم التسليم).
+          </p>
+        </div>
+        <label className="inline-flex items-center gap-2 cursor-pointer">
+          <span className="text-sm" style={{ color: 'var(--a-text-muted)' }}>
+            {autoShip ? 'مُفعّل' : 'معطّل'}
+          </span>
+          <input
+            type="checkbox"
+            className="sr-only peer"
+            checked={autoShip}
+            disabled={savingToggle}
+            onChange={(e) => toggleAutoShip(e.target.checked)}
+          />
+          <span
+            className="relative w-11 h-6 rounded-full transition-colors"
+            style={{ background: autoShip ? 'var(--a-palm)' : '#cbd5e1' }}
+          >
+            <span
+              className="absolute top-0.5 w-5 h-5 rounded-full bg-white shadow transition-all"
+              style={{ [autoShip ? 'right' : 'left']: '2px' } as any}
             />
           </span>
         </label>

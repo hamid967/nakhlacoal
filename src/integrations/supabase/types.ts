@@ -367,18 +367,21 @@ export type Database = {
       email_settings: {
         Row: {
           auto_order_confirmation: boolean
+          auto_shipment_notification: boolean
           id: boolean
           updated_at: string
           updated_by: string | null
         }
         Insert: {
           auto_order_confirmation?: boolean
+          auto_shipment_notification?: boolean
           id?: boolean
           updated_at?: string
           updated_by?: string | null
         }
         Update: {
           auto_order_confirmation?: boolean
+          auto_shipment_notification?: boolean
           id?: boolean
           updated_at?: string
           updated_by?: string | null
