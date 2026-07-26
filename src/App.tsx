@@ -71,6 +71,8 @@ const AdminInvoices = lazy(() => import('@/admin/pages/Invoices'));
 const AdminShipments = lazy(() => import('@/admin/pages/Shipments'));
 const AdminWebVitals = lazy(() => import('@/admin/pages/WebVitals'));
 const AdminChatAnalytics = lazy(() => import('@/admin/pages/ChatAnalytics'));
+const AdminCoupons = lazy(() => import('@/admin/pages/Coupons'));
+const AdminAuditLog = lazy(() => import('@/admin/pages/AuditLog'));
 
 const PortalLayout = lazy(() => import('@/portal/PortalLayout'));
 const PortalDashboard = lazy(() => import('@/portal/pages/Dashboard'));
@@ -165,6 +167,9 @@ export default function App() {
                   <Route path="settings" element={<AdminSettings />} />
                   <Route path="tracking" element={<AdminTracking />} />
                   <Route path="trademarks" element={<AdminTrademarks />} />
+                  <Route path="coupons" element={<AdminCoupons />} />
+                  <Route path="marketing" element={<AdminCoupons />} />
+                  <Route path="logs" element={<AdminAuditLog />} />
                   <Route path="*" element={<AdminPlaceholder />} />
                 </Route>
                 <Route path="/portal/login" element={<PortalLogin />} />
