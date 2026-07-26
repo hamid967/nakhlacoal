@@ -157,7 +157,7 @@ export function BrokenGridHome() {
               {isAr ? (
                 <>من نخيل المدينة<br /><span className="italic text-jade">إلى موائد العالم</span></>
               ) : (
-                <>From Madinah palms<br /><span className="italic text-jade">to the world\'s tables</span></>
+                <>From Madinah palms<br /><span className="italic text-jade">to the world&apos;s tables</span></>
               )}
             </h2>
             <p className="text-foreground/75 leading-relaxed">
