@@ -77,6 +77,7 @@ const AdminCoupons = lazy(() => import('@/admin/pages/Coupons'));
 const AdminAuditLog = lazy(() => import('@/admin/pages/AuditLog'));
 const AdminQuotes = lazy(() => import('@/admin/pages/Quotes'));
 const AdminEmails = lazy(() => import('@/admin/pages/Emails'));
+const AdminLinkPreviews = lazy(() => import('@/admin/pages/LinkPreviews'));
 
 const PortalQuotes = lazy(() => import('@/portal/pages/Quotes'));
 
@@ -180,7 +181,9 @@ export default function App() {
                   <Route path="quotes" element={<AdminQuotes />} />
 
                   <Route path="emails" element={<AdminEmails />} />
+                  <Route path="link-previews" element={<AdminLinkPreviews />} />
                   <Route path="*" element={<AdminPlaceholder />} />
+
 
                 </Route>
                 <Route path="/portal/login" element={<PortalLogin />} />
