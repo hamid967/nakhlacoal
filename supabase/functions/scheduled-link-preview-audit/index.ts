@@ -133,14 +133,18 @@ async function checkOne(url: string) {
     });
     const html = await resp.text();
     const meta = parseMeta(html);
-    const warnings = computeWarnings(meta);
+    const probes = await probeMany([meta.ogImage, meta.twitterImage], DEFAULT_UA);
+    const warnings = computeWarnings(meta, probes);
     const status = resp.status >= 400 ? 'error' : warnings.length ? 'warn' : 'ok';
-    return { url, httpStatus: resp.status, meta, warnings, status, durationMs: Date.now() - started, fetchError: null as string | null };
+    const imageProbes = Object.fromEntries(
+      Object.entries(probes).map(([u, p]) => [u, p.ok ? { width: p.dims.width, height: p.dims.height, format: p.dims.format, bytes: p.dims.bytes, contentType: p.dims.contentType } : { error: p.error, httpStatus: p.httpStatus ?? null }]),
+    );
+    return { url, httpStatus: resp.status, meta: { ...meta, imageProbes }, warnings, status, durationMs: Date.now() - started, fetchError: null as string | null };
   } catch (err) {
     return {
       url,
       httpStatus: 0,
-      meta: null as ReturnType<typeof parseMeta> | null,
+      meta: null as (ReturnType<typeof parseMeta> & { imageProbes?: Record<string, unknown> }) | null,
       warnings: ['فشل جلب الصفحة'],
       status: 'error' as const,
       durationMs: Date.now() - started,
