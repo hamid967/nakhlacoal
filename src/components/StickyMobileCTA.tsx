@@ -4,7 +4,9 @@ import { ShoppingBag, MessageCircle } from 'lucide-react';
 import { OrderModal } from './OrderModal';
 import { trackWhatsApp, trackConversion } from '@/lib/track';
 
-const WHATSAPP = 'https://wa.me/966540060085';
+import { waLink } from '@/lib/brand';
+
+const WHATSAPP = waLink('order');
 
 /**
  * Sticky bottom CTA bar — mobile only. Appears after the user scrolls past the hero
