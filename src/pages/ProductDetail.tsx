@@ -69,6 +69,8 @@ export default function ProductDetail() {
   const [activeImage, setActiveImage] = useState<string | null>(null);
   const [adding, setAdding] = useState(false);
   const [added, setAdded] = useState(false);
+
+  useEffect(() => {
     if (!slug) return;
     let cancelled = false;
     setLoading(true);
