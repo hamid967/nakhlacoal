@@ -80,6 +80,15 @@ export default function AdminQuotes() {
         old_data: { status: q.status },
         new_data: { status: next, ...extra },
       });
+      // Send status-change email (fire-and-forget) only when the status actually changed
+      if (next !== q.status && q.email) {
+        supabase.functions
+          .invoke('send-quote-status-email', { body: { quoteId: q.id, status: next } })
+          .then(({ error: mailErr }) => {
+            if (mailErr) console.warn('quote email failed:', mailErr.message);
+            else toast.success('تم إرسال إشعار بريدي للعميل');
+          });
+      }
       toast.success('تم التحديث');
       await load();
       setActive((a) => (a && a.id === q.id ? { ...a, status: next, ...extra } as QR : a));
@@ -89,6 +98,7 @@ export default function AdminQuotes() {
       setBusy(false);
     }
   };
+
 
   const convertToOrder = async (q: QR) => {
     if (q.order_id) return toast.info('تم التحويل مسبقاً');
