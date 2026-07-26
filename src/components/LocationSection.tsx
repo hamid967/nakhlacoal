@@ -9,7 +9,7 @@ const MAPS_LINK = `https://www.google.com/maps/dir/?api=1&destination=${encodeUR
 const EMBED = `https://www.google.com/maps?q=${encodeURIComponent(QUERY)}&output=embed`;
 
 export function LocationSection() {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const isAr = i18n.language?.startsWith('ar');
   const { Arrow } = useDir();
   const tiltA = useTilt<HTMLDivElement>(4);

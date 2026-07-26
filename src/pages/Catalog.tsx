@@ -13,7 +13,7 @@ import { SEO } from '@/components/SEO';
  * Arabic typography, RTL, and brand fonts without any PDF font hassles.
  */
 export default function Catalog() {
-  const { i18n, t } = useTranslation();
+  const { i18n } = useTranslation();
   const isAr = i18n.language === 'ar';
   const dir = isAr ? 'rtl' : 'ltr';
 
@@ -27,7 +27,7 @@ export default function Catalog() {
     const product = products.find((p) => p.slug === slug);
     return INVENTORY.find((i) => i.match.test(slug) || (product && i.match.test(product.nameAr)));
   };
-  const priceFor = (slug: string) => inventoryFor(slug)?.tiers ?? null;
+  
 
   const handlePrint = () => window.print();
 

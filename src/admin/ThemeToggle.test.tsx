@@ -65,7 +65,7 @@ describe('Admin theme toggle', () => {
   });
 
   it('swaps the toggle icon between Moon (light) and Sun (dark)', () => {
-    const { container } = renderLayout();
+    renderLayout();
     const btn = screen.getByTitle('تبديل الثيم');
     // lucide renders an <svg> with class containing the icon name.
     expect(btn.querySelector('svg.lucide-moon')).toBeTruthy();

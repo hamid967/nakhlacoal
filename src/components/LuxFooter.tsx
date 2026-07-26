@@ -5,8 +5,7 @@ import { BrandLogo } from '@/components/BrandLogo';
 import { brand } from '@/lib/brand';
 
 export function LuxFooter() {
-  const { t, i18n } = useTranslation();
-  const isAr = i18n.language?.startsWith('ar');
+  const { t } = useTranslation();
   const year = new Date().getFullYear();
 
   return (
