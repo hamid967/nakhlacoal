@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import { Save, Building2, Bell, Palette, Globe2, ShieldCheck, Upload } from 'lucide-react';
+import { Save, Building2, Bell, Palette, Globe2, ShieldCheck, Upload, Mail, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
+
 
 const TABS = [
   { id: 'general', label: 'عام', icon: Building2 },
