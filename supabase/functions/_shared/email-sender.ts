@@ -11,6 +11,14 @@ export interface EmailAttachment {
   content_type?: string;
 }
 
+export type EmailCategory =
+  | 'order_updates'
+  | 'shipment_updates'
+  | 'invoice_receipts'
+  | 'quote_updates'
+  | 'marketing'
+  | 'transactional'; // bypasses opt-in (password reset, admin tests, etc.)
+
 export interface SendEmailInput {
   template: string;
   to: string;
@@ -24,6 +32,18 @@ export interface SendEmailInput {
   triggeredBy?: string | null;
   admin?: SupabaseClient;
   attachments?: EmailAttachment[];
+  category?: EmailCategory;
+}
+
+// Best-effort inference from template name when caller omits category.
+function inferCategory(template: string): EmailCategory {
+  const t = template.toLowerCase();
+  if (t.includes('shipment')) return 'shipment_updates';
+  if (t.includes('invoice')) return 'invoice_receipts';
+  if (t.includes('quote')) return 'quote_updates';
+  if (t.includes('order')) return 'order_updates';
+  if (t.includes('marketing') || t.includes('promo') || t.includes('newsletter')) return 'marketing';
+  return 'transactional';
 }
 
 export interface SendEmailResult {
