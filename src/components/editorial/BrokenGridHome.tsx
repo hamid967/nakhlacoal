@@ -74,7 +74,7 @@ export function BrokenGridHome() {
             fallback={heroEditorial}
             alt=""
             className="h-full w-full object-cover opacity-90"
-            {...({ fetchpriority: 'high' } as Record<string, string>)}
+            fetchPriority="high"
             loading="eager"
             width={1920}
             height={1088}
