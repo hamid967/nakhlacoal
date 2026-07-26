@@ -40,10 +40,9 @@ const PRESETS: { label: string; text: string }[] = [
   { label: 'مناسبات', text: 'أحتاج فحم لمناسبة واحدة (~50–100 كجم). ما الخيار الأفضل سعراً وجودة؟' },
 ];
 
-type LiveQuote = {
-  count: number; subtotal: number; vat: number; total: number;
-  items: { label: string; qty: number; unit: string; lineTotal: number }[];
-};
+// LiveQuote type comes from LiveQuoteSchema above — kept as single source of truth.
+
+const MAX_WA_TEXT = 3500; // WhatsApp text cap safety margin
 
 const fmt = (n: number) => new Intl.NumberFormat('ar-SA', { maximumFractionDigits: 2 }).format(n);
 const unitAr = (u: string) => ({ kg: 'كجم', carton: 'كرتون', ton: 'طن' } as Record<string, string>)[u] || u;
@@ -82,7 +81,16 @@ export default function Quote() {
   }, []);
 
   useEffect(() => {
-    const onUpdate = (e: Event) => setLive((e as CustomEvent<LiveQuote>).detail);
+    const onUpdate = (e: Event) => {
+      const raw = (e as CustomEvent<unknown>).detail;
+      const parsed = LiveQuoteSchema.safeParse(raw);
+      if (!parsed.success) {
+        // Silently drop malformed payloads — never propagate to UI/URL builders.
+        setLive(null);
+        return;
+      }
+      setLive(parsed.data);
+    };
     window.addEventListener('palm:quote-update', onUpdate);
     return () => window.removeEventListener('palm:quote-update', onUpdate);
   }, []);
@@ -91,16 +99,23 @@ export default function Quote() {
     window.dispatchEvent(new CustomEvent('palm:open-assistant', { detail: { prefill } }));
   };
 
-  const summaryText = () => {
-    if (!live || !live.count) return '';
-    const lines = live.items
-      .map((i, idx) => `${idx + 1}) ${i.label} — ${i.qty} ${unitAr(i.unit)} = ${fmt(i.lineTotal)} ر.س`)
+  /** Build summary strictly from a re-validated LiveQuote. Returns null when invalid. */
+  const buildValidatedSummary = (): string | null => {
+    if (!live) return null;
+    const parsed = LiveQuoteSchema.safeParse(live);
+    if (!parsed.success || parsed.data.count === 0) return null;
+    const d = parsed.data;
+    // Strip control chars and clamp label length on the final formatting step.
+    const clean = (s: string) => s.replace(/[\u0000-\u001F\u007F]/g, '').slice(0, 120);
+    const lines = d.items
+      .map((i, idx) => `${idx + 1}) ${clean(i.label)} — ${i.qty} ${unitAr(i.unit)} = ${fmt(i.lineTotal)} ر.س`)
       .join('\n');
-    return `🌴 ملخص عرض السعر — فحم النخلة\n${lines}\n— عدد البنود: ${live.count}\n— الإجمالي شامل الضريبة: ${fmt(live.total)} ر.س`;
+    const text = `🌴 ملخص عرض السعر — فحم النخلة\n${lines}\n— عدد البنود: ${d.count}\n— الإجمالي شامل الضريبة: ${fmt(d.total)} ر.س`;
+    return text.slice(0, MAX_WA_TEXT);
   };
 
   const copySummary = async () => {
-    const t = summaryText();
+    const t = buildValidatedSummary();
     if (!t) return toast.error('أضف منتجاً أولاً لتوليد الملخص');
     await navigator.clipboard.writeText(t);
     setCopied(true);
@@ -109,9 +124,10 @@ export default function Quote() {
   };
 
   const sendSummaryWhatsApp = () => {
-    const t = summaryText();
+    const t = buildValidatedSummary();
     if (!t) return toast.error('أضف منتجاً أولاً لتوليد الملخص');
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(t)}`, '_blank', 'noopener');
+    // waLink centralizes number + encodeURIComponent; never bypass it.
+    window.open(waLink(t), '_blank', 'noopener,noreferrer');
   };
 
   return (
