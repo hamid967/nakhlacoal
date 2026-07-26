@@ -81,6 +81,8 @@ export default function ZatcaAdmin() {
   const [busy, setBusy] = useState<string | null>(null);
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const rowRefs = useRef<Record<string, HTMLTableRowElement | null>>({});
 
   const defaultEnv: EnvKey = scope === 'production' ? 'production' : 'sandbox';
 
