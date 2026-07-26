@@ -13,3 +13,6 @@ verify_jwt = false
 verify_jwt = false
 
 
+
+[functions.send-shipment-notification]
+verify_jwt = false
