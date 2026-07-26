@@ -42,7 +42,8 @@ const groups: Group[] = [
     { to: '/admin/payments', label: 'المدفوعات', icon: CreditCard, badge: 'قريباً' },
   ]},
   { title: 'النمو', items: [
-    { to: '/admin/marketing', label: 'التسويق', icon: Megaphone, badge: 'قريباً' },
+    { to: '/admin/coupons', label: 'الكوبونات والخصومات', icon: Tag },
+    { to: '/admin/marketing', label: 'التسويق', icon: Megaphone },
     { to: '/admin/ai-center', label: 'مركز الذكاء', icon: Sparkles, badge: 'قريباً' },
     { to: '/admin/website', label: 'محرر الموقع', icon: LayoutTemplate, badge: 'قريباً' },
     { to: '/admin/seo', label: 'السيو', icon: Search, badge: 'قريباً' },
@@ -52,7 +53,7 @@ const groups: Group[] = [
   { title: 'النظام', items: [
     { to: '/admin/users', label: 'المستخدمون', icon: Users, badge: 'قريباً' },
     { to: '/admin/roles', label: 'الأدوار والصلاحيات', icon: KeyRound, badge: 'قريباً' },
-    { to: '/admin/logs', label: 'سجل النظام', icon: ScrollText, badge: 'قريباً' },
+    { to: '/admin/logs', label: 'سجل النشاط', icon: ScrollText },
     { to: '/admin/security', label: 'الأمان', icon: ShieldCheck, badge: 'قريباً' },
     { to: '/admin/tracking', label: 'التتبع والتحليلات', icon: BarChart3 },
     { to: '/admin/settings', label: 'الإعدادات', icon: SettingsIcon },

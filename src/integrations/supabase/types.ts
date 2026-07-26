@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      activity_log: {
+        Row: {
+          action: string
+          actor_email: string | null
+          actor_id: string | null
+          created_at: string
+          entity_id: string | null
+          entity_table: string
+          id: string
+          ip_address: string | null
+          new_data: Json | null
+          old_data: Json | null
+          summary: string | null
+        }
+        Insert: {
+          action: string
+          actor_email?: string | null
+          actor_id?: string | null
+          created_at?: string
+          entity_id?: string | null
+          entity_table: string
+          id?: string
+          ip_address?: string | null
+          new_data?: Json | null
+          old_data?: Json | null
+          summary?: string | null
+        }
+        Update: {
+          action?: string
+          actor_email?: string | null
+          actor_id?: string | null
+          created_at?: string
+          entity_id?: string | null
+          entity_table?: string
+          id?: string
+          ip_address?: string | null
+          new_data?: Json | null
+          old_data?: Json | null
+          summary?: string | null
+        }
+        Relationships: []
+      }
       analytics_settings: {
         Row: {
           enabled: boolean
@@ -129,6 +171,57 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      coupons: {
+        Row: {
+          code: string
+          created_at: string
+          created_by: string | null
+          discount_type: string
+          discount_value: number
+          ends_at: string | null
+          id: string
+          is_active: boolean
+          max_uses: number | null
+          min_order_sar: number
+          notes: string | null
+          starts_at: string | null
+          updated_at: string
+          uses_count: number
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          created_by?: string | null
+          discount_type: string
+          discount_value: number
+          ends_at?: string | null
+          id?: string
+          is_active?: boolean
+          max_uses?: number | null
+          min_order_sar?: number
+          notes?: string | null
+          starts_at?: string | null
+          updated_at?: string
+          uses_count?: number
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          created_by?: string | null
+          discount_type?: string
+          discount_value?: number
+          ends_at?: string | null
+          id?: string
+          is_active?: boolean
+          max_uses?: number | null
+          min_order_sar?: number
+          notes?: string | null
+          starts_at?: string | null
+          updated_at?: string
+          uses_count?: number
+        }
+        Relationships: []
       }
       customers: {
         Row: {

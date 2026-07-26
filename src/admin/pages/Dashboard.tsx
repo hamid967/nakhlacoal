@@ -20,15 +20,18 @@ const toKg = (q: number, unit: string) => {
   return q;
 };
 
+type Period = 'day' | 'week' | 'month';
+
 export default function AdminDashboard() {
   const [orders, setOrders] = useState<any[]>([]);
   const [inv, setInv] = useState<any[]>([]);
   const [customers, setCustomers] = useState(0);
+  const [period, setPeriod] = useState<Period>('day');
 
   useEffect(() => {
     (async () => {
       const [o, i, c] = await Promise.all([
-        supabase.from('orders').select('*').order('created_at', { ascending: false }).limit(500),
+        supabase.from('orders').select('*').order('created_at', { ascending: false }).limit(2000),
         supabase.from('inventory_items').select('*'),
         supabase.from('profiles').select('id', { count: 'exact', head: true }),
       ]);
@@ -37,6 +40,18 @@ export default function AdminDashboard() {
       setCustomers(c.count || 0);
     })();
   }, []);
+
+  const priceOf = useMemo(() => {
+    return (o: any) => {
+      const kg = toKg(Number(o.quantity) || 0, o.unit);
+      const item = inv.find((it) => {
+        try { return new RegExp(it.match_pattern || it.slug, 'i').test(o.product_type || ''); } catch { return false; }
+      });
+      const tiers = Array.isArray(item?.tiers) ? item!.tiers : [];
+      const price = tiers.length ? Math.min(...tiers.map((t: any) => Number(t.pricePerKg ?? t.price_sar) || 0).filter(Boolean)) : 0;
+      return kg * price;
+    };
+  }, [inv]);
 
   const stats = useMemo(() => {
     const today = new Date().toISOString().slice(0, 10);
@@ -47,15 +62,7 @@ export default function AdminDashboard() {
     const wholesale = orders.filter((o) => /جمل|whole/i.test(o.business_type || ''));
     const exportO = orders.filter((o) => /export|تصدير/i.test(o.business_type || ''));
 
-    const revenueOf = (list: any[]) => list.reduce((s, o) => {
-      const kg = toKg(Number(o.quantity) || 0, o.unit);
-      const item = inv.find((it) => {
-        try { return new RegExp(it.match_pattern || it.slug, 'i').test(o.product_type || ''); } catch { return false; }
-      });
-      const tiers = Array.isArray(item?.tiers) ? item!.tiers : [];
-      const price = tiers.length ? Math.min(...tiers.map((t: any) => Number(t.pricePerKg ?? t.price_sar) || 0).filter(Boolean)) : 0;
-      return s + kg * price;
-    }, 0);
+    const revenueOf = (list: any[]) => list.reduce((s, o) => s + priceOf(o), 0);
     const revenue = revenueOf(orders);
     const revToday = revenueOf(todays);
     const revYest = revenueOf(yesterdays);
@@ -70,15 +77,47 @@ export default function AdminDashboard() {
 
     const stockKg = inv.reduce((s, i) => s + (Number(i.in_stock_kg) || 0), 0);
 
-    const byDay: Record<string, { date: string; orders: number; revenue: number }> = {};
-    for (let d = 13; d >= 0; d--) {
-      const k = new Date(Date.now() - d * 86400000).toISOString().slice(0, 10);
-      byDay[k] = { date: k.slice(5), orders: 0, revenue: 0 };
+    // Bucketed timeline by selected period
+    type Bucket = { date: string; orders: number; revenue: number; key: string };
+    const buckets = new Map<string, Bucket>();
+    const now = new Date();
+    const spans = period === 'day' ? 14 : period === 'week' ? 8 : 6;
+
+    for (let i = spans - 1; i >= 0; i--) {
+      let key: string; let label: string;
+      if (period === 'day') {
+        const d = new Date(now.getTime() - i * 86400000);
+        key = d.toISOString().slice(0, 10);
+        label = key.slice(5);
+      } else if (period === 'week') {
+        const d = new Date(now.getTime() - i * 7 * 86400000);
+        const y = d.getFullYear();
+        const onejan = new Date(y, 0, 1);
+        const week = Math.ceil((((d.getTime() - onejan.getTime()) / 86400000) + onejan.getDay() + 1) / 7);
+        key = `${y}-W${String(week).padStart(2, '0')}`;
+        label = `أسبوع ${week}`;
+      } else {
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+        label = d.toLocaleDateString('ar-SA', { month: 'short' });
+      }
+      buckets.set(key, { date: label, orders: 0, revenue: 0, key });
     }
     orders.forEach((o) => {
-      const k = o.created_at?.slice(0, 10);
-      if (byDay[k]) byDay[k].orders += 1;
+      if (!o.created_at) return;
+      const d = new Date(o.created_at);
+      let key: string;
+      if (period === 'day') key = d.toISOString().slice(0, 10);
+      else if (period === 'week') {
+        const y = d.getFullYear();
+        const onejan = new Date(y, 0, 1);
+        const week = Math.ceil((((d.getTime() - onejan.getTime()) / 86400000) + onejan.getDay() + 1) / 7);
+        key = `${y}-W${String(week).padStart(2, '0')}`;
+      } else key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+      const b = buckets.get(key);
+      if (b) { b.orders += 1; b.revenue += priceOf(o); }
     });
+    const timeline = Array.from(buckets.values());
 
     const byProd: Record<string, number> = {};
     orders.forEach((o) => { byProd[o.product_type] = (byProd[o.product_type] || 0) + toKg(Number(o.quantity) || 0, o.unit); });
@@ -91,11 +130,11 @@ export default function AdminDashboard() {
 
     return {
       todays: todays.length, pending: pending.length, wholesale: wholesale.length, exportO: exportO.length,
-      revenue, stockKg, timeline: Object.values(byDay), topProducts, statusData, byStatus,
+      revenue, stockKg, timeline, topProducts, statusData, byStatus,
       totalOrders: orders.length,
       ordersDelta, revenueDelta,
     };
-  }, [orders, inv]);
+  }, [orders, inv, period, priceOf]);
 
   const STATUS_LABEL: Record<string, string> = {
     new: 'جديد', contacted: 'تم التواصل', confirmed: 'مؤكد',
@@ -191,9 +230,25 @@ export default function AdminDashboard() {
       {/* Charts */}
       <div className="grid lg:grid-cols-3 gap-5">
         <div className="a-card p-5 lg:col-span-2">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="font-semibold">حركة الطلبات — آخر 14 يوم</h3>
-            <span className="a-pill a-pill-green">مباشر</span>
+          <div className="flex items-center justify-between mb-3 gap-2 flex-wrap">
+            <h3 className="font-semibold">
+              الأداء — {period === 'day' ? 'يومي (14 يوم)' : period === 'week' ? 'أسبوعي (8 أسابيع)' : 'شهري (6 أشهر)'}
+            </h3>
+            <div className="inline-flex rounded-lg border overflow-hidden" style={{ borderColor: 'var(--a-border)' }}>
+              {(['day','week','month'] as const).map((p) => (
+                <button
+                  key={p}
+                  onClick={() => setPeriod(p)}
+                  className="px-3 py-1.5 text-xs font-medium transition"
+                  style={{
+                    background: period === p ? 'var(--a-palm)' : 'transparent',
+                    color: period === p ? '#fff' : 'var(--a-text-muted)',
+                  }}
+                >
+                  {p === 'day' ? 'يومي' : p === 'week' ? 'أسبوعي' : 'شهري'}
+                </button>
+              ))}
+            </div>
           </div>
           <ResponsiveContainer width="100%" height={280}>
             <AreaChart data={stats.timeline}>
@@ -202,12 +257,18 @@ export default function AdminDashboard() {
                   <stop offset="0%" stopColor="#1A4A00" stopOpacity={0.35} />
                   <stop offset="100%" stopColor="#1A4A00" stopOpacity={0} />
                 </linearGradient>
+                <linearGradient id="g2" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#C9A84C" stopOpacity={0.35} />
+                  <stop offset="100%" stopColor="#C9A84C" stopOpacity={0} />
+                </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,.06)" />
               <XAxis dataKey="date" tick={{ fontSize: 11 }} />
-              <YAxis tick={{ fontSize: 11 }} allowDecimals={false} />
-              <Tooltip />
-              <Area type="monotone" dataKey="orders" stroke="#1A4A00" strokeWidth={2.5} fill="url(#g1)" />
+              <YAxis yAxisId="left" tick={{ fontSize: 11 }} allowDecimals={false} />
+              <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 11 }} />
+              <Tooltip formatter={(v: number, n: string) => n === 'الإيرادات' ? `${Math.round(v).toLocaleString('ar-SA')} ر.س` : v} />
+              <Area yAxisId="left" type="monotone" name="الطلبات" dataKey="orders" stroke="#1A4A00" strokeWidth={2.5} fill="url(#g1)" />
+              <Area yAxisId="right" type="monotone" name="الإيرادات" dataKey="revenue" stroke="#C9A84C" strokeWidth={2} fill="url(#g2)" />
             </AreaChart>
           </ResponsiveContainer>
         </div>

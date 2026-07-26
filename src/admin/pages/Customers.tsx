@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { Users, Search, Plus, Pencil, Trash2, X, Loader2 } from 'lucide-react';
+import { Users, Search, Plus, Pencil, Trash2, X, Loader2, TrendingUp, ShoppingBag, Crown, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
+import { logActivity } from '../lib/activity';
 
 type Customer = {
   id: string;
@@ -34,22 +35,50 @@ const empty: Partial<Customer> = {
   notes: '',
 };
 
+type OrderRow = {
+  id: string; created_at: string; product_type: string | null;
+  quantity: number | null; unit: string | null; status: string | null;
+  contact_name?: string | null; phone?: string | null; email?: string | null;
+  company_name?: string | null;
+};
+
+type Segment = 'vip' | 'loyal' | 'active' | 'new';
+const SEGMENT_META: Record<Segment, { label: string; tint: string; icon: typeof Crown }> = {
+  vip:    { label: 'VIP',     tint: 'gold',   icon: Crown },
+  loyal:  { label: 'منتظم',   tint: 'green',  icon: TrendingUp },
+  active: { label: 'نشط',     tint: 'blue',   icon: ShoppingBag },
+  new:    { label: 'جديد',    tint: 'violet', icon: Sparkles },
+};
+
+function segmentOf(count: number, revenue: number): Segment {
+  if (revenue >= 50000 || count >= 20) return 'vip';
+  if (count >= 5) return 'loyal';
+  if (count >= 1) return 'active';
+  return 'new';
+}
+
 export default function AdminCustomers() {
   const [rows, setRows] = useState<Customer[]>([]);
+  const [allOrders, setAllOrders] = useState<OrderRow[]>([]);
+  const [inv, setInv] = useState<any[]>([]);
   const [q, setQ] = useState('');
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState<Partial<Customer>>(empty);
+  const [detail, setDetail] = useState<Customer | null>(null);
 
   const load = async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from('customers')
-      .select('*')
-      .order('created_at', { ascending: false });
+    const [{ data: cs, error }, { data: os }, { data: iv }] = await Promise.all([
+      supabase.from('customers').select('*').order('created_at', { ascending: false }),
+      supabase.from('orders').select('id, created_at, product_type, quantity, unit, status, contact_name, phone, email, company_name').order('created_at', { ascending: false }).limit(2000),
+      supabase.from('inventory_items').select('*'),
+    ]);
     if (error) toast.error(error.message);
-    setRows((data as Customer[]) || []);
+    setRows((cs as Customer[]) || []);
+    setAllOrders((os as OrderRow[]) || []);
+    setInv(iv || []);
     setLoading(false);
   };
 
@@ -103,6 +132,13 @@ export default function AdminCustomers() {
       : await supabase.from('customers').insert(payload);
     setSaving(false);
     if (res.error) return toast.error(res.error.message);
+    logActivity({
+      action: form.id ? 'update' : 'create',
+      entity_table: 'customers',
+      entity_id: form.id ?? null,
+      summary: `${form.id ? 'تعديل' : 'إنشاء'} عميل: ${payload.company_name}`,
+      new_data: payload,
+    });
     toast.success(form.id ? 'تم التحديث' : 'تم الإنشاء');
     setOpen(false);
     load();
@@ -112,8 +148,37 @@ export default function AdminCustomers() {
     if (!confirm(`حذف العميل "${c.company_name}"؟`)) return;
     const { error } = await supabase.from('customers').delete().eq('id', c.id);
     if (error) return toast.error(error.message);
+    logActivity({ action: 'delete', entity_table: 'customers', entity_id: c.id, summary: `حذف عميل: ${c.company_name}`, old_data: c });
     toast.success('تم الحذف');
     setRows((r) => r.filter((x) => x.id !== c.id));
+  };
+
+  // Match orders to a customer by phone/email/company_name and compute LTV metrics
+  const priceOf = (o: OrderRow) => {
+    const u = (o.unit || '').toLowerCase();
+    const q = Number(o.quantity) || 0;
+    const kg = u.includes('ton') || u.includes('طن') ? q * 1000 : u.includes('box') || u.includes('كرت') ? q * 10 : q;
+    const item = inv.find((it) => {
+      try { return new RegExp(it.match_pattern || it.slug, 'i').test(o.product_type || ''); } catch { return false; }
+    });
+    const tiers = Array.isArray(item?.tiers) ? item!.tiers : [];
+    const price = tiers.length ? Math.min(...tiers.map((t: any) => Number(t.pricePerKg ?? t.price_sar) || 0).filter(Boolean)) : 0;
+    return kg * price;
+  };
+  const ordersOf = (c: Customer): OrderRow[] => {
+    const phone = (c.phone || '').replace(/\s+/g, '');
+    const email = (c.email || '').toLowerCase();
+    const name = (c.company_name || '').toLowerCase();
+    return allOrders.filter((o) =>
+      (phone && (o.phone || '').replace(/\s+/g, '').endsWith(phone.slice(-8))) ||
+      (email && (o.email || '').toLowerCase() === email) ||
+      (name && (o.company_name || '').toLowerCase() === name)
+    );
+  };
+  const metricsOf = (c: Customer) => {
+    const os = ordersOf(c);
+    const revenue = os.reduce((s, o) => s + priceOf(o), 0);
+    return { count: os.length, revenue, segment: segmentOf(os.length, revenue), lastAt: os[0]?.created_at ?? null, orders: os };
   };
 
   const set = (k: keyof Customer, v: any) => setForm((f) => ({ ...f, [k]: v }));
@@ -162,39 +227,134 @@ export default function AdminCustomers() {
                 <th className="px-3 py-2 font-medium">الشركة</th>
                 <th className="px-3 py-2 font-medium">المسؤول</th>
                 <th className="px-3 py-2 font-medium">الجوال</th>
-                <th className="px-3 py-2 font-medium">البريد</th>
-                <th className="px-3 py-2 font-medium">المدينة</th>
-                <th className="px-3 py-2 font-medium">الرصيد</th>
+                <th className="px-3 py-2 font-medium">الشريحة</th>
+                <th className="px-3 py-2 font-medium">الطلبات</th>
+                <th className="px-3 py-2 font-medium">LTV</th>
                 <th className="px-3 py-2"></th>
               </tr>
             </thead>
             <tbody>
-              {filtered.map((c) => (
-                <tr key={c.id} className="border-t" style={{ borderColor: 'var(--a-border)' }}>
-                  <td className="px-3 py-2 font-medium">{c.company_name}</td>
-                  <td className="px-3 py-2">{c.contact_name || '—'}</td>
-                  <td className="px-3 py-2 ltr-text">{c.phone || '—'}</td>
-                  <td className="px-3 py-2 ltr-text">{c.email || '—'}</td>
-                  <td className="px-3 py-2">{c.city || '—'}</td>
-                  <td className="px-3 py-2">{Number(c.balance_sar).toFixed(2)}</td>
-                  <td className="px-3 py-2">
-                    <div className="flex items-center justify-end gap-1">
-                      <button onClick={() => startEdit(c)}
-                        className="p-1.5 rounded hover:bg-black/5" title="تعديل">
-                        <Pencil className="h-4 w-4" />
-                      </button>
-                      <button onClick={() => remove(c)}
-                        className="p-1.5 rounded hover:bg-red-500/10 text-red-600" title="حذف">
-                        <Trash2 className="h-4 w-4" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+              {filtered.map((c) => {
+                const m = metricsOf(c);
+                const seg = SEGMENT_META[m.segment];
+                const SegIcon = seg.icon;
+                return (
+                  <tr
+                    key={c.id}
+                    className="border-t cursor-pointer hover:bg-black/[.02]"
+                    style={{ borderColor: 'var(--a-border)' }}
+                    onClick={() => setDetail(c)}
+                  >
+                    <td className="px-3 py-2 font-medium">{c.company_name}</td>
+                    <td className="px-3 py-2">{c.contact_name || '—'}</td>
+                    <td className="px-3 py-2 ltr-text">{c.phone || '—'}</td>
+                    <td className="px-3 py-2">
+                      <span className={`a-pill a-pill-${seg.tint} inline-flex items-center gap-1`}>
+                        <SegIcon className="w-3 h-3" /> {seg.label}
+                      </span>
+                    </td>
+                    <td className="px-3 py-2 tabular-nums">{m.count}</td>
+                    <td className="px-3 py-2 tabular-nums font-semibold">
+                      {Math.round(m.revenue).toLocaleString('ar-SA')} ر.س
+                    </td>
+                    <td className="px-3 py-2" onClick={(e) => e.stopPropagation()}>
+                      <div className="flex items-center justify-end gap-1">
+                        <button onClick={() => startEdit(c)}
+                          className="p-1.5 rounded hover:bg-black/5" title="تعديل">
+                          <Pencil className="h-4 w-4" />
+                        </button>
+                        <button onClick={() => remove(c)}
+                          className="p-1.5 rounded hover:bg-red-500/10 text-red-600" title="حذف">
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         )}
       </div>
+
+      {/* Customer detail drawer with LTV + purchase history */}
+      {detail && (() => {
+        const m = metricsOf(detail);
+        const seg = SEGMENT_META[m.segment];
+        const SegIcon = seg.icon;
+        return (
+          <div className="fixed inset-0 z-50 bg-black/50" onClick={() => setDetail(null)}>
+            <aside
+              onClick={(e) => e.stopPropagation()}
+              className="fixed inset-y-0 start-0 w-full max-w-xl overflow-y-auto border-e"
+              style={{ background: 'var(--a-surface)', borderColor: 'var(--a-border)' }}
+            >
+              <div className="p-5 border-b flex items-start justify-between gap-3" style={{ borderColor: 'var(--a-border)' }}>
+                <div>
+                  <div className="text-xs" style={{ color: 'var(--a-text-muted)' }}>ملف عميل</div>
+                  <h2 className="text-xl font-bold">{detail.company_name}</h2>
+                  <div className="text-xs mt-1" style={{ color: 'var(--a-text-muted)' }}>
+                    {detail.contact_name || '—'} · <span className="ltr-text">{detail.phone || '—'}</span>
+                  </div>
+                </div>
+                <button onClick={() => setDetail(null)} className="p-1 rounded hover:bg-black/5">
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+
+              <div className="p-5 grid grid-cols-3 gap-3">
+                <div className="a-card p-3">
+                  <div className="text-[10px]" style={{ color: 'var(--a-text-muted)' }}>الشريحة</div>
+                  <div className="mt-1">
+                    <span className={`a-pill a-pill-${seg.tint} inline-flex items-center gap-1`}>
+                      <SegIcon className="w-3 h-3" /> {seg.label}
+                    </span>
+                  </div>
+                </div>
+                <div className="a-card p-3">
+                  <div className="text-[10px]" style={{ color: 'var(--a-text-muted)' }}>عدد الطلبات</div>
+                  <div className="text-xl font-bold mt-1 tabular-nums">{m.count}</div>
+                </div>
+                <div className="a-card p-3">
+                  <div className="text-[10px]" style={{ color: 'var(--a-text-muted)' }}>LTV</div>
+                  <div className="text-lg font-bold mt-1 tabular-nums" style={{ color: 'var(--a-palm)' }}>
+                    {Math.round(m.revenue).toLocaleString('ar-SA')} ر.س
+                  </div>
+                </div>
+              </div>
+
+              <div className="px-5 pb-5">
+                <h3 className="font-semibold text-sm mb-2">سجل الطلبات ({m.count})</h3>
+                {m.orders.length === 0 ? (
+                  <div className="text-xs text-center py-8" style={{ color: 'var(--a-text-muted)' }}>
+                    لا توجد طلبات مرتبطة بهذا العميل بعد.
+                  </div>
+                ) : (
+                  <ul className="space-y-2">
+                    {m.orders.slice(0, 30).map((o) => (
+                      <li key={o.id} className="flex items-center justify-between gap-3 p-2 rounded border" style={{ borderColor: 'var(--a-border)' }}>
+                        <div className="min-w-0">
+                          <div className="text-sm font-medium truncate">{o.product_type}</div>
+                          <div className="text-[11px]" style={{ color: 'var(--a-text-muted)' }}>
+                            {o.quantity} {o.unit} · {new Date(o.created_at).toLocaleDateString('ar-SA')}
+                          </div>
+                        </div>
+                        <span className="a-pill">{o.status}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+
+              <div className="p-5 border-t flex justify-end gap-2" style={{ borderColor: 'var(--a-border)' }}>
+                <button onClick={() => { setDetail(null); startEdit(detail); }} className="a-btn a-btn-ghost">
+                  <Pencil className="h-4 w-4" /> تعديل
+                </button>
+              </div>
+            </aside>
+          </div>
+        );
+      })()}
 
       {open && (
         <div className="fixed inset-0 z-50 grid place-items-center bg-black/50 p-4"
