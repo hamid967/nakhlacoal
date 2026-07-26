@@ -678,6 +678,8 @@ export type Database = {
       }
       email_settings: {
         Row: {
+          admin_notify_email: string | null
+          auto_admin_quote_alert: boolean
           auto_customer_invite: boolean
           auto_invoice_receipt: boolean
           auto_order_confirmation: boolean
@@ -687,6 +689,8 @@ export type Database = {
           updated_by: string | null
         }
         Insert: {
+          admin_notify_email?: string | null
+          auto_admin_quote_alert?: boolean
           auto_customer_invite?: boolean
           auto_invoice_receipt?: boolean
           auto_order_confirmation?: boolean
@@ -696,6 +700,8 @@ export type Database = {
           updated_by?: string | null
         }
         Update: {
+          admin_notify_email?: string | null
+          auto_admin_quote_alert?: boolean
           auto_customer_invite?: boolean
           auto_invoice_receipt?: boolean
           auto_order_confirmation?: boolean
