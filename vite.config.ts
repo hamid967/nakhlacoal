@@ -27,8 +27,9 @@ export default defineConfig(({ mode }) => ({
         return new URLSearchParams();
       },
     }),
-    // Inject <link rel="preload" fetchpriority="high"> for the most likely LCP image
-    lcpPreload({ candidates: ['slide-coconut-trees', 'product-coconut', 'hero-charcoal'] }),
+    // Inject <link rel="preload" fetchpriority="high"> for the most likely LCP image.
+    // Home hero is <ResponsiveImage base="hero-editorial"> → the 1600/1920 webp variant.
+    lcpPreload({ candidates: ['hero-editorial-1920', 'hero-editorial-1600', 'hero-editorial'] }),
     // Service Worker via Workbox — caches static assets, fonts, images, and Supabase Storage
     // for near-instant repeat visits. Auto-updates in the background on new deploys.
     VitePWA({
