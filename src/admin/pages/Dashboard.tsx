@@ -26,18 +26,24 @@ export default function AdminDashboard() {
   const [orders, setOrders] = useState<any[]>([]);
   const [inv, setInv] = useState<any[]>([]);
   const [customers, setCustomers] = useState(0);
+  const [quotes, setQuotes] = useState<any[]>([]);
+  const [trademarks, setTrademarks] = useState<any[]>([]);
   const [period, setPeriod] = useState<Period>('day');
 
   useEffect(() => {
     (async () => {
-      const [o, i, c] = await Promise.all([
+      const [o, i, c, q, t] = await Promise.all([
         supabase.from('orders').select('*').order('created_at', { ascending: false }).limit(2000),
         supabase.from('inventory_items').select('*'),
         supabase.from('profiles').select('id', { count: 'exact', head: true }),
+        supabase.from('quote_requests').select('id,status,quoted_price_sar,created_at').order('created_at', { ascending: false }).limit(500),
+        supabase.from('trademarks').select('id,name_ar,registration_no,expires_hijri,is_active').eq('is_active', true),
       ]);
       setOrders(o.data || []);
       setInv(i.data || []);
       setCustomers(c.count || 0);
+      setQuotes(q.data || []);
+      setTrademarks(t.data || []);
     })();
   }, []);
 
