@@ -6,13 +6,14 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.4";
 import { buildCors } from "../_shared/cors.ts";
 import {
-  buildQrTlv,
   buildUblInvoice,
-  b64encode,
-  sha256Base64,
   zatcaBase,
 } from "../_shared/zatca.ts";
-import { zatcaSignSha256 } from "../_shared/zatca-csr.ts";
+import {
+  signInvoiceXades,
+  wrapInvoiceForSigning,
+  computeInvoiceHashB64,
+} from "../_shared/zatca-xmldsig.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
