@@ -411,6 +411,7 @@ export type Database = {
       }
       email_settings: {
         Row: {
+          auto_customer_invite: boolean
           auto_invoice_receipt: boolean
           auto_order_confirmation: boolean
           auto_shipment_notification: boolean
@@ -419,6 +420,7 @@ export type Database = {
           updated_by: string | null
         }
         Insert: {
+          auto_customer_invite?: boolean
           auto_invoice_receipt?: boolean
           auto_order_confirmation?: boolean
           auto_shipment_notification?: boolean
@@ -427,6 +429,7 @@ export type Database = {
           updated_by?: string | null
         }
         Update: {
+          auto_customer_invite?: boolean
           auto_invoice_receipt?: boolean
           auto_order_confirmation?: boolean
           auto_shipment_notification?: boolean
@@ -868,6 +871,7 @@ export type Database = {
           email: string | null
           full_name: string
           id: string
+          invited_at: string | null
           notes: string | null
           order_id: string | null
           phone: string
@@ -889,6 +893,7 @@ export type Database = {
           email?: string | null
           full_name: string
           id?: string
+          invited_at?: string | null
           notes?: string | null
           order_id?: string | null
           phone: string
@@ -910,6 +915,7 @@ export type Database = {
           email?: string | null
           full_name?: string
           id?: string
+          invited_at?: string | null
           notes?: string | null
           order_id?: string | null
           phone?: string
