@@ -256,6 +256,70 @@ export default function Products() {
               </select>
             </div>
           </div>
+
+          {/* Secondary row: price range + availability */}
+          <div className="container pb-4 flex flex-wrap items-center gap-4 border-t border-border/40 pt-3">
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
+                {isAr ? 'السعر (ر.س)' : 'Price (SAR)'}
+              </span>
+              <label htmlFor="price-min" className="sr-only">{isAr ? 'أقل سعر' : 'Min price'}</label>
+              <input
+                id="price-min"
+                type="number"
+                inputMode="numeric"
+                min={0}
+                step={5}
+                value={minParam ?? ''}
+                onChange={(e) => setParam('min', e.target.value.trim() || null)}
+                placeholder={isAr ? 'من' : 'Min'}
+                dir="ltr"
+                className="h-9 w-20 bg-transparent border border-border focus:border-gold focus:ring-2 focus:ring-gold/30 focus:outline-none text-sm px-2 text-foreground"
+              />
+              <span aria-hidden className="text-muted-foreground">—</span>
+              <label htmlFor="price-max" className="sr-only">{isAr ? 'أعلى سعر' : 'Max price'}</label>
+              <input
+                id="price-max"
+                type="number"
+                inputMode="numeric"
+                min={0}
+                step={5}
+                value={maxParam ?? ''}
+                onChange={(e) => setParam('max', e.target.value.trim() || null)}
+                placeholder={isAr ? 'إلى' : 'Max'}
+                dir="ltr"
+                className="h-9 w-20 bg-transparent border border-border focus:border-gold focus:ring-2 focus:ring-gold/30 focus:outline-none text-sm px-2 text-foreground"
+              />
+              {(minParam || maxParam) && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    const next = new URLSearchParams(params);
+                    next.delete('min');
+                    next.delete('max');
+                    setParams(next, { replace: true });
+                  }}
+                  className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground hover:text-foreground"
+                  aria-label={isAr ? 'مسح نطاق السعر' : 'Clear price range'}
+                >
+                  {isAr ? 'مسح' : 'Reset'}
+                </button>
+              )}
+            </div>
+
+            <label className="inline-flex items-center gap-2 cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={stockOnly}
+                onChange={(e) => setParam('stock', e.target.checked ? '1' : null)}
+                className="h-4 w-4 accent-gold cursor-pointer"
+              />
+              <span className="text-xs uppercase tracking-[0.22em] text-foreground/80">
+                {isAr ? 'المتوفر فقط' : 'In stock only'}
+              </span>
+            </label>
+          </div>
+
         </section>
 
         {/* Grid */}
