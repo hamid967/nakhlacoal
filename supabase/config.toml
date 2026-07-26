@@ -19,3 +19,6 @@ verify_jwt = false
 
 [functions.send-invoice-receipt]
 verify_jwt = false
+
+[functions.email-preferences]
+verify_jwt = false
