@@ -79,6 +79,8 @@ export function QuoteRequestForm({ initialProduct, initialSku }: QuoteRequestFor
     setSubmitting(true);
     try {
       const d = parsed.data;
+      const skuLine = initialSku ? `[SKU: ${initialSku}] ` : '';
+      const notes = `${skuLine}${d.notes || ''}`.trim() || null;
       const payload = {
         full_name: d.full_name!,
         company_name: d.company_name!,
@@ -88,9 +90,10 @@ export function QuoteRequestForm({ initialProduct, initialSku }: QuoteRequestFor
         quantity: d.quantity!,
         unit: d.unit || 'كرتون',
         destination: d.destination || null,
-        notes: d.notes || null,
+        notes,
         user_id: user?.id ?? null,
       };
+
       const { data, error } = await supabase
         .from('quote_requests')
         .insert(payload)
