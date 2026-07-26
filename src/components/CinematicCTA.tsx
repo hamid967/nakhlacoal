@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { ArrowRight, MessageCircle } from 'lucide-react';
+import { waLink } from '@/lib/brand';
 
 export function CinematicCTA() {
   const { i18n } = useTranslation();

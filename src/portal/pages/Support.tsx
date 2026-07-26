@@ -1,10 +1,11 @@
 import { Phone, Mail, MessageCircle, Headphones, BookOpen, MessageSquare } from 'lucide-react';
+import { waLink } from '@/lib/brand';
 
 const channels = [
-  { icon: MessageCircle, label: 'واتساب', value: '+966 54 006 0085', href: 'https://wa.me/966540060085', tint: 'green' },
+  { icon: MessageCircle, label: 'واتساب', value: '+966 54 006 0085', href: waLink('general'), tint: 'green' },
   { icon: Phone, label: 'هاتف', value: '+966 54 006 0085', href: 'tel:+966540060085', tint: 'blue' },
   { icon: Mail, label: 'البريد', value: 'nakhlacoal@gmail.com', href: 'mailto:nakhlacoal@gmail.com', tint: 'gold' },
-  { icon: Headphones, label: 'الدعم الفني', value: 'متاح من 9ص — 9م', href: 'https://wa.me/966540060085?text=الدعم%20الفني', tint: 'violet' },
+  { icon: Headphones, label: 'الدعم الفني', value: 'متاح من 9ص — 9م', href: waLink('support'), tint: 'violet' },
   { icon: MessageSquare, label: 'شكوى/اقتراح', value: 'نستقبل ملاحظاتك', href: 'mailto:nakhlacoal@gmail.com?subject=شكوى', tint: 'rose' },
   { icon: BookOpen, label: 'مركز المعرفة', value: 'مقالات ودلائل', href: '/knowledge', tint: 'amber' },
 ];
