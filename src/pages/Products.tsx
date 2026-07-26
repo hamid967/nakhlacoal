@@ -92,10 +92,11 @@ export default function Products() {
       .from('products')
       .select(
         sel(
-          'id, slug, name_ar, name_en, tagline_ar, tagline_en, hero_image, base_price, currency, is_featured, sort_order, category_id, categories(slug, name_ar, name_en)',
+          'id, slug, name_ar, name_en, tagline_ar, tagline_en, hero_image, base_price, currency, is_featured, sort_order, category_id, categories(slug, name_ar, name_en), product_variants(stock, is_active)',
         ),
       )
       .eq('is_active', true);
+
 
     if (cat !== 'all') query = query.eq('categories.slug', cat);
 
