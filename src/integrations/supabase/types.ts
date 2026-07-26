@@ -2062,6 +2062,19 @@ export type Database = {
         Args: { _category: string; _email: string }
         Returns: boolean
       }
+      get_quote_status: {
+        Args: { _id: string; _phone: string }
+        Returns: {
+          created_at: string
+          id: string
+          product: string
+          quantity: number
+          quoted_price_sar: number
+          status: string
+          unit: string
+          updated_at: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
