@@ -33,10 +33,32 @@ const unitAr = (u: string) => ({ kg: 'كجم', carton: 'كرتون', ton: 'طن'
 
 export default function Quote() {
   const [sp] = useSearchParams();
-  const initialSlug = sp.get('product') || undefined;
-  const validSlug = initialSlug && PRICING[initialSlug] ? initialSlug : undefined;
   const [live, setLive] = useState<LiveQuote | null>(null);
   const [copied, setCopied] = useState(false);
+
+  // Validate ?product= and ?variant= against strict schemas AND known catalog data.
+  const { validSlug, validSku, rejected } = useMemo(() => {
+    const rawSlug = sp.get('product');
+    const rawSku = sp.get('variant');
+    const bad: string[] = [];
+
+    const slugParse = rawSlug ? SlugSchema.safeParse(rawSlug) : null;
+    const slug = slugParse?.success && PRICING[slugParse.data] ? slugParse.data : undefined;
+    if (rawSlug && !slug) bad.push('product');
+
+    const skuParse = rawSku ? SkuSchema.safeParse(rawSku) : null;
+    const sku = skuParse?.success ? skuParse.data.toUpperCase() : undefined;
+    if (rawSku && !sku) bad.push('variant');
+
+    return { validSlug: slug, validSku: sku, rejected: bad };
+  }, [sp]);
+
+  useEffect(() => {
+    if (rejected.length) {
+      toast.error(`تم تجاهل باراميترات غير صالحة: ${rejected.join('، ')}`);
+    }
+  }, [rejected]);
+
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'auto' });
