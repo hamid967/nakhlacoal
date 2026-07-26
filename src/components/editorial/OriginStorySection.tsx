@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import palmOrigin from '@/assets/design/palm-origin.jpg';
 import { ResponsiveImage } from './ResponsiveImage';
-import { BigNumber, Eyebrow } from './primitives';
+import { BigNumber, SectionHeader, SectionLead } from './primitives';
 
 /**
  * القسم 2 — Origin Story (Broken Grid)
@@ -12,7 +12,7 @@ export function OriginStorySection() {
   const isAr = i18n.language?.startsWith('ar');
 
   return (
-    <section className="relative bg-background py-24 lg:py-40 overflow-hidden">
+    <section className="relative bg-background py-24 lg:py-32 overflow-hidden">
       <div className="container grid grid-cols-12 gap-6 lg:gap-10 items-center">
         <div className="col-span-12 lg:col-span-7 relative">
           <div className="absolute -top-16 -left-4 lg:-left-8 z-0">
@@ -32,22 +32,18 @@ export function OriginStorySection() {
           className="col-span-12 lg:col-span-5 lg:-ml-16 xl:-ml-24 z-20 bg-surface p-8 lg:p-12 space-y-6 shadow-luxe"
           dir={isAr ? 'rtl' : 'ltr'}
         >
-          <Eyebrow>{isAr ? 'الأصل' : 'Origin'}</Eyebrow>
-          <h2
-            className="font-editorial-bold leading-[0.95] text-foreground"
-            style={{ fontSize: 'clamp(36px, 4.4vw, 68px)' }}
-          >
+          <SectionHeader eyebrow={isAr ? 'الأصل' : 'Origin'} size="md">
             {isAr ? (
               <>من نخيل المدينة<br /><span className="italic text-jade">إلى موائد العالم</span></>
             ) : (
               <>From Madinah palms<br /><span className="italic text-jade">to the world&apos;s tables</span></>
             )}
-          </h2>
-          <p className="text-foreground/75 leading-relaxed">
+          </SectionHeader>
+          <SectionLead>
             {isAr
               ? 'نختار جذوع النخيل المتساقطة من مزارع المدينة والقصيم — مادة عضوية فائقة الكثافة تُكربَن ببطء على درجات محكومة لتنتج جمرة نقية بلا مواد كيميائية.'
               : 'We hand-select fallen palm trunks from Madinah and Qassim — dense organic material slow-carbonized at controlled temperatures for a pure, chemical-free ember.'}
-          </p>
+          </SectionLead>
           <div className="pt-4 flex items-center gap-6 text-[11px] uppercase tracking-[0.24em] text-muted-foreground">
             <span>{isAr ? '١٠٠٪ طبيعي' : '100% Natural'}</span>
             <span className="h-px w-8 bg-gold/50" />

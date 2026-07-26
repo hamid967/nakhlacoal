@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import productHero from '@/assets/design/product-hero.jpg';
 import packagingImg from '@/assets/design/packaging.jpg';
 import textureMacro from '@/assets/design/texture-macro.jpg';
-import { Eyebrow } from './primitives';
+import { SectionHeader, SectionLead } from './primitives';
 import { ProductCard } from './ProductCard';
 
 /**
@@ -22,25 +22,21 @@ export function ProductShowcaseSection() {
           className="grid grid-cols-12 gap-6 lg:gap-8 mb-16 items-end"
           dir={isAr ? 'rtl' : 'ltr'}
         >
-          <div className="col-span-12 lg:col-span-6 space-y-6">
-            <Eyebrow>{isAr ? 'مجموعتنا' : 'The Collection'}</Eyebrow>
-            <h2
-              className="font-editorial-bold leading-[0.95]"
-              style={{ fontSize: 'clamp(40px, 5.6vw, 96px)' }}
-            >
+          <div className="col-span-12 lg:col-span-6">
+            <SectionHeader eyebrow={isAr ? 'مجموعتنا' : 'The Collection'} size="lg">
               {isAr ? (
                 <>منتجات <span className="italic text-gold">مصنوعة بإتقان</span></>
               ) : (
                 <>Crafted <span className="italic text-gold">to perfection</span></>
               )}
-            </h2>
+            </SectionHeader>
           </div>
           <div className="col-span-12 lg:col-span-4 lg:col-start-9 space-y-4">
-            <p className="text-dark-foreground/70 leading-relaxed">
+            <SectionLead tone="dark">
               {isAr
                 ? 'أربع تشكيلات فاخرة صُممت للطهي المهني، الشيشة، والمناسبات — كل قطعة تحمل هوية النخلة.'
                 : 'Four premium collections engineered for professional cooking, shisha, and hospitality — each carrying the palm signature.'}
-            </p>
+            </SectionLead>
             <Link
               to="/products"
               className="inline-flex items-center gap-2 text-gold hover:text-gold-hi text-sm uppercase tracking-[0.22em]"

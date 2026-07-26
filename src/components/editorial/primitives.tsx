@@ -86,6 +86,24 @@ export function SectionHeader({
   );
 }
 
+/** فقرة توضيحية موحّدة تلي عنوان القسم — قياس ونمط ثابت عبر كل الأقسام */
+export function SectionLead({
+  children,
+  tone = 'light',
+  className = '',
+}: {
+  children: ReactNode;
+  tone?: 'light' | 'dark';
+  className?: string;
+}) {
+  const color = tone === 'dark' ? 'text-dark-foreground/70' : 'text-foreground/75';
+  return (
+    <p className={`${color} text-base lg:text-lg leading-relaxed max-w-xl ${className}`}>
+      {children}
+    </p>
+  );
+}
+
 /** بطاقة إحصائية — تُستعمل في Quality lab */
 export function StatCard({
   value,
