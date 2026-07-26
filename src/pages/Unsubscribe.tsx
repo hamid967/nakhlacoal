@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
+// supabase client not needed; using direct fetch to the edge function
 import { Helmet } from 'react-helmet-async';
 
 type Prefs = {
