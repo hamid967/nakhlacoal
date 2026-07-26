@@ -177,7 +177,10 @@ export default function App() {
                   <Route path="marketing" element={<AdminCoupons />} />
                   <Route path="logs" element={<AdminAuditLog />} />
                   <Route path="quotes" element={<AdminQuotes />} />
+                  <Route path="quotes" element={<AdminQuotes />} />
+                  <Route path="emails" element={<AdminEmails />} />
                   <Route path="*" element={<AdminPlaceholder />} />
+
                 </Route>
                 <Route path="/portal/login" element={<PortalLogin />} />
                 <Route path="/portal" element={<ProtectedRoute requireAnyRole={['customer','user','wholesale','distributor']}><PortalLayout /></ProtectedRoute>}>
