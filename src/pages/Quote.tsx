@@ -150,7 +150,7 @@ export default function Quote() {
                   </p>
                 </div>
               </div>
-              <QuoteRequestForm />
+              <QuoteRequestForm initialProduct={validSlug} initialSku={validSku} />
             </div>
           </div>
 
