@@ -473,6 +473,8 @@ export default function ZatcaAdmin() {
         </TabsContent>
 
         <TabsContent value="invoices" className="space-y-3">
+          <AlertSettingsCard />
+
           <Card>
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between flex-wrap gap-2">
