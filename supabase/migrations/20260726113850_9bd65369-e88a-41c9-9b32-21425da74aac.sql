@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.email_opted_in(text, text) FROM anon, authenticated;
