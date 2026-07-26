@@ -8,7 +8,7 @@
 
 
     <meta name="author" content="Palm Charcoal Co." />
-    <meta name="theme-color" content="#0B0B0B" />
+    <meta name="theme-color" content="#0A0B09" />
 
     <!-- Security headers (meta-level). Prefer setting these as HTTP headers at the edge/CDN where possible. -->
     <meta name="referrer" content="strict-origin-when-cross-origin" />
@@ -40,36 +40,36 @@
     <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/manifest.webmanifest" />
-    <meta name="theme-color" content="#052E22" />
-    <meta name="msapplication-TileColor" content="#052E22" />
+    <meta name="theme-color" content="#0A0B09" />
+    <meta name="msapplication-TileColor" content="#0A0B09" />
     <meta name="msapplication-TileImage" content="/icon-192.png" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Palm Charcoal" />
 
 
+    <!-- Palm Charcoal typography per redesign brief §4:
+         IBM Plex Sans Arabic (Arabic UI + headings) + Manrope (Latin UI + headings).
+         font-display: swap keeps FCP fast; only weights actually used are requested. -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Preload critical above-the-fold font CSS so the browser fetches it in the highest priority -->
     <link
       rel="preload"
       as="style"
-      href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@400;500;600;700&family=Cormorant+Garamond:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
     />
     <link
-      href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@400;500;600;700&family=Cormorant+Garamond:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
       media="print"
       onload="this.media='all'"
     />
     <noscript>
       <link
-        href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@400;500;600;700&family=Cormorant+Garamond:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
         rel="stylesheet"
       />
     </noscript>
-    <!-- Font files are referenced from the CSS above; Google rotates hashed URLs so we no longer
-         preload specific .woff2 files (caused ERR_ABORTED + wasted preload warnings). -->
 
 
     <script type="application/ld+json">
