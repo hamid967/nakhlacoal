@@ -455,6 +455,71 @@ function Chip({
   );
 }
 
+function Pagination({
+  page,
+  totalPages,
+  onChange,
+  isAr,
+}: {
+  page: number;
+  totalPages: number;
+  onChange: (n: number) => void;
+  isAr: boolean;
+}) {
+  const pages: (number | 'ellipsis')[] = [];
+  const push = (v: number | 'ellipsis') => pages.push(v);
+  const window = 1;
+  for (let i = 1; i <= totalPages; i++) {
+    if (i === 1 || i === totalPages || (i >= page - window && i <= page + window)) push(i);
+    else if (pages[pages.length - 1] !== 'ellipsis') push('ellipsis');
+  }
+  const prevLabel = isAr ? 'السابق' : 'Previous';
+  const nextLabel = isAr ? 'التالي' : 'Next';
+  return (
+    <nav
+      role="navigation"
+      aria-label={isAr ? 'ترقيم الصفحات' : 'Pagination'}
+      className="mt-12 flex items-center justify-center gap-2 flex-wrap"
+    >
+      <button
+        type="button"
+        onClick={() => onChange(page - 1)}
+        disabled={page <= 1}
+        className="h-9 px-4 text-[11px] uppercase tracking-[0.22em] border border-border text-foreground hover:border-gold hover:text-gold-hi disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+      >
+        {prevLabel}
+      </button>
+      {pages.map((p, idx) =>
+        p === 'ellipsis' ? (
+          <span key={`e${idx}`} aria-hidden className="px-2 text-muted-foreground">…</span>
+        ) : (
+          <button
+            key={p}
+            type="button"
+            onClick={() => onChange(p)}
+            aria-current={p === page ? 'page' : undefined}
+            className={`h-9 min-w-9 px-3 text-sm border transition-colors ${
+              p === page
+                ? 'border-gold bg-gold/10 text-gold-hi'
+                : 'border-border text-muted-foreground hover:text-foreground hover:border-foreground/40'
+            }`}
+          >
+            {p}
+          </button>
+        ),
+      )}
+      <button
+        type="button"
+        onClick={() => onChange(page + 1)}
+        disabled={page >= totalPages}
+        className="h-9 px-4 text-[11px] uppercase tracking-[0.22em] border border-border text-foreground hover:border-gold hover:text-gold-hi disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+      >
+        {nextLabel}
+      </button>
+    </nav>
+  );
+}
+
 function ProductCard({
   product,
   index,
