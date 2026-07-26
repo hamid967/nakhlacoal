@@ -33,8 +33,6 @@ const mapRow = (r: any): Trademark => ({
   image: r.image_url || imageById[r.id] || tm0,
 });
 
-const sortItems = (a: any, b: any) =>
-  (a._sort ?? 0) - (b._sort ?? 0) || a.id.localeCompare(b.id);
 
 export type SyncStatus = 'idle' | 'connecting' | 'live' | 'reconnecting' | 'offline';
 

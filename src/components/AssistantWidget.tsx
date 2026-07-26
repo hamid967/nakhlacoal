@@ -29,7 +29,7 @@ type Msg = { id: string; role: 'user' | 'assistant'; content: string };
 const STORAGE_KEY = 'palm-assistant-widget-v1';
 const ORDER_STORAGE_KEY = 'palm-assistant-pending-order-v1';
 const WHATSAPP_NUMBER = '966540060085';
-const ORDER_EMAIL = 'nakhlacoal@gmail.com';
+
 
 const greet: Msg = {
   id: 'greet',

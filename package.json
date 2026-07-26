@@ -24,7 +24,10 @@
     "audit:bot": "node scripts/audit-bot.mjs",
     "audit:og": "node scripts/audit-og-tags.mjs",
     "audit:tokens": "node scripts/audit-tokens.mjs",
-    "build:analyze": "ANALYZE=1 vite build"
+    "build:analyze": "ANALYZE=1 vite build",
+    "lint:deadcode": "eslint --config eslint.deadcode.config.js --no-inline-config src",
+    "lint:unused": "knip --no-exit-code --reporter compact",
+    "lint:unused:strict": "knip"
   },
   "dependencies": {
     "@fontsource/amiri": "^5.2.8",
@@ -119,8 +122,10 @@
     "eslint": "^9.32.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
+    "eslint-plugin-unused-imports": "^4.4.1",
     "globals": "^15.15.0",
     "jsdom": "^29.1.1",
+    "knip": "^6.29.0",
     "lovable-tagger": "^1.1.9",
     "playwright": "^1.61.1",
     "pngjs": "^7.0.0",

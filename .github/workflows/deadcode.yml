@@ -1,0 +1,35 @@
+name: Dead Code
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deadcode:
+    name: Unused imports · TS · knip
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: Install
+        run: bun install --frozen-lockfile
+
+      # 1. ESLint: fail on any unused import in src/**
+      - name: ESLint (unused imports)
+        run: bun run lint:deadcode
+
+      # 2. TypeScript: fail on unused locals via noUnusedLocals in tsconfig.app.json
+      - name: TypeScript (noUnusedLocals)
+        run: bunx tsgo --noEmit
+
+      # 3. knip: report unused files / exports / deps.
+      # Non-blocking for now — flip to `lint:unused:strict` once the existing
+      # baseline (duplicate default exports, unused editorial helpers) is triaged.
+      - name: knip (report only)
+        run: bun run lint:unused
