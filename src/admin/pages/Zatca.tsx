@@ -118,6 +118,41 @@ export default function ZatcaAdmin() {
 
   useEffect(() => { load(); }, []);
 
+  // Deep-link: ?invoice=<id>&env=<sandbox|simulation|production>
+  useEffect(() => {
+    if (loading) return;
+    const target = searchParams.get('invoice');
+    if (!target) return;
+    const zi = invoices.find((z) => z.id === target);
+    if (!zi) return;
+    const cred = creds.find((c) => c.id === zi.credential_id);
+    const desiredScope: EnvScope = cred ? scopeOf(cred.environment) : (searchParams.get('env') === 'production' ? 'production' : 'nonprod');
+    if (desiredScope !== scope) {
+      setScope(desiredScope);
+      return; // wait for re-render
+    }
+    setExpanded((prev) => {
+      const next = new Set(prev);
+      next.add(target);
+      return next;
+    });
+    // switch to invoices tab and scroll
+    requestAnimationFrame(() => {
+      const el = rowRefs.current[target];
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        el.classList.add('ring-2', 'ring-primary');
+        setTimeout(() => el.classList.remove('ring-2', 'ring-primary'), 2400);
+      }
+    });
+    // clear the query param so refresh doesn't re-trigger
+    const next = new URLSearchParams(searchParams);
+    next.delete('invoice');
+    next.delete('env');
+    setSearchParams(next, { replace: true });
+  }, [loading, invoices, creds, searchParams, scope, setSearchParams]);
+
+
   const scopedCreds = useMemo(
     () => creds.filter((c) => scopeOf(c.environment) === scope),
     [creds, scope],
