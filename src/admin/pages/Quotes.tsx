@@ -195,6 +195,33 @@ export default function AdminQuotes() {
         ))}
       </div>
 
+      {/* search */}
+      <div className="a-card p-3 flex items-center gap-2" style={{ borderColor: 'var(--a-border)' }}>
+        <Search className="w-4 h-4 opacity-60" />
+        <input
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="ابحث بالهاتف، الاسم، الشركة، البريد، أو رقم الطلب…"
+          className="flex-1 bg-transparent outline-none text-sm"
+          dir="rtl"
+          aria-label="بحث في طلبات عروض الأسعار"
+        />
+        {query && (
+          <button
+            onClick={() => setQuery('')}
+            className="a-btn a-btn-ghost"
+            aria-label="مسح البحث"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+        )}
+        {(query || statusFilter) && (
+          <span className="text-[11px]" style={{ color: 'var(--a-text-muted)' }}>
+            {filtered.length} نتيجة
+          </span>
+        )}
+      </div>
+
       <div className="a-card overflow-hidden">
         {loading ? (
           <div className="p-12 text-center text-sm" style={{ color: 'var(--a-text-muted)' }}>
