@@ -2298,9 +2298,11 @@ export type Database = {
           compliance_request_id: string | null
           created_at: string
           csr: string | null
+          csr_config: Json
           device_serial: string
           environment: string
           id: string
+          key_curve: string
           notes: string | null
           onboarding_step: string
           org_address: Json | null
@@ -2309,6 +2311,7 @@ export type Database = {
           org_vat: string
           private_key_encrypted: string | null
           production_csid: string | null
+          public_key: string | null
           updated_at: string
         }
         Insert: {
@@ -2319,9 +2322,11 @@ export type Database = {
           compliance_request_id?: string | null
           created_at?: string
           csr?: string | null
+          csr_config?: Json
           device_serial: string
           environment?: string
           id?: string
+          key_curve?: string
           notes?: string | null
           onboarding_step?: string
           org_address?: Json | null
@@ -2330,6 +2335,7 @@ export type Database = {
           org_vat: string
           private_key_encrypted?: string | null
           production_csid?: string | null
+          public_key?: string | null
           updated_at?: string
         }
         Update: {
@@ -2340,9 +2346,11 @@ export type Database = {
           compliance_request_id?: string | null
           created_at?: string
           csr?: string | null
+          csr_config?: Json
           device_serial?: string
           environment?: string
           id?: string
+          key_curve?: string
           notes?: string | null
           onboarding_step?: string
           org_address?: Json | null
@@ -2351,6 +2359,7 @@ export type Database = {
           org_vat?: string
           private_key_encrypted?: string | null
           production_csid?: string | null
+          public_key?: string | null
           updated_at?: string
         }
         Relationships: []

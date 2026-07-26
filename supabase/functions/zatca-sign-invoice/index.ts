@@ -8,11 +8,11 @@ import { buildCors } from "../_shared/cors.ts";
 import {
   buildQrTlv,
   buildUblInvoice,
-  b64decode,
   b64encode,
   sha256Base64,
   zatcaBase,
 } from "../_shared/zatca.ts";
+import { zatcaSignSha256 } from "../_shared/zatca-csr.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -106,25 +106,19 @@ Deno.serve(async (req) => {
 
     // 5) Hash + QR
     const invoiceHashB64 = await sha256Base64(xml);
-    // Sign hash with our ECDSA key (best-effort — placeholder for full XMLDSig)
+    // Sign XML with the secp256k1 key from onboarding (ZATCA-mandated curve).
     let signatureB64: string | undefined;
-    let publicKeyB64: string | undefined;
+    let publicKeyB64: string | undefined = cred.public_key ?? undefined;
     if (cred.private_key_encrypted) {
       try {
-        const pk = await crypto.subtle.importKey(
-          "pkcs8",
-          b64decode(cred.private_key_encrypted),
-          { name: "ECDSA", namedCurve: "P-256" },
-          true,
-          ["sign"],
-        );
-        const sig = await crypto.subtle.sign(
-          { name: "ECDSA", hash: "SHA-256" },
-          pk,
+        const sigDer = await zatcaSignSha256(
           new TextEncoder().encode(xml),
+          cred.private_key_encrypted, // hex-encoded secp256k1 scalar
         );
-        signatureB64 = b64encode(new Uint8Array(sig));
-      } catch (_e) { /* ignore signing errors in sandbox */ }
+        signatureB64 = b64encode(sigDer);
+      } catch (e) {
+        console.warn("[zatca-sign-invoice] signing failed:", (e as Error).message);
+      }
     }
 
     const qr = buildQrTlv({
