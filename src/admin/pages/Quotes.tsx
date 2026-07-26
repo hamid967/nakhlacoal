@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { CheckCircle2, XCircle, Send, Loader2, ExternalLink, RefreshCw } from 'lucide-react';
+import { CheckCircle2, XCircle, Send, Loader2, ExternalLink, RefreshCw, Search, X } from 'lucide-react';
 import { logActivity } from '@/admin/lib/activity';
 
 type QR = {
@@ -36,6 +36,7 @@ export default function AdminQuotes() {
   const [rows, setRows] = useState<QR[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<string>('');
+  const [query, setQuery] = useState<string>('');
   const [active, setActive] = useState<QR | null>(null);
   const [busy, setBusy] = useState(false);
 
@@ -53,10 +54,26 @@ export default function AdminQuotes() {
 
   useEffect(() => { load(); }, []);
 
-  const filtered = useMemo(
-    () => (statusFilter ? rows.filter((r) => r.status === statusFilter) : rows),
-    [rows, statusFilter],
-  );
+  const normalizedQuery = query.trim();
+  const digitsQuery = normalizedQuery.replace(/\D/g, '');
+  const filtered = useMemo(() => {
+    let list = rows;
+    if (statusFilter) list = list.filter((r) => r.status === statusFilter);
+    if (normalizedQuery) {
+      const ql = normalizedQuery.toLowerCase();
+      list = list.filter((r) => {
+        const phoneDigits = (r.phone || '').replace(/\D/g, '');
+        const phoneMatch = digitsQuery.length >= 3 && phoneDigits.includes(digitsQuery);
+        const textMatch =
+          (r.full_name || '').toLowerCase().includes(ql) ||
+          (r.company_name || '').toLowerCase().includes(ql) ||
+          (r.email || '').toLowerCase().includes(ql) ||
+          (r.id || '').toLowerCase().startsWith(ql);
+        return phoneMatch || textMatch;
+      });
+    }
+    return list;
+  }, [rows, statusFilter, normalizedQuery, digitsQuery]);
 
   const stats = useMemo(() => {
     const s: Record<string, number> = {};
@@ -176,6 +193,33 @@ export default function AdminQuotes() {
             {v.label} ({stats[k] || 0})
           </button>
         ))}
+      </div>
+
+      {/* search */}
+      <div className="a-card p-3 flex items-center gap-2" style={{ borderColor: 'var(--a-border)' }}>
+        <Search className="w-4 h-4 opacity-60" />
+        <input
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="ابحث بالهاتف، الاسم، الشركة، البريد، أو رقم الطلب…"
+          className="flex-1 bg-transparent outline-none text-sm"
+          dir="rtl"
+          aria-label="بحث في طلبات عروض الأسعار"
+        />
+        {query && (
+          <button
+            onClick={() => setQuery('')}
+            className="a-btn a-btn-ghost"
+            aria-label="مسح البحث"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+        )}
+        {(query || statusFilter) && (
+          <span className="text-[11px]" style={{ color: 'var(--a-text-muted)' }}>
+            {filtered.length} نتيجة
+          </span>
+        )}
       </div>
 
       <div className="a-card overflow-hidden">
