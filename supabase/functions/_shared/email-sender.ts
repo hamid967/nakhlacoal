@@ -83,6 +83,13 @@ export async function sendEmail(input: SendEmailInput): Promise<SendEmailResult>
         to: [input.to],
         subject: input.subject,
         html: input.html,
+        ...(input.attachments && input.attachments.length
+          ? { attachments: input.attachments.map((a) => ({
+              filename: a.filename,
+              content: a.content,
+              ...(a.content_type ? { content_type: a.content_type } : {}),
+            })) }
+          : {}),
       }),
     });
     const body = await r.json().catch(() => ({} as any));
