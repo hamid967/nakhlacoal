@@ -24,3 +24,6 @@ export { QualityLabSection } from './QualityLabSection';
 export { LifestyleGridSection } from './LifestyleGridSection';
 export { TextureFeatureSection } from './TextureFeatureSection';
 export { FeatureCtaSection } from './FeatureCtaSection';
+export { TestimonialsSection } from './TestimonialsSection';
+export { JournalPreviewSection } from './JournalPreviewSection';
+export { NewsletterSection } from './NewsletterSection';
