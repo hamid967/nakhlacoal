@@ -2,6 +2,8 @@ import { useTranslation } from 'react-i18next';
 import craftProcess from '@/assets/design/craft-process.jpg';
 import { ResponsiveImage } from './ResponsiveImage';
 import { Eyebrow, ProcessStepCard } from './primitives';
+import { BrandIcon } from '@/components/brand/BrandIcon';
+import type { BrandIconName } from '@/lib/brandTokens';
 
 /**
  * القسم 4 — Craft Process (Cinematic)
@@ -11,11 +13,11 @@ export function CraftProcessSection() {
   const { i18n } = useTranslation();
   const isAr = i18n.language?.startsWith('ar');
 
-  const steps = [
-    { n: '01', ar: 'الحصاد', en: 'Harvest', ar_d: 'اختيار جذوع النخيل الطبيعية', en_d: 'Selecting fallen palm trunks' },
-    { n: '02', ar: 'الكربنة', en: 'Carbonize', ar_d: '٧٢ ساعة على حرارة مضبوطة', en_d: '72 hours at controlled heat' },
-    { n: '03', ar: 'التنقية', en: 'Purify', ar_d: 'فحص الكربون في المختبر', en_d: 'Lab-tested carbon content' },
-    { n: '04', ar: 'التعبئة', en: 'Package', ar_d: 'تعبئة فاخرة يدوية', en_d: 'Hand-finished premium packaging' },
+  const steps: Array<{ n: string; ar: string; en: string; ar_d: string; en_d: string; icon: BrandIconName }> = [
+    { n: '01', ar: 'الحصاد',   en: 'Harvest',    ar_d: 'اختيار جذوع النخيل الطبيعية', en_d: 'Selecting fallen palm trunks', icon: 'leafSustain' },
+    { n: '02', ar: 'الكربنة',  en: 'Carbonize',  ar_d: '٧٢ ساعة على حرارة مضبوطة',   en_d: '72 hours at controlled heat',  icon: 'flame' },
+    { n: '03', ar: 'التنقية',  en: 'Purify',     ar_d: 'فحص الكربون في المختبر',      en_d: 'Lab-tested carbon content',    icon: 'labFlask' },
+    { n: '04', ar: 'التعبئة',  en: 'Package',    ar_d: 'تعبئة فاخرة يدوية',           en_d: 'Hand-finished premium packaging', icon: 'shippingCrate' },
   ];
 
   return (
