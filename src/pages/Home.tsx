@@ -1,7 +1,21 @@
 import { SEO } from '@/components/SEO';
-import { BrokenGridHome } from '@/components/editorial/BrokenGridHome';
 import { StickyMobileCTA } from '@/components/StickyMobileCTA';
+import {
+  EditorialHero,
+  OriginStorySection,
+  ProductShowcaseSection,
+  CraftProcessSection,
+  QualityLabSection,
+  LifestyleGridSection,
+  TextureFeatureSection,
+  FeatureCtaSection,
+} from '@/components/editorial';
 
+/**
+ * الصفحة الرئيسية — Palm Charcoal
+ * تجربة موحّدة مبنية على نظام Broken-Grid Editorial.
+ * راجع docs/DESIGN_PLAN.md لتفاصيل كل قسم.
+ */
 export default function Home() {
   return (
     <>
@@ -11,9 +25,17 @@ export default function Home() {
         path="/"
       />
       <h1 className="sr-only">فحم النخلة | Palm Charcoal — Premium Saudi Charcoal</h1>
-      <BrokenGridHome />
+      <div className="bg-background text-foreground font-editorial-sans">
+        <EditorialHero />
+        <OriginStorySection />
+        <ProductShowcaseSection />
+        <CraftProcessSection />
+        <QualityLabSection />
+        <LifestyleGridSection />
+        <TextureFeatureSection />
+        <FeatureCtaSection />
+      </div>
       <StickyMobileCTA />
     </>
   );
 }
-
