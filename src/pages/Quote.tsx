@@ -8,13 +8,29 @@ import { QuoteForm } from '@/components/QuoteBuilder';
 import { QuoteRequestForm } from '@/components/QuoteRequestForm';
 import { PRICING } from '@/data/pricing';
 import { toast } from 'sonner';
-import { waLink, WHATSAPP_NUMBER, CONTACT_EMAIL } from '@/lib/brand';
+import { waLink, WHATSAPP_NUMBER } from '@/lib/brand';
 
 // Strict URL param schemas — reject anything that isn't a clean slug/SKU.
 const SlugSchema = z.string().trim().min(1).max(80).regex(/^[a-z0-9](?:[a-z0-9-]{0,78}[a-z0-9])?$/i);
 const SkuSchema = z.string().trim().min(1).max(64).regex(/^[A-Z0-9](?:[A-Z0-9._-]{0,62}[A-Z0-9])?$/i);
 
-const WHATSAPP_NUMBER = '966540060085';
+// Strict schema for the live-quote payload. Any invalid item aborts URL generation.
+const UnitSchema = z.enum(['kg', 'carton', 'ton']);
+const LiveItemSchema = z.object({
+  label: z.string().trim().min(1).max(120),
+  qty: z.number().finite().positive().max(1_000_000),
+  unit: UnitSchema,
+  lineTotal: z.number().finite().nonnegative().max(1e9),
+});
+const LiveQuoteSchema = z.object({
+  count: z.number().int().nonnegative().max(200),
+  subtotal: z.number().finite().nonnegative().max(1e9),
+  vat: z.number().finite().nonnegative().max(1e9),
+  total: z.number().finite().nonnegative().max(1e9),
+  items: z.array(LiveItemSchema).min(1).max(50),
+});
+type LiveQuote = z.infer<typeof LiveQuoteSchema>;
+
 const ORDER_EMAIL = 'nakhlacoal@gmail.com';
 
 const PRESETS: { label: string; text: string }[] = [
