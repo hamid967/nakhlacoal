@@ -16,3 +16,6 @@ verify_jwt = false
 
 [functions.send-shipment-notification]
 verify_jwt = false
+
+[functions.send-invoice-receipt]
+verify_jwt = false
