@@ -8,8 +8,8 @@ import { QuoteRequestForm } from '@/components/QuoteRequestForm';
 import { PRICING } from '@/data/pricing';
 import { toast } from 'sonner';
 
-const WHATSAPP_NUMBER = '966540060095';
-const ORDER_EMAIL = 'mab355@gmail.com';
+const WHATSAPP_NUMBER = '966540060085';
+const ORDER_EMAIL = 'nakhlacoal@gmail.com';
 
 const PRESETS: { label: string; text: string }[] = [
   { label: 'مطعم/مشواة', text: 'مرحباً، أحتاج عرض سعر لفحم مطاعم بكميات شهرية منتظمة. ما الأنسب لي؟' },
@@ -210,7 +210,7 @@ export default function Quote() {
                 <MessageCircle className="size-5 text-whatsapp" />
                 <div>
                   <div className="text-sm font-semibold">واتساب المبيعات</div>
-                  <div className="text-xs text-muted-foreground" dir="ltr">+966 54 006 0095</div>
+                  <div className="text-xs text-muted-foreground" dir="ltr">+966 54 006 0085</div>
                 </div>
               </a>
               <a
@@ -220,7 +220,7 @@ export default function Quote() {
                 <Phone className="size-5 text-gold" />
                 <div>
                   <div className="text-sm font-semibold">اتصال مباشر</div>
-                  <div className="text-xs text-muted-foreground" dir="ltr">+966 54 006 0095</div>
+                  <div className="text-xs text-muted-foreground" dir="ltr">+966 54 006 0085</div>
                 </div>
               </a>
               <a

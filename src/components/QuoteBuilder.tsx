@@ -11,8 +11,8 @@ import { saveQuote } from '@/lib/quoteStore';
 import { exportQuoteToPdf } from '@/lib/exportQuotePdf';
 import { toast } from 'sonner';
 
-const WHATSAPP_NUMBER = '966540060095';
-const ORDER_EMAIL = 'mab355@gmail.com';
+const WHATSAPP_NUMBER = '966540060085';
+const ORDER_EMAIL = 'nakhlacoal@gmail.com';
 
 type Line = { slug: string; qty: number; unit: 'kg' | 'carton' | 'ton' };
 

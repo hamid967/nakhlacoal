@@ -4,7 +4,7 @@ import { AlertTriangle, RefreshCw, Home, MessageCircle, Bug } from 'lucide-react
 interface Props { children: ReactNode }
 interface State { error: Error | null; info: ErrorInfo | null; showDetails: boolean }
 
-const WHATSAPP = '966540060095';
+const WHATSAPP = '966540060085';
 
 function classify(err: Error): { title: string; hint: string; links: { label: string; href: string; icon?: any }[] } {
   const msg = `${err?.name ?? ''} ${err?.message ?? ''}`.toLowerCase();

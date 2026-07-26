@@ -3,7 +3,7 @@ import { createClient, SupabaseClient } from 'npm:@supabase/supabase-js@2';
 
 const GATEWAY_URL = 'https://connector-gateway.lovable.dev/resend';
 const DEFAULT_FROM = 'فحم النخلة | Palm Charcoal <no-reply@notify.alnakhlacoal.com>';
-const DEFAULT_REPLY_TO = 'mab355@gmail.com';
+const DEFAULT_REPLY_TO = 'nakhlacoal@gmail.com';
 
 export interface EmailAttachment {
   filename: string;
@@ -248,7 +248,7 @@ export function brandedShell(opts: {
             <div style="font-size:16px;font-weight:600">${opts.cardValue ?? ''}</div>
             ${opts.cardExtra ? `<div style="margin-top:10px;color:#555;font-size:14px">${opts.cardExtra}</div>` : ''}
           </div>` : ''}
-          <p style="font-size:13px;color:#888;margin:24px 0 0">للاستفسارات: واتساب 0540060095 · mab355@gmail.com</p>
+          <p style="font-size:13px;color:#888;margin:24px 0 0">للاستفسارات: واتساب 0540060085 · nakhlacoal@gmail.com</p>
         </td></tr>
         <tr><td style="background:#0e2e00;color:#bfae74;padding:16px;text-align:center;font-size:11px;letter-spacing:3px">
           © ${new Date().getFullYear()} PALM CHARCOAL · JEDDAH, KSA

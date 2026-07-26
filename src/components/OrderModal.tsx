@@ -6,7 +6,7 @@ import { products } from '@/data/products';
 import { MessageCircle, ArrowRight, ArrowLeft, Check, User, Building2, Store, Globe2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 
-const WHATSAPP_NUMBER = '966540060095';
+const WHATSAPP_NUMBER = '966540060085';
 
 type CustomerType = 'individual' | 'restaurant' | 'distributor' | 'exporter';
 type LineItem = { slug: string; qty: number };

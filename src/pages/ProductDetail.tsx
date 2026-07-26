@@ -154,7 +154,7 @@ export default function ProductDetail() {
                     <ShoppingCart className="w-4 h-4" /> {isAr ? 'اطلب عرض سعر' : 'Request a quote'}
                   </Link>
                   <a
-                    href={`https://wa.me/966540060095?text=${waMsg}`}
+                    href={`https://wa.me/966540060085?text=${waMsg}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="btn-ghost-gold"

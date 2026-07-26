@@ -140,7 +140,7 @@ async function buildInvoicePdf(inv: InvoiceRow, items: InvoiceItem[]): Promise<U
 
   // Footer
   page.drawLine({ start: { x: M, y: 60 }, end: { x: W - M, y: 60 }, thickness: 0.5, color: line });
-  page.drawText('Palm Charcoal - Jeddah, KSA - WhatsApp +966 54 006 0095 - mab355@gmail.com', {
+  page.drawText('Palm Charcoal - Jeddah, KSA - WhatsApp +966 54 006 0085 - nakhlacoal@gmail.com', {
     x: M, y: 46, size: 8, font, color: muted,
   });
   page.drawText('This is an official ZATCA-compliant tax invoice.', { x: M, y: 34, size: 8, font, color: muted });

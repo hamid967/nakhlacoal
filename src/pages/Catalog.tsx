@@ -175,8 +175,8 @@ export default function Catalog() {
           <h2 className="text-xl font-bold text-emerald-900 mb-3">
             {isAr ? 'تواصل معنا' : 'Contact Us'}
           </h2>
-          <p className="text-stone-700">WhatsApp: +966 54 006 0095</p>
-          <p className="text-stone-700">Email: mab355@gmail.com</p>
+          <p className="text-stone-700">WhatsApp: +966 54 006 0085</p>
+          <p className="text-stone-700">Email: nakhlacoal@gmail.com</p>
           <p className="text-stone-700">Web: alnakhlacoal.com</p>
           <p className="text-xs text-stone-400 mt-6">
             © {new Date().getFullYear()} Palm Charcoal · {isAr ? 'جميع الحقوق محفوظة' : 'All rights reserved'}

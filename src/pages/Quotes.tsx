@@ -8,8 +8,8 @@ import { exportQuoteToPdf } from '@/lib/exportQuotePdf';
 import { products } from '@/data/products';
 import { toast } from 'sonner';
 
-const WHATSAPP_NUMBER = '966540060095';
-const ORDER_EMAIL = 'mab355@gmail.com';
+const WHATSAPP_NUMBER = '966540060085';
+const ORDER_EMAIL = 'nakhlacoal@gmail.com';
 
 const fmt = (n: number) => new Intl.NumberFormat('ar-SA', { maximumFractionDigits: 2 }).format(n);
 const labelOf = (slug: string) => products.find((p) => p.slug === slug)?.nameAr || slug;

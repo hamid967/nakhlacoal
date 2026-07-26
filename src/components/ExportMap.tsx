@@ -567,7 +567,7 @@ export function ExportMap() {
                     : 'For a custom quote to this destination, contact our export team.'}
                 </div>
                 <a
-                  href={`https://wa.me/966540060095?text=${encodeURIComponent(
+                  href={`https://wa.me/966540060085?text=${encodeURIComponent(
                     isAr
                       ? `مرحبًا، أرغب بعرض سعر شحن إلى ${selected.cityAr} (${selected.countryAr}).`
                       : `Hello, I'd like a shipping quote to ${selected.cityEn} (${selected.countryEn}).`
