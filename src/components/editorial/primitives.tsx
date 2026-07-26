@@ -35,7 +35,7 @@ export function GoldCTA({ to, children }: { to: string; children: ReactNode }) {
   return (
     <Link
       to={to}
-      className="group inline-flex items-center gap-3 bg-gradient-to-br from-gold-hi to-gold-lo px-8 py-4 text-dark font-editorial-sans font-semibold text-sm uppercase tracking-[0.18em] shadow-[0_18px_40px_-14px_hsl(var(--gold)/0.55)] transition-transform duration-500 hover:-translate-y-0.5"
+      className="group inline-flex items-center gap-3 bg-gradient-to-br from-gold-hi to-gold-lo px-8 py-4 text-dark font-editorial-sans font-semibold text-sm uppercase tracking-[0.18em] shadow-gold transition-transform duration-slow hover:-translate-y-0.5"
     >
       {children}
       <ArrowUpRight className="h-4 w-4 transition-transform duration-500 group-hover:translate-x-1 group-hover:-translate-y-1" />
