@@ -45,17 +45,18 @@ export function ProductCard(props: ProductCardProps) {
       <Link
         to={props.to}
         className={
-          'group relative overflow-hidden bg-jade ' + (props.className ?? '')
+          'group relative overflow-hidden bg-jade transition-[transform,box-shadow] duration-base ease-brand hover:-translate-y-1 hover:shadow-luxe focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-background ' +
+          (props.className ?? '')
         }
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-jade to-dark" />
-        <div className="absolute inset-0 p-6 flex flex-col justify-between">
+        <div className="absolute inset-0 bg-gradient-to-br from-jade to-dark transition-opacity duration-slow ease-brand group-hover:opacity-90" />
+        <div className="absolute inset-0 p-brand-lg flex flex-col justify-between">
           <p className="text-xs uppercase tracking-[0.24em] text-gold">{props.eyebrow}</p>
           <div>
             <h3 className="font-editorial-bold text-2xl leading-tight text-dark-foreground">
               {props.title}
             </h3>
-            <ArrowUpRight className="mt-2 h-5 w-5 text-gold" />
+            <ArrowUpRight className="mt-brand-sm h-5 w-5 text-gold transition-transform duration-base ease-brand-in group-hover:translate-x-1 group-hover:-translate-y-1" />
           </div>
         </div>
       </Link>
@@ -72,13 +73,13 @@ export function ProductCard(props: ProductCardProps) {
   return (
     <Link
       to={props.to}
-      className={'group relative overflow-hidden bg-dark-2 ' + (props.className ?? '')}
+      className={'group relative overflow-hidden bg-dark-2 transition-[transform,box-shadow] duration-base ease-brand hover:-translate-y-1 hover:shadow-luxe focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-background ' + (props.className ?? '')}
     >
       <ResponsiveImage
         base={props.imgBase}
         fallback={props.imgFallback}
         alt=""
-        className="absolute inset-0 h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105"
+        className="absolute inset-0 h-full w-full object-cover transition-transform duration-cinematic ease-brand-in group-hover:scale-105"
         sizes={props.imgSizes ?? '(max-width: 1024px) 100vw, 40vw'}
         style={
           props.imgOpacity !== undefined
@@ -86,7 +87,7 @@ export function ProductCard(props: ProductCardProps) {
             : undefined
         }
       />
-      <div className={'absolute inset-0 ' + overlayClass} />
+      <div className={'absolute inset-0 transition-opacity duration-slow ease-brand ' + overlayClass + ' group-hover:opacity-90'} />
       {isHero ? (
         <div className="absolute bottom-0 left-0 right-0 p-8 lg:p-12">
           <p className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.28em] text-gold-ink font-editorial-sans font-medium">

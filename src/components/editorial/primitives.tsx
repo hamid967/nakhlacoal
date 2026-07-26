@@ -30,15 +30,15 @@ export function BigNumber({ n }: { n: string }) {
   );
 }
 
-/** زر CTA أساسي بتدرّج ذهبي */
+/** زر CTA أساسي بتدرّج ذهبي — Emerald Prestige motion */
 export function GoldCTA({ to, children }: { to: string; children: ReactNode }) {
   return (
     <Link
       to={to}
-      className="group inline-flex items-center gap-3 bg-gradient-to-br from-gold-hi to-gold-lo px-8 py-4 text-dark font-editorial-sans font-semibold text-sm uppercase tracking-[0.18em] shadow-gold transition-transform duration-slow hover:-translate-y-0.5"
+      className="group inline-flex items-center gap-3 bg-gradient-to-br from-gold-hi to-gold-lo px-brand-xl py-brand-md text-dark font-editorial-sans font-semibold text-sm uppercase tracking-[0.18em] shadow-gold transition-[transform,box-shadow] duration-base ease-brand-in hover:-translate-y-0.5 hover:shadow-glow-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-background"
     >
       {children}
-      <ArrowUpRight className="h-4 w-4 transition-transform duration-500 group-hover:translate-x-1 group-hover:-translate-y-1" />
+      <ArrowUpRight className="h-4 w-4 transition-transform duration-slow ease-brand-in group-hover:translate-x-1 group-hover:-translate-y-1" />
     </Link>
   );
 }
@@ -48,7 +48,7 @@ export function GhostCTA({ to, children }: { to: string; children: ReactNode }) 
   return (
     <Link
       to={to}
-      className="inline-flex items-center gap-3 border border-gold/60 text-gold-ink hover:text-gold px-8 py-4 font-editorial-sans font-medium text-sm uppercase tracking-[0.18em] transition-colors duration-500 hover:border-gold"
+      className="inline-flex items-center gap-3 border border-gold/60 text-gold-ink hover:text-gold hover:bg-gold/5 hover:border-gold px-brand-xl py-brand-md font-editorial-sans font-medium text-sm uppercase tracking-[0.18em] transition-[color,background-color,border-color] duration-base ease-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-background"
     >
       {children}
     </Link>
@@ -97,10 +97,11 @@ export function StatCard({
   icon?: ReactNode;
 }) {
   return (
-    <div className="border-t border-gold/40 pt-4">
-      {icon ? <div className="mb-3 text-gold">{icon}</div> : null}
+    <div className="group relative border-t border-gold/40 pt-brand-md transition-[transform,border-color] duration-base ease-brand hover:-translate-y-0.5 hover:border-gold">
+      <span aria-hidden className="absolute -top-px left-0 h-px w-0 bg-jade transition-[width] duration-slow ease-brand-in group-hover:w-16" />
+      {icon ? <div className="mb-brand-sm text-gold transition-colors duration-base ease-brand group-hover:text-gold-hi">{icon}</div> : null}
       <div className="font-editorial-bold text-4xl lg:text-5xl text-foreground">{value}</div>
-      <div className="mt-2 text-xs uppercase tracking-[0.22em] text-muted-foreground">{label}</div>
+      <div className="mt-brand-sm text-xs uppercase tracking-[0.22em] text-muted-foreground">{label}</div>
     </div>
   );
 }
