@@ -13,7 +13,7 @@ const RELATED = [
   { to: '/quality', icon: FlaskConical, title: 'الجودة والاعتمادات', desc: 'تقارير المختبر ومعايير الإنتاج' },
   { to: '/about', icon: Info, title: 'من نحن', desc: 'قصة مؤسسة محمد عبدالله باعشن منذ 1434هـ' },
   { to: '/export', icon: Globe2, title: 'التصدير B2B', desc: 'شروط دولية وطلب عرض سعر للمصدّرين' },
-  { to: '/contact', icon: MessageCircle, title: 'تواصل معنا', desc: 'واتساب 0540060095 أو البريد الإلكتروني' },
+  { to: '/contact', icon: MessageCircle, title: 'تواصل معنا', desc: 'واتساب 0540060085 أو البريد الإلكتروني' },
 ];
 
 export default function Trademarks() {

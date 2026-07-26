@@ -10,13 +10,13 @@ export function PromoBanner() {
         { icon: Flame, text: 'عروض الجملة متاحة — تواصل معنا الآن' },
         { icon: MapPin, text: 'سوق الفحم، البلد، جدة' },
         { icon: ShieldCheck, text: '٥ علامات تجارية مسجلة — وزارة التجارة السعودية' },
-        { icon: Phone, text: '‎+966 54 006 0095' },
+        { icon: Phone, text: '‎+966 54 006 0085' },
       ]
     : [
         { icon: Flame, text: 'Wholesale offers available — contact us now' },
         { icon: MapPin, text: 'Charcoal Souq, Al-Balad, Jeddah' },
         { icon: ShieldCheck, text: '5 registered trademarks — KSA Ministry of Commerce' },
-        { icon: Phone, text: '+966 54 006 0095' },
+        { icon: Phone, text: '+966 54 006 0085' },
       ];
 
   const Row = () => (

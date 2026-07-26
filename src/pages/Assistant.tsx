@@ -12,8 +12,8 @@ type Msg = { id: string; role: Role; content: string };
 type Thread = { id: string; title: string; messages: Msg[]; updatedAt: number };
 
 const STORAGE_KEY = 'palm-assistant-threads-v1';
-const WHATSAPP_NUMBER = '966540060095';
-const ORDER_EMAIL = 'mab355@gmail.com';
+const WHATSAPP_NUMBER = '966540060085';
+const ORDER_EMAIL = 'nakhlacoal@gmail.com';
 
 function loadThreads(): Thread[] {
   if (typeof window === 'undefined') return [];

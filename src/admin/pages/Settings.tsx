@@ -62,8 +62,8 @@ export default function AdminSettings() {
                 <Field label="المقر" defaultValue="جدة، المملكة العربية السعودية" />
               </Row>
               <Row>
-                <Field label="جوال الأعمال" defaultValue="+966540060095" />
-                <Field label="البريد الإلكتروني" defaultValue="mab355@gmail.com" type="email" />
+                <Field label="جوال الأعمال" defaultValue="+966540060085" />
+                <Field label="البريد الإلكتروني" defaultValue="nakhlacoal@gmail.com" type="email" />
               </Row>
               <Row>
                 <Field label="السجل التجاري" defaultValue="1431135825" />

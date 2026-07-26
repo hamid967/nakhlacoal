@@ -57,7 +57,7 @@ export function CareersInvite() {
             </p>
 
             <a
-              href="mailto:mab355@gmail.com?subject=Careers%20%E2%80%94%20Palm%20Charcoal"
+              href="mailto:nakhlacoal@gmail.com?subject=Careers%20%E2%80%94%20Palm%20Charcoal"
               className="mt-8 inline-flex items-center gap-2 px-5 py-3 rounded-full border border-[hsl(var(--gold))]/50 text-[hsl(var(--gold-hi,46_95%_78%))] hover:bg-[hsl(var(--gold))]/10 transition-colors text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--gold))]/70"
             >
               {isAr ? 'أرسل سيرتك الذاتية' : 'Send your CV'} <ArrowUpRight className="w-4 h-4" />
@@ -70,7 +70,7 @@ export function CareersInvite() {
               {roles.map((r, i) => (
                 <motion.a
                   key={i}
-                  href="mailto:mab355@gmail.com?subject=Application%20%E2%80%94%20Palm%20Charcoal"
+                  href="mailto:nakhlacoal@gmail.com?subject=Application%20%E2%80%94%20Palm%20Charcoal"
                   initial={{ opacity: 0, y: 12 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: '-60px' }}

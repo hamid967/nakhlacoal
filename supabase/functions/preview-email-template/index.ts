@@ -106,7 +106,7 @@ const ORDER_STATUS_AR: Record<string, { title: string; body: string }> = {
   confirmed:  { title: 'تم تأكيد طلبك',   body: 'طلبك مؤكد وقيد التجهيز الآن في مستودعنا بجدة.' },
   shipped:    { title: 'تم شحن طلبك',     body: 'طلبك في طريقه إليك. سنوافيك بتحديثات التتبع.' },
   completed:  { title: 'تم تسليم طلبك',   body: 'تم تسليم طلبك بنجاح. شكراً لثقتك بفحم النخلة 🌴' },
-  cancelled:  { title: 'تم إلغاء الطلب',  body: 'تم إلغاء طلبك. للاستفسار راسلنا على mab355@gmail.com' },
+  cancelled:  { title: 'تم إلغاء الطلب',  body: 'تم إلغاء طلبك. للاستفسار راسلنا على nakhlacoal@gmail.com' },
 };
 function renderOrderStatus(order: any, status: string) {
   const s = ORDER_STATUS_AR[status] ?? ORDER_STATUS_AR.new;

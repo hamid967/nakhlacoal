@@ -36,11 +36,11 @@ describe('AudienceLanding WhatsApp CTA fallback', () => {
   });
 
   it('uses brand.footer.whatsapp when present', async () => {
-    brandMock.footer = { whatsapp: 'https://wa.me/966540060095' };
+    brandMock.footer = { whatsapp: 'https://wa.me/966540060085' };
     await renderPage();
     const wa = screen
       .getAllByRole('link')
-      .find((a) => a.getAttribute('href')?.startsWith('https://wa.me/966540060095'));
+      .find((a) => a.getAttribute('href')?.startsWith('https://wa.me/966540060085'));
     expect(wa).toBeTruthy();
     expect(wa!.getAttribute('href')).toContain('?text=');
   });

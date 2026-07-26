@@ -126,7 +126,7 @@ export const articles: Article[] = [
       { h: 'التوصيل داخل جدة والمنطقة الغربية', p: 'فحم النخلة يوصّل مجاناً داخل جدة للطلبات فوق 500 كجم، وبتعرفة ثابتة لمكة، الطائف، المدينة، ينبع، رابغ. التسليم خلال 48 ساعة من تأكيد الدفع للمخزون الجاهز.' },
       { h: 'كيف تتفاوض كموزّع ذكي', p: 'اطلب: عينة مجانية قبل الطلب الأول، شهادة مختبر لدفعتك تحديداً وليس عيّنة قديمة، ضمان استبدال الدفعات المعيبة، حق وقف الدفع إذا فشل اختبار الجودة عند الاستلام.' },
       { h: 'علامات المورّد الموثوق في جدة', p: 'سجل تجاري ساري، علامة تجارية مسجّلة، عنوان مستودع حقيقي يمكن زيارته، رقم ثابت + جوال + إيميل عمل، فواتير ضريبية رسمية بـ 15% VAT، QR لفحص الفاتورة.' },
-      { h: 'الخلاصة', p: 'فحم النخلة يخدم أكثر من 120 موزّع ومطعم في جدة والمنطقة الغربية منذ 2010. تواصل معنا عبر صفحة /wholesale أو واتساب 0540060095 لاستلام قائمة أسعار الجملة الكاملة بصيغة PDF.' },
+      { h: 'الخلاصة', p: 'فحم النخلة يخدم أكثر من 120 موزّع ومطعم في جدة والمنطقة الغربية منذ 2010. تواصل معنا عبر صفحة /wholesale أو واتساب 0540060085 لاستلام قائمة أسعار الجملة الكاملة بصيغة PDF.' },
     ],
     contentEn: [
       { h: 'Why Jeddah is the Gulf charcoal hub', p: 'Jeddah\'s Red Sea port location makes it the closest entry point for Indonesian and Malawi coconut charcoal, and the closest export point for Saudi charcoal to the Gulf and Africa — creating a structural price edge for distributors who source from Jeddah.' },
@@ -136,7 +136,7 @@ export const articles: Article[] = [
       { h: 'Delivery in Jeddah & Western Region', p: 'Palm Charcoal delivers free within Jeddah for orders over 500 kg, with flat rates for Makkah, Taif, Madinah, Yanbu, and Rabigh. 48-hour delivery from payment confirmation on in-stock SKUs.' },
       { h: 'Negotiate like a pro', p: 'Demand: free sample before first order, lot-specific lab certificate (not an old reference sample), defect-batch replacement, payment hold-right if QC fails on arrival.' },
       { h: 'Trust signals for a Jeddah supplier', p: 'Valid CR, registered trademark, real warehouse address you can visit, landline + mobile + business email, 15% VAT-compliant invoices with QR.' },
-      { h: 'Bottom line', p: 'Palm Charcoal has served 120+ distributors and restaurants across Jeddah since 2010. Reach us via /wholesale or WhatsApp +966 54 006 0095 for the full PDF wholesale price list.' },
+      { h: 'Bottom line', p: 'Palm Charcoal has served 120+ distributors and restaurants across Jeddah since 2010. Reach us via /wholesale or WhatsApp +966 54 006 0085 for the full PDF wholesale price list.' },
     ],
   },
   {

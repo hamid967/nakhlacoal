@@ -57,8 +57,8 @@ export default function ExportPage() {
     const wa = encodeURIComponent(
       `Hello Palm Charcoal — B2B export inquiry:\n• Company: ${form.company}\n• Country: ${form.country}\n• Product: ${form.product}\n• Quantity: ${form.qty} KG\n• Email: ${form.email}\n• Notes: ${form.notes || '—'}`,
     );
-    window.open(`mailto:mab355@gmail.com?subject=${subject}&body=${body}`, '_blank');
-    setTimeout(() => window.open(`https://wa.me/966540060095?text=${wa}`, '_blank'), 250);
+    window.open(`mailto:nakhlacoal@gmail.com?subject=${subject}&body=${body}`, '_blank');
+    setTimeout(() => window.open(`https://wa.me/966540060085?text=${wa}`, '_blank'), 250);
     toast({ title: isAr ? 'تم تجهيز الطلب — افتح البريد والواتساب لإرساله' : 'Inquiry ready — email & WhatsApp opened' });
   };
 

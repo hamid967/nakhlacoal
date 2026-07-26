@@ -8,7 +8,7 @@ import { ScrollReveal } from '@/components/ScrollReveal';
 
 type TierKey = 'restaurant' | 'lounge' | 'distributor' | 'container';
 
-const WHATSAPP = '966540060095';
+const WHATSAPP = '966540060085';
 
 const TIERS: {
   key: TierKey;

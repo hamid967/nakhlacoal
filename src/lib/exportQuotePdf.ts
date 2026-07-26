@@ -94,7 +94,7 @@ function buildHtml(p: QuotePdfPayload): string {
     <!-- Footer -->
     <div style="margin-top:36px;padding-top:16px;border-top:1px solid #ece7d4;font-size:10px;color:#6b6754;text-align:center;line-height:1.7;">
       عرض السعر صالح لمدة 7 أيام من تاريخ الإصدار. الأسعار تشمل ضريبة القيمة المضافة (15%).<br/>
-      للتواصل: +966 54 006 0095 · mab355@gmail.com · alnakhlacoal.com
+      للتواصل: +966 54 006 0085 · nakhlacoal@gmail.com · alnakhlacoal.com
     </div>
   </div>`;
 }

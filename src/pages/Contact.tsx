@@ -42,7 +42,7 @@ export default function Contact() {
     <>
       <SEO
         title={isAr ? 'تواصل معنا — فحم النخلة' : 'Contact — Palm Charcoal'}
-        description={isAr ? 'تواصل مع فريق مبيعات فحم النخلة في جدة — واتساب 0540060095 والبريد mab355@gmail.com. عروض للجملة والتصدير والفنادق والمطاعم خلال ساعات العمل.' : 'Contact Palm Charcoal sales in Jeddah — WhatsApp 0540060095 and email mab355@gmail.com. Wholesale, export, hotel, and restaurant enquiries answered daily.'}
+        description={isAr ? 'تواصل مع فريق مبيعات فحم النخلة في جدة — واتساب 0540060085 والبريد nakhlacoal@gmail.com. عروض للجملة والتصدير والفنادق والمطاعم خلال ساعات العمل.' : 'Contact Palm Charcoal sales in Jeddah — WhatsApp 0540060085 and email nakhlacoal@gmail.com. Wholesale, export, hotel, and restaurant enquiries answered daily.'}
         path="/contact"
       />
       <PageHero number={15} eyebrow={t("contact.eyebrow")} title={t("contact.title")} subtitle={t("contact.subtitle")} />
