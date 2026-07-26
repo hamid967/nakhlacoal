@@ -899,9 +899,9 @@
 }
 
 @layer utilities {
-  .font-display { font-family: 'Syne', 'Cormorant Garamond', serif; letter-spacing: -0.02em; }
-  .font-display-ar { font-family: 'Reem Kufi', 'IBM Plex Sans Arabic', sans-serif; }
-  .font-body { font-family: 'Plus Jakarta Sans', 'IBM Plex Sans Arabic', system-ui, sans-serif; }
+  .font-display { font-family: 'Manrope', 'IBM Plex Sans Arabic', system-ui, sans-serif; letter-spacing: -0.03em; font-weight: 700; }
+  .font-display-ar { font-family: 'IBM Plex Sans Arabic', 'Manrope', system-ui, sans-serif; font-weight: 700; }
+  .font-body { font-family: 'Manrope', 'IBM Plex Sans Arabic', system-ui, sans-serif; }
 
   /* Logical-property helpers for RTL */
   .ps-luxe { padding-inline-start: 1.5rem; }
