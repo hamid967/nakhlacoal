@@ -39,6 +39,25 @@ export default function AdminEmails() {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [resendingId, setResendingId] = useState<string | null>(null);
   const [runningCron, setRunningCron] = useState(false);
+  const [autoConfirm, setAutoConfirm] = useState<boolean>(true);
+  const [savingToggle, setSavingToggle] = useState(false);
+
+  const loadSettings = async () => {
+    const { data } = await supabase.from('email_settings').select('auto_order_confirmation').eq('id', true).maybeSingle();
+    if (data) setAutoConfirm(!!data.auto_order_confirmation);
+  };
+  useEffect(() => { loadSettings(); }, []);
+
+  const toggleAutoConfirm = async (next: boolean) => {
+    setSavingToggle(true);
+    const { error } = await supabase.from('email_settings')
+      .upsert({ id: true, auto_order_confirmation: next, updated_at: new Date().toISOString() });
+    setSavingToggle(false);
+    if (error) { toast.error('تعذّر حفظ الإعداد'); return; }
+    setAutoConfirm(next);
+    toast.success(next ? 'تم تفعيل بريد تأكيد الطلب التلقائي' : 'تم تعطيل بريد تأكيد الطلب التلقائي');
+  };
+
 
   const load = async () => {
     setLoading(true);
