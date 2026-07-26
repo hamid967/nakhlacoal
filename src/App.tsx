@@ -75,6 +75,8 @@ const AdminChatAnalytics = lazy(() => import('@/admin/pages/ChatAnalytics'));
 const AdminCoupons = lazy(() => import('@/admin/pages/Coupons'));
 const AdminAuditLog = lazy(() => import('@/admin/pages/AuditLog'));
 const AdminQuotes = lazy(() => import('@/admin/pages/Quotes'));
+const AdminEmails = lazy(() => import('@/admin/pages/Emails'));
+
 const PortalQuotes = lazy(() => import('@/portal/pages/Quotes'));
 
 const PortalLayout = lazy(() => import('@/portal/PortalLayout'));
