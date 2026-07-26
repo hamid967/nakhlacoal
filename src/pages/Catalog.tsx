@@ -2,10 +2,9 @@ import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { products } from '@/data/products';
 import { INVENTORY } from '@/data/inventory';
-import { brand } from '@/lib/brand';
 import { BrandLogo } from '@/components/BrandLogo';
 import { Button } from '@/components/ui/button';
-import { Download, Printer } from 'lucide-react';
+import { Download } from 'lucide-react';
 import { SEO } from '@/components/SEO';
 
 /**

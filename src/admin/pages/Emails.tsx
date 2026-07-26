@@ -150,7 +150,7 @@ export default function AdminEmails() {
     setLoading(false);
   };
 
-  useEffect(() => { load(); /* eslint-disable-next-line */ }, [range, templateFilter, statusFilter]);
+  useEffect(() => { load();   }, [range, templateFilter, statusFilter]);
 
   const stats = useMemo(() => {
     const total = rows.length;

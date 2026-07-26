@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Link } from 'react-router-dom';
 
 // P75 poor-thresholds (Google CWV).
 const POOR: Record<string, number> = { LCP: 4000, INP: 500, CLS: 0.25, FCP: 3000, TTFB: 1800 };

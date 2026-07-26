@@ -63,7 +63,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, info: ErrorInfo) {
     this.setState({ info });
-    // eslint-disable-next-line no-console
+     
     console.error('[ErrorBoundary]', error, info?.componentStack);
   }
 
