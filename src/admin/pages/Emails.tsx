@@ -41,14 +41,16 @@ export default function AdminEmails() {
   const [runningCron, setRunningCron] = useState(false);
   const [autoConfirm, setAutoConfirm] = useState<boolean>(true);
   const [autoShip, setAutoShip] = useState<boolean>(true);
+  const [autoInvoice, setAutoInvoice] = useState<boolean>(true);
   const [savingToggle, setSavingToggle] = useState(false);
 
   const loadSettings = async () => {
     const { data } = await supabase.from('email_settings')
-      .select('auto_order_confirmation, auto_shipment_notification').eq('id', true).maybeSingle();
+      .select('auto_order_confirmation, auto_shipment_notification, auto_invoice_receipt').eq('id', true).maybeSingle();
     if (data) {
       setAutoConfirm(!!data.auto_order_confirmation);
       setAutoShip((data as any).auto_shipment_notification !== false);
+      setAutoInvoice((data as any).auto_invoice_receipt !== false);
     }
   };
   useEffect(() => { loadSettings(); }, []);
@@ -71,6 +73,16 @@ export default function AdminEmails() {
     if (error) { toast.error('تعذّر حفظ الإعداد'); return; }
     setAutoShip(next);
     toast.success(next ? 'تم تفعيل إشعار الشحن التلقائي' : 'تم تعطيل إشعار الشحن التلقائي');
+  };
+
+  const toggleAutoInvoice = async (next: boolean) => {
+    setSavingToggle(true);
+    const { error } = await supabase.from('email_settings')
+      .upsert({ id: true, auto_invoice_receipt: next, updated_at: new Date().toISOString() } as any);
+    setSavingToggle(false);
+    if (error) { toast.error('تعذّر حفظ الإعداد'); return; }
+    setAutoInvoice(next);
+    toast.success(next ? 'تم تفعيل إرسال إيصال الفاتورة تلقائياً' : 'تم تعطيل إرسال إيصال الفاتورة تلقائياً');
   };
 
 
