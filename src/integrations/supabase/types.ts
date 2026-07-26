@@ -671,6 +671,7 @@ export type Database = {
       }
       link_preview_checks: {
         Row: {
+          batch_id: string | null
           canonical: string | null
           checked_by: string | null
           created_at: string
@@ -683,6 +684,7 @@ export type Database = {
           og_type: string | null
           og_url: string | null
           raw: Json | null
+          source: string
           status: string
           tool: string
           twitter_card: string | null
@@ -691,6 +693,7 @@ export type Database = {
           warnings: Json
         }
         Insert: {
+          batch_id?: string | null
           canonical?: string | null
           checked_by?: string | null
           created_at?: string
@@ -703,6 +706,7 @@ export type Database = {
           og_type?: string | null
           og_url?: string | null
           raw?: Json | null
+          source?: string
           status?: string
           tool?: string
           twitter_card?: string | null
@@ -711,6 +715,7 @@ export type Database = {
           warnings?: Json
         }
         Update: {
+          batch_id?: string | null
           canonical?: string | null
           checked_by?: string | null
           created_at?: string
@@ -723,6 +728,7 @@ export type Database = {
           og_type?: string | null
           og_url?: string | null
           raw?: Json | null
+          source?: string
           status?: string
           tool?: string
           twitter_card?: string | null
