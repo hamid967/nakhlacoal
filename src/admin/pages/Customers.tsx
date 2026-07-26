@@ -132,6 +132,13 @@ export default function AdminCustomers() {
       : await supabase.from('customers').insert(payload);
     setSaving(false);
     if (res.error) return toast.error(res.error.message);
+    logActivity({
+      action: form.id ? 'update' : 'create',
+      entity_table: 'customers',
+      entity_id: form.id ?? null,
+      summary: `${form.id ? 'تعديل' : 'إنشاء'} عميل: ${payload.company_name}`,
+      new_data: payload,
+    });
     toast.success(form.id ? 'تم التحديث' : 'تم الإنشاء');
     setOpen(false);
     load();
@@ -141,8 +148,37 @@ export default function AdminCustomers() {
     if (!confirm(`حذف العميل "${c.company_name}"؟`)) return;
     const { error } = await supabase.from('customers').delete().eq('id', c.id);
     if (error) return toast.error(error.message);
+    logActivity({ action: 'delete', entity_table: 'customers', entity_id: c.id, summary: `حذف عميل: ${c.company_name}`, old_data: c });
     toast.success('تم الحذف');
     setRows((r) => r.filter((x) => x.id !== c.id));
+  };
+
+  // Match orders to a customer by phone/email/company_name and compute LTV metrics
+  const priceOf = (o: OrderRow) => {
+    const u = (o.unit || '').toLowerCase();
+    const q = Number(o.quantity) || 0;
+    const kg = u.includes('ton') || u.includes('طن') ? q * 1000 : u.includes('box') || u.includes('كرت') ? q * 10 : q;
+    const item = inv.find((it) => {
+      try { return new RegExp(it.match_pattern || it.slug, 'i').test(o.product_type || ''); } catch { return false; }
+    });
+    const tiers = Array.isArray(item?.tiers) ? item!.tiers : [];
+    const price = tiers.length ? Math.min(...tiers.map((t: any) => Number(t.pricePerKg ?? t.price_sar) || 0).filter(Boolean)) : 0;
+    return kg * price;
+  };
+  const ordersOf = (c: Customer): OrderRow[] => {
+    const phone = (c.phone || '').replace(/\s+/g, '');
+    const email = (c.email || '').toLowerCase();
+    const name = (c.company_name || '').toLowerCase();
+    return allOrders.filter((o) =>
+      (phone && (o.phone || '').replace(/\s+/g, '').endsWith(phone.slice(-8))) ||
+      (email && (o.email || '').toLowerCase() === email) ||
+      (name && (o.company_name || '').toLowerCase() === name)
+    );
+  };
+  const metricsOf = (c: Customer) => {
+    const os = ordersOf(c);
+    const revenue = os.reduce((s, o) => s + priceOf(o), 0);
+    return { count: os.length, revenue, segment: segmentOf(os.length, revenue), lastAt: os[0]?.created_at ?? null, orders: os };
   };
 
   const set = (k: keyof Customer, v: any) => setForm((f) => ({ ...f, [k]: v }));
