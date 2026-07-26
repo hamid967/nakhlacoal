@@ -6,13 +6,14 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.4";
 import { buildCors } from "../_shared/cors.ts";
 import {
-  buildQrTlv,
   buildUblInvoice,
-  b64encode,
-  sha256Base64,
   zatcaBase,
 } from "../_shared/zatca.ts";
-import { zatcaSignSha256 } from "../_shared/zatca-csr.ts";
+import {
+  signInvoiceXades,
+  wrapInvoiceForSigning,
+  computeInvoiceHashB64,
+} from "../_shared/zatca-xmldsig.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -104,35 +105,46 @@ Deno.serve(async (req) => {
       },
     });
 
-    // 5) Hash + QR
-    const invoiceHashB64 = await sha256Base64(xml);
-    // Sign XML with the secp256k1 key from onboarding (ZATCA-mandated curve).
-    let signatureB64: string | undefined;
-    let publicKeyB64: string | undefined = cred.public_key ?? undefined;
-    if (cred.private_key_encrypted) {
-      try {
-        const sigDer = await zatcaSignSha256(
-          new TextEncoder().encode(xml),
-          cred.private_key_encrypted, // hex-encoded secp256k1 scalar
-        );
-        signatureB64 = b64encode(sigDer);
-      } catch (e) {
-        console.warn("[zatca-sign-invoice] signing failed:", (e as Error).message);
-      }
+    // 5) Wrap baseline invoice with the cac:Signature stub required by XAdES
+    const baseline = wrapInvoiceForSigning(xml);
+
+    // 6) Pick certificate for the environment
+    const certificateB64 = cred.environment === "production"
+      ? cred.production_csid
+      : cred.compliance_csid;
+
+    let signedXml = baseline;
+    let invoiceHashB64: string;
+    let qrTlvB64 = "";
+
+    if (certificateB64 && cred.private_key_encrypted) {
+      // Full XAdES-B-B signature — required for Clearance/Reporting
+      const signed = await signInvoiceXades({
+        invoiceXml: baseline,
+        certificateB64,
+        privateKeyHex: cred.private_key_encrypted,
+        signingTime: issued.toISOString(),
+        qr: {
+          sellerName: cred.org_name,
+          vatNumber: cred.org_vat,
+          timestamp: issued.toISOString(),
+          totalWithVat: Number(inv.grand_total_sar ?? 0).toFixed(2),
+          vatAmount: Number(inv.vat_amount_sar ?? 0).toFixed(2),
+        },
+      });
+      signedXml = signed.signedInvoiceXml;
+      invoiceHashB64 = signed.invoiceHashB64;
+      qrTlvB64 = signed.qrTlvB64;
+    } else {
+      // No cert yet (pre-onboarding) — hash only, no signature.
+      // ZATCA will reject on submit; useful for local preview.
+      invoiceHashB64 = computeInvoiceHashB64(baseline);
+      console.warn("[zatca-sign-invoice] missing certificate/key — invoice not XAdES signed");
     }
 
-    const qr = buildQrTlv({
-      sellerName: cred.org_name,
-      vatNumber: cred.org_vat,
-      timestamp: issued.toISOString(),
-      totalWithVat: Number(inv.grand_total_sar ?? 0).toFixed(2),
-      vatAmount: Number(inv.vat_amount_sar ?? 0).toFixed(2),
-      invoiceHashB64,
-      signatureB64,
-      publicKeyB64,
-    });
+    const qr = qrTlvB64;
 
-    // 6) Insert zatca_invoices row
+    // 7) Insert zatca_invoices row
     const submissionType = isSimplified ? "reporting" : "clearance";
     const { data: zRow, error: zErr } = await admin.from("zatca_invoices").insert({
       invoice_id: invoiceId,
@@ -141,12 +153,12 @@ Deno.serve(async (req) => {
       icv,
       pih,
       hash: invoiceHashB64,
-      xml_signed: xml,
+      xml_signed: signedXml,
       qr_base64: qr,
       invoice_type: isSimplified ? "simplified" : "standard",
       invoice_subtype: inv.invoice_subtype ?? "388",
       submission_type: submissionType,
-      status: "signed",
+      status: certificateB64 ? "signed" : "pending",
     }).select().single();
     if (zErr) return json({ error: zErr.message }, 500, cors);
 
@@ -169,7 +181,7 @@ Deno.serve(async (req) => {
         body: JSON.stringify({
           invoiceHash: invoiceHashB64,
           uuid,
-          invoice: btoa(xml),
+          invoice: btoa(signedXml),
         }),
       });
       apiBody = await res.json().catch(() => ({}));
