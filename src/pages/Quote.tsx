@@ -8,6 +8,7 @@ import { QuoteForm } from '@/components/QuoteBuilder';
 import { QuoteRequestForm } from '@/components/QuoteRequestForm';
 import { PRICING } from '@/data/pricing';
 import { toast } from 'sonner';
+import { waLink, WHATSAPP_NUMBER, CONTACT_EMAIL } from '@/lib/brand';
 
 // Strict URL param schemas — reject anything that isn't a clean slug/SKU.
 const SlugSchema = z.string().trim().min(1).max(80).regex(/^[a-z0-9](?:[a-z0-9-]{0,78}[a-z0-9])?$/i);
