@@ -292,7 +292,7 @@ export default function ProductDetail() {
               {/* CTAs */}
               <div className="mt-10 flex flex-col sm:flex-row gap-3">
                 <a
-                  href={whatsappUrl(waMsg)}
+                  href={waLink(waMsg)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center justify-center gap-2 h-12 px-6 bg-gradient-to-br from-gold-hi to-gold-lo text-dark font-semibold text-sm uppercase tracking-[0.18em] hover:-translate-y-0.5 hover:shadow-glow-gold transition-all"
