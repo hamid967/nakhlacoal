@@ -60,11 +60,27 @@ export default function Products() {
   const minPrice = minParam && !Number.isNaN(Number(minParam)) ? Math.max(0, Number(minParam)) : null;
   const maxPrice = maxParam && !Number.isNaN(Number(maxParam)) ? Math.max(0, Number(maxParam)) : null;
 
+  const PER_PAGE_OPTIONS = [12, 24, 48] as const;
+  const perPageParam = Number(params.get('perPage'));
+  const perPage = (PER_PAGE_OPTIONS as readonly number[]).includes(perPageParam) ? perPageParam : 12;
+  const pageParam = Number(params.get('page'));
+  const page = Number.isInteger(pageParam) && pageParam > 0 ? pageParam : 1;
+
+  const FILTER_KEYS = new Set(['q', 'cat', 'sort', 'min', 'max', 'stock', 'perPage']);
   const setParam = (k: string, v: string | null) => {
     const next = new URLSearchParams(params);
     if (!v || v === 'all' || v === 'featured' || v === '0') next.delete(k);
     else next.set(k, v);
+    // Reset pagination when a filter/sort/search changes
+    if (FILTER_KEYS.has(k)) next.delete('page');
     setParams(next, { replace: true });
+  };
+  const goToPage = (n: number) => {
+    const next = new URLSearchParams(params);
+    if (n <= 1) next.delete('page');
+    else next.set('page', String(n));
+    setParams(next, { replace: false });
+    if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
 
@@ -350,22 +366,60 @@ export default function Products() {
             </div>
           ) : (
             <>
-              <p className="text-xs text-muted-foreground mb-8">
-                {isAr
-                  ? `${items.length} منتج${activeCat ? ` · ${activeCat.name_ar}` : ''}`
-                  : `${items.length} product${items.length === 1 ? '' : 's'}${activeCat ? ` · ${activeCat.name_en}` : ''}`}
-              </p>
+              {(() => {
+                const totalPages = Math.max(1, Math.ceil(items.length / perPage));
+                const currentPage = Math.min(page, totalPages);
+                const start = (currentPage - 1) * perPage;
+                const pageItems = items.slice(start, start + perPage);
+                const rangeStart = items.length === 0 ? 0 : start + 1;
+                const rangeEnd = start + pageItems.length;
+                return (
+                  <>
+                    <div className="flex flex-wrap items-center justify-between gap-3 mb-8">
+                      <p className="text-xs text-muted-foreground">
+                        {isAr
+                          ? `${rangeStart}–${rangeEnd} من ${items.length} منتج${activeCat ? ` · ${activeCat.name_ar}` : ''}`
+                          : `${rangeStart}–${rangeEnd} of ${items.length} product${items.length === 1 ? '' : 's'}${activeCat ? ` · ${activeCat.name_en}` : ''}`}
+                      </p>
+                      <div className="flex items-center gap-2">
+                        <label htmlFor="per-page" className="text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
+                          {isAr ? 'لكل صفحة' : 'Per page'}
+                        </label>
+                        <select
+                          id="per-page"
+                          value={perPage}
+                          onChange={(e) => setParam('perPage', e.target.value === '12' ? null : e.target.value)}
+                          className="h-9 bg-transparent border border-border focus:border-gold focus:ring-2 focus:ring-gold/30 focus:outline-none text-sm px-2 text-foreground"
+                        >
+                          {PER_PAGE_OPTIONS.map((n) => (
+                            <option key={n} value={n}>{n}</option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
 
-              <ul
-                role="list"
-                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
-              >
-                {items.map((p, i) => (
-                  <li key={p.id}>
-                    <ProductCard product={p} index={i} total={items.length} isAr={isAr} Arrow={Arrow} />
-                  </li>
-                ))}
-              </ul>
+                    <ul
+                      role="list"
+                      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
+                    >
+                      {pageItems.map((p, i) => (
+                        <li key={p.id}>
+                          <ProductCard product={p} index={start + i} total={items.length} isAr={isAr} Arrow={Arrow} />
+                        </li>
+                      ))}
+                    </ul>
+
+                    {totalPages > 1 && (
+                      <Pagination
+                        page={currentPage}
+                        totalPages={totalPages}
+                        onChange={goToPage}
+                        isAr={isAr}
+                      />
+                    )}
+                  </>
+                );
+              })()}
             </>
           )}
         </section>
@@ -398,6 +452,71 @@ function Chip({
     >
       {children}
     </button>
+  );
+}
+
+function Pagination({
+  page,
+  totalPages,
+  onChange,
+  isAr,
+}: {
+  page: number;
+  totalPages: number;
+  onChange: (n: number) => void;
+  isAr: boolean;
+}) {
+  const pages: (number | 'ellipsis')[] = [];
+  const push = (v: number | 'ellipsis') => pages.push(v);
+  const window = 1;
+  for (let i = 1; i <= totalPages; i++) {
+    if (i === 1 || i === totalPages || (i >= page - window && i <= page + window)) push(i);
+    else if (pages[pages.length - 1] !== 'ellipsis') push('ellipsis');
+  }
+  const prevLabel = isAr ? 'السابق' : 'Previous';
+  const nextLabel = isAr ? 'التالي' : 'Next';
+  return (
+    <nav
+      role="navigation"
+      aria-label={isAr ? 'ترقيم الصفحات' : 'Pagination'}
+      className="mt-12 flex items-center justify-center gap-2 flex-wrap"
+    >
+      <button
+        type="button"
+        onClick={() => onChange(page - 1)}
+        disabled={page <= 1}
+        className="h-9 px-4 text-[11px] uppercase tracking-[0.22em] border border-border text-foreground hover:border-gold hover:text-gold-hi disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+      >
+        {prevLabel}
+      </button>
+      {pages.map((p, idx) =>
+        p === 'ellipsis' ? (
+          <span key={`e${idx}`} aria-hidden className="px-2 text-muted-foreground">…</span>
+        ) : (
+          <button
+            key={p}
+            type="button"
+            onClick={() => onChange(p)}
+            aria-current={p === page ? 'page' : undefined}
+            className={`h-9 min-w-9 px-3 text-sm border transition-colors ${
+              p === page
+                ? 'border-gold bg-gold/10 text-gold-hi'
+                : 'border-border text-muted-foreground hover:text-foreground hover:border-foreground/40'
+            }`}
+          >
+            {p}
+          </button>
+        ),
+      )}
+      <button
+        type="button"
+        onClick={() => onChange(page + 1)}
+        disabled={page >= totalPages}
+        className="h-9 px-4 text-[11px] uppercase tracking-[0.22em] border border-border text-foreground hover:border-gold hover:text-gold-hi disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+      >
+        {nextLabel}
+      </button>
+    </nav>
   );
 }
 
