@@ -76,6 +76,8 @@ export default function ZatcaAdmin() {
   const [invoices, setInvoices] = useState<ZatcaInvoice[]>([]);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState<string | null>(null);
+  const [expanded, setExpanded] = useState<Set<string>>(new Set());
+  const [statusFilter, setStatusFilter] = useState<string>('all');
 
   const defaultEnv: EnvKey = scope === 'production' ? 'production' : 'sandbox';
 
