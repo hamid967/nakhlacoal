@@ -122,6 +122,28 @@ export default function ZatcaAdmin() {
     () => invoices.filter((z) => scopedCredIds.has(z.credential_id)),
     [invoices, scopedCredIds],
   );
+  const filteredInvoices = useMemo(
+    () => scopedInvoices.filter((z) => statusFilter === 'all' || z.status === statusFilter),
+    [scopedInvoices, statusFilter],
+  );
+
+  function toggleExpanded(id: string) {
+    setExpanded((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+
+  async function copyText(t: string) {
+    try {
+      await navigator.clipboard.writeText(t);
+      toast.success('تم النسخ');
+    } catch {
+      toast.error('تعذّر النسخ');
+    }
+  }
 
   const counts = useMemo(() => {
     const c = { nonprod: 0, production: 0 };
