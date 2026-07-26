@@ -50,8 +50,13 @@ async def audit(browser, name, w, h):
     def on_console(msg):
         if msg.type == "error":
             text = msg.text
-            # Ignore benign React Router future-flag / dev warnings.
-            if "React Router Future Flag" in text:
+            # Ignore benign React/router dev warnings that don't affect rendering.
+            ignore = (
+                "React Router Future Flag",
+                "fetchPriority",  # React 18 casing warning on <img fetchpriority>
+                "Download the React DevTools",
+            )
+            if any(s in text for s in ignore):
                 return
             console_errors.append(text)
 
