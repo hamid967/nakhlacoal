@@ -267,7 +267,7 @@ export function BrokenGridHome() {
               to="/products"
               className="group relative col-span-12 lg:col-span-5 row-span-1 overflow-hidden bg-dark-2"
             >
-              <img src={textureMacro} alt="" className="absolute inset-0 h-full w-full object-cover opacity-70 transition-transform duration-1000 group-hover:scale-105" loading="lazy" />
+              <ResponsiveImage base="texture-macro" fallback={textureMacro} alt="" className="absolute inset-0 h-full w-full object-cover opacity-70 transition-transform duration-1000 group-hover:scale-105" sizes="(max-width: 1024px) 100vw, 40vw" />
               <div className="absolute inset-0 bg-gradient-to-r from-dark via-dark/40 to-transparent" />
               <div className="absolute inset-y-0 left-0 p-6 lg:p-8 flex flex-col justify-center max-w-xs">
                 <p className="text-xs uppercase tracking-[0.24em] text-gold">Shisha</p>
