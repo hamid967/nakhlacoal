@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Mail, RefreshCw, Send, Filter, CheckCircle2, XCircle, Clock, Loader2, BellRing } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
-import SEO from '@/components/SEO';
+import { SEO } from '@/components/SEO';
 
 type LogRow = {
   id: string;
