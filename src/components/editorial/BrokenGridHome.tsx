@@ -10,6 +10,7 @@ import craftProcess from '@/assets/design/craft-process.jpg';
 import lifestyleMajlis from '@/assets/design/lifestyle-majlis.jpg';
 import textureMacro from '@/assets/design/texture-macro.jpg';
 import qualityLab from '@/assets/design/quality-lab.jpg';
+import { ResponsiveImage } from './ResponsiveImage';
 
 /* Shared eyebrow chip */
 function Eyebrow({ children }: { children: React.ReactNode }) {
