@@ -36,6 +36,7 @@ export default function AdminQuotes() {
   const [rows, setRows] = useState<QR[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<string>('');
+  const [query, setQuery] = useState<string>('');
   const [active, setActive] = useState<QR | null>(null);
   const [busy, setBusy] = useState(false);
 
