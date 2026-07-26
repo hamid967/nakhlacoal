@@ -39,6 +39,25 @@ export default function AdminEmails() {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [resendingId, setResendingId] = useState<string | null>(null);
   const [runningCron, setRunningCron] = useState(false);
+  const [autoConfirm, setAutoConfirm] = useState<boolean>(true);
+  const [savingToggle, setSavingToggle] = useState(false);
+
+  const loadSettings = async () => {
+    const { data } = await supabase.from('email_settings').select('auto_order_confirmation').eq('id', true).maybeSingle();
+    if (data) setAutoConfirm(!!data.auto_order_confirmation);
+  };
+  useEffect(() => { loadSettings(); }, []);
+
+  const toggleAutoConfirm = async (next: boolean) => {
+    setSavingToggle(true);
+    const { error } = await supabase.from('email_settings')
+      .upsert({ id: true, auto_order_confirmation: next, updated_at: new Date().toISOString() });
+    setSavingToggle(false);
+    if (error) { toast.error('تعذّر حفظ الإعداد'); return; }
+    setAutoConfirm(next);
+    toast.success(next ? 'تم تفعيل بريد تأكيد الطلب التلقائي' : 'تم تعطيل بريد تأكيد الطلب التلقائي');
+  };
+
 
   const load = async () => {
     setLoading(true);
@@ -75,6 +94,9 @@ export default function AdminEmails() {
       } else if (row.template.startsWith('quote-') && row.template !== 'quote-expiry-reminder' && row.entity_id) {
         fn = 'send-quote-status-email';
         body = { quoteId: row.entity_id, status: row.template.replace('quote-', '') };
+      } else if (row.template === 'order-confirmation' && row.entity_id) {
+        fn = 'send-order-confirmation';
+        body = { orderId: row.entity_id };
       } else if (row.template === 'test-email') {
         fn = 'send-test-email';
         body = { to: row.recipient };
@@ -83,6 +105,7 @@ export default function AdminEmails() {
         setResendingId(null);
         return;
       }
+
       const { data, error } = await supabase.functions.invoke(fn, { body });
       if (error) throw error;
       if ((data as any)?.ok) {
@@ -141,6 +164,41 @@ export default function AdminEmails() {
         <Stat label="فشل / مرتد" value={stats.failed} icon={XCircle} tint="#ef4444" />
         <Stat label="مستلمون فريدون" value={stats.unique} icon={Send} tint="#f59e0b" />
       </div>
+
+      {/* Automations */}
+      <div className="a-card p-4 flex items-center justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2 font-semibold" style={{ color: 'var(--a-text)' }}>
+            <BellRing className="w-4 h-4" style={{ color: 'var(--a-palm)' }} />
+            بريد تأكيد الطلب التلقائي
+          </div>
+          <p className="text-xs mt-1" style={{ color: 'var(--a-text-muted)' }}>
+            يتم إرسال بريد تأكيد فوري للعميل عند إنشاء أي طلب جديد يحتوي على بريد إلكتروني.
+          </p>
+        </div>
+        <label className="inline-flex items-center gap-2 cursor-pointer">
+          <span className="text-sm" style={{ color: 'var(--a-text-muted)' }}>
+            {autoConfirm ? 'مُفعّل' : 'معطّل'}
+          </span>
+          <input
+            type="checkbox"
+            className="sr-only peer"
+            checked={autoConfirm}
+            disabled={savingToggle}
+            onChange={(e) => toggleAutoConfirm(e.target.checked)}
+          />
+          <span
+            className="relative w-11 h-6 rounded-full transition-colors"
+            style={{ background: autoConfirm ? 'var(--a-palm)' : '#cbd5e1' }}
+          >
+            <span
+              className="absolute top-0.5 w-5 h-5 rounded-full bg-white shadow transition-all"
+              style={{ [autoConfirm ? 'right' : 'left']: '2px' } as any}
+            />
+          </span>
+        </label>
+      </div>
+
 
       {/* Filters */}
       <div className="a-card p-4 flex flex-wrap items-center gap-3">

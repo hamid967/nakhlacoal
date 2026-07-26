@@ -1,0 +1,1 @@
+REVOKE ALL ON FUNCTION public.trg_send_order_confirmation() FROM PUBLIC, anon, authenticated;
