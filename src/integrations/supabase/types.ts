@@ -364,6 +364,27 @@ export type Database = {
         }
         Relationships: []
       }
+      email_settings: {
+        Row: {
+          auto_order_confirmation: boolean
+          id: boolean
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          auto_order_confirmation?: boolean
+          id?: boolean
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          auto_order_confirmation?: boolean
+          id?: boolean
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       inventory_items: {
         Row: {
           active: boolean
