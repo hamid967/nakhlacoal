@@ -56,7 +56,7 @@ async def check_route(context, path):
     resp = await page.goto(url, wait_until="domcontentloaded", timeout=30_000)
     await page.wait_for_load_state("load", timeout=15_000)
     try:
-        await page.wait_for_selector("main", timeout=10_000, state="attached")
+        await page.wait_for_selector("main#main-content", timeout=25_000, state="attached")
     except Exception:
         pass
     await page.wait_for_timeout(800)
