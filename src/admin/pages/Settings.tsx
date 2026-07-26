@@ -112,8 +112,10 @@ export default function AdminSettings() {
             <IntegrationRow name="WhatsApp Business" status="connected" />
             <IntegrationRow name="Google Analytics" status="disconnected" />
             <IntegrationRow name="ZATCA Fatoora" status="connected" />
+            <ResendTestRow />
           </Section>
         )}
+
 
         {tab === 'security' && (
           <Section title="الأمان" description="حماية الحساب والجلسات النشطة.">
