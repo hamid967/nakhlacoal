@@ -471,15 +471,25 @@ export default function AdminEmails() {
                       )}
                     </Td>
                     <Td>
-                      <button
-                        className="a-btn"
-                        onClick={() => resend(r)}
-                        disabled={resendingId === r.id}
-                        style={{ padding: '4px 10px', fontSize: 12 }}
-                      >
-                        {resendingId === r.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <Send className="w-3 h-3" />}
-                        إعادة
-                      </button>
+                      <div className="flex items-center gap-1">
+                        <button
+                          className="a-btn"
+                          onClick={() => runPreview(r.template, r.entity_id ?? undefined)}
+                          style={{ padding: '4px 10px', fontSize: 12 }}
+                          title="معاينة القالب"
+                        >
+                          <Eye className="w-3 h-3" /> معاينة
+                        </button>
+                        <button
+                          className="a-btn"
+                          onClick={() => resend(r)}
+                          disabled={resendingId === r.id}
+                          style={{ padding: '4px 10px', fontSize: 12 }}
+                        >
+                          {resendingId === r.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <Send className="w-3 h-3" />}
+                          إعادة
+                        </button>
+                      </div>
                     </Td>
                   </tr>
                 );
