@@ -69,13 +69,16 @@ export function BrokenGridHome() {
       <section className="relative min-h-[100vh] bg-dark text-dark-foreground overflow-hidden">
         {/* Image bleed */}
         <div className="absolute inset-y-0 right-0 w-full lg:w-[62%]">
-          <img
-            src={heroEditorial}
+          <ResponsiveImage
+            base="hero-editorial"
+            fallback={heroEditorial}
             alt=""
             className="h-full w-full object-cover opacity-90"
-            fetchPriority="high"
+            {...({ fetchpriority: 'high' } as Record<string, string>)}
+            loading="eager"
             width={1920}
             height={1088}
+            sizes="(max-width: 1024px) 100vw, 62vw"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-dark via-dark/60 to-transparent lg:from-dark lg:via-dark/40" />
         </div>
