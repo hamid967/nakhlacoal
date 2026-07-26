@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { ArrowLeft, ArrowRight, Loader2, MessageCircle, PackageCheck } from 'lucide-react';
 import { SEO } from '@/components/SEO';
 import { supabase } from '@/integrations/supabase/client';
-import { brand, whatsappUrl } from '@/lib/brand';
+import { brand, waLink } from '@/lib/brand';
 
 type Variant = {
   id: string;
