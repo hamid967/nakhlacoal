@@ -18,15 +18,16 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ['"Syne"', '"Cormorant Garamond"', 'serif'],
-        body: ['"Plus Jakarta Sans"', '"IBM Plex Sans Arabic"', 'system-ui', 'sans-serif'],
-        arabic: ['"Reem Kufi"', '"IBM Plex Sans Arabic"', 'sans-serif'],
-        editorial: ['"Syne"', '"Amiri"', 'Georgia', 'serif'],
-        // P1 — Bold Editorial pair: DM Serif Display headings + Fira Sans body
-        'editorial-bold': ['"DM Serif Display"', '"Amiri"', 'Georgia', 'serif'],
-        'editorial-sans': ['"Fira Sans"', '"IBM Plex Sans Arabic"', 'system-ui', 'sans-serif'],
-        sans: ['"Plus Jakarta Sans"', '"IBM Plex Sans Arabic"', 'system-ui', 'sans-serif'],
-        amiri: ['"Amiri"', '"Syne"', 'serif'],
+        // Palm Charcoal typography per redesign brief §4
+        display:          ['"Manrope"', '"IBM Plex Sans Arabic"', 'system-ui', 'sans-serif'],
+        body:             ['"Manrope"', '"IBM Plex Sans Arabic"', 'system-ui', 'sans-serif'],
+        sans:             ['"Manrope"', '"IBM Plex Sans Arabic"', 'system-ui', 'sans-serif'],
+        arabic:           ['"IBM Plex Sans Arabic"', 'system-ui', 'sans-serif'],
+        // Legacy aliases retained so existing components keep compiling; all resolve to Manrope + IBM Plex Arabic.
+        editorial:        ['"Manrope"', '"IBM Plex Sans Arabic"', 'system-ui', 'sans-serif'],
+        'editorial-bold': ['"Manrope"', '"IBM Plex Sans Arabic"', 'system-ui', 'sans-serif'],
+        'editorial-sans': ['"Manrope"', '"IBM Plex Sans Arabic"', 'system-ui', 'sans-serif'],
+        amiri:            ['"IBM Plex Sans Arabic"', 'system-ui', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -39,6 +40,24 @@ export default {
           2: "hsl(var(--surface-2))",
           3: "hsl(var(--surface-3))",
         },
+        // Brief §4 palette aliases
+        coal: {
+          DEFAULT: "hsl(var(--dark))",
+          950:     "hsl(var(--dark))",
+          900:     "hsl(var(--dark-2))",
+          800:     "hsl(var(--dark-3))",
+        },
+        ivory: "hsl(var(--ivory))",
+        sand:  "hsl(var(--sand))",
+        ember: {
+          DEFAULT: "hsl(var(--ember))",
+          hi:      "hsl(var(--ember-hi))",
+        },
+        'palm-gold': {
+          DEFAULT: "hsl(var(--gold))",
+          hi:      "hsl(var(--gold-hi))",
+          lo:      "hsl(var(--gold-lo))",
+        },
         gold: {
           DEFAULT: "hsl(var(--gold))",
           hi: "hsl(var(--gold-hi))",
@@ -46,6 +65,7 @@ export default {
           ink: "hsl(var(--gold-ink))",
         },
         jade: "hsl(var(--jade))",
+        success: "hsl(var(--success))",
         whatsapp: {
           DEFAULT: "hsl(var(--brand-whatsapp))",
           hover: "hsl(var(--brand-whatsapp-hover))",

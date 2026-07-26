@@ -3,63 +3,76 @@
 @tailwind utilities;
 
 /* ============================================================
-   فحم النخلة | Palm Charcoal — Luxury Design System
-   Matte black canvas, metallic gold accents, hairline luxury.
-   All colors are HSL tokens. Never hardcode hex in components.
+   فحم النخلة | Palm Charcoal — Premium Saudi Industrial Luxury
+   Palette per redesign brief §4: Coal · Palm Gold · Ember · Ivory
+   HSL tokens only. Never hardcode hex in components.
    ============================================================ */
 
 @layer base {
   :root {
-    /* ============= Emerald Palm palette — matched to Palm Charcoal logo =============
-       #F5F0E0 paper · #064E3B deep emerald ink · #0D7A5F living emerald · #C9A84C palm gold */
-    --background: 44 55% 92%;             /* #F5F0E0 warm paper */
-    --foreground: 160 78% 12%;            /* deep emerald ink */
-    --surface: 44 50% 96%;                /* raised card */
-    --surface-2: 42 40% 88%;              /* recessed panel */
-    --surface-3: 40 32% 82%;              /* deepest cream */
+    /* ============= Coal + Palm Gold palette (brief §4) =============
+       #F6F2E9 ivory canvas · #0A0B09 coal ink · #B7923E palm-gold
+       #D45B28 ember accent · #E7D9BD sand · #2D6A4F success */
+
+    /* Ivory canvas — clean editorial surface (light-mode) */
+    --background: 41 55% 94%;             /* #F6F2E9 ivory */
+    --foreground: 80 8% 9%;               /* #171914 ink */
+    --surface: 44 50% 97%;                /* raised card */
+    --surface-2: 41 40% 90%;              /* recessed panel */
+    --surface-3: 39 32% 84%;              /* sand */
 
     /* Dark editorial sections (hero, footer, dark bands) */
-    --dark: 160 78% 10%;                  /* #04382A near-black emerald */
-    --dark-2: 162 82% 6%;                 /* deepest emerald */
-    --dark-foreground: 44 55% 94%;        /* paper on emerald */
+    --dark: 75 9% 5%;                     /* #0A0B09 coal-950 */
+    --dark-2: 108 6% 6%;                  /* #111310 coal-900 */
+    --dark-3: 84 8% 11%;                  /* #1B1E19 coal-800 */
+    --dark-foreground: 41 55% 94%;        /* ivory on coal */
 
-    /* Primary spectrum — palm gold */
-    --gold: 43 55% 54%;                   /* #C9A84C */
-    --gold-hi: 43 68% 66%;                /* highlight */
-    --gold-lo: 40 55% 38%;                /* AA on cream */
-    --gold-ink: 40 60% 30%;               /* text-safe gold */
+    /* Palm gold spectrum — accent only, not a background */
+    --gold: 40 51% 48%;                   /* #B7923E palm-gold */
+    --gold-hi: 42 57% 65%;                /* #D7BC72 highlight */
+    --gold-lo: 40 55% 35%;                /* AA on ivory */
+    --gold-ink: 40 60% 28%;               /* text-safe gold */
 
-    /* Jade secondary — living emerald */
-    --jade: 163 80% 26%;                  /* #0D7A5F */
+    /* Ember — heat / motion moments only */
+    --ember: 16 68% 49%;                  /* #D45B28 */
+    --ember-hi: 18 76% 62%;               /* softer ember */
+
+    /* Sand + Ivory helpers */
+    --sand: 40 45% 82%;                   /* #E7D9BD */
+    --ivory: 41 55% 94%;                  /* #F6F2E9 */
+
+    /* Jade secondary → success moss (retained token name for compat) */
+    --jade: 154 40% 30%;                  /* #2D6A4F success */
 
     /* Functional aliases (shadcn) */
-    --card: 44 50% 96%;
-    --card-foreground: 160 78% 12%;
-    --popover: 44 50% 96%;
-    --popover-foreground: 160 78% 12%;
-    --primary: 163 80% 26%;               /* emerald as primary action */
-    --primary-foreground: 44 55% 94%;
-    --secondary: 42 40% 88%;
-    --secondary-foreground: 160 78% 12%;
-    --muted: 42 40% 88%;
-    --muted-foreground: 160 25% 30%;
-    --accent: 43 55% 54%;                 /* gold accent */
-    --accent-foreground: 160 78% 12%;
-    --destructive: 0 65% 45%;
-    --destructive-foreground: 44 55% 94%;
+    --card: 44 50% 97%;
+    --card-foreground: 80 8% 9%;
+    --popover: 44 50% 97%;
+    --popover-foreground: 80 8% 9%;
+    --primary: 75 9% 5%;                  /* coal as primary action on ivory */
+    --primary-foreground: 41 55% 94%;
+    --secondary: 41 40% 90%;
+    --secondary-foreground: 80 8% 9%;
+    --muted: 41 40% 90%;
+    --muted-foreground: 90 6% 43%;        /* #6E7168 */
+    --accent: 40 51% 48%;                 /* palm-gold accent */
+    --accent-foreground: 75 9% 5%;
+    --destructive: 3 51% 48%;             /* #B8403B */
+    --destructive-foreground: 41 55% 94%;
+    --success: 154 40% 30%;               /* #2D6A4F */
     --brand-whatsapp: 142 70% 39%;
     --brand-whatsapp-hover: 142 74% 32%;
-    --border: 160 20% 72%;
-    --input: 42 40% 90%;
-    --ring: 163 80% 26%;
+    --border: 84 8% 78%;
+    --input: 41 40% 92%;
+    --ring: 40 51% 48%;
 
     --radius: 0.25rem;
 
     /* Curated gradients & shadows */
-    --gradient-gold: linear-gradient(135deg, hsl(43 68% 66%) 0%, hsl(43 55% 54%) 50%, hsl(40 55% 38%) 100%);
-    --gradient-ember: radial-gradient(ellipse at 50% 100%, hsl(43 68% 66% / 0.35), transparent 60%);
+    --gradient-gold: linear-gradient(135deg, hsl(42 57% 65%) 0%, hsl(40 51% 48%) 50%, hsl(40 55% 35%) 100%);
+    --gradient-ember: radial-gradient(ellipse at 50% 100%, hsl(16 68% 49% / 0.28), transparent 60%);
     --gradient-night: linear-gradient(180deg, hsl(var(--dark)) 0%, hsl(var(--dark-2)) 100%);
-    --shadow-luxe: 0 30px 60px -25px hsl(160 78% 10% / 0.35), 0 4px 16px -6px hsl(160 78% 10% / 0.18);
+    --shadow-luxe: 0 30px 60px -25px hsl(75 9% 5% / 0.35), 0 4px 16px -6px hsl(75 9% 5% / 0.18);
     --shadow-gold: 0 14px 36px -10px hsl(var(--gold) / 0.45);
     --ease-luxe: cubic-bezier(0.16, 1, 0.3, 1);
   }
@@ -207,7 +220,7 @@
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: system-ui, -apple-system, sans-serif;
+    font-family: 'Manrope', 'IBM Plex Sans Arabic', system-ui, -apple-system, sans-serif;
     font-size: 17px;
     line-height: 1.72;
     font-weight: 400;
@@ -236,10 +249,10 @@
     line-height: 1.85;
   }
 
-  /* Basic-inspired editorial scale — generous, restrained, premium */
+  /* Premium editorial scale — Manrope headings (LTR) with tight tracking */
   h1, h2, h3, h4, h5 {
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 500;
+    font-family: 'Manrope', 'IBM Plex Sans Arabic', system-ui, sans-serif;
+    font-weight: 700;
     letter-spacing: -0.022em;
     line-height: 1.05;
     text-wrap: balance;
@@ -256,7 +269,7 @@
   html[dir="rtl"] h3,
   html[dir="rtl"] h4,
   html[dir="rtl"] h5 {
-    font-family: 'Reem Kufi', 'IBM Plex Sans Arabic', serif;
+    font-family: 'IBM Plex Sans Arabic', system-ui, sans-serif;
     font-weight: 700;
     letter-spacing: 0;
     line-height: 1.42;
