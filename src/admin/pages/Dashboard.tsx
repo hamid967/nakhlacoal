@@ -230,9 +230,25 @@ export default function AdminDashboard() {
       {/* Charts */}
       <div className="grid lg:grid-cols-3 gap-5">
         <div className="a-card p-5 lg:col-span-2">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="font-semibold">حركة الطلبات — آخر 14 يوم</h3>
-            <span className="a-pill a-pill-green">مباشر</span>
+          <div className="flex items-center justify-between mb-3 gap-2 flex-wrap">
+            <h3 className="font-semibold">
+              الأداء — {period === 'day' ? 'يومي (14 يوم)' : period === 'week' ? 'أسبوعي (8 أسابيع)' : 'شهري (6 أشهر)'}
+            </h3>
+            <div className="inline-flex rounded-lg border overflow-hidden" style={{ borderColor: 'var(--a-border)' }}>
+              {(['day','week','month'] as const).map((p) => (
+                <button
+                  key={p}
+                  onClick={() => setPeriod(p)}
+                  className="px-3 py-1.5 text-xs font-medium transition"
+                  style={{
+                    background: period === p ? 'var(--a-palm)' : 'transparent',
+                    color: period === p ? '#fff' : 'var(--a-text-muted)',
+                  }}
+                >
+                  {p === 'day' ? 'يومي' : p === 'week' ? 'أسبوعي' : 'شهري'}
+                </button>
+              ))}
+            </div>
           </div>
           <ResponsiveContainer width="100%" height={280}>
             <AreaChart data={stats.timeline}>
@@ -241,12 +257,18 @@ export default function AdminDashboard() {
                   <stop offset="0%" stopColor="#1A4A00" stopOpacity={0.35} />
                   <stop offset="100%" stopColor="#1A4A00" stopOpacity={0} />
                 </linearGradient>
+                <linearGradient id="g2" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#C9A84C" stopOpacity={0.35} />
+                  <stop offset="100%" stopColor="#C9A84C" stopOpacity={0} />
+                </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,.06)" />
               <XAxis dataKey="date" tick={{ fontSize: 11 }} />
-              <YAxis tick={{ fontSize: 11 }} allowDecimals={false} />
-              <Tooltip />
-              <Area type="monotone" dataKey="orders" stroke="#1A4A00" strokeWidth={2.5} fill="url(#g1)" />
+              <YAxis yAxisId="left" tick={{ fontSize: 11 }} allowDecimals={false} />
+              <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 11 }} />
+              <Tooltip formatter={(v: number, n: string) => n === 'الإيرادات' ? `${Math.round(v).toLocaleString('ar-SA')} ر.س` : v} />
+              <Area yAxisId="left" type="monotone" name="الطلبات" dataKey="orders" stroke="#1A4A00" strokeWidth={2.5} fill="url(#g1)" />
+              <Area yAxisId="right" type="monotone" name="الإيرادات" dataKey="revenue" stroke="#C9A84C" strokeWidth={2} fill="url(#g2)" />
             </AreaChart>
           </ResponsiveContainer>
         </div>
