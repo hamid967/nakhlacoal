@@ -141,7 +141,7 @@ export function SectionSkeleton({
       );
 
     case 'cases':
-      // Header row + big card + dots (mirrors CaseStudies layout)
+      // Header row + big card + pagination dots (generic 'cases' variant layout)
       return (
         <BaseWrap variant={variant} label={label}>
           <div className="py-8">
