@@ -35,15 +35,21 @@ type ZatcaInvoice = {
   credential_id: string;
   uuid: string;
   icv: number;
+  pih: string | null;
   hash: string;
+  xml_signed: string | null;
+  qr_base64: string | null;
   invoice_type: string;
+  invoice_subtype: string | null;
   submission_type: string;
   status: string;
+  zatca_response: any;
   attempts: number;
   last_error: string | null;
   submitted_at: string | null;
   cleared_at: string | null;
   created_at: string;
+  updated_at: string | null;
 };
 
 const STATUS_COLORS: Record<string, string> = {
