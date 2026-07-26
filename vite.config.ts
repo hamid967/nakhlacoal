@@ -66,13 +66,13 @@ export default defineConfig(({ mode }) => ({
       },
       manifest: false, // project ships its own public/manifest.webmanifest
     }),
-    // Bundle analyzer — writes dist/stats.html on `npm run build:analyze`.
-    process.env.ANALYZE && visualizer({
+    // Bundle analyzer — writes dist/stats.html on `ANALYZE=1 npm run build`.
+    process.env.ANALYZE ? visualizer({
       filename: 'dist/stats.html',
       gzipSize: true,
       brotliSize: true,
       template: 'treemap',
-    }),
+    }) : null,
     mode === "development" && componentTagger(),
   ].filter(Boolean),
   resolve: {
