@@ -1219,6 +1219,7 @@ export type Database = {
           user_id: string | null
           vat_amount_sar: number | null
           vat_rate: number | null
+          wholesale_account_id: string | null
         }
         Insert: {
           address?: string | null
@@ -1253,6 +1254,7 @@ export type Database = {
           user_id?: string | null
           vat_amount_sar?: number | null
           vat_rate?: number | null
+          wholesale_account_id?: string | null
         }
         Update: {
           address?: string | null
@@ -1287,8 +1289,17 @@ export type Database = {
           user_id?: string | null
           vat_amount_sar?: number | null
           vat_rate?: number | null
+          wholesale_account_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "orders_wholesale_account_id_fkey"
+            columns: ["wholesale_account_id"]
+            isOneToOne: false
+            referencedRelation: "wholesale_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       pending_orders: {
         Row: {
@@ -1590,6 +1601,7 @@ export type Database = {
           unit: string
           updated_at: string
           user_id: string | null
+          wholesale_account_id: string | null
         }
         Insert: {
           admin_notes?: string | null
@@ -1612,6 +1624,7 @@ export type Database = {
           unit?: string
           updated_at?: string
           user_id?: string | null
+          wholesale_account_id?: string | null
         }
         Update: {
           admin_notes?: string | null
@@ -1634,6 +1647,7 @@ export type Database = {
           unit?: string
           updated_at?: string
           user_id?: string | null
+          wholesale_account_id?: string | null
         }
         Relationships: [
           {
@@ -1648,6 +1662,13 @@ export type Database = {
             columns: ["order_id"]
             isOneToOne: false
             referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quote_requests_wholesale_account_id_fkey"
+            columns: ["wholesale_account_id"]
+            isOneToOne: false
+            referencedRelation: "wholesale_accounts"
             referencedColumns: ["id"]
           },
         ]
@@ -2017,6 +2038,74 @@ export type Database = {
         }
         Relationships: []
       }
+      wholesale_accounts: {
+        Row: {
+          approved_at: string | null
+          company_name: string
+          contact_email: string | null
+          contact_name: string | null
+          contact_phone: string | null
+          cr_number: string | null
+          created_at: string
+          credit_limit_sar: number
+          id: string
+          lead_id: string | null
+          notes: string | null
+          payment_terms: string
+          sales_rep_id: string | null
+          status: string
+          updated_at: string
+          user_id: string | null
+          vat_number: string | null
+        }
+        Insert: {
+          approved_at?: string | null
+          company_name: string
+          contact_email?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
+          cr_number?: string | null
+          created_at?: string
+          credit_limit_sar?: number
+          id?: string
+          lead_id?: string | null
+          notes?: string | null
+          payment_terms?: string
+          sales_rep_id?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+          vat_number?: string | null
+        }
+        Update: {
+          approved_at?: string | null
+          company_name?: string
+          contact_email?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
+          cr_number?: string | null
+          created_at?: string
+          credit_limit_sar?: number
+          id?: string
+          lead_id?: string | null
+          notes?: string | null
+          payment_terms?: string
+          sales_rep_id?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+          vat_number?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wholesale_accounts_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "wholesale_leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       wholesale_leads: {
         Row: {
           business_type: string | null
@@ -2064,6 +2153,120 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      wholesale_price_tiers: {
+        Row: {
+          account_id: string | null
+          category_id: string | null
+          created_at: string
+          discount_pct: number | null
+          fixed_price_sar: number | null
+          id: string
+          min_qty: number
+          updated_at: string
+          valid_from: string
+          valid_until: string | null
+          variant_id: string | null
+        }
+        Insert: {
+          account_id?: string | null
+          category_id?: string | null
+          created_at?: string
+          discount_pct?: number | null
+          fixed_price_sar?: number | null
+          id?: string
+          min_qty?: number
+          updated_at?: string
+          valid_from?: string
+          valid_until?: string | null
+          variant_id?: string | null
+        }
+        Update: {
+          account_id?: string | null
+          category_id?: string | null
+          created_at?: string
+          discount_pct?: number | null
+          fixed_price_sar?: number | null
+          id?: string
+          min_qty?: number
+          updated_at?: string
+          valid_from?: string
+          valid_until?: string | null
+          variant_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wholesale_price_tiers_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "wholesale_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "wholesale_price_tiers_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "wholesale_price_tiers_variant_id_fkey"
+            columns: ["variant_id"]
+            isOneToOne: false
+            referencedRelation: "product_variants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      wholesale_statements: {
+        Row: {
+          account_id: string
+          closing_balance_sar: number
+          created_at: string
+          id: string
+          invoiced_sar: number
+          opening_balance_sar: number
+          paid_sar: number
+          pdf_url: string | null
+          period_end: string
+          period_start: string
+          updated_at: string
+        }
+        Insert: {
+          account_id: string
+          closing_balance_sar?: number
+          created_at?: string
+          id?: string
+          invoiced_sar?: number
+          opening_balance_sar?: number
+          paid_sar?: number
+          pdf_url?: string | null
+          period_end: string
+          period_start: string
+          updated_at?: string
+        }
+        Update: {
+          account_id?: string
+          closing_balance_sar?: number
+          created_at?: string
+          id?: string
+          invoiced_sar?: number
+          opening_balance_sar?: number
+          paid_sar?: number
+          pdf_url?: string | null
+          period_end?: string
+          period_start?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wholesale_statements_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "wholesale_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
@@ -2126,6 +2329,14 @@ export type Database = {
         Returns: boolean
       }
       expire_stock_reservations: { Args: never; Returns: number }
+      get_account_balance: {
+        Args: { _account_id: string }
+        Returns: {
+          available_sar: number
+          credit_limit_sar: number
+          outstanding_sar: number
+        }[]
+      }
       get_quote_status: {
         Args: { _id: string; _phone: string }
         Returns: {
@@ -2137,6 +2348,14 @@ export type Database = {
           status: string
           unit: string
           updated_at: string
+        }[]
+      }
+      get_wholesale_price: {
+        Args: { _qty?: number; _variant_id: string }
+        Returns: {
+          price_sar: number
+          source: string
+          tier_id: string
         }[]
       }
       has_role: {
@@ -2163,6 +2382,7 @@ export type Database = {
         | "distributor"
         | "customer"
         | "manager"
+        | "sales_rep"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -2301,6 +2521,7 @@ export const Constants = {
         "distributor",
         "customer",
         "manager",
+        "sales_rep",
       ],
     },
   },
