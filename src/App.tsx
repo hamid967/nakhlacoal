@@ -74,6 +74,8 @@ const AdminWebVitals = lazy(() => import('@/admin/pages/WebVitals'));
 const AdminChatAnalytics = lazy(() => import('@/admin/pages/ChatAnalytics'));
 const AdminCoupons = lazy(() => import('@/admin/pages/Coupons'));
 const AdminAuditLog = lazy(() => import('@/admin/pages/AuditLog'));
+const AdminQuotes = lazy(() => import('@/admin/pages/Quotes'));
+const PortalQuotes = lazy(() => import('@/portal/pages/Quotes'));
 
 const PortalLayout = lazy(() => import('@/portal/PortalLayout'));
 const PortalDashboard = lazy(() => import('@/portal/pages/Dashboard'));
@@ -172,6 +174,7 @@ export default function App() {
                   <Route path="coupons" element={<AdminCoupons />} />
                   <Route path="marketing" element={<AdminCoupons />} />
                   <Route path="logs" element={<AdminAuditLog />} />
+                  <Route path="quotes" element={<AdminQuotes />} />
                   <Route path="*" element={<AdminPlaceholder />} />
                 </Route>
                 <Route path="/portal/login" element={<PortalLogin />} />
@@ -183,7 +186,7 @@ export default function App() {
                   <Route path="tracking" element={<PortalShipments />} />
                   <Route path="shipments" element={<PortalShipments />} />
                   <Route path="shipments/:id" element={<PortalShipmentDetail />} />
-                  <Route path="quotes" element={<PortalPlaceholder title="العروض السعرية" />} />
+                  <Route path="quotes" element={<PortalQuotes />} />
                   <Route path="invoices" element={<PortalPlaceholder title="الفواتير" />} />
                   <Route path="payments" element={<PortalPlaceholder title="المدفوعات" />} />
                   <Route path="catalog" element={<PortalCatalog />} />

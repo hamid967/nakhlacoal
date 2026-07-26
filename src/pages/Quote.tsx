@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useSearchParams } from 'react-router-dom';
-import { FileText, Sparkles, MessageCircle, Phone, Mail, Clock, Calculator, Copy, Check } from 'lucide-react';
+import { FileText, Sparkles, MessageCircle, Phone, Mail, Clock, Calculator, Copy, Check, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { QuoteForm } from '@/components/QuoteBuilder';
+import { QuoteRequestForm } from '@/components/QuoteRequestForm';
 import { PRICING } from '@/data/pricing';
 import { toast } from 'sonner';
 
@@ -105,6 +106,20 @@ export default function Quote() {
               <h2 className="text-lg font-bold">منشئ عرض السعر</h2>
             </div>
             <QuoteForm initialSlug={validSlug} />
+
+            {/* Formal request form — persists to backend for sales follow-up */}
+            <div className="mt-8 pt-6 border-t border-gold/10">
+              <div className="flex items-center gap-2 mb-4">
+                <Send className="size-5 text-gold" />
+                <div>
+                  <h3 className="text-base font-bold">إرسال طلب رسمي لعرض السعر</h3>
+                  <p className="text-xs text-muted-foreground">
+                    سيصلك رد من فريق المبيعات خلال 24 ساعة عمل مع سعر مخصص وشروط الشحن.
+                  </p>
+                </div>
+              </div>
+              <QuoteRequestForm />
+            </div>
           </div>
 
           {/* Assistant side panel */}
