@@ -241,7 +241,7 @@ export function BrokenGridHome() {
               to="/products"
               className="group relative col-span-6 lg:col-span-3 row-span-1 overflow-hidden bg-dark-2"
             >
-              <img src={packagingImg} alt="" className="absolute inset-0 h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105" loading="lazy" />
+              <ResponsiveImage base="packaging" fallback={packagingImg} alt="" className="absolute inset-0 h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105" sizes="(max-width: 1024px) 50vw, 25vw" />
               <div className="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/30 to-transparent" />
               <div className="absolute bottom-0 p-6">
                 <p className="text-xs uppercase tracking-[0.24em] text-gold">Gift Edition</p>
