@@ -549,6 +549,42 @@ export type Database = {
         }
         Relationships: []
       }
+      notifications: {
+        Row: {
+          created_at: string
+          entity_id: string | null
+          entity_type: string | null
+          error: string | null
+          id: string
+          recipient: string
+          sent_at: string | null
+          status: string
+          subject: string
+        }
+        Insert: {
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string | null
+          error?: string | null
+          id?: string
+          recipient: string
+          sent_at?: string | null
+          status?: string
+          subject: string
+        }
+        Update: {
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string | null
+          error?: string | null
+          id?: string
+          recipient?: string
+          sent_at?: string | null
+          status?: string
+          subject?: string
+        }
+        Relationships: []
+      }
       orders: {
         Row: {
           address: string | null
@@ -705,6 +741,84 @@ export type Database = {
         }
         Relationships: []
       }
+      quote_requests: {
+        Row: {
+          admin_notes: string | null
+          company_name: string
+          created_at: string
+          customer_id: string | null
+          destination: string | null
+          email: string | null
+          full_name: string
+          id: string
+          notes: string | null
+          order_id: string | null
+          phone: string
+          product: string
+          quantity: number
+          quoted_price_sar: number | null
+          status: string
+          unit: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          admin_notes?: string | null
+          company_name: string
+          created_at?: string
+          customer_id?: string | null
+          destination?: string | null
+          email?: string | null
+          full_name: string
+          id?: string
+          notes?: string | null
+          order_id?: string | null
+          phone: string
+          product: string
+          quantity: number
+          quoted_price_sar?: number | null
+          status?: string
+          unit?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          admin_notes?: string | null
+          company_name?: string
+          created_at?: string
+          customer_id?: string | null
+          destination?: string | null
+          email?: string | null
+          full_name?: string
+          id?: string
+          notes?: string | null
+          order_id?: string | null
+          phone?: string
+          product?: string
+          quantity?: number
+          quoted_price_sar?: number | null
+          status?: string
+          unit?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quote_requests_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quote_requests_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       rate_limits: {
         Row: {
           bucket_key: string
@@ -799,6 +913,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      status_history: {
+        Row: {
+          changed_by: string | null
+          created_at: string
+          entity_id: string
+          entity_type: string
+          from_status: string | null
+          id: string
+          note: string | null
+          to_status: string
+        }
+        Insert: {
+          changed_by?: string | null
+          created_at?: string
+          entity_id: string
+          entity_type: string
+          from_status?: string | null
+          id?: string
+          note?: string | null
+          to_status: string
+        }
+        Update: {
+          changed_by?: string | null
+          created_at?: string
+          entity_id?: string
+          entity_type?: string
+          from_status?: string | null
+          id?: string
+          note?: string | null
+          to_status?: string
+        }
+        Relationships: []
       }
       trademarks: {
         Row: {
