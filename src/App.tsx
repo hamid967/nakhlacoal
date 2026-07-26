@@ -119,6 +119,7 @@ export default function App() {
 
             <Toaster />
             <Sonner />
+            <RouteNoIndex />
             <Suspense fallback={<RouteFallback />}>
               <Routes>
                 <Route element={<Layout />}>
