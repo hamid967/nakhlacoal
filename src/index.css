@@ -711,7 +711,7 @@
     color: hsl(var(--background));
   }
   .lux-emerald-wordmark {
-    font-family: 'Cormorant Garamond', 'Reem Kufi', 'IBM Plex Sans Arabic', serif;
+    font-family: 'Manrope', 'IBM Plex Sans Arabic', system-ui, sans-serif;
     color: hsl(var(--gold-hi));
     letter-spacing: -0.01em;
     line-height: 1;
