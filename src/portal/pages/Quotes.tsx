@@ -18,7 +18,7 @@ const STATUS_TINT: Record<string, string> = {
   new: 'bg-slate-500/10 text-slate-600',
   under_review: 'bg-blue-500/10 text-blue-600',
   priced: 'bg-amber-500/10 text-amber-700',
-  accepted: 'bg-emerald-500/10 text-emerald-700',
+  accepted: 'bg-sand0/10 text-gold',
   rejected: 'bg-rose-500/10 text-rose-700',
   converted_to_order: 'bg-violet-500/10 text-violet-700',
 };

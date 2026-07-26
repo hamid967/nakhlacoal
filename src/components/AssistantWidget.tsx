@@ -557,7 +557,7 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
             ) : submitting ? (
               <><Loader2 className="w-3 h-3 animate-spin" /> جارٍ الإرسال…</>
             ) : (
-              <><span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_hsl(142_70%_45%)] animate-pulse" /> متصل · مجاني ٢٤/٧</>
+              <><span className="w-1.5 h-1.5 rounded-full bg-gold shadow-[0_0_6px_hsl(142_70%_45%)] animate-pulse" /> متصل · مجاني ٢٤/٧</>
             )}
           </p>
         </div>
@@ -676,7 +676,7 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
                         <summary className="cursor-pointer select-none px-2 py-1 flex items-center gap-1.5 hover:bg-gold/10 rounded-lg">
                           <span>{meta.icon}</span>
                           <span className="font-semibold text-foreground">{meta.label}</span>
-                          <CheckCircle2 className="w-3 h-3 text-emerald-600 ms-auto" />
+                          <CheckCircle2 className="w-3 h-3 text-gold ms-auto" />
                         </summary>
                         <pre className="px-2 pb-2 pt-1 text-[10px] leading-tight overflow-x-auto text-muted-foreground whitespace-pre-wrap break-all">
 {JSON.stringify(t.result, null, 2).slice(0, 800)}
@@ -722,7 +722,7 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
           </div>
         );})}
         {submitting && (
-          <div className="flex items-center gap-2 text-xs text-emerald-600">
+          <div className="flex items-center gap-2 text-xs text-gold">
             <CheckCircle2 className="w-3.5 h-3.5 animate-pulse" /> جارٍ حفظ وإرسال الطلب...
           </div>
         )}
@@ -760,7 +760,7 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
         <div className="border-t border-gold/30 bg-gradient-to-b from-gold/10 to-gold/5 p-3 space-y-3 font-arabic max-h-[55%] overflow-y-auto">
           <div className="flex items-center justify-between">
             <p className="text-xs font-semibold text-foreground flex items-center gap-1.5">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> مراجعة نهائية للطلب
+              <CheckCircle2 className="w-3.5 h-3.5 text-gold" /> مراجعة نهائية للطلب
             </p>
             <button onClick={() => setReviewMode(false)} className="text-[10px] text-muted-foreground hover:text-foreground underline">تعديل</button>
           </div>
@@ -805,7 +805,7 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
                 </div>
                 <div className="flex justify-between gap-2 border-t border-gold/30 pt-1 text-[12px]">
                   <dt className="text-foreground font-bold">الإجمالي شامل الضريبة</dt>
-                  <dd className="font-bold text-emerald-700">{formatSAR(liveQuote.total)}</dd>
+                  <dd className="font-bold text-gold">{formatSAR(liveQuote.total)}</dd>
                 </div>
                 <div className="flex justify-between gap-2 text-[10px]">
                   <dt className="text-muted-foreground">مدة التجهيز المتوقعة</dt>
@@ -831,7 +831,7 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
             <button
               onClick={submitFinal}
               disabled={submitting}
-              className="py-2 rounded-lg bg-emerald-600 text-white text-xs font-semibold hover:bg-emerald-700 disabled:opacity-50 transition flex items-center justify-center gap-1.5"
+              className="py-2 rounded-lg bg-gold text-white text-xs font-semibold hover:bg-gold disabled:opacity-50 transition flex items-center justify-center gap-1.5"
             >
               {submitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-3.5 h-3.5" />}
               إرسال نهائي
@@ -859,9 +859,9 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
               { k: 'تأكيد', done: false },
             ].map((s, i, arr) => (
               <li key={s.k} className="flex items-center gap-1 flex-1 min-w-0">
-                <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-bold shrink-0 ${s.done ? 'bg-emerald-500 text-white' : 'bg-muted text-muted-foreground border border-border'}`}>{s.done ? '✓' : i + 1}</span>
+                <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-bold shrink-0 ${s.done ? 'bg-sand0 text-white' : 'bg-muted text-muted-foreground border border-border'}`}>{s.done ? '✓' : i + 1}</span>
                 <span className={`truncate ${s.done ? 'text-foreground font-medium' : ''}`}>{s.k}</span>
-                {i < arr.length - 1 && <span className={`flex-1 h-px ${s.done ? 'bg-emerald-500/50' : 'bg-border'}`} />}
+                {i < arr.length - 1 && <span className={`flex-1 h-px ${s.done ? 'bg-sand0/50' : 'bg-border'}`} />}
               </li>
             ))}
           </ol>
@@ -870,7 +870,7 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
             {pendingOrder.ai_summary && <span className="block mt-0.5 italic">{pendingOrder.ai_summary}</span>}
           </p>
           {liveQuote && (
-            <div className={`rounded-lg border p-2 text-[11px] sm:text-[10.5px] space-y-1 ${liveQuote.ok ? 'border-emerald-500/40 bg-emerald-500/5' : 'border-destructive/50 bg-destructive/5'}`} aria-live="polite">
+            <div className={`rounded-lg border p-2 text-[11px] sm:text-[10.5px] space-y-1 ${liveQuote.ok ? 'border-sand0/40 bg-sand0/5' : 'border-destructive/50 bg-destructive/5'}`} aria-live="polite">
               <div className="flex items-center justify-between flex-wrap gap-1">
                 <span className="font-semibold text-foreground flex items-center gap-1">
                   {liveQuote.ok ? '✅ متوفر' : '⚠️ تحقق الكمية'}
@@ -885,7 +885,7 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
                 <div className="flex items-center justify-between font-arabic flex-wrap gap-1">
                   <span className="text-muted-foreground">السعر اللحظي</span>
                   <span className="font-semibold text-foreground text-end">
-                    {formatSAR(liveQuote.pricePerKg)} / كجم · إجمالي <span className="text-emerald-700">{formatSAR(liveQuote.total)}</span>
+                    {formatSAR(liveQuote.pricePerKg)} / كجم · إجمالي <span className="text-gold">{formatSAR(liveQuote.total)}</span>
                     <span className="block text-[9px] text-muted-foreground text-end">شامل ضريبة القيمة المضافة</span>
                   </span>
                 </div>
@@ -894,7 +894,7 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
                 <p key={idx} className="text-destructive">• {i}</p>
               ))}
               {liveQuote.notes.map((n, idx) => (
-                <p key={idx} className="text-[10px] text-emerald-700">💡 {n}</p>
+                <p key={idx} className="text-[10px] text-gold">💡 {n}</p>
               ))}
             </div>
           )}

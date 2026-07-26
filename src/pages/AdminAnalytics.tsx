@@ -123,22 +123,22 @@ export default function AdminAnalytics() {
   }, [filtered, inventory]);
 
   return (
-    <section dir="rtl" className="min-h-dvh bg-gradient-to-b from-stone-50 to-emerald-50/30 py-12">
+    <section dir="rtl" className="min-h-dvh bg-gradient-to-b from-stone-50 to-sand/30 py-12">
       <SEO title="لوحة التحليلات — فحم النخلة" description="إحصاءات الطلبات والإيرادات والمنتجات الأعلى طلباً." path="/admin/analytics" />
       <div className="container max-w-7xl">
         <header className="flex flex-wrap items-end justify-between gap-4 mb-8">
           <div>
-            <p className="text-xs tracking-[0.3em] text-emerald-700/70">ADMIN · ANALYTICS</p>
-            <h1 className="text-3xl md:text-4xl font-serif text-emerald-950 mt-2">لوحة تحليلات المالك</h1>
+            <p className="text-xs tracking-[0.3em] text-gold/70">ADMIN · ANALYTICS</p>
+            <h1 className="text-3xl md:text-4xl font-serif text-coal mt-2">لوحة تحليلات المالك</h1>
             <p className="text-sm text-stone-600 mt-1">نظرة عامة على الأداء التجاري لفحم النخلة.</p>
           </div>
-          <div className="flex gap-1 p-1 bg-white/80 backdrop-blur rounded-full border border-emerald-900/10">
+          <div className="flex gap-1 p-1 bg-white/80 backdrop-blur rounded-full border border-coal/10">
             {PERIODS.map((p) => (
               <button
                 key={p.value}
                 onClick={() => setDays(p.value)}
                 className={`px-4 py-1.5 rounded-full text-xs transition ${
-                  days === p.value ? 'bg-emerald-900 text-white shadow' : 'text-emerald-900 hover:bg-emerald-50'
+                  days === p.value ? 'bg-coal text-white shadow' : 'text-coal hover:bg-sand'
                 }`}
               >
                 {p.label}
@@ -148,7 +148,7 @@ export default function AdminAnalytics() {
         </header>
 
         {loading ? (
-          <div className="flex items-center justify-center py-24"><Loader2 className="animate-spin text-emerald-700" /></div>
+          <div className="flex items-center justify-center py-24"><Loader2 className="animate-spin text-gold" /></div>
         ) : (
           <>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
@@ -203,7 +203,7 @@ export default function AdminAnalytics() {
                   <tbody>
                     {stats.topProducts.map((p) => (
                       <tr key={p.label} className="border-b border-stone-100">
-                        <td className="py-2 font-medium text-emerald-950">{p.label}</td>
+                        <td className="py-2 font-medium text-coal">{p.label}</td>
                         <td>{p.count}</td>
                         <td>{p.qty.toLocaleString('ar-SA', { maximumFractionDigits: 0 })}</td>
                         <td>{p.revenue.toLocaleString('ar-SA', { maximumFractionDigits: 0 })}</td>
@@ -227,20 +227,20 @@ export default function AdminAnalytics() {
 
 function StatCard({ icon: Icon, label, value }: { icon: any; label: string; value: string }) {
   return (
-    <div className="glass-card p-5 rounded-2xl border border-emerald-900/10 bg-white/80 backdrop-blur shadow-sm">
+    <div className="glass-card p-5 rounded-2xl border border-coal/10 bg-white/80 backdrop-blur shadow-sm">
       <div className="flex items-center justify-between">
         <span className="text-xs text-stone-500">{label}</span>
-        <Icon className="w-4 h-4 text-emerald-700" />
+        <Icon className="w-4 h-4 text-gold" />
       </div>
-      <div className="mt-2 text-2xl font-serif text-emerald-950">{value}</div>
+      <div className="mt-2 text-2xl font-serif text-coal">{value}</div>
     </div>
   );
 }
 
 function ChartCard({ title, children, className = '' }: { title: string; children: React.ReactNode; className?: string }) {
   return (
-    <div className={`glass-card p-5 rounded-2xl border border-emerald-900/10 bg-white/80 backdrop-blur shadow-sm ${className}`}>
-      <h3 className="text-sm font-medium text-emerald-950 mb-4 tracking-wide">{title}</h3>
+    <div className={`glass-card p-5 rounded-2xl border border-coal/10 bg-white/80 backdrop-blur shadow-sm ${className}`}>
+      <h3 className="text-sm font-medium text-coal mb-4 tracking-wide">{title}</h3>
       {children}
     </div>
   );

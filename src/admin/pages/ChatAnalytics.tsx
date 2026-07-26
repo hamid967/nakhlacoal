@@ -144,7 +144,7 @@ export default function ChatAnalytics() {
 
       <header className="flex flex-wrap items-end justify-between gap-4 mb-6">
         <div>
-          <p className="text-xs tracking-[0.3em] text-emerald-700/70">ADMIN · AI ASSISTANT</p>
+          <p className="text-xs tracking-[0.3em] text-gold/70">ADMIN · AI ASSISTANT</p>
           <h1 className="a-display text-3xl mt-2 flex items-center gap-3" style={{ color: 'var(--a-palm)' }}>
             تحليلات المساعد الذكي
             <span

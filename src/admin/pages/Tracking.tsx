@@ -112,13 +112,13 @@ function StatusBadge({ state }: { state: TestState }) {
   if (state.status === 'testing')
     return <span className="inline-flex items-center gap-1 text-[10px]"><Loader2 className="w-3 h-3 animate-spin" /> اختبار…</span>;
   if (state.status === 'ok')
-    return <span className="inline-flex items-center gap-1 text-[10px] text-emerald-600"><CheckCircle2 className="w-3 h-3" /> صالح</span>;
+    return <span className="inline-flex items-center gap-1 text-[10px] text-gold"><CheckCircle2 className="w-3 h-3" /> صالح</span>;
   return <span className="inline-flex items-center gap-1 text-[10px] text-red-600"><XCircle className="w-3 h-3" /> فشل</span>;
 }
 
 function TestFeedback({ state, onRetry }: { state: TestState; onRetry?: () => void }) {
   const tone =
-    state.status === 'ok' ? 'text-emerald-700 bg-emerald-50 border-emerald-200'
+    state.status === 'ok' ? 'text-gold bg-sand border-gold/20'
     : state.status === 'fail' ? 'text-red-700 bg-red-50 border-red-200'
     : 'text-foreground bg-muted border-border';
   return (
