@@ -18,7 +18,7 @@ const Schema = z.object({
   city: z.string().trim().min(2).max(80),
   address: z.string().trim().min(5).max(300),
   notes: z.string().trim().max(500).optional(),
-  payment_method: z.enum(['bank_transfer', 'cash_on_delivery']),
+  payment_method: z.enum(['moyasar', 'bank_transfer', 'cash_on_delivery']),
 });
 
 export default function Checkout() {
@@ -33,7 +33,7 @@ export default function Checkout() {
   const [form, setForm] = useState({
     contact_name: '', phone: '', email: user?.email ?? '',
     company_name: '', city: '', address: '', notes: '',
-    payment_method: 'bank_transfer' as 'bank_transfer' | 'cash_on_delivery',
+    payment_method: 'moyasar' as 'moyasar' | 'bank_transfer' | 'cash_on_delivery',
   });
 
 
@@ -114,6 +114,21 @@ export default function Checkout() {
           .maybeSingle();
         newId = (latest as { id: string } | null)?.id ?? null;
       }
+
+      // Online payment → redirect to Moyasar hosted invoice
+      if (form.payment_method === 'moyasar' && newId) {
+        const { data: session, error: sessErr } = await supabase.functions.invoke(
+          'payments-create-session',
+          { body: { order_id: newId } },
+        );
+        if (sessErr || !session?.redirect_url) {
+          throw new Error(sessErr?.message || 'payment_session_failed');
+        }
+        clear();
+        window.location.href = session.redirect_url as string;
+        return;
+      }
+
       clear();
       toast.success(isAr ? 'تم إنشاء الطلب بنجاح' : 'Order created');
       navigate(newId ? `/checkout/success?order=${newId}` : '/checkout/success');
@@ -169,9 +184,10 @@ export default function Checkout() {
                   <span className="text-sm mb-1 block">{isAr ? 'طريقة الدفع' : 'Payment method'}</span>
                   <select
                     value={form.payment_method}
-                    onChange={(e) => setForm({ ...form, payment_method: e.target.value as 'bank_transfer' | 'cash_on_delivery' })}
+                    onChange={(e) => setForm({ ...form, payment_method: e.target.value as 'moyasar' | 'bank_transfer' | 'cash_on_delivery' })}
                     className="w-full px-3 py-2 rounded-lg border border-[hsl(var(--input))] bg-[hsl(var(--background))]"
                   >
+                    <option value="moyasar">{isAr ? 'دفع إلكتروني (مدى / Apple Pay / STC Pay / بطاقة)' : 'Pay online (Mada / Apple Pay / STC Pay / Card)'}</option>
                     <option value="bank_transfer">{isAr ? 'تحويل بنكي' : 'Bank transfer'}</option>
                     <option value="cash_on_delivery">{isAr ? 'الدفع عند الاستلام' : 'Cash on delivery'}</option>
                   </select>
@@ -199,7 +215,9 @@ export default function Checkout() {
                   <button onClick={() => setStep(1)} className="flex-1 py-3 rounded-xl border border-[hsl(var(--border))]">{isAr ? 'السابق' : 'Back'}</button>
                   <button onClick={submit} disabled={loading || !legalAccepted} className="flex-1 py-3 rounded-xl bg-[hsl(var(--gold-hi))] text-[hsl(var(--ink))] font-bold disabled:opacity-60 flex items-center justify-center gap-2">
                     {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-                    {isAr ? 'تأكيد الطلب' : 'Place order'}
+                    {form.payment_method === 'moyasar'
+                      ? (isAr ? 'ادفع الآن' : 'Pay now')
+                      : (isAr ? 'تأكيد الطلب' : 'Place order')}
                   </button>
                 </div>
 

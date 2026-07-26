@@ -1233,7 +1233,9 @@ export type Database = {
           items: Json | null
           legal_accepted_at: string | null
           notes: string | null
+          paid_at: string | null
           payment_method: string | null
+          payment_status: string
           phone: string
           postal_code: string | null
           pricing_snapshot: Json | null
@@ -1268,7 +1270,9 @@ export type Database = {
           items?: Json | null
           legal_accepted_at?: string | null
           notes?: string | null
+          paid_at?: string | null
           payment_method?: string | null
+          payment_status?: string
           phone: string
           postal_code?: string | null
           pricing_snapshot?: Json | null
@@ -1303,7 +1307,9 @@ export type Database = {
           items?: Json | null
           legal_accepted_at?: string | null
           notes?: string | null
+          paid_at?: string | null
           payment_method?: string | null
+          payment_status?: string
           phone?: string
           postal_code?: string | null
           pricing_snapshot?: Json | null
@@ -1327,6 +1333,59 @@ export type Database = {
             columns: ["wholesale_account_id"]
             isOneToOne: false
             referencedRelation: "wholesale_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payments: {
+        Row: {
+          amount_sar: number
+          created_at: string
+          currency: string
+          failure_reason: string | null
+          id: string
+          method: string | null
+          order_id: string
+          provider: string
+          provider_ref: string | null
+          raw_response: Json | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          amount_sar: number
+          created_at?: string
+          currency?: string
+          failure_reason?: string | null
+          id?: string
+          method?: string | null
+          order_id: string
+          provider?: string
+          provider_ref?: string | null
+          raw_response?: Json | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          amount_sar?: number
+          created_at?: string
+          currency?: string
+          failure_reason?: string | null
+          id?: string
+          method?: string | null
+          order_id?: string
+          provider?: string
+          provider_ref?: string | null
+          raw_response?: Json | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
             referencedColumns: ["id"]
           },
         ]
