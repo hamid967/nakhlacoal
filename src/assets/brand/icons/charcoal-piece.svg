@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true">
+  <title>Charcoal Piece</title>
+  <path d="M12 40 L20 18 L38 12 L54 24 L50 46 L30 54 L14 48 Z" />
+  <path d="M20 18 L32 30 L54 24" />
+  <path d="M32 30 L30 54" />
+  <path d="M32 30 L14 48" />
+</svg>
