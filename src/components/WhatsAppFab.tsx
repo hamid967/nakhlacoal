@@ -41,7 +41,7 @@ export function WhatsAppFab() {
       {/* "اضغط هنا للطلب" — refined pill */}
       {!open && (
         <div className="fixed bottom-10 end-24 z-50 pointer-events-none animate-fade-in" aria-hidden>
-          <div className="relative px-4 py-2 rounded-full bg-gradient-to-b from-dark to-[hsl(var(--dark)/0.92)] text-cream text-[11px] font-semibold font-arabic tracking-wide border border-gold/50 whitespace-nowrap flex items-center gap-2 shadow-[0_10px_30px_-8px_hsl(var(--gold)/0.5)]">
+          <div className="relative px-4 py-2 rounded-full bg-gradient-to-b from-dark to-[hsl(var(--dark)/0.92)] text-cream text-[11px] font-semibold font-arabic tracking-wide border border-gold/50 whitespace-nowrap flex items-center gap-2 shadow-glow-gold">
             <Sparkles className="w-3.5 h-3.5 text-gold-hi motion-safe:animate-pulse" />
             <span className="bg-gradient-to-l from-gold-hi to-cream bg-clip-text text-transparent">
               {isAr ? 'اضغط هنا لطلبك الآن' : 'Tap to order now'}

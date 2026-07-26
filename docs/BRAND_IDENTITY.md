@@ -105,3 +105,38 @@ import { BrandIcon } from "@/components/brand/BrandIcon";
 ## ملاحظة تشغيل
 
 كل القيم متاحة برمجيًا من `@/lib/brandTokens`. عند إضافة توكن جديد، أضِفه هنا أولًا قبل الاستخدام في المكوّنات لضمان اتساق الهوية.
+
+---
+
+## 8) جدول Utility ↔ Token ↔ JS
+
+| Tailwind utility | CSS var (`index.css`) | `brandTokens.ts` |
+|---|---|---|
+| `bg-background` `text-foreground` | `--background` / `--foreground` | `brandColors.background/foreground` |
+| `bg-surface` `bg-surface-2` `bg-surface-3` | `--surface`, `--surface-2`, `--surface-3` | `brandColors.surface*` |
+| `bg-dark` `bg-dark-2` `text-dark-foreground` | `--dark`, `--dark-2`, `--dark-foreground` | `brandColors.dark*` |
+| `bg-gold` `text-gold-ink` `from-gold-hi to-gold-lo` | `--gold`, `--gold-hi/lo/ink` | `brandColors.gold*` |
+| `text-jade` `bg-primary` | `--jade` = `--primary` | `brandColors.jade` |
+| `shadow-luxe` `shadow-gold` | `--shadow-luxe/gold` | `shadows.luxe/gold` |
+| `shadow-soft` `shadow-card` `shadow-lift` | — | `shadows.soft/card/lift` |
+| `shadow-glow-gold` `shadow-glow-gold-sm` | — | `shadows.glowGold/glowGoldSm` |
+| `rounded-brand-{sm,md,lg,xl,2xl,pill}` | — | `radii.*` |
+| `p/m/gap-brand-{xs..4xl}` | — | `spacing.*` |
+| `duration-{fast,base,slow,cinematic}` | — | `motion.duration.*` |
+| `ease-brand`, `ease-brand-in`, `ease-brand-out` | — | `motion.ease.*` |
+| `bg-gradient-gold / -ember / -night` | `--gradient-*` | — |
+
+### قواعد
+
+1. **لا hex في المكوّنات** — استعمل utility رسمي. أي لون جديد يُضاف أولًا في `index.css` ثم يُعكس في `brandTokens.ts`.
+2. **لا `shadow-[...]` عشوائي** — أضف اسمًا في `tailwind.config.ts → boxShadow` ثم استعمله.
+3. **لا `rounded-[Npx]`** — استعمل `rounded-brand-*` أو أضف اسمًا جديدًا.
+4. للحالات الاستثنائية (Canvas / SVG / inline style)، استعمل `token('gold')` من `brandTokens.ts`.
+
+### تدقيق آلي
+
+```bash
+npm run audit:tokens
+```
+
+يعرض أي hex أو `shadow-[...]` أو `rounded-[Npx]` خارج طبقة التوكنز (تحذير، لا يفشل CI).

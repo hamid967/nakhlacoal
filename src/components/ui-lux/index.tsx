@@ -321,7 +321,7 @@ export function CtaBand({
     <section className="pb-20 md:pb-28">
       <div className="container">
         <ScrollReveal>
-          <div className="section-dark rounded-[2rem] p-10 md:p-16 relative overflow-hidden">
+          <div className="section-dark rounded-brand-2xl p-10 md:p-16 relative overflow-hidden">
             <div className="absolute inset-0 ember-glow opacity-50" />
             <div className="relative grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
               <div className="md:col-span-8">

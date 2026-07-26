@@ -539,7 +539,7 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
       >
         <span className="absolute inset-0 bg-[radial-gradient(circle_at_10%_0%,hsl(var(--gold)/0.18),transparent_55%)] pointer-events-none" aria-hidden />
         <div
-          className="relative w-10 h-10 sm:w-9 sm:h-9 rounded-full flex items-center justify-center ring-1 ring-gold/40 shadow-[0_0_18px_-4px_hsl(var(--gold)/0.6)] shrink-0"
+          className="relative w-10 h-10 sm:w-9 sm:h-9 rounded-full flex items-center justify-center ring-1 ring-gold/40 shadow-glow-gold-sm shrink-0"
           style={{ background: 'radial-gradient(circle at 30% 25%, hsl(var(--gold-hi)/0.35), hsl(0 0% 6%) 70%)' }}
         >
           <BrandLogo alt="" className="w-7 h-7 sm:w-7 sm:h-7 object-contain drop-shadow-[0_0_6px_hsl(var(--gold-hi)/0.5)]" />
@@ -950,7 +950,7 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
                       onClick={() => setFormData(f => ({ ...f, delivery_method: key }))}
                       className={`px-2 py-2.5 sm:py-2 rounded-lg text-[12px] sm:text-[11px] border transition flex items-center justify-center gap-1.5 font-arabic leading-tight ${
                         active
-                          ? 'bg-gradient-to-b from-gold to-[hsl(var(--gold)/0.85)] text-dark border-gold font-bold shadow-[0_4px_14px_-4px_hsl(var(--gold)/0.6)]'
+                          ? 'bg-gradient-to-b from-gold to-[hsl(var(--gold)/0.85)] text-dark border-gold font-bold shadow-glow-gold-sm'
                           : 'bg-background border-border text-foreground hover:border-gold/50 hover:bg-gold/5'
                       }`}
                     >
@@ -965,7 +965,7 @@ export function AssistantWidget({ open, onClose }: { open: boolean; onClose: () 
           <button
             onClick={confirmOrder}
             disabled={submitting}
-            className="w-full mt-2 py-3 sm:py-2.5 rounded-lg text-sm sm:text-xs font-bold font-arabic tracking-wide text-cream transition flex items-center justify-center gap-2 disabled:opacity-50 hover:shadow-[0_10px_28px_-8px_hsl(var(--gold)/0.6)] hover:-translate-y-px active:translate-y-0"
+            className="w-full mt-2 py-3 sm:py-2.5 rounded-lg text-sm sm:text-xs font-bold font-arabic tracking-wide text-cream transition flex items-center justify-center gap-2 disabled:opacity-50 hover:shadow-glow-gold hover:-translate-y-px active:translate-y-0"
             style={{
               background:
                 'linear-gradient(135deg, hsl(var(--dark)) 0%, hsl(0 0% 10%) 100%)',
