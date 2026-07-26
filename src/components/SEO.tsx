@@ -2,7 +2,8 @@ import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
 
 const SITE = 'https://alnakhlacoal.com';
-const DEFAULT_OG_IMAGE = `${SITE}/og-image.png`;
+export const OG_IMAGE_VERSION = '20260726';
+const DEFAULT_OG_IMAGE = `${SITE}/og-image.png?v=${OG_IMAGE_VERSION}`;
 
 type PreloadImage = {
   href: string;
