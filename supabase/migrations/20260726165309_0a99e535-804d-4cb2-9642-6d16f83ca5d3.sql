@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.release_order_reservations(uuid) FROM authenticated;
