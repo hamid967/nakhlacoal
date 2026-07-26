@@ -413,16 +413,39 @@ export default function ZatcaAdmin() {
         <TabsContent value="invoices" className="space-y-3">
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-base">
-                فواتير بيئة {isProd ? 'Production' : 'Sandbox/Simulation'}
-              </CardTitle>
-              <CardDescription>سجل الإرسال إلى Clearance/Reporting مع سلسلة ICV/PIH.</CardDescription>
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <div>
+                  <CardTitle className="text-base">
+                    فواتير بيئة {isProd ? 'Production' : 'Sandbox/Simulation'}
+                  </CardTitle>
+                  <CardDescription>سجل الإرسال إلى Clearance/Reporting مع سلسلة ICV/PIH والحمولات الكاملة.</CardDescription>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="inline-flex rounded-md border bg-background p-0.5">
+                    {(['all','signed','cleared','reported','failed','rejected','pending'] as const).map((s) => (
+                      <button
+                        key={s}
+                        onClick={() => setStatusFilter(s)}
+                        className={`px-2.5 py-1 text-xs rounded-sm transition ${
+                          statusFilter === s ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'
+                        }`}
+                      >
+                        {s === 'all' ? 'الكل' : s}
+                      </button>
+                    ))}
+                  </div>
+                  <Button size="sm" variant="outline" onClick={() => exportInvoicesCsv(filteredInvoices, scope)}>
+                    <Download className="w-3.5 h-3.5 ml-1.5" /> CSV
+                  </Button>
+                </div>
+              </div>
             </CardHeader>
             <CardContent>
               <div className="overflow-x-auto">
                 <table className="w-full text-xs">
                   <thead className="bg-muted/50">
                     <tr>
+                      <th className="p-2 w-6"></th>
                       <th className="p-2 text-right">ICV</th>
                       <th className="p-2 text-right">النوع</th>
                       <th className="p-2 text-right">Endpoint</th>
@@ -434,31 +457,47 @@ export default function ZatcaAdmin() {
                     </tr>
                   </thead>
                   <tbody>
-                    {scopedInvoices.length === 0 && (
-                      <tr><td colSpan={8} className="text-center py-8 text-muted-foreground">لا توجد فواتير في هذه البيئة بعد</td></tr>
+                    {filteredInvoices.length === 0 && (
+                      <tr><td colSpan={9} className="text-center py-8 text-muted-foreground">لا توجد فواتير مطابقة</td></tr>
                     )}
-                    {scopedInvoices.map((z) => (
-                      <tr key={z.id} className="border-t">
-                        <td className="p-2 font-mono">{z.icv}</td>
-                        <td className="p-2">{z.invoice_type === 'simplified' ? 'مبسّطة' : 'قياسية'}</td>
-                        <td className="p-2">{z.submission_type === 'clearance' ? 'Clearance' : 'Reporting'}</td>
-                        <td className="p-2">
-                          <Badge className={STATUS_COLORS[z.status] ?? 'bg-gray-500'}>{z.status}</Badge>
-                        </td>
-                        <td className="p-2">{z.attempts}</td>
-                        <td className="p-2 font-mono text-[10px] truncate max-w-[120px]" title={z.hash}>
-                          {z.hash?.slice(0, 12)}…
-                        </td>
-                        <td className="p-2">{z.submitted_at ? new Date(z.submitted_at).toLocaleString('ar-SA') : '—'}</td>
-                        <td className="p-2">
-                          {(z.status === 'failed' || z.status === 'pending' || z.status === 'signed') && (
-                            <Button size="sm" variant="ghost" onClick={() => resubmit(z)} disabled={busy === z.id + ':resend'}>
-                              {busy === z.id + ':resend' ? <Loader2 className="w-3 h-3 animate-spin" /> : <Send className="w-3 h-3" />}
-                            </Button>
+                    {filteredInvoices.map((z) => {
+                      const isOpen = expanded.has(z.id);
+                      return (
+                        <>
+                          <tr key={z.id} className="border-t hover:bg-muted/30 cursor-pointer" onClick={() => toggleExpanded(z.id)}>
+                            <td className="p-2">
+                              {isOpen ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronLeft className="w-3.5 h-3.5" />}
+                            </td>
+                            <td className="p-2 font-mono">{z.icv}</td>
+                            <td className="p-2">{z.invoice_type === 'simplified' ? 'مبسّطة' : 'قياسية'}</td>
+                            <td className="p-2">{z.submission_type === 'clearance' ? 'Clearance' : 'Reporting'}</td>
+                            <td className="p-2">
+                              <Badge className={STATUS_COLORS[z.status] ?? 'bg-gray-500'}>{z.status}</Badge>
+                            </td>
+                            <td className="p-2">{z.attempts}</td>
+                            <td className="p-2 font-mono text-[10px] truncate max-w-[120px]" title={z.hash}>
+                              {z.hash?.slice(0, 12)}…
+                            </td>
+                            <td className="p-2">{z.submitted_at ? new Date(z.submitted_at).toLocaleString('ar-SA') : '—'}</td>
+                            <td className="p-2" onClick={(e) => e.stopPropagation()}>
+                              {(z.status === 'failed' || z.status === 'pending' || z.status === 'signed') && (
+                                <Button size="sm" variant="ghost" onClick={() => resubmit(z)} disabled={busy === z.id + ':resend'}>
+                                  {busy === z.id + ':resend' ? <Loader2 className="w-3 h-3 animate-spin" /> : <Send className="w-3 h-3" />}
+                                </Button>
+                              )}
+                            </td>
+                          </tr>
+                          {isOpen && (
+                            <tr className="border-t bg-muted/20">
+                              <td></td>
+                              <td colSpan={8} className="p-3">
+                                <InvoiceDetail z={z} onCopy={(t) => copyText(t)} />
+                              </td>
+                            </tr>
                           )}
-                        </td>
-                      </tr>
-                    ))}
+                        </>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
