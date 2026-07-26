@@ -6,6 +6,7 @@ import { SEO } from '@/components/SEO';
 import { LuxSection, SectionHeader } from '@/components/ui-lux';
 import { ScrollReveal } from '@/components/ScrollReveal';
 import { PageHero } from '@/components/PageHero';
+import { waLink } from '@/lib/brand';
 
 type Item = { q: string; a: string; cat: string };
 
