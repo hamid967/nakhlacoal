@@ -94,6 +94,9 @@ export default function AdminEmails() {
       } else if (row.template.startsWith('quote-') && row.template !== 'quote-expiry-reminder' && row.entity_id) {
         fn = 'send-quote-status-email';
         body = { quoteId: row.entity_id, status: row.template.replace('quote-', '') };
+      } else if (row.template === 'order-confirmation' && row.entity_id) {
+        fn = 'send-order-confirmation';
+        body = { orderId: row.entity_id };
       } else if (row.template === 'test-email') {
         fn = 'send-test-email';
         body = { to: row.recipient };
@@ -102,6 +105,7 @@ export default function AdminEmails() {
         setResendingId(null);
         return;
       }
+
       const { data, error } = await supabase.functions.invoke(fn, { body });
       if (error) throw error;
       if ((data as any)?.ok) {
