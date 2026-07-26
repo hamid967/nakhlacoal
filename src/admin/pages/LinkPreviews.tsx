@@ -3,6 +3,7 @@ import {
   Link as LinkIcon, RefreshCw, ExternalLink, CheckCircle2, AlertTriangle,
   XCircle, Trash2, Loader2, Facebook, Linkedin, Twitter, MessageCircle,
   Send as TelegramIcon, Search as GoogleIcon, CalendarClock, PlayCircle,
+  FileDown, FileJson, Download,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
