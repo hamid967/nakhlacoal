@@ -177,7 +177,7 @@ export default function App() {
                   <Route path="marketing" element={<AdminCoupons />} />
                   <Route path="logs" element={<AdminAuditLog />} />
                   <Route path="quotes" element={<AdminQuotes />} />
-                  <Route path="quotes" element={<AdminQuotes />} />
+
                   <Route path="emails" element={<AdminEmails />} />
                   <Route path="*" element={<AdminPlaceholder />} />
 
