@@ -421,7 +421,13 @@ export default function AdminLinkPreviews() {
             <span className="text-amber-600">{summary.warn} تحذير</span>
             <span>·</span>
             <span className="text-rose-600">{summary.error} خطأ</span>
-            <button className="a-btn a-btn-ghost ms-2" onClick={loadLog} disabled={loadingLog}>
+            <button className="a-btn a-btn-ghost ms-2" onClick={() => exportRows(rows, 'csv', 'log')} disabled={!rows.length}>
+              <FileDown size={14} /> CSV
+            </button>
+            <button className="a-btn a-btn-ghost" onClick={() => exportRows(rows, 'json', 'log')} disabled={!rows.length}>
+              <FileJson size={14} /> JSON
+            </button>
+            <button className="a-btn a-btn-ghost" onClick={loadLog} disabled={loadingLog}>
               {loadingLog ? <Loader2 size={14} className="animate-spin" /> : <RefreshCw size={14} />}
               تحديث
             </button>
