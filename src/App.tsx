@@ -88,6 +88,13 @@ const AdminEmails = lazy(() => import('@/admin/pages/Emails'));
 const AdminLinkPreviews = lazy(() => import('@/admin/pages/LinkPreviews'));
 
 const PortalQuotes = lazy(() => import('@/portal/pages/Quotes'));
+const WholesaleDashboard = lazy(() => import('@/portal/pages/wholesale/Dashboard'));
+const WholesaleCatalog = lazy(() => import('@/portal/pages/wholesale/Catalog'));
+const WholesaleBulkOrder = lazy(() => import('@/portal/pages/wholesale/BulkOrder'));
+const WholesaleStatement = lazy(() => import('@/portal/pages/wholesale/Statement'));
+const AdminWholesaleLeads = lazy(() => import('@/admin/pages/wholesale/Leads'));
+const AdminWholesaleAccounts = lazy(() => import('@/admin/pages/wholesale/Accounts'));
+const AdminPriceTiers = lazy(() => import('@/admin/pages/wholesale/PriceTiers'));
 
 const PortalLayout = lazy(() => import('@/portal/PortalLayout'));
 const PortalDashboard = lazy(() => import('@/portal/pages/Dashboard'));
@@ -191,6 +198,9 @@ export default function App() {
 
                   <Route path="emails" element={<AdminEmails />} />
                   <Route path="link-previews" element={<AdminLinkPreviews />} />
+                  <Route path="wholesale/leads" element={<AdminWholesaleLeads />} />
+                  <Route path="wholesale/accounts" element={<AdminWholesaleAccounts />} />
+                  <Route path="wholesale/price-tiers" element={<AdminPriceTiers />} />
                   <Route path="*" element={<AdminPlaceholder />} />
 
 
@@ -219,6 +229,10 @@ export default function App() {
                   <Route path="addresses" element={<PortalPlaceholder title="العناوين" />} />
                   <Route path="profile" element={<PortalProfile />} />
                   <Route path="settings" element={<PortalSettings />} />
+                  <Route path="wholesale" element={<WholesaleDashboard />} />
+                  <Route path="wholesale/catalog" element={<WholesaleCatalog />} />
+                  <Route path="wholesale/bulk-order" element={<WholesaleBulkOrder />} />
+                  <Route path="wholesale/statement" element={<WholesaleStatement />} />
                   <Route path="*" element={<PortalPlaceholder />} />
                 </Route>
 

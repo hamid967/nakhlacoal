@@ -26,7 +26,9 @@ const groups: Group[] = [
   { title: 'العمليات', items: [
     { to: '/admin/orders', label: 'الطلبات', icon: ShoppingBag },
     { to: '/admin/quotes', label: 'عروض الأسعار', icon: FileText },
-    { to: '/admin/wholesale', label: 'الجملة', icon: Building2, badge: 'قريباً' },
+    { to: '/admin/wholesale/leads', label: 'طلبات الجملة', icon: Building2 },
+    { to: '/admin/wholesale/accounts', label: 'حسابات الجملة', icon: Building2 },
+    { to: '/admin/wholesale/price-tiers', label: 'تسعير الجملة', icon: Tag },
     { to: '/admin/export', label: 'التصدير', icon: Globe2, badge: 'قريباً' },
     { to: '/admin/suppliers', label: 'الموردون', icon: Truck, badge: 'قريباً' },
     { to: '/admin/warehouse', label: 'المستودع', icon: Warehouse, badge: 'قريباً' },

@@ -24,6 +24,12 @@ const groups: Group[] = [
     { to: '/portal/invoices', label: 'الفواتير', icon: Receipt, badge: 'قريباً' },
     { to: '/portal/payments', label: 'المدفوعات', icon: CreditCard, badge: 'قريباً' },
   ]},
+  { title: 'الجملة', items: [
+    { to: '/portal/wholesale', label: 'حساب الجملة', icon: LayoutDashboard },
+    { to: '/portal/wholesale/catalog', label: 'كتالوج الجملة', icon: BookOpen },
+    { to: '/portal/wholesale/bulk-order', label: 'طلب بالجملة', icon: PlusCircle },
+    { to: '/portal/wholesale/statement', label: 'كشف الحساب', icon: Receipt },
+  ]},
   { title: 'المنتجات', items: [
     { to: '/portal/catalog', label: 'الكتالوج', icon: BookOpen },
     { to: '/portal/products', label: 'المنتجات', icon: Package },
