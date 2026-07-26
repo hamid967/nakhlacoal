@@ -268,6 +268,41 @@ export default function AdminEmails() {
         </label>
       </div>
 
+      <div className="a-card p-4 flex items-center justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2 font-semibold" style={{ color: 'var(--a-text)' }}>
+            <BellRing className="w-4 h-4" style={{ color: 'var(--a-palm)' }} />
+            إيصال الفاتورة الضريبية (PDF مرفق تلقائياً)
+          </div>
+          <p className="text-xs mt-1" style={{ color: 'var(--a-text-muted)' }}>
+            يُرسَل للعميل تلقائيًا عند إصدار الفاتورة أو تغيّر حالتها إلى «مُصدرة/مدفوعة»، مع مرفق PDF متوافق مع ZATCA وسجل كامل في email_log.
+          </p>
+        </div>
+        <label className="inline-flex items-center gap-2 cursor-pointer">
+          <span className="text-sm" style={{ color: 'var(--a-text-muted)' }}>
+            {autoInvoice ? 'مُفعّل' : 'معطّل'}
+          </span>
+          <input
+            type="checkbox"
+            className="sr-only peer"
+            checked={autoInvoice}
+            disabled={savingToggle}
+            onChange={(e) => toggleAutoInvoice(e.target.checked)}
+          />
+          <span
+            className="relative w-11 h-6 rounded-full transition-colors"
+            style={{ background: autoInvoice ? 'var(--a-palm)' : '#cbd5e1' }}
+          >
+            <span
+              className="absolute top-0.5 w-5 h-5 rounded-full bg-white shadow transition-all"
+              style={{ [autoInvoice ? 'right' : 'left']: '2px' } as any}
+            />
+          </span>
+        </label>
+      </div>
+
+
+
 
       {/* Filters */}
       <div className="a-card p-4 flex flex-wrap items-center gap-3">
