@@ -199,8 +199,15 @@ Deno.serve(async (req) => {
   }
 
   const meta = html ? parseMeta(html) : null;
-  const warnings = meta ? computeWarnings(meta) : ['فشل جلب الصفحة'];
+  const probes = meta ? await probeMany([meta.ogImage, meta.twitterImage], ua) : {};
+  const warnings = meta ? computeWarnings(meta, probes) : ['فشل جلب الصفحة'];
   const status = fetchError || httpStatus >= 400 ? 'error' : warnings.length ? 'warn' : 'ok';
+
+  // Attach probe summaries so the client + audit log get the real dims.
+  const imageProbes = Object.fromEntries(
+    Object.entries(probes).map(([u, p]) => [u, p.ok ? { width: p.dims.width, height: p.dims.height, format: p.dims.format, bytes: p.dims.bytes, contentType: p.dims.contentType } : { error: p.error, httpStatus: p.httpStatus ?? null }]),
+  );
+  const metaWithProbes = meta ? { ...meta, imageProbes } : null;
 
   // Log
   if (shouldLog) {
@@ -218,7 +225,7 @@ Deno.serve(async (req) => {
       twitter_image: meta?.twitterImage ?? null,
       canonical: meta?.canonical ?? null,
       warnings,
-      raw: meta,
+      raw: metaWithProbes,
       note: body.note ?? null,
       checked_by: userData.user.id,
     });
