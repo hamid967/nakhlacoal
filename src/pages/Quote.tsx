@@ -132,6 +132,11 @@ export default function Quote() {
               <FileText className="size-5 text-gold" />
               <h2 className="text-lg font-bold">منشئ عرض السعر</h2>
             </div>
+            {validSku ? (
+              <div className="mb-3 text-xs text-muted-foreground">
+                المنتج المطلوب: <span className="font-mono text-gold">{validSku}</span>
+              </div>
+            ) : null}
             <QuoteForm initialSlug={validSlug} />
 
             {/* Formal request form — persists to backend for sales follow-up */}
