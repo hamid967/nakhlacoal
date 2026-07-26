@@ -48,6 +48,8 @@ const groups: Group[] = [
   { title: 'النمو', items: [
     { to: '/admin/coupons', label: 'الكوبونات والخصومات', icon: Tag },
     { to: '/admin/marketing', label: 'التسويق', icon: Megaphone },
+    { to: '/admin/reviews', label: 'مراجعات المنتجات', icon: MessageSquare },
+    { to: '/admin/marketplace', label: 'قنوات البيع الخارجية', icon: Globe2 },
     { to: '/admin/ai-center', label: 'مركز الذكاء', icon: Sparkles, badge: 'قريباً' },
     { to: '/admin/website', label: 'محرر الموقع', icon: LayoutTemplate, badge: 'قريباً' },
     { to: '/admin/seo', label: 'السيو', icon: Search, badge: 'قريباً' },
