@@ -746,3 +746,115 @@ function PayloadBox({
   );
 }
 
+
+// ---------- Alert settings ----------
+
+type AlertSettings = {
+  auto_zatca_failure_alert: boolean;
+  zatca_alert_threshold: number;
+  admin_notify_email: string | null;
+  slack_webhook_url: string | null;
+};
+
+function AlertSettingsCard() {
+  const [s, setS] = useState<AlertSettings | null>(null);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    supabase
+      .from('email_settings')
+      .select('auto_zatca_failure_alert, zatca_alert_threshold, admin_notify_email, slack_webhook_url')
+      .eq('id', true)
+      .maybeSingle()
+      .then(({ data }) => {
+        setS({
+          auto_zatca_failure_alert: data?.auto_zatca_failure_alert ?? true,
+          zatca_alert_threshold: data?.zatca_alert_threshold ?? 3,
+          admin_notify_email: data?.admin_notify_email ?? '',
+          slack_webhook_url: data?.slack_webhook_url ?? '',
+        });
+      });
+  }, []);
+
+  async function save() {
+    if (!s) return;
+    setSaving(true);
+    const threshold = Math.max(1, Math.min(20, Number(s.zatca_alert_threshold) || 3));
+    const { error } = await supabase
+      .from('email_settings')
+      .update({
+        auto_zatca_failure_alert: s.auto_zatca_failure_alert,
+        zatca_alert_threshold: threshold,
+        admin_notify_email: s.admin_notify_email || null,
+        slack_webhook_url: s.slack_webhook_url || null,
+      })
+      .eq('id', true);
+    setSaving(false);
+    if (error) toast.error(error.message);
+    else toast.success('تم حفظ إعدادات التنبيه');
+  }
+
+  if (!s) return null;
+
+  return (
+    <Card>
+      <CardHeader className="pb-3">
+        <CardTitle className="text-base flex items-center gap-2">
+          <AlertTriangle className="w-4 h-4 text-amber-500" /> تنبيهات فشل الفواتير
+        </CardTitle>
+        <CardDescription>
+          يُرسَل تنبيه مرة واحدة عند بلوغ عدد المحاولات الحد الأدنى، مع رابط مباشر للفاتورة في لوحة المراقبة.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="grid gap-3 md:grid-cols-4 items-end">
+          <div className="flex items-center gap-2">
+            <input
+              id="enable-alert"
+              type="checkbox"
+              checked={s.auto_zatca_failure_alert}
+              onChange={(e) => setS({ ...s, auto_zatca_failure_alert: e.target.checked })}
+              className="h-4 w-4"
+            />
+            <Label htmlFor="enable-alert" className="cursor-pointer">تفعيل التنبيهات</Label>
+          </div>
+          <div>
+            <Label className="text-xs">حد المحاولات</Label>
+            <Input
+              type="number"
+              min={1}
+              max={20}
+              value={s.zatca_alert_threshold}
+              onChange={(e) => setS({ ...s, zatca_alert_threshold: Number(e.target.value) })}
+            />
+          </div>
+          <div>
+            <Label className="text-xs">بريد المدير</Label>
+            <Input
+              type="email"
+              placeholder="nakhlacoal@gmail.com"
+              value={s.admin_notify_email ?? ''}
+              onChange={(e) => setS({ ...s, admin_notify_email: e.target.value })}
+            />
+          </div>
+          <div>
+            <Label className="text-xs">Slack Webhook (اختياري)</Label>
+            <Input
+              type="url"
+              dir="ltr"
+              placeholder="https://hooks.slack.com/services/..."
+              value={s.slack_webhook_url ?? ''}
+              onChange={(e) => setS({ ...s, slack_webhook_url: e.target.value })}
+            />
+          </div>
+        </div>
+        <div className="mt-3 flex justify-end">
+          <Button onClick={save} disabled={saving} size="sm">
+            {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin ml-1.5" /> : null}
+            حفظ
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
