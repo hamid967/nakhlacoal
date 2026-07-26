@@ -53,20 +53,20 @@ async def check_route(context, path):
     ))
 
     url = f"{BASE}{path}"
-    resp = await page.goto(url, wait_until="domcontentloaded", timeout=30_000)
-    await page.wait_for_load_state("load", timeout=15_000)
-    try:
-        await page.wait_for_selector("main#main-content", timeout=25_000, state="attached")
-    except Exception:
-        pass
-    await page.wait_for_timeout(800)
+    resp = await page.goto(url, wait_until="domcontentloaded", timeout=45_000)
+    # Poll for the Layout <main> to mount (lazy chunk + Suspense).
+    main_seen = False
+    for _ in range(40):
+        if await page.locator("main#main-content").count() > 0:
+            main_seen = True
+            break
+        await page.wait_for_timeout(500)
     status = resp.status if resp else 0
 
-    # Give lazy chunks a beat + trigger scroll to force in-view sections.
     await page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
-    await page.wait_for_timeout(500)
+    await page.wait_for_timeout(400)
 
-    has_main = await page.locator("main").count() > 0
+    has_main = main_seen
     module_errors = [
         e for e in console_errors
         if any(m in e for m in REMOVED_MODULES)
