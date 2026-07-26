@@ -110,6 +110,42 @@ export type Database = {
         }
         Relationships: []
       }
+      analytics_events: {
+        Row: {
+          created_at: string
+          event_name: string
+          id: number
+          properties: Json
+          referrer: string | null
+          session_id: string
+          url: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_name: string
+          id?: number
+          properties?: Json
+          referrer?: string | null
+          session_id: string
+          url?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_name?: string
+          id?: number
+          properties?: Json
+          referrer?: string | null
+          session_id?: string
+          url?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       analytics_settings: {
         Row: {
           enabled: boolean
@@ -583,6 +619,48 @@ export type Database = {
           sales_subtotal_sar?: number
           updated_at?: string
           vat_collected_sar?: number
+        }
+        Relationships: []
+      }
+      email_campaigns: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          name: string
+          opened_count: number
+          scheduled_at: string | null
+          segment: Json
+          sent_count: number
+          status: string
+          template: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          name: string
+          opened_count?: number
+          scheduled_at?: string | null
+          segment?: Json
+          sent_count?: number
+          status?: string
+          template: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          name?: string
+          opened_count?: number
+          scheduled_at?: string | null
+          segment?: Json
+          sent_count?: number
+          status?: string
+          template?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -1092,6 +1170,212 @@ export type Database = {
         }
         Relationships: []
       }
+      loyalty_accounts: {
+        Row: {
+          created_at: string
+          lifetime_spend_sar: number
+          points_balance: number
+          tier: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          lifetime_spend_sar?: number
+          points_balance?: number
+          tier?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          lifetime_spend_sar?: number
+          points_balance?: number
+          tier?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      loyalty_transactions: {
+        Row: {
+          created_at: string
+          id: string
+          order_id: string | null
+          points: number
+          reason: string | null
+          type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          order_id?: string | null
+          points: number
+          reason?: string | null
+          type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          order_id?: string | null
+          points?: number
+          reason?: string | null
+          type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "loyalty_transactions_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      marketplace_channels: {
+        Row: {
+          active: boolean
+          config: Json
+          created_at: string
+          credentials_ref: string | null
+          id: string
+          last_sync_at: string | null
+          name: string
+          provider: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          config?: Json
+          created_at?: string
+          credentials_ref?: string | null
+          id?: string
+          last_sync_at?: string | null
+          name: string
+          provider: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          config?: Json
+          created_at?: string
+          credentials_ref?: string | null
+          id?: string
+          last_sync_at?: string | null
+          name?: string
+          provider?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      marketplace_listings: {
+        Row: {
+          channel_id: string
+          created_at: string
+          external_id: string | null
+          external_sku: string | null
+          id: string
+          last_error: string | null
+          last_pushed_at: string | null
+          price_sar: number | null
+          status: string
+          stock_qty: number | null
+          updated_at: string
+          variant_id: string
+        }
+        Insert: {
+          channel_id: string
+          created_at?: string
+          external_id?: string | null
+          external_sku?: string | null
+          id?: string
+          last_error?: string | null
+          last_pushed_at?: string | null
+          price_sar?: number | null
+          status?: string
+          stock_qty?: number | null
+          updated_at?: string
+          variant_id: string
+        }
+        Update: {
+          channel_id?: string
+          created_at?: string
+          external_id?: string | null
+          external_sku?: string | null
+          id?: string
+          last_error?: string | null
+          last_pushed_at?: string | null
+          price_sar?: number | null
+          status?: string
+          stock_qty?: number | null
+          updated_at?: string
+          variant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marketplace_listings_channel_id_fkey"
+            columns: ["channel_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_channels"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "marketplace_listings_variant_id_fkey"
+            columns: ["variant_id"]
+            isOneToOne: false
+            referencedRelation: "product_variants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      marketplace_orders: {
+        Row: {
+          channel_id: string
+          external_order_id: string
+          id: string
+          imported_at: string
+          order_id: string | null
+          raw: Json
+          status: string
+        }
+        Insert: {
+          channel_id: string
+          external_order_id: string
+          id?: string
+          imported_at?: string
+          order_id?: string | null
+          raw?: Json
+          status?: string
+        }
+        Update: {
+          channel_id?: string
+          external_order_id?: string
+          id?: string
+          imported_at?: string
+          order_id?: string | null
+          raw?: Json
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marketplace_orders_channel_id_fkey"
+            columns: ["channel_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_channels"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "marketplace_orders_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       newsletter_subscribers: {
         Row: {
           created_at: string
@@ -1452,6 +1736,63 @@ export type Database = {
           },
         ]
       }
+      product_reviews: {
+        Row: {
+          approved: boolean
+          body: string | null
+          created_at: string
+          id: string
+          order_id: string | null
+          product_id: string
+          rating: number
+          title: string | null
+          updated_at: string
+          user_id: string
+          verified: boolean
+        }
+        Insert: {
+          approved?: boolean
+          body?: string | null
+          created_at?: string
+          id?: string
+          order_id?: string | null
+          product_id: string
+          rating: number
+          title?: string | null
+          updated_at?: string
+          user_id: string
+          verified?: boolean
+        }
+        Update: {
+          approved?: boolean
+          body?: string | null
+          created_at?: string
+          id?: string
+          order_id?: string | null
+          product_id?: string
+          rating?: number
+          title?: string | null
+          updated_at?: string
+          user_id?: string
+          verified?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_reviews_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_reviews_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       product_variants: {
         Row: {
           compare_at_price: number | null
@@ -1782,6 +2123,71 @@ export type Database = {
           window_start?: string
         }
         Relationships: []
+      }
+      referral_codes: {
+        Row: {
+          code: string
+          created_at: string
+          total_reward_sar: number
+          user_id: string
+          uses: number
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          total_reward_sar?: number
+          user_id: string
+          uses?: number
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          total_reward_sar?: number
+          user_id?: string
+          uses?: number
+        }
+        Relationships: []
+      }
+      referral_redemptions: {
+        Row: {
+          code: string
+          created_at: string
+          discount_sar: number
+          id: string
+          order_id: string | null
+          referred_user_id: string | null
+          referrer_user_id: string
+          reward_points: number
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          discount_sar?: number
+          id?: string
+          order_id?: string | null
+          referred_user_id?: string | null
+          referrer_user_id: string
+          reward_points?: number
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          discount_sar?: number
+          id?: string
+          order_id?: string | null
+          referred_user_id?: string | null
+          referrer_user_id?: string
+          reward_points?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referral_redemptions_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       shipments: {
         Row: {
@@ -2622,6 +3028,13 @@ export type Database = {
       release_order_reservations: {
         Args: { _order_id: string }
         Returns: number
+      }
+      validate_referral_code: {
+        Args: { _code: string }
+        Returns: {
+          referrer: string
+          valid: boolean
+        }[]
       }
       zatca_next_icv: {
         Args: { _credential_id: string }

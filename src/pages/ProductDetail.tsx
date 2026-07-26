@@ -7,6 +7,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { brand, waLink } from '@/lib/brand';
 import { addToCart } from '@/lib/cart';
 import { toast } from 'sonner';
+import ProductReviews from '@/components/ProductReviews';
+import { track } from '@/hooks/useTrack';
 
 type Variant = {
   id: string;
@@ -102,6 +104,7 @@ export default function ProductDetail() {
           setProduct(p);
           setSelectedVariantId(p.product_variants[0]?.id ?? null);
           setActiveImage(p.product_images[0]?.url ?? p.hero_image);
+          void track('product_view', { product_id: p.id, slug: p.slug });
         }
         setLoading(false);
       });
@@ -373,6 +376,8 @@ export default function ProductDetail() {
                   <p className="text-base leading-[1.75] text-foreground/80 whitespace-pre-line">{story}</p>
                 </div>
               ) : null}
+
+              <ProductReviews productId={product.id} isAr={isAr} />
             </div>
           </div>
         </div>

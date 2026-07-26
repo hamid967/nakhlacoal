@@ -3,6 +3,7 @@ import {
   LayoutDashboard, ShoppingBag, PlusCircle, MapPin, Receipt, CreditCard,
   FileText, Package, Award, BookOpen, BadgeCheck, Heart, Bell, Headphones,
   MessageSquare, MapPinned, User, Settings as SettingsIcon, LogOut, ChevronLeft,
+  Gift, Share2,
 } from 'lucide-react';
 import { BrandLogo } from '@/components/BrandLogo';
 import { useAuth } from '@/contexts/AuthContext';
@@ -36,6 +37,10 @@ const groups: Group[] = [
     { to: '/portal/trademarks', label: 'العلامات التجارية', icon: Award },
     { to: '/portal/certificates', label: 'الشهادات', icon: BadgeCheck, badge: 'قريباً' },
     { to: '/portal/favorites', label: 'المفضلة', icon: Heart },
+  ]},
+  { title: 'المكافآت', items: [
+    { to: '/portal/loyalty', label: 'نقاط النخلة', icon: Gift },
+    { to: '/portal/referrals', label: 'برنامج الإحالة', icon: Share2 },
   ]},
   { title: 'التواصل', items: [
     { to: '/portal/notifications', label: 'الإشعارات', icon: Bell, badge: 'قريباً' },

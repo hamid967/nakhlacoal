@@ -1,90 +1,118 @@
-# Phase 5 — Payments & Order Fulfillment
+# Phase 7 — Marketplace Sync & Growth Engine
 
-بعد اكتمال الفوترة الإلكترونية (Phase 4 ZATCA)، المرحلة التالية الطبيعية هي **قبول المدفوعات الحقيقية وتشغيل عمليات المستودع والشحن** لإغلاق دورة B2C كاملة: من السلة → الدفع → تجهيز → شحن → إثبات تسليم → فاتورة ZATCA → تحصيل.
+بعد اكتمال المدفوعات والفوترة، المرحلة 7 تفتح **قنوات بيع خارجية** (Amazon.sa + Noon) وتُنشئ **محرك نمو** (SEO تقني عميق، تحليلات سلوكية، ولاء العملاء، ريفيرال، وأتمتة تسويقية) لتحويل الموقع من متجر مستقل إلى **شبكة توزيع رقمية**.
 
 ## نطاق العمل
 
-### 1) بوابة الدفع (Moyasar — البوابة الرسمية السعودية)
-لماذا Moyasar: تدعم Mada + Visa/Master + Apple Pay + STC Pay + Tamara بحساب واحد، معتمدة من SAMA، وثائق عربية، ورسوم منافسة. بديلاً: HyperPay أو Tap.
+### 1) Marketplace Sync (Amazon.sa + Noon Seller)
+- جدول `marketplace_channels(id, provider, name, active, credentials_ref, last_sync_at, config jsonb)`.
+- جدول `marketplace_listings(id, channel_id, variant_id, external_sku, external_id, price_sar, stock_qty, status, last_pushed_at, last_error)`.
+- جدول `marketplace_orders(id, channel_id, external_order_id, order_id FK nullable, raw jsonb, imported_at, status)`.
+- Edge Functions:
+  - `marketplace-push-inventory` (Cron كل 15 دقيقة): يرفع المخزون والأسعار لكل قناة نشطة.
+  - `marketplace-pull-orders` (Cron كل 5 دقائق): يسحب طلبات جديدة ويحوّلها إلى `orders` محلية بعلامة `source='amazon'|'noon'`.
+  - `marketplace-update-tracking`: يدفع رقم التتبع للقناة عند إنشاء الشحنة.
+- شاشة `/admin/marketplace`: قائمة القنوات، ربط SKUs، سجل المزامنة، وإعادة رفع يدوية.
 
-- Edge Function `payments-create-session`: يستلم `order_id`، يعيد التحقق من الأسعار عبر `checkout-validate`، ويُنشئ Payment Session لدى Moyasar ويرجع `redirect_url` + `payment_id`.
-- Edge Function `payments-webhook`: يستقبل Callbacks (paid/failed/refunded)، يتحقق من التوقيع، ويحدّث `orders.status` و`payments` بشكل idempotent.
-- Edge Function `payments-refund`: للمرتجعات الجزئية/الكاملة (Admin only) — تُنشئ Credit Note ZATCA تلقائيًا.
-- جدول جديد `payments(id, order_id, provider, provider_ref, method, amount_sar, status, raw_response jsonb, created_at)`.
-- توسيع `orders`: `payment_status`, `paid_at`, `payment_method`.
-- الأسرار: `MOYASAR_SECRET_KEY`, `MOYASAR_WEBHOOK_SECRET`, `MOYASAR_PUBLISHABLE_KEY` (الأخيرة فقط قابلة للاستخدام في الواجهة).
+### 2) SEO تقني متقدم
+- `sitemap.xml` ديناميكي (Edge Function `sitemap-generate` يومي) يشمل كل منتج/مقال/تاجرت مارك.
+- `robots.txt` محدّث + `llms.txt` (موجود).
+- JSON-LD مُوسّع: `Product` (offers, aggregateRating, reviews), `BreadcrumbList`, `FAQPage`, `Organization`, `LocalBusiness`.
+- Canonical + hreflang لكل صفحة (ar/en).
+- `Open Graph` ديناميكي لكل منتج/مقال عبر Edge Function `og-image` (توليد PNG بـ Coal/Gold).
+- Core Web Vitals: LCP < 2s، CLS < 0.05.
 
-### 2) صفحة Checkout حقيقية
-- استبدال التدفق الحالي (Order → WhatsApp) بخيار **"ادفع الآن"** مع إبقاء "اطلب عبر واتساب" كخيار ثانٍ.
-- عرض طرق الدفع المتاحة (Mada, Apple Pay, Visa, STC Pay, Tamara للتقسيط) مع Logos.
-- بعد الدفع الناجح: تحرير الحجز (`stock_reservations`) → خصم فعلي من `product_variants.stock_qty` → إصدار فاتورة ZATCA → إرسال البريد.
-- صفحات `/checkout/success?order=<id>` و`/checkout/failed?order=<id>&reason=...` (موجودتان — تحديث الربط).
+### 3) Reviews & Ratings
+- جدول `product_reviews(id, product_id, user_id, order_id, rating 1-5, title, body, verified, approved, created_at)`.
+- RLS: Insert لمن اشترى فعلاً (تحقق من `orders.status='delivered'`)، Read عام للـapproved.
+- عرض متوسط التقييم في `ProductDetail.tsx` + نموذج مراجعة بعد التسليم.
+- ربط `aggregateRating` بـSchema.org.
 
-### 3) عمليات المستودع (Warehouse Operations)
-شاشة `/admin/fulfillment` لدور `warehouse` + `admin`:
-- **قائمة الالتقاط (Pick List)**: طلبات `paid` وغير مشحونة، مرتبة بأولوية (Same-day → قديم).
-- **زر تجهيز**: يضع الطلب في `status='processing'`، يطبع Pick Ticket A5 (منتجات + كميات + موقع رف اختياري).
-- **إنشاء شحنة**: نموذج مبسّط (شركة الشحن، عنوان، وزن) → يُنشئ سجلًا في `shipments` مع `tracking_no`.
-- **مسح باركود** (اختياري في هذه المرحلة): إدخال يدوي للـ tracking + التقاط صورة إثبات.
+### 4) برنامج الولاء (Palm Points)
+- جدول `loyalty_accounts(user_id, points_balance, tier, lifetime_spend_sar)`.
+- جدول `loyalty_transactions(id, user_id, order_id, type earn|redeem|expire, points, reason)`.
+- قواعد: 1 نقطة لكل 10 ر.س، 100 نقطة = 10 ر.س خصم، انتهاء بعد 12 شهرًا.
+- شاشة `/portal/loyalty` (رصيد، سجل، مكافآت متاحة).
+- Trigger على `orders.status='delivered'` يمنح النقاط تلقائيًا.
 
-### 4) تكامل الشحن (SMSA / Aramex / DHL)
-اختياري لكن يوصى به: Edge Function `shipping-create-label` يستدعي API الناقل (نبدأ بـ **SMSA Express** — الأكثر شيوعًا محليًا) لإنشاء بوليصة PDF ورقم تتبع.
-- Fallback: إدخال يدوي إذا كان الحساب غير مفعّل.
-- Webhook `shipping-tracking-webhook` لتحديث حالات (out_for_delivery, delivered).
-- سر مطلوب: `SMSA_API_KEY` (نطلبه لاحقًا عند التفعيل).
+### 5) نظام الإحالة (Referral)
+- جدول `referral_codes(user_id, code unique, uses, total_reward_sar)`.
+- كل مستخدم يحصل على كود فريد. عند استخدام صديق للكود على أول طلب: الصديق يحصل على 10% خصم (سقف 50 ر.س)، والمُحيل يحصل على 50 نقطة ولاء.
+- شاشة `/portal/referrals` + تكامل مع WhatsApp Share.
 
-### 5) استرداد وإلغاء
-- سياسة استرداد واضحة (موجودة في `/refund-policy`).
-- زر "استرداد" في `/admin/orders/:id` (لأدوار admin/accountant فقط) → يستدعي `payments-refund` → يُصدر Credit Note ZATCA (`invoice_subtype=381`) → يعيد المخزون.
+### 6) Analytics & Behavior Tracking
+- جدول `analytics_events(id, session_id, user_id, event_name, properties jsonb, url, referrer, created_at)` — Retention 90 يوم.
+- Client hook `useTrack(event, props)` — يرسل: `product_view`, `add_to_cart`, `checkout_start`, `checkout_complete`, `quote_request`, `search`, `filter_apply`.
+- شاشة `/admin/analytics` (تحلّ محل الحالية): Funnel، Top products، Top search terms، Cart abandonment، LTV، Cohort retention.
+- Optional: تكامل GA4 عبر gtag.js (إذا وافق المدير).
 
-### 6) إعادة الحجز عند الفشل
-- Cron موجود `expire_stock_reservations` يُشغَّل كل 5 دقائق.
-- إضافة: إذا فشل الدفع أو انتهت الجلسة، إطلاق `release_order_reservations(order_id)` فورًا.
+### 7) Marketing Automation
+- جدول `email_campaigns(id, name, template, segment jsonb, scheduled_at, status, sent_count, opened_count)`.
+- 4 حملات جاهزة:
+  1. **Cart abandonment** (بعد 4 ساعات من هجر السلة).
+  2. **Post-purchase upsell** (بعد 3 أيام من التسليم).
+  3. **Win-back** (لعميل لم يطلب منذ 90 يومًا).
+  4. **Wholesale onboarding** (سلسلة 5 رسائل للحسابات الجديدة).
+- Cron `marketing-run-campaigns` يومي.
 
-### 7) الاختبارات
-1. طلب B2C كامل → Mada Test Card → paid → فاتورة ZATCA → بريد → شحنة → delivered.
-2. طلب فاشل → المخزون يُحرَّر خلال دقيقة.
-3. استرداد جزئي → Credit Note + إشعار للعميل.
-4. Webhook مكرر → لا ازدواج (idempotency).
-5. طلب Wholesale مدفوع بالائتمان (بدون بوابة) → يبقى `payment_status=on_account`.
+### 8) Content Hub تحسين
+- تحسين `/knowledge` بمحرّر Markdown كامل للمدير.
+- SEO auto-suggestions (meta description، keywords) عبر Lovable AI.
+- Related products/articles تلقائي حسب embeddings.
 
 ## Technical Details
 
-**جداول جديدة:**
+**جداول جديدة (10):**
 ```text
-payments(id, order_id FK, provider text, provider_ref text unique,
-         method text, amount_sar numeric(12,2), status text,
-         raw_response jsonb, created_at, updated_at)
+marketplace_channels, marketplace_listings, marketplace_orders,
+product_reviews, loyalty_accounts, loyalty_transactions,
+referral_codes, referral_redemptions,
+analytics_events, email_campaigns
 ```
 
-**تعديلات:**
+**Edge Functions جديدة (8):**
 ```text
-orders + payment_status text default 'unpaid',
-       + paid_at timestamptz, payment_method text
+marketplace-push-inventory   (cron 15m)
+marketplace-pull-orders      (cron 5m)
+marketplace-update-tracking  (trigger)
+sitemap-generate             (cron daily)
+og-image                     (on-demand)
+loyalty-award                (trigger on order delivered)
+marketing-run-campaigns      (cron daily)
+analytics-ingest             (client → server)
 ```
 
-**Edge Functions:** 4 جديدة (`payments-create-session`, `payments-webhook`, `payments-refund`, `shipping-create-label`).
+**Secrets مطلوبة (لاحقًا، بعد موافقتك على كل قناة):**
+- `AMAZON_SP_API_CLIENT_ID`, `AMAZON_SP_API_CLIENT_SECRET`, `AMAZON_REFRESH_TOKEN`, `AMAZON_SELLER_ID`
+- `NOON_PARTNER_CODE`, `NOON_API_KEY`
+- (اختياري) `GA4_MEASUREMENT_ID`
 
 **صفحات جديدة:**
 ```text
-/admin/fulfillment       (Pick list + Ship)
-/admin/payments          (Payments log + refunds)
+/admin/marketplace     (channels + listings + sync log)
+/admin/reviews         (moderation queue)
+/admin/campaigns       (marketing automation)
+/portal/loyalty        (points balance + rewards)
+/portal/referrals      (referral code + earnings)
 ```
 
-**Secrets مطلوبة (نطلبها لاحقًا بعد موافقتك):**
-- `MOYASAR_SECRET_KEY`, `MOYASAR_WEBHOOK_SECRET`, `MOYASAR_PUBLISHABLE_KEY`
-- (اختياري) `SMSA_API_KEY`
+**قياس النجاح (KPIs):**
+- +30% Organic traffic خلال 90 يوم.
+- +15% Conversion rate من مراجعات المنتجات.
+- 25% من الطلبات الجديدة عبر Amazon/Noon خلال 6 أشهر.
+- 40% Retention rate عبر برنامج الولاء.
 
 ## خارج النطاق
-- POS طرفيات ومزامنة مبيعات الفروع.
-- تعدد العملات (SAR فقط).
-- Marketplace (Amazon/Noon) — Phase 7 لاحقًا.
+- POS/Terminal integration (Phase 8).
+- WhatsApp Business API (Meta) — يحتاج ترخيص منفصل.
+- TikTok Shop / Instagram Shopping.
+- Multi-currency (USD/AED).
 
 ## المخرجات
-- 1 migration (`payments` + توسيع `orders`).
-- 4 Edge Functions + Webhook Endpoints.
-- Checkout حقيقي + `/admin/fulfillment` + `/admin/payments`.
-- تكامل Moyasar Test Mode جاهز للتبديل إلى Live بضغطة.
+- 1 Migration واحدة (10 جداول + GRANT + RLS + POLICIES).
+- 8 Edge Functions + 3 Cron schedules.
+- 5 شاشات جديدة (3 Admin + 2 Portal) + توسعة `/analytics` و`/knowledge`.
+- Marketplace Test Mode جاهز (Sandbox Amazon/Noon).
 
-## ملاحظة
-سنبدأ في **Test Mode لـ Moyasar** فورًا (لا تحتاج ترخيص فعلي)، وعند جاهزية الحساب التجاري نبدّل المفاتيح.
+## ملاحظة تنفيذ
+سنبدأ بـ **Analytics + Reviews + Loyalty** (لا تحتاج مفاتيح خارجية) → ثم SEO + Marketing Automation → ثم Marketplace (يحتاج حسابات Seller Central معتمدة). أخبرني إن أردت البدء بترتيب مختلف أو تقليص النطاق.
