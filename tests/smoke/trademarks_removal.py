@@ -55,7 +55,11 @@ async def check_route(context, path):
     url = f"{BASE}{path}"
     resp = await page.goto(url, wait_until="domcontentloaded", timeout=30_000)
     await page.wait_for_load_state("load", timeout=15_000)
-    await page.wait_for_timeout(1200)
+    try:
+        await page.wait_for_selector("main", timeout=10_000, state="attached")
+    except Exception:
+        pass
+    await page.wait_for_timeout(800)
     status = resp.status if resp else 0
 
     # Give lazy chunks a beat + trigger scroll to force in-view sections.
