@@ -28,11 +28,13 @@ export default function Checkout() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState<1 | 2 | 3>(1);
+  const [legalAccepted, setLegalAccepted] = useState(false);
   const [form, setForm] = useState({
     contact_name: '', phone: '', email: user?.email ?? '',
     company_name: '', city: '', address: '', notes: '',
     payment_method: 'bank_transfer' as 'bank_transfer' | 'cash_on_delivery',
   });
+
 
   const fmt = (n: number) => new Intl.NumberFormat(isAr ? 'ar-SA' : 'en-US', { maximumFractionDigits: 2 }).format(n);
 
