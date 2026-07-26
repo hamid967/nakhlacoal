@@ -55,6 +55,8 @@ const groups: Group[] = [
     { to: '/admin/users', label: 'المستخدمون', icon: Users, badge: 'قريباً' },
     { to: '/admin/roles', label: 'الأدوار والصلاحيات', icon: KeyRound, badge: 'قريباً' },
     { to: '/admin/logs', label: 'سجل النشاط', icon: ScrollText },
+    { to: '/admin/emails', label: 'سجل البريد', icon: Mail },
+
     { to: '/admin/security', label: 'الأمان', icon: ShieldCheck, badge: 'قريباً' },
     { to: '/admin/tracking', label: 'التتبع والتحليلات', icon: BarChart3 },
     { to: '/admin/settings', label: 'الإعدادات', icon: SettingsIcon },
