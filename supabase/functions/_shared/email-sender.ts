@@ -74,6 +74,71 @@ export async function sendEmail(input: SendEmailInput): Promise<SendEmailResult>
   const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
   const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY');
 
+  const category = input.category ?? inferCategory(input.template);
+
+  // Consent check (skipped for pure transactional/system emails).
+  if (category !== 'transactional') {
+    try {
+      const { data: optedIn, error: optErr } = await admin.rpc('email_opted_in', {
+        _email: input.to,
+        _category: category,
+      });
+      if (optErr) console.error('[email_opted_in] rpc error:', optErr);
+      if (optedIn === false) {
+        await logEmail(admin, {
+          template: input.template,
+          recipient: input.to,
+          subject: input.subject,
+          status: 'skipped',
+          error_message: `opt-out:${category}`,
+          entity_type: input.entityType ?? null,
+          entity_id: input.entityId ?? null,
+          metadata: { ...(input.metadata ?? {}), category, skipped_reason: 'opt_out' },
+          triggered_by: input.triggeredBy ?? null,
+        });
+        return { ok: false, status: 200, error: 'recipient opted out' };
+      }
+    } catch (e) {
+      console.error('[consent] check failed, proceeding:', e);
+    }
+  }
+
+  // Ensure a preferences row exists so the customer can manage it later.
+  let unsubToken: string | null = null;
+  try {
+    const { data: existing } = await admin
+      .from('email_preferences')
+      .select('unsubscribe_token')
+      .ilike('email', input.to)
+      .maybeSingle();
+    if (existing?.unsubscribe_token) {
+      unsubToken = existing.unsubscribe_token;
+    } else {
+      const { data: inserted } = await admin
+        .from('email_preferences')
+        .insert({ email: input.to })
+        .select('unsubscribe_token')
+        .maybeSingle();
+      unsubToken = inserted?.unsubscribe_token ?? null;
+    }
+  } catch (e) {
+    console.error('[email_preferences] upsert failed:', e);
+  }
+
+  // Inject unsubscribe link placeholder.
+  const siteUrl = Deno.env.get('SITE_URL') || 'https://alnakhlacoal.com';
+  const unsubUrl = unsubToken
+    ? `${siteUrl}/unsubscribe?token=${encodeURIComponent(unsubToken)}`
+    : `${siteUrl}/portal/settings`;
+  const htmlWithUnsub = input.html.includes('{{unsubscribe_url}}')
+    ? input.html.replaceAll('{{unsubscribe_url}}', unsubUrl)
+    : input.html.replace(
+        /<\/body>/i,
+        `<div style="text-align:center;padding:16px 24px;font-size:11px;color:#8a8674;font-family:'Segoe UI',Tahoma,Arial,sans-serif">
+          لا ترغب باستلام هذه الإشعارات؟ <a href="${unsubUrl}" style="color:#1A4A00;text-decoration:underline">إلغاء الاشتراك</a>
+        </div></body>`,
+      );
+
   if (!LOVABLE_API_KEY || !RESEND_API_KEY) {
     await logEmail(admin, {
       template: input.template,
@@ -88,6 +153,7 @@ export async function sendEmail(input: SendEmailInput): Promise<SendEmailResult>
     });
     return { ok: false, status: 500, error: 'Email service not configured' };
   }
+
 
   try {
     const r = await fetch(`${GATEWAY_URL}/emails`, {
