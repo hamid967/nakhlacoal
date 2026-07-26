@@ -141,6 +141,9 @@ Deno.serve(async (req) => {
   let authorized = false;
   if (SHARED_TOKEN && provided && provided === SHARED_TOKEN) {
     authorized = true;
+  } else if (jwt && jwt === SERVICE_ROLE) {
+    // pg_cron / server-to-server invocation using the service role key.
+    authorized = true;
   } else if (jwt) {
     const { data: userData } = await admin.auth.getUser(jwt);
     if (userData?.user) {
