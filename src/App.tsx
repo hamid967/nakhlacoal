@@ -95,6 +95,7 @@ const WholesaleStatement = lazy(() => import('@/portal/pages/wholesale/Statement
 const AdminWholesaleLeads = lazy(() => import('@/admin/pages/wholesale/Leads'));
 const AdminWholesaleAccounts = lazy(() => import('@/admin/pages/wholesale/Accounts'));
 const AdminPriceTiers = lazy(() => import('@/admin/pages/wholesale/PriceTiers'));
+const AdminZatca = lazy(() => import('@/admin/pages/Zatca'));
 
 const PortalLayout = lazy(() => import('@/portal/PortalLayout'));
 const PortalDashboard = lazy(() => import('@/portal/pages/Dashboard'));
@@ -201,6 +202,7 @@ export default function App() {
                   <Route path="wholesale/leads" element={<AdminWholesaleLeads />} />
                   <Route path="wholesale/accounts" element={<AdminWholesaleAccounts />} />
                   <Route path="wholesale/price-tiers" element={<AdminPriceTiers />} />
+                  <Route path="zatca" element={<AdminZatca />} />
                   <Route path="*" element={<AdminPlaceholder />} />
 
 

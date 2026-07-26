@@ -857,6 +857,8 @@ export type Database = {
           buyer_address: string | null
           buyer_name: string
           buyer_vat_number: string | null
+          counterparty_address: Json | null
+          counterparty_vat: string | null
           created_at: string
           created_by: string | null
           currency: string
@@ -866,6 +868,8 @@ export type Database = {
           grand_total_sar: number
           id: string
           invoice_no: string
+          invoice_subtype: string
+          invoice_type: string
           issue_date: string
           notes: string | null
           order_id: string | null
@@ -879,11 +883,16 @@ export type Database = {
           updated_at: string
           vat_amount_sar: number
           vat_rate: number
+          zatca_qr: string | null
+          zatca_status: string
+          zatca_uuid: string | null
         }
         Insert: {
           buyer_address?: string | null
           buyer_name: string
           buyer_vat_number?: string | null
+          counterparty_address?: Json | null
+          counterparty_vat?: string | null
           created_at?: string
           created_by?: string | null
           currency?: string
@@ -893,6 +902,8 @@ export type Database = {
           grand_total_sar?: number
           id?: string
           invoice_no?: string
+          invoice_subtype?: string
+          invoice_type?: string
           issue_date?: string
           notes?: string | null
           order_id?: string | null
@@ -906,11 +917,16 @@ export type Database = {
           updated_at?: string
           vat_amount_sar?: number
           vat_rate?: number
+          zatca_qr?: string | null
+          zatca_status?: string
+          zatca_uuid?: string | null
         }
         Update: {
           buyer_address?: string | null
           buyer_name?: string
           buyer_vat_number?: string | null
+          counterparty_address?: Json | null
+          counterparty_vat?: string | null
           created_at?: string
           created_by?: string | null
           currency?: string
@@ -920,6 +936,8 @@ export type Database = {
           grand_total_sar?: number
           id?: string
           invoice_no?: string
+          invoice_subtype?: string
+          invoice_type?: string
           issue_date?: string
           notes?: string | null
           order_id?: string | null
@@ -933,6 +951,9 @@ export type Database = {
           updated_at?: string
           vat_amount_sar?: number
           vat_rate?: number
+          zatca_qr?: string | null
+          zatca_status?: string
+          zatca_uuid?: string | null
         }
         Relationships: [
           {
@@ -2268,6 +2289,156 @@ export type Database = {
           },
         ]
       }
+      zatca_credentials: {
+        Row: {
+          active: boolean
+          cert_expires_at: string | null
+          common_name: string
+          compliance_csid: string | null
+          compliance_request_id: string | null
+          created_at: string
+          csr: string | null
+          device_serial: string
+          environment: string
+          id: string
+          notes: string | null
+          onboarding_step: string
+          org_address: Json | null
+          org_cr: string | null
+          org_name: string
+          org_vat: string
+          private_key_encrypted: string | null
+          production_csid: string | null
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          cert_expires_at?: string | null
+          common_name: string
+          compliance_csid?: string | null
+          compliance_request_id?: string | null
+          created_at?: string
+          csr?: string | null
+          device_serial: string
+          environment?: string
+          id?: string
+          notes?: string | null
+          onboarding_step?: string
+          org_address?: Json | null
+          org_cr?: string | null
+          org_name: string
+          org_vat: string
+          private_key_encrypted?: string | null
+          production_csid?: string | null
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          cert_expires_at?: string | null
+          common_name?: string
+          compliance_csid?: string | null
+          compliance_request_id?: string | null
+          created_at?: string
+          csr?: string | null
+          device_serial?: string
+          environment?: string
+          id?: string
+          notes?: string | null
+          onboarding_step?: string
+          org_address?: Json | null
+          org_cr?: string | null
+          org_name?: string
+          org_vat?: string
+          private_key_encrypted?: string | null
+          production_csid?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      zatca_invoices: {
+        Row: {
+          attempts: number
+          cleared_at: string | null
+          created_at: string
+          credential_id: string | null
+          hash: string
+          icv: number
+          id: string
+          invoice_id: string
+          invoice_subtype: string
+          invoice_type: string
+          last_error: string | null
+          pih: string
+          qr_base64: string | null
+          status: string
+          submission_type: string
+          submitted_at: string | null
+          updated_at: string
+          uuid: string
+          xml_signed: string | null
+          zatca_response: Json | null
+        }
+        Insert: {
+          attempts?: number
+          cleared_at?: string | null
+          created_at?: string
+          credential_id?: string | null
+          hash: string
+          icv: number
+          id?: string
+          invoice_id: string
+          invoice_subtype?: string
+          invoice_type?: string
+          last_error?: string | null
+          pih: string
+          qr_base64?: string | null
+          status?: string
+          submission_type: string
+          submitted_at?: string | null
+          updated_at?: string
+          uuid: string
+          xml_signed?: string | null
+          zatca_response?: Json | null
+        }
+        Update: {
+          attempts?: number
+          cleared_at?: string | null
+          created_at?: string
+          credential_id?: string | null
+          hash?: string
+          icv?: number
+          id?: string
+          invoice_id?: string
+          invoice_subtype?: string
+          invoice_type?: string
+          last_error?: string | null
+          pih?: string
+          qr_base64?: string | null
+          status?: string
+          submission_type?: string
+          submitted_at?: string | null
+          updated_at?: string
+          uuid?: string
+          xml_signed?: string | null
+          zatca_response?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "zatca_invoices_credential_id_fkey"
+            columns: ["credential_id"]
+            isOneToOne: false
+            referencedRelation: "zatca_credentials"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "zatca_invoices_invoice_id_fkey"
+            columns: ["invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       trademarks_public: {
@@ -2368,6 +2539,13 @@ export type Database = {
       release_order_reservations: {
         Args: { _order_id: string }
         Returns: number
+      }
+      zatca_next_icv: {
+        Args: { _credential_id: string }
+        Returns: {
+          next_icv: number
+          previous_hash: string
+        }[]
       }
     }
     Enums: {
