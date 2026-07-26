@@ -499,6 +499,74 @@ export default function AdminEmails() {
         </div>
       </div>
     </div>
+
+      {/* Preview modal */}
+      {previewOpen && (
+        <div
+          className="fixed inset-0 z-[100] grid place-items-center p-4"
+          style={{ background: 'rgba(10,20,10,0.55)' }}
+          onClick={() => setPreviewOpen(false)}
+        >
+          <div
+            className="w-full max-w-4xl bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col"
+            style={{ maxHeight: '92vh' }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between px-5 py-3 border-b" style={{ borderColor: 'var(--a-border)' }}>
+              <div className="min-w-0">
+                <div className="flex items-center gap-2 text-sm font-semibold" style={{ color: 'var(--a-text)' }}>
+                  <Eye className="w-4 h-4" style={{ color: 'var(--a-palm)' }} />
+                  معاينة القالب —{' '}
+                  <code className="text-xs" style={{ color: 'var(--a-palm)' }}>{previewTemplate}</code>
+                  {previewResult?.usedSample && (
+                    <span className="a-pill a-pill-amber text-[10px]">بيانات نموذجية</span>
+                  )}
+                </div>
+                {previewResult && (
+                  <div className="mt-1 text-xs truncate" style={{ color: 'var(--a-text-muted)' }}>
+                    <b>الموضوع:</b> {previewResult.subject}
+                    {previewResult.recipient && (
+                      <> · <b>المستلم:</b> <span dir="ltr">{previewResult.recipient}</span></>
+                    )}
+                  </div>
+                )}
+              </div>
+              <button
+                className="a-btn"
+                style={{ padding: '4px 10px' }}
+                onClick={() => setPreviewOpen(false)}
+                aria-label="إغلاق"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            {previewResult?.note && (
+              <div className="px-5 py-2 text-xs" style={{ background: '#fff9e5', color: '#8a6a00' }}>
+                {previewResult.note}
+              </div>
+            )}
+            <div className="flex-1 overflow-hidden" style={{ background: '#f6f5ef' }}>
+              {previewLoading ? (
+                <div className="h-[60vh] grid place-items-center">
+                  <Loader2 className="w-6 h-6 animate-spin" style={{ color: 'var(--a-palm)' }} />
+                </div>
+              ) : previewResult ? (
+                <iframe
+                  title="email preview"
+                  srcDoc={previewResult.html}
+                  sandbox=""
+                  className="w-full"
+                  style={{ height: '70vh', border: 0, background: '#f6f5ef' }}
+                />
+              ) : (
+                <div className="h-[60vh] grid place-items-center text-sm" style={{ color: 'var(--a-text-muted)' }}>
+                  لا توجد معاينة.
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
   );
 }
 
