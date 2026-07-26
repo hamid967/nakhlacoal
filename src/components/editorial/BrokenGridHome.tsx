@@ -374,14 +374,14 @@ export function BrokenGridHome() {
 
           <div className="grid grid-cols-12 gap-4 lg:gap-6">
             <div className="col-span-12 md:col-span-7 relative overflow-hidden group">
-              <img src={lifestyleMajlis} alt="" className="w-full aspect-[16/10] object-cover transition-transform duration-1000 group-hover:scale-105" loading="lazy" />
+              <ResponsiveImage base="lifestyle-majlis" fallback={lifestyleMajlis} alt="" className="w-full aspect-[16/10] object-cover transition-transform duration-1000 group-hover:scale-105" sizes="(max-width: 768px) 100vw, 58vw" />
             </div>
             <div className="col-span-12 md:col-span-5 grid grid-rows-2 gap-4 lg:gap-6">
               <div className="relative overflow-hidden group">
-                <img src={packagingImg} alt="" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" loading="lazy" />
+                <ResponsiveImage base="packaging" fallback={packagingImg} alt="" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" sizes="(max-width: 768px) 100vw, 40vw" />
               </div>
               <div className="relative overflow-hidden group">
-                <img src={productHero} alt="" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" loading="lazy" />
+                <ResponsiveImage base="product-hero" fallback={productHero} alt="" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" sizes="(max-width: 768px) 100vw, 40vw" />
               </div>
             </div>
           </div>
