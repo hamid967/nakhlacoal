@@ -181,7 +181,7 @@ Deno.serve(async (req) => {
         body: JSON.stringify({
           invoiceHash: invoiceHashB64,
           uuid,
-          invoice: btoa(xml),
+          invoice: btoa(signedXml),
         }),
       });
       apiBody = await res.json().catch(() => ({}));
