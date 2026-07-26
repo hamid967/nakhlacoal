@@ -224,6 +224,7 @@ export default function AdminEmails() {
   };
 
   return (
+    <>
     <div className="space-y-6">
       <SEO title="سجل البريد — فحم النخلة" description="سجل شامل لجميع رسائل البريد الإلكتروني المُرسلة." path="/admin/emails" />
 
