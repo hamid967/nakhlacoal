@@ -27,17 +27,15 @@ export default function Unsubscribe() {
   const [email, setEmail] = useState('');
   const [prefs, setPrefs] = useState<Prefs | null>(null);
 
+  const fnBase = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/email-preferences`;
+
   useEffect(() => {
     if (!token) { setState('invalid'); return; }
     (async () => {
-      const { data, error } = await supabase.functions.invoke('email-preferences', {
-        body: null,
-        method: 'GET' as any,
-      });
-      // functions.invoke doesn't support GET query cleanly; call fetch directly:
       try {
-        const url = `${(supabase as any).functionsUrl ?? ''}/email-preferences?token=${encodeURIComponent(token)}`;
-        const resp = await fetch(url);
+        const resp = await fetch(`${fnBase}?token=${encodeURIComponent(token)}`, {
+          headers: { apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string },
+        });
         const j = await resp.json();
         if (!resp.ok || !j.ok) throw new Error(j.error || 'invalid');
         setEmail(j.email);
@@ -46,15 +44,19 @@ export default function Unsubscribe() {
       } catch {
         setState('invalid');
       }
-      void data; void error;
     })();
-  }, [token]);
+  }, [token, fnBase]);
 
   const save = async (payload: any) => {
-    const res = await supabase.functions.invoke('email-preferences', {
-      body: { token, ...payload },
+    const resp = await fetch(fnBase, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string,
+      },
+      body: JSON.stringify({ token, ...payload }),
     });
-    if (res.error) return;
+    if (!resp.ok) return;
     setState(payload.all ? 'done' : 'saved');
   };
 
