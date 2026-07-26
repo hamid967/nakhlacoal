@@ -316,11 +316,12 @@ export function BrokenGridHome() {
       <section className="relative py-24 lg:py-32 bg-background overflow-hidden">
         <div className="container grid grid-cols-12 gap-8 lg:gap-16 items-center" dir={isAr ? 'rtl' : 'ltr'}>
           <div className="col-span-12 lg:col-span-6 relative">
-            <img
-              src={qualityLab}
+            <ResponsiveImage
+              base="quality-lab"
+              fallback={qualityLab}
               alt={isAr ? 'مختبر جودة الفحم' : 'Charcoal quality lab'}
               className="w-full aspect-[4/3] object-cover shadow-luxe"
-              loading="lazy"
+              sizes="(max-width: 1024px) 100vw, 50vw"
             />
             <div className="hidden lg:block absolute -bottom-8 -right-8 bg-dark text-dark-foreground p-6 shadow-luxe max-w-[220px]">
               <p className="text-xs uppercase tracking-[0.24em] text-gold">ISO 9001</p>
