@@ -1,0 +1,73 @@
+name: OG / Twitter / LocalBusiness meta audit
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: "Override base URL (defaults to a local `vite preview` of the built app)."
+        required: false
+        default: ""
+
+concurrency:
+  group: og-audit-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  og-audit:
+    name: Audit og:image / twitter:image / LocalBusiness
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Build production bundle
+        if: ${{ inputs.base_url == '' }}
+        run: npm run build
+
+      - name: Start preview server
+        if: ${{ inputs.base_url == '' }}
+        run: |
+          npx vite preview --host 127.0.0.1 --port 8080 --strictPort &
+          echo $! > .preview.pid
+          for i in $(seq 1 40); do
+            curl -sf -o /dev/null http://127.0.0.1:8080/ && exit 0
+            sleep 1
+          done
+          echo "Preview server did not become ready" && exit 1
+
+      - name: Run OG / Twitter / LocalBusiness audit
+        run: |
+          BASE="${{ inputs.base_url }}"
+          if [ -z "$BASE" ]; then BASE="http://127.0.0.1:8080"; fi
+          node scripts/audit-og-tags.mjs \
+            --base="$BASE" \
+            --json="og-audit.json"
+
+      - name: Stop preview server
+        if: always() && inputs.base_url == ''
+        run: |
+          if [ -f .preview.pid ]; then kill "$(cat .preview.pid)" 2>/dev/null || true; fi
+
+      - name: Upload audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: og-audit-${{ github.run_id }}
+          path: og-audit.json
+          retention-days: 14
+          if-no-files-found: warn
