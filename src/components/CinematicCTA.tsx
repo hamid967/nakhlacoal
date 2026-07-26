@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { ArrowRight, MessageCircle } from 'lucide-react';
+import { waLink } from '@/lib/brand';
 
 export function CinematicCTA() {
   const { i18n } = useTranslation();
@@ -100,7 +101,7 @@ export function CinematicCTA() {
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 rtl:group-hover:-translate-x-1 rtl:rotate-180 transition-transform" />
           </Link>
           <a
-            href="https://wa.me/966540060085"
+            href={waLink('quote')}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 rounded-full border border-[hsl(var(--gold))]/40 text-white px-8 py-4 text-sm font-semibold hover:bg-white/5 transition"

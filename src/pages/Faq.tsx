@@ -6,6 +6,7 @@ import { SEO } from '@/components/SEO';
 import { LuxSection, SectionHeader } from '@/components/ui-lux';
 import { ScrollReveal } from '@/components/ScrollReveal';
 import { PageHero } from '@/components/PageHero';
+import { waLink } from '@/lib/brand';
 
 type Item = { q: string; a: string; cat: string };
 
@@ -216,7 +217,7 @@ export default function Faq() {
             </p>
             <div className="flex flex-wrap gap-3 justify-center">
               <a
-                href="https://wa.me/966540060085"
+                href={waLink('support')}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-jade text-background font-semibold hover:bg-jade/90 transition"
