@@ -364,6 +364,51 @@ export type Database = {
         }
         Relationships: []
       }
+      email_preferences: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          invoice_receipts: boolean
+          marketing: boolean
+          order_updates: boolean
+          quote_updates: boolean
+          shipment_updates: boolean
+          unsubscribe_token: string
+          unsubscribed_all: boolean
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          invoice_receipts?: boolean
+          marketing?: boolean
+          order_updates?: boolean
+          quote_updates?: boolean
+          shipment_updates?: boolean
+          unsubscribe_token?: string
+          unsubscribed_all?: boolean
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          invoice_receipts?: boolean
+          marketing?: boolean
+          order_updates?: boolean
+          quote_updates?: boolean
+          shipment_updates?: boolean
+          unsubscribe_token?: string
+          unsubscribed_all?: boolean
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       email_settings: {
         Row: {
           auto_invoice_receipt: boolean
@@ -1205,6 +1250,10 @@ export type Database = {
     Functions: {
       check_rate_limit: {
         Args: { _key: string; _max: number; _window_seconds: number }
+        Returns: boolean
+      }
+      email_opted_in: {
+        Args: { _category: string; _email: string }
         Returns: boolean
       }
       has_role: {

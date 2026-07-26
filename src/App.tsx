@@ -57,6 +57,7 @@ const OrderTracking = lazy(() => import('@/pages/OrderTracking'));
 const Catalog = lazy(() => import('@/pages/Catalog'));
 const CampaignLanding = lazy(() => import('@/pages/CampaignLanding'));
 const Checkout = lazy(() => import('@/pages/Checkout'));
+const Unsubscribe = lazy(() => import('@/pages/Unsubscribe'));
 
 const AdminLayout = lazy(() => import('@/admin/AdminLayout'));
 const AdminDashboard = lazy(() => import('@/admin/pages/Dashboard'));
@@ -183,6 +184,7 @@ export default function App() {
 
                 </Route>
                 <Route path="/portal/login" element={<PortalLogin />} />
+                <Route path="/unsubscribe" element={<Unsubscribe />} />
                 <Route path="/portal" element={<ProtectedRoute requireAnyRole={['customer','user','wholesale','distributor']}><PortalLayout /></ProtectedRoute>}>
                   <Route index element={<PortalDashboard />} />
                   <Route path="orders" element={<PortalOrders />} />
