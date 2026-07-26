@@ -42,6 +42,7 @@ const groups: Group[] = [
   ]},
   { title: 'المالية', items: [
     { to: '/admin/invoices', label: 'الفواتير', icon: Receipt, badge: 'قريباً' },
+    { to: '/admin/zatca', label: 'فاتورة (ZATCA)', icon: ShieldCheck },
     { to: '/admin/payments', label: 'المدفوعات', icon: CreditCard, badge: 'قريباً' },
   ]},
   { title: 'النمو', items: [
