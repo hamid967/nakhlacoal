@@ -218,11 +218,12 @@ export function BrokenGridHome() {
               to="/products"
               className="group relative col-span-12 lg:col-span-7 row-span-2 overflow-hidden bg-dark-2"
             >
-              <img
-                src={productHero}
+              <ResponsiveImage
+                base="product-hero"
+                fallback={productHero}
                 alt=""
                 className="absolute inset-0 h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105"
-                loading="lazy"
+                sizes="(max-width: 1024px) 100vw, 55vw"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-dark via-dark/20 to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-8 lg:p-12">
