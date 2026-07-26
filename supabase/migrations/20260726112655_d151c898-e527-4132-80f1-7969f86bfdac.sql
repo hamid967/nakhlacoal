@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.trg_send_shipment_notification() FROM PUBLIC, anon, authenticated;
