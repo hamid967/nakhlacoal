@@ -684,9 +684,12 @@ export type Database = {
           auto_invoice_receipt: boolean
           auto_order_confirmation: boolean
           auto_shipment_notification: boolean
+          auto_zatca_failure_alert: boolean
           id: boolean
+          slack_webhook_url: string | null
           updated_at: string
           updated_by: string | null
+          zatca_alert_threshold: number
         }
         Insert: {
           admin_notify_email?: string | null
@@ -695,9 +698,12 @@ export type Database = {
           auto_invoice_receipt?: boolean
           auto_order_confirmation?: boolean
           auto_shipment_notification?: boolean
+          auto_zatca_failure_alert?: boolean
           id?: boolean
+          slack_webhook_url?: string | null
           updated_at?: string
           updated_by?: string | null
+          zatca_alert_threshold?: number
         }
         Update: {
           admin_notify_email?: string | null
@@ -706,9 +712,12 @@ export type Database = {
           auto_invoice_receipt?: boolean
           auto_order_confirmation?: boolean
           auto_shipment_notification?: boolean
+          auto_zatca_failure_alert?: boolean
           id?: boolean
+          slack_webhook_url?: string | null
           updated_at?: string
           updated_by?: string | null
+          zatca_alert_threshold?: number
         }
         Relationships: []
       }
@@ -2366,6 +2375,8 @@ export type Database = {
       }
       zatca_invoices: {
         Row: {
+          alert_count: number
+          alerted_at: string | null
           attempts: number
           cleared_at: string | null
           created_at: string
@@ -2388,6 +2399,8 @@ export type Database = {
           zatca_response: Json | null
         }
         Insert: {
+          alert_count?: number
+          alerted_at?: string | null
           attempts?: number
           cleared_at?: string | null
           created_at?: string
@@ -2410,6 +2423,8 @@ export type Database = {
           zatca_response?: Json | null
         }
         Update: {
+          alert_count?: number
+          alerted_at?: string | null
           attempts?: number
           cleared_at?: string | null
           created_at?: string

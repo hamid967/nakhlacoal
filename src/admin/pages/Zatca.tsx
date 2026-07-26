@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -50,6 +51,8 @@ type ZatcaInvoice = {
   cleared_at: string | null;
   created_at: string;
   updated_at: string | null;
+  alerted_at?: string | null;
+  alert_count?: number | null;
 };
 
 const STATUS_COLORS: Record<string, string> = {
@@ -78,6 +81,8 @@ export default function ZatcaAdmin() {
   const [busy, setBusy] = useState<string | null>(null);
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const rowRefs = useRef<Record<string, HTMLTableRowElement | null>>({});
 
   const defaultEnv: EnvKey = scope === 'production' ? 'production' : 'sandbox';
 
@@ -112,6 +117,41 @@ export default function ZatcaAdmin() {
   }
 
   useEffect(() => { load(); }, []);
+
+  // Deep-link: ?invoice=<id>&env=<sandbox|simulation|production>
+  useEffect(() => {
+    if (loading) return;
+    const target = searchParams.get('invoice');
+    if (!target) return;
+    const zi = invoices.find((z) => z.id === target);
+    if (!zi) return;
+    const cred = creds.find((c) => c.id === zi.credential_id);
+    const desiredScope: EnvScope = cred ? scopeOf(cred.environment) : (searchParams.get('env') === 'production' ? 'production' : 'nonprod');
+    if (desiredScope !== scope) {
+      setScope(desiredScope);
+      return; // wait for re-render
+    }
+    setExpanded((prev) => {
+      const next = new Set(prev);
+      next.add(target);
+      return next;
+    });
+    // switch to invoices tab and scroll
+    requestAnimationFrame(() => {
+      const el = rowRefs.current[target];
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        el.classList.add('ring-2', 'ring-primary');
+        setTimeout(() => el.classList.remove('ring-2', 'ring-primary'), 2400);
+      }
+    });
+    // clear the query param so refresh doesn't re-trigger
+    const next = new URLSearchParams(searchParams);
+    next.delete('invoice');
+    next.delete('env');
+    setSearchParams(next, { replace: true });
+  }, [loading, invoices, creds, searchParams, scope, setSearchParams]);
+
 
   const scopedCreds = useMemo(
     () => creds.filter((c) => scopeOf(c.environment) === scope),
@@ -433,6 +473,8 @@ export default function ZatcaAdmin() {
         </TabsContent>
 
         <TabsContent value="invoices" className="space-y-3">
+          <AlertSettingsCard />
+
           <Card>
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between flex-wrap gap-2">
@@ -486,7 +528,7 @@ export default function ZatcaAdmin() {
                       const isOpen = expanded.has(z.id);
                       return (
                         <>
-                          <tr key={z.id} className="border-t hover:bg-muted/30 cursor-pointer" onClick={() => toggleExpanded(z.id)}>
+                          <tr key={z.id} ref={(el) => { rowRefs.current[z.id] = el; }} className="border-t hover:bg-muted/30 cursor-pointer transition-shadow" onClick={() => toggleExpanded(z.id)}>
                             <td className="p-2">
                               {isOpen ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronLeft className="w-3.5 h-3.5" />}
                             </td>
@@ -612,8 +654,14 @@ function InvoiceDetail({ z, onCopy }: { z: ZatcaInvoice; onCopy: (t: string) => 
             </div>
           ))}
         </div>
-        <div className="text-[11px] text-muted-foreground mt-1">
-          محاولات الإرسال: <span className="font-semibold text-foreground">{z.attempts}</span>
+        <div className="text-[11px] text-muted-foreground mt-1 flex flex-wrap gap-x-4 gap-y-1">
+          <span>محاولات الإرسال: <span className="font-semibold text-foreground">{z.attempts}</span></span>
+          {z.alerted_at && (
+            <span className="text-red-600 dark:text-red-400">
+              <AlertTriangle className="inline w-3 h-3 ml-1" />
+              أُرسل تنبيه × {z.alert_count ?? 1} · آخرها {new Date(z.alerted_at).toLocaleString('ar-SA')}
+            </span>
+          )}
         </div>
       </div>
 
@@ -698,3 +746,115 @@ function PayloadBox({
   );
 }
 
+
+// ---------- Alert settings ----------
+
+type AlertSettings = {
+  auto_zatca_failure_alert: boolean;
+  zatca_alert_threshold: number;
+  admin_notify_email: string | null;
+  slack_webhook_url: string | null;
+};
+
+function AlertSettingsCard() {
+  const [s, setS] = useState<AlertSettings | null>(null);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    supabase
+      .from('email_settings')
+      .select('auto_zatca_failure_alert, zatca_alert_threshold, admin_notify_email, slack_webhook_url')
+      .eq('id', true)
+      .maybeSingle()
+      .then(({ data }) => {
+        setS({
+          auto_zatca_failure_alert: data?.auto_zatca_failure_alert ?? true,
+          zatca_alert_threshold: data?.zatca_alert_threshold ?? 3,
+          admin_notify_email: data?.admin_notify_email ?? '',
+          slack_webhook_url: data?.slack_webhook_url ?? '',
+        });
+      });
+  }, []);
+
+  async function save() {
+    if (!s) return;
+    setSaving(true);
+    const threshold = Math.max(1, Math.min(20, Number(s.zatca_alert_threshold) || 3));
+    const { error } = await supabase
+      .from('email_settings')
+      .update({
+        auto_zatca_failure_alert: s.auto_zatca_failure_alert,
+        zatca_alert_threshold: threshold,
+        admin_notify_email: s.admin_notify_email || null,
+        slack_webhook_url: s.slack_webhook_url || null,
+      })
+      .eq('id', true);
+    setSaving(false);
+    if (error) toast.error(error.message);
+    else toast.success('تم حفظ إعدادات التنبيه');
+  }
+
+  if (!s) return null;
+
+  return (
+    <Card>
+      <CardHeader className="pb-3">
+        <CardTitle className="text-base flex items-center gap-2">
+          <AlertTriangle className="w-4 h-4 text-amber-500" /> تنبيهات فشل الفواتير
+        </CardTitle>
+        <CardDescription>
+          يُرسَل تنبيه مرة واحدة عند بلوغ عدد المحاولات الحد الأدنى، مع رابط مباشر للفاتورة في لوحة المراقبة.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="grid gap-3 md:grid-cols-4 items-end">
+          <div className="flex items-center gap-2">
+            <input
+              id="enable-alert"
+              type="checkbox"
+              checked={s.auto_zatca_failure_alert}
+              onChange={(e) => setS({ ...s, auto_zatca_failure_alert: e.target.checked })}
+              className="h-4 w-4"
+            />
+            <Label htmlFor="enable-alert" className="cursor-pointer">تفعيل التنبيهات</Label>
+          </div>
+          <div>
+            <Label className="text-xs">حد المحاولات</Label>
+            <Input
+              type="number"
+              min={1}
+              max={20}
+              value={s.zatca_alert_threshold}
+              onChange={(e) => setS({ ...s, zatca_alert_threshold: Number(e.target.value) })}
+            />
+          </div>
+          <div>
+            <Label className="text-xs">بريد المدير</Label>
+            <Input
+              type="email"
+              placeholder="nakhlacoal@gmail.com"
+              value={s.admin_notify_email ?? ''}
+              onChange={(e) => setS({ ...s, admin_notify_email: e.target.value })}
+            />
+          </div>
+          <div>
+            <Label className="text-xs">Slack Webhook (اختياري)</Label>
+            <Input
+              type="url"
+              dir="ltr"
+              placeholder="https://hooks.slack.com/services/..."
+              value={s.slack_webhook_url ?? ''}
+              onChange={(e) => setS({ ...s, slack_webhook_url: e.target.value })}
+            />
+          </div>
+        </div>
+        <div className="mt-3 flex justify-end">
+          <Button onClick={save} disabled={saving} size="sm">
+            {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin ml-1.5" /> : null}
+            حفظ
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
