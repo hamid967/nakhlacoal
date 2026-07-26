@@ -98,6 +98,10 @@ const AdminPriceTiers = lazy(() => import('@/admin/pages/wholesale/PriceTiers'))
 const AdminZatca = lazy(() => import('@/admin/pages/Zatca'));
 const AdminFulfillment = lazy(() => import('@/admin/pages/Fulfillment'));
 const AdminPayments = lazy(() => import('@/admin/pages/Payments'));
+const AdminReviews = lazy(() => import('@/admin/pages/Reviews'));
+const AdminMarketplace = lazy(() => import('@/admin/pages/Marketplace'));
+const PortalLoyalty = lazy(() => import('@/portal/pages/Loyalty'));
+const PortalReferrals = lazy(() => import('@/portal/pages/Referrals'));
 
 const PortalLayout = lazy(() => import('@/portal/PortalLayout'));
 const PortalDashboard = lazy(() => import('@/portal/pages/Dashboard'));
@@ -210,6 +214,9 @@ export default function App() {
                   <Route path="*" element={<AdminPlaceholder />} />
 
 
+                  <Route path="reviews" element={<AdminReviews />} />
+                  <Route path="marketplace" element={<AdminMarketplace />} />
+                  <Route path="*" element={<AdminPlaceholder />} />
                 </Route>
                 <Route path="/portal/login" element={<PortalLogin />} />
                 <Route path="/unsubscribe" element={<Unsubscribe />} />
