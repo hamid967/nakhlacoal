@@ -219,6 +219,39 @@ export default function AdminEmails() {
         </label>
       </div>
 
+      <div className="a-card p-4 flex items-center justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2 font-semibold" style={{ color: 'var(--a-text)' }}>
+            <BellRing className="w-4 h-4" style={{ color: 'var(--a-palm)' }} />
+            إشعار الشحن التلقائي (مع رقم التتبع)
+          </div>
+          <p className="text-xs mt-1" style={{ color: 'var(--a-text-muted)' }}>
+            يُرسَل للعميل تلقائيًا عند إضافة رقم تتبّع أو تغيّر حالة الشحنة (شُحنت / قيد النقل / خرج للتوصيل / تم التسليم).
+          </p>
+        </div>
+        <label className="inline-flex items-center gap-2 cursor-pointer">
+          <span className="text-sm" style={{ color: 'var(--a-text-muted)' }}>
+            {autoShip ? 'مُفعّل' : 'معطّل'}
+          </span>
+          <input
+            type="checkbox"
+            className="sr-only peer"
+            checked={autoShip}
+            disabled={savingToggle}
+            onChange={(e) => toggleAutoShip(e.target.checked)}
+          />
+          <span
+            className="relative w-11 h-6 rounded-full transition-colors"
+            style={{ background: autoShip ? 'var(--a-palm)' : '#cbd5e1' }}
+          >
+            <span
+              className="absolute top-0.5 w-5 h-5 rounded-full bg-white shadow transition-all"
+              style={{ [autoShip ? 'right' : 'left']: '2px' } as any}
+            />
+          </span>
+        </label>
+      </div>
+
 
       {/* Filters */}
       <div className="a-card p-4 flex flex-wrap items-center gap-3">
