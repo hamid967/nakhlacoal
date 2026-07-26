@@ -75,6 +75,8 @@ const AdminChatAnalytics = lazy(() => import('@/admin/pages/ChatAnalytics'));
 const AdminCoupons = lazy(() => import('@/admin/pages/Coupons'));
 const AdminAuditLog = lazy(() => import('@/admin/pages/AuditLog'));
 const AdminQuotes = lazy(() => import('@/admin/pages/Quotes'));
+const AdminEmails = lazy(() => import('@/admin/pages/Emails'));
+
 const PortalQuotes = lazy(() => import('@/portal/pages/Quotes'));
 
 const PortalLayout = lazy(() => import('@/portal/PortalLayout'));
@@ -175,7 +177,10 @@ export default function App() {
                   <Route path="marketing" element={<AdminCoupons />} />
                   <Route path="logs" element={<AdminAuditLog />} />
                   <Route path="quotes" element={<AdminQuotes />} />
+
+                  <Route path="emails" element={<AdminEmails />} />
                   <Route path="*" element={<AdminPlaceholder />} />
+
                 </Route>
                 <Route path="/portal/login" element={<PortalLogin />} />
                 <Route path="/portal" element={<ProtectedRoute requireAnyRole={['customer','user','wholesale','distributor']}><PortalLayout /></ProtectedRoute>}>

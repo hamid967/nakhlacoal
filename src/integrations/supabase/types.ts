@@ -319,6 +319,51 @@ export type Database = {
         }
         Relationships: []
       }
+      email_log: {
+        Row: {
+          created_at: string
+          entity_id: string | null
+          entity_type: string | null
+          error_message: string | null
+          id: string
+          metadata: Json | null
+          provider_id: string | null
+          recipient: string
+          status: string
+          subject: string | null
+          template: string
+          triggered_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string | null
+          error_message?: string | null
+          id?: string
+          metadata?: Json | null
+          provider_id?: string | null
+          recipient: string
+          status?: string
+          subject?: string | null
+          template: string
+          triggered_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string | null
+          error_message?: string | null
+          id?: string
+          metadata?: Json | null
+          provider_id?: string | null
+          recipient?: string
+          status?: string
+          subject?: string | null
+          template?: string
+          triggered_by?: string | null
+        }
+        Relationships: []
+      }
       inventory_items: {
         Row: {
           active: boolean
@@ -757,6 +802,7 @@ export type Database = {
           product: string
           quantity: number
           quoted_price_sar: number | null
+          reminder_sent_at: string | null
           status: string
           unit: string
           updated_at: string
@@ -777,6 +823,7 @@ export type Database = {
           product: string
           quantity: number
           quoted_price_sar?: number | null
+          reminder_sent_at?: string | null
           status?: string
           unit?: string
           updated_at?: string
@@ -797,6 +844,7 @@ export type Database = {
           product?: string
           quantity?: number
           quoted_price_sar?: number | null
+          reminder_sent_at?: string | null
           status?: string
           unit?: string
           updated_at?: string

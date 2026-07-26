@@ -1,7 +1,6 @@
 import { buildCors } from '../_shared/cors.ts';
 import { createClient } from 'npm:@supabase/supabase-js@2';
-
-const GATEWAY_URL = 'https://connector-gateway.lovable.dev/resend';
+import { sendEmail, brandedShell, esc } from '../_shared/email-sender.ts';
 
 const STATUS_AR: Record<string, { title: string; body: (price: number | null) => string }> = {
   new: {
@@ -14,10 +13,9 @@ const STATUS_AR: Record<string, { title: string; body: (price: number | null) =>
   },
   priced: {
     title: 'تم إعداد عرض السعر',
-    body: (p) =>
-      p
-        ? `يسرّنا تقديم عرض السعر التالي: <b>${Number(p).toFixed(2)} ر.س</b> للوحدة (شامل ضريبة القيمة المضافة عند التطبيق). العرض ساري لمدة 7 أيام.`
-        : 'تم إعداد عرض السعر الخاص بك، يرجى مراجعته عبر حسابك في بوابة العملاء.',
+    body: (p) => p
+      ? `يسرّنا تقديم عرض السعر التالي: <b>${Number(p).toFixed(2)} ر.س</b> للوحدة (شامل ضريبة القيمة المضافة عند التطبيق). العرض ساري لمدة 7 أيام.`
+      : 'تم إعداد عرض السعر الخاص بك، يرجى مراجعته عبر حسابك في بوابة العملاء.',
   },
   accepted: {
     title: 'تم قبول عرض السعر',
@@ -32,46 +30,7 @@ const STATUS_AR: Record<string, { title: string; body: (price: number | null) =>
     body: () => 'ممتاز! تم إنشاء طلب رسمي بناءً على العرض المتفق عليه. ستصلك تحديثات حالة الطلب تباعاً.',
   },
 };
-
 const ALLOWED = Object.keys(STATUS_AR);
-
-function esc(v: string): string {
-  return String(v ?? '')
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-}
-
-function tpl(q: any, status: string) {
-  const s = STATUS_AR[status];
-  const price = q.quoted_price_sar ? Number(q.quoted_price_sar) : null;
-  const name = esc(q.full_name || q.company_name || '');
-  const qid = esc(String(q.id).slice(0, 8).toUpperCase());
-  const details = `${esc(q.product)} · ${esc(String(q.quantity))} ${esc(q.unit)}` +
-    (q.destination ? ` · ${esc(q.destination)}` : '');
-  return `<!doctype html><html dir="rtl" lang="ar"><body style="margin:0;background:#f6f5ef;font-family:'Segoe UI',Tahoma,Arial,sans-serif;color:#1a1a1a">
-    <table width="100%" cellpadding="0" cellspacing="0" style="background:#f6f5ef;padding:32px 0"><tr><td align="center">
-      <table width="560" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:16px;overflow:hidden;border:1px solid #e8e4d6">
-        <tr><td style="background:linear-gradient(135deg,#1A4A00,#0e2e00);padding:28px;text-align:center;color:#f4e4b2">
-          <div style="font-size:13px;letter-spacing:6px;opacity:.7">PALM CHARCOAL</div>
-          <div style="font-size:22px;font-weight:700;margin-top:6px">فحم النخلة</div>
-        </td></tr>
-        <tr><td style="padding:32px">
-          <h1 style="margin:0 0 12px;font-size:22px;color:#1A4A00">${s.title}</h1>
-          <p style="margin:0 0 16px;line-height:1.8;color:#333">عميلنا العزيز ${name},</p>
-          <p style="margin:0 0 20px;line-height:1.8;color:#333">${s.body(price)}</p>
-          <div style="background:#f6f5ef;border-radius:12px;padding:16px;margin:20px 0">
-            <div style="font-size:12px;color:#8a8674;letter-spacing:2px;margin-bottom:6px">QUOTE</div>
-            <div style="font-size:16px;font-weight:600">#${qid}</div>
-            <div style="margin-top:10px;color:#555;font-size:14px">${details}</div>
-          </div>
-          <p style="font-size:13px;color:#888;margin:24px 0 0">للاستفسارات: واتساب 0540060095 · mab355@gmail.com</p>
-        </td></tr>
-        <tr><td style="background:#0e2e00;color:#bfae74;padding:16px;text-align:center;font-size:11px;letter-spacing:3px">
-          © ${new Date().getFullYear()} PALM CHARCOAL · JEDDAH, KSA
-        </td></tr>
-      </table>
-    </td></tr></table></body></html>`;
-}
 
 Deno.serve(async (req) => {
   const corsHeaders = buildCors(req);
@@ -95,10 +54,8 @@ Deno.serve(async (req) => {
     }
 
     const admin = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
-    const { data: isAdmin, error: roleErr } = await admin.rpc('has_role', {
-      _user_id: claims.claims.sub,
-      _role: 'admin',
-    });
+    const userId = claims.claims.sub as string;
+    const { data: isAdmin, error: roleErr } = await admin.rpc('has_role', { _user_id: userId, _role: 'admin' });
     if (roleErr || !isAdmin) {
       return new Response(JSON.stringify({ error: 'Forbidden' }), { status: 403, headers: jhdr });
     }
@@ -116,36 +73,37 @@ Deno.serve(async (req) => {
       return new Response(JSON.stringify({ skipped: true, reason: 'no email' }), { headers: jhdr });
     }
 
-    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
-    const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY');
-    if (!LOVABLE_API_KEY || !RESEND_API_KEY) {
-      return new Response(JSON.stringify({ error: 'Email service not configured' }), { status: 500, headers: jhdr });
-    }
+    const s = STATUS_AR[status];
+    const price = q.quoted_price_sar ? Number(q.quoted_price_sar) : null;
+    const qid = String(q.id).slice(0, 8).toUpperCase();
+    const details = `${esc(q.product)} · ${esc(q.quantity)} ${esc(q.unit)}` + (q.destination ? ` · ${esc(q.destination)}` : '');
 
-    const subject = `${STATUS_AR[status].title} — #${String(q.id).slice(0, 8).toUpperCase()}`;
-    const html = tpl(q, status);
-
-    const r = await fetch(`${GATEWAY_URL}/emails`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-        'X-Connection-Api-Key': RESEND_API_KEY,
-      },
-      body: JSON.stringify({
-        from: 'فحم النخلة | Palm Charcoal <quotes@notify.alnakhlacoal.com>',
-        reply_to: 'mab355@gmail.com',
-        to: [q.email],
-        subject,
-        html,
-      }),
+    const html = brandedShell({
+      title: s.title,
+      bodyHtml: `<p style="margin:0 0 16px;line-height:1.8;color:#333">عميلنا العزيز ${esc(q.full_name || q.company_name || '')},</p>
+        <p style="margin:0 0 20px;line-height:1.8;color:#333">${s.body(price)}</p>`,
+      cardLabel: 'QUOTE',
+      cardValue: `#${qid}`,
+      cardExtra: details,
     });
-    const body = await r.json().catch(() => ({}));
-    if (!r.ok) {
-      console.error('resend error', r.status, body);
-      return new Response(JSON.stringify({ error: 'send failed', details: body }), { status: 502, headers: jhdr });
+
+    const result = await sendEmail({
+      template: `quote-${status}`,
+      to: q.email,
+      subject: `${s.title} — #${qid}`,
+      html,
+      from: 'فحم النخلة | Palm Charcoal <quotes@notify.alnakhlacoal.com>',
+      entityType: 'quote_request',
+      entityId: q.id,
+      triggeredBy: userId,
+      metadata: { status },
+      admin,
+    });
+
+    if (!result.ok) {
+      return new Response(JSON.stringify({ error: result.error, details: result.details }), { status: 502, headers: jhdr });
     }
-    return new Response(JSON.stringify({ ok: true, id: body?.id }), { headers: jhdr });
+    return new Response(JSON.stringify({ ok: true, id: result.id }), { headers: jhdr });
   } catch (e) {
     console.error('[send-quote-status-email] error:', e);
     return new Response(JSON.stringify({ error: 'Internal server error' }), { status: 500, headers: jhdr });
