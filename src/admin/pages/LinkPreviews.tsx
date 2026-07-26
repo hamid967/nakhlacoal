@@ -75,19 +75,57 @@ export default function AdminLinkPreviews() {
 
   const [rows, setRows] = useState<CheckRow[]>([]);
   const [loadingLog, setLoadingLog] = useState(true);
+  const [batches, setBatches] = useState<BatchSummary[]>([]);
+  const [runningBatch, setRunningBatch] = useState(false);
 
   const loadLog = async () => {
     setLoadingLog(true);
     const { data, error } = await supabase
       .from('link_preview_checks')
-      .select('id,url,tool,status,http_status,og_title,og_description,og_image,twitter_card,twitter_image,canonical,warnings,note,created_at')
+      .select('id,url,tool,status,http_status,og_title,og_description,og_image,twitter_card,twitter_image,canonical,warnings,note,source,batch_id,created_at')
       .order('created_at', { ascending: false })
-      .limit(50);
+      .limit(200);
     if (error) toast.error('تعذّر تحميل سجل الفحوصات');
-    setRows((data ?? []) as any);
+    const list = (data ?? []) as CheckRow[];
+    setRows(list);
+
+    // Aggregate scheduled batches client-side (last 12 batches).
+    const map = new Map<string, BatchSummary>();
+    for (const r of list) {
+      if (!r.batch_id || r.source !== 'scheduled') continue;
+      const b = map.get(r.batch_id) ?? {
+        batch_id: r.batch_id, started_at: r.created_at, total: 0, ok: 0, warn: 0, error: 0,
+      };
+      b.total += 1;
+      if (r.status === 'ok') b.ok += 1;
+      else if (r.status === 'warn') b.warn += 1;
+      else b.error += 1;
+      // Keep the earliest timestamp within the batch as "started_at".
+      if (new Date(r.created_at) < new Date(b.started_at)) b.started_at = r.created_at;
+      map.set(r.batch_id, b);
+    }
+    setBatches([...map.values()].sort((a, b) => b.started_at.localeCompare(a.started_at)).slice(0, 12));
+
     setLoadingLog(false);
   };
   useEffect(() => { loadLog(); }, []);
+
+  const runScheduledNow = async () => {
+    setRunningBatch(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('scheduled-link-preview-audit', {
+        body: { source: 'scheduled' },
+      });
+      if (error) throw error;
+      const s = (data as any)?.summary ?? {};
+      toast.success(`تم الفحص الدوري — ${(data as any)?.totalUrls ?? 0} صفحة (سليم ${s.ok ?? 0} / تحذير ${s.warn ?? 0} / خطأ ${s.error ?? 0})`);
+      loadLog();
+    } catch (err: any) {
+      toast.error(err?.message ?? 'تعذّر تشغيل الفحص الدوري');
+    } finally {
+      setRunningBatch(false);
+    }
+  };
 
   const runCheck = async () => {
     if (!/^https?:\/\//i.test(url)) {
