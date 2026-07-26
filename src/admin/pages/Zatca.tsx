@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -6,13 +6,15 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
-import { Loader2, ShieldCheck, KeyRound, Send, RefreshCw } from 'lucide-react';
+import { Loader2, ShieldCheck, KeyRound, Send, RefreshCw, FlaskConical, Rocket, AlertTriangle } from 'lucide-react';
+
+type EnvKey = 'sandbox' | 'simulation' | 'production';
+type EnvScope = 'nonprod' | 'production';
 
 type Credential = {
   id: string;
-  environment: 'sandbox' | 'simulation' | 'production';
+  environment: EnvKey;
   org_name: string;
   org_vat: string;
   org_cr: string | null;
@@ -30,6 +32,7 @@ type Credential = {
 type ZatcaInvoice = {
   id: string;
   invoice_id: string;
+  credential_id: string;
   uuid: string;
   icv: number;
   hash: string;
@@ -52,28 +55,48 @@ const STATUS_COLORS: Record<string, string> = {
   rejected: 'bg-red-600',
 };
 
+const SCOPE_KEY = 'zatca:env-scope';
+
+function scopeOf(env: EnvKey): EnvScope {
+  return env === 'production' ? 'production' : 'nonprod';
+}
+
 export default function ZatcaAdmin() {
+  const [scope, setScope] = useState<EnvScope>(() => {
+    const s = typeof window !== 'undefined' ? localStorage.getItem(SCOPE_KEY) : null;
+    return s === 'production' ? 'production' : 'nonprod';
+  });
   const [creds, setCreds] = useState<Credential[]>([]);
   const [invoices, setInvoices] = useState<ZatcaInvoice[]>([]);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState<string | null>(null);
 
-  // New credential form
+  const defaultEnv: EnvKey = scope === 'production' ? 'production' : 'sandbox';
+
   const [form, setForm] = useState({
-    environment: 'sandbox' as Credential['environment'],
     org_name: 'شركة فحم النخلة',
     org_vat: '',
     org_cr: '',
     device_serial: 'DEVICE-001',
     common_name: 'PalmCharcoal-POS-01',
+    environment: defaultEnv as EnvKey,
   });
   const [otp, setOtp] = useState('');
+
+  // keep form environment in sync with active scope
+  useEffect(() => {
+    setForm((f) => ({
+      ...f,
+      environment: scope === 'production' ? 'production' : (f.environment === 'production' ? 'sandbox' : f.environment),
+    }));
+    localStorage.setItem(SCOPE_KEY, scope);
+  }, [scope]);
 
   async function load() {
     setLoading(true);
     const [{ data: c }, { data: i }] = await Promise.all([
       supabase.from('zatca_credentials').select('*').order('created_at', { ascending: false }),
-      supabase.from('zatca_invoices').select('*').order('created_at', { ascending: false }).limit(100),
+      supabase.from('zatca_invoices').select('*').order('created_at', { ascending: false }).limit(200),
     ]);
     setCreds((c ?? []) as Credential[]);
     setInvoices((i ?? []) as ZatcaInvoice[]);
@@ -82,9 +105,33 @@ export default function ZatcaAdmin() {
 
   useEffect(() => { load(); }, []);
 
+  const scopedCreds = useMemo(
+    () => creds.filter((c) => scopeOf(c.environment) === scope),
+    [creds, scope],
+  );
+  const scopedCredIds = useMemo(() => new Set(scopedCreds.map((c) => c.id)), [scopedCreds]);
+  const scopedInvoices = useMemo(
+    () => invoices.filter((z) => scopedCredIds.has(z.credential_id)),
+    [invoices, scopedCredIds],
+  );
+
+  const counts = useMemo(() => {
+    const c = { nonprod: 0, production: 0 };
+    for (const cr of creds) c[scopeOf(cr.environment)]++;
+    return c;
+  }, [creds]);
+
   async function createCredential() {
     if (!form.org_vat || form.org_vat.length !== 15) {
       toast.error('الرقم الضريبي يجب أن يكون 15 رقمًا');
+      return;
+    }
+    if (scope === 'production' && form.environment !== 'production') {
+      toast.error('في وضع Production يجب أن تكون بيئة الجهاز production');
+      return;
+    }
+    if (scope === 'nonprod' && form.environment === 'production') {
+      toast.error('في وضع Sandbox لا يمكن إنشاء جهاز production');
       return;
     }
     setBusy('create');
@@ -139,9 +186,11 @@ export default function ZatcaAdmin() {
     load();
   }
 
+  const isProd = scope === 'production';
+
   return (
     <div className="p-6 space-y-6" dir="rtl">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <ShieldCheck className="w-6 h-6 text-emerald-600" />
@@ -157,30 +206,101 @@ export default function ZatcaAdmin() {
         </Button>
       </div>
 
+      {/* Environment switcher */}
+      <Card className={isProd ? 'border-red-500/60 bg-red-50/40 dark:bg-red-950/20' : 'border-amber-500/60 bg-amber-50/40 dark:bg-amber-950/20'}>
+        <CardContent className="p-4 flex items-center justify-between flex-wrap gap-4">
+          <div className="flex items-center gap-3">
+            {isProd ? (
+              <Rocket className="w-5 h-5 text-red-600" />
+            ) : (
+              <FlaskConical className="w-5 h-5 text-amber-600" />
+            )}
+            <div>
+              <div className="font-semibold text-sm">
+                البيئة النشطة: {isProd ? 'Production (إنتاج فعلي)' : 'Sandbox / Simulation (اختبار)'}
+              </div>
+              <div className="text-xs text-muted-foreground">
+                الاعتماديات والفواتير معزولة لكل بيئة. عدد الأجهزة — Sandbox: {counts.nonprod} · Production: {counts.production}
+              </div>
+            </div>
+          </div>
+          <div className="inline-flex rounded-md border bg-background p-1">
+            <button
+              type="button"
+              onClick={() => setScope('nonprod')}
+              className={`px-3 py-1.5 text-sm rounded-sm flex items-center gap-1.5 transition ${
+                !isProd ? 'bg-amber-500 text-white' : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              <FlaskConical className="w-3.5 h-3.5" /> Sandbox
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                if (!isProd && !confirm('هل أنت متأكد من التبديل إلى Production؟ سيتم إرسال الفواتير فعليًا إلى هيئة الزكاة.')) return;
+                setScope('production');
+              }}
+              className={`px-3 py-1.5 text-sm rounded-sm flex items-center gap-1.5 transition ${
+                isProd ? 'bg-red-600 text-white' : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              <Rocket className="w-3.5 h-3.5" /> Production
+            </button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {isProd && (
+        <div className="flex items-start gap-2 rounded-md border border-red-500/50 bg-red-50 dark:bg-red-950/30 p-3 text-xs text-red-700 dark:text-red-300">
+          <AlertTriangle className="w-4 h-4 mt-0.5 shrink-0" />
+          <div>
+            وضع Production نشط. أي جهاز أو فاتورة يُنشأ هنا سيتصل بواجهات ZATCA الرسمية ويُصدر شهادات إنتاج فعلية.
+          </div>
+        </div>
+      )}
+
       <Tabs defaultValue="onboarding">
         <TabsList>
-          <TabsTrigger value="onboarding">الأونبوردنغ والأجهزة</TabsTrigger>
-          <TabsTrigger value="invoices">مراقبة الفواتير</TabsTrigger>
+          <TabsTrigger value="onboarding">
+            الأونبوردنغ والأجهزة ({scopedCreds.length})
+          </TabsTrigger>
+          <TabsTrigger value="invoices">
+            مراقبة الفواتير ({scopedInvoices.length})
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="onboarding" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">إضافة جهاز جديد</CardTitle>
-              <CardDescription>سجّل جهازًا (نقطة بيع/خادم) قبل توليد CSR وطلب الشهادة.</CardDescription>
+              <CardTitle className="text-base">
+                إضافة جهاز جديد — {isProd ? 'Production' : 'Sandbox/Simulation'}
+              </CardTitle>
+              <CardDescription>
+                {isProd
+                  ? 'سيتم تسجيل الجهاز مع بيئة Production الرسمية.'
+                  : 'اختر Sandbox للتطوير أو Simulation لاختبار سيناريو ما قبل الإنتاج.'}
+              </CardDescription>
             </CardHeader>
             <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              <div>
-                <Label>البيئة</Label>
-                <Select value={form.environment} onValueChange={(v: any) => setForm({ ...form, environment: v })}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="sandbox">Sandbox (تطوير)</SelectItem>
-                    <SelectItem value="simulation">Simulation (محاكاة)</SelectItem>
-                    <SelectItem value="production">Production (إنتاج)</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+              {!isProd && (
+                <div>
+                  <Label>نوع البيئة الاختبارية</Label>
+                  <div className="inline-flex rounded-md border bg-background p-1 mt-1">
+                    {(['sandbox', 'simulation'] as const).map((v) => (
+                      <button
+                        key={v}
+                        type="button"
+                        onClick={() => setForm({ ...form, environment: v })}
+                        className={`px-3 py-1.5 text-xs rounded-sm transition ${
+                          form.environment === v ? 'bg-amber-500 text-white' : 'text-muted-foreground hover:text-foreground'
+                        }`}
+                      >
+                        {v === 'sandbox' ? 'Sandbox' : 'Simulation'}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
               <div>
                 <Label>اسم المنشأة</Label>
                 <Input value={form.org_name} onChange={(e) => setForm({ ...form, org_name: e.target.value })} />
@@ -191,7 +311,7 @@ export default function ZatcaAdmin() {
               </div>
               <div>
                 <Label>السجل التجاري</Label>
-                <Input value={form.org_cr} onChange={(e) => setForm({ ...form, org_cr: e.target.value })} />
+                <Input value={form.org_cr ?? ''} onChange={(e) => setForm({ ...form, org_cr: e.target.value })} />
               </div>
               <div>
                 <Label>الرقم التسلسلي للجهاز</Label>
@@ -202,26 +322,37 @@ export default function ZatcaAdmin() {
                 <Input value={form.common_name} onChange={(e) => setForm({ ...form, common_name: e.target.value })} />
               </div>
               <div className="md:col-span-3">
-                <Button onClick={createCredential} disabled={busy === 'create'}>
+                <Button
+                  onClick={createCredential}
+                  disabled={busy === 'create'}
+                  className={isProd ? 'bg-red-600 hover:bg-red-700' : ''}
+                >
                   {busy === 'create' ? <Loader2 className="w-4 h-4 ml-2 animate-spin" /> : <KeyRound className="w-4 h-4 ml-2" />}
-                  إنشاء جهاز
+                  إنشاء جهاز {isProd ? 'Production' : 'اختباري'}
                 </Button>
               </div>
             </CardContent>
           </Card>
 
           <div className="grid gap-4">
-            {creds.length === 0 && (
-              <p className="text-sm text-muted-foreground text-center py-6">لا توجد أجهزة مسجّلة بعد.</p>
+            {scopedCreds.length === 0 && (
+              <p className="text-sm text-muted-foreground text-center py-6">
+                لا توجد أجهزة مسجّلة في بيئة {isProd ? 'Production' : 'Sandbox/Simulation'} بعد.
+              </p>
             )}
-            {creds.map((c) => (
+            {scopedCreds.map((c) => (
               <Card key={c.id}>
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between">
                     <div>
-                      <CardTitle className="text-base">{c.org_name}</CardTitle>
+                      <CardTitle className="text-base flex items-center gap-2">
+                        {c.org_name}
+                        <Badge variant="outline" className={c.environment === 'production' ? 'text-red-600 border-red-600' : 'text-amber-600 border-amber-600'}>
+                          {c.environment}
+                        </Badge>
+                      </CardTitle>
                       <CardDescription className="mt-1">
-                        {c.device_serial} · VAT {c.org_vat} · بيئة {c.environment}
+                        {c.device_serial} · VAT {c.org_vat}
                       </CardDescription>
                     </div>
                     <div className="flex flex-col items-end gap-1">
@@ -274,7 +405,9 @@ export default function ZatcaAdmin() {
         <TabsContent value="invoices" className="space-y-3">
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-base">آخر 100 فاتورة</CardTitle>
+              <CardTitle className="text-base">
+                فواتير بيئة {isProd ? 'Production' : 'Sandbox/Simulation'}
+              </CardTitle>
               <CardDescription>سجل الإرسال إلى Clearance/Reporting مع سلسلة ICV/PIH.</CardDescription>
             </CardHeader>
             <CardContent>
@@ -293,10 +426,10 @@ export default function ZatcaAdmin() {
                     </tr>
                   </thead>
                   <tbody>
-                    {invoices.length === 0 && (
-                      <tr><td colSpan={8} className="text-center py-8 text-muted-foreground">لا توجد فواتير بعد</td></tr>
+                    {scopedInvoices.length === 0 && (
+                      <tr><td colSpan={8} className="text-center py-8 text-muted-foreground">لا توجد فواتير في هذه البيئة بعد</td></tr>
                     )}
-                    {invoices.map((z) => (
+                    {scopedInvoices.map((z) => (
                       <tr key={z.id} className="border-t">
                         <td className="p-2 font-mono">{z.icv}</td>
                         <td className="p-2">{z.invoice_type === 'simplified' ? 'مبسّطة' : 'قياسية'}</td>
