@@ -24,5 +24,3 @@ export { QualityLabSection } from './QualityLabSection';
 export { LifestyleGridSection } from './LifestyleGridSection';
 export { TextureFeatureSection } from './TextureFeatureSection';
 export { FeatureCtaSection } from './FeatureCtaSection';
-
-export { BrokenGridHome } from './BrokenGridHome';
