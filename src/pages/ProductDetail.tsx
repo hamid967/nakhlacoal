@@ -295,23 +295,67 @@ export default function ProductDetail() {
 
               {/* CTAs */}
               <div className="mt-10 flex flex-col sm:flex-row gap-3">
+                <button
+                  type="button"
+                  disabled={!variant || variant.stock <= 0 || adding}
+                  onClick={async () => {
+                    if (!variant) return;
+                    setAdding(true);
+                    try {
+                      const res = await addToCart({
+                        variantId: variant.id,
+                        unitPrice: Number(variant.price),
+                        qty: 1,
+                      });
+                      window.dispatchEvent(new CustomEvent('cart:updated', { detail: { qty: res.qty } }));
+                      setAdded(true);
+                      toast.success(
+                        isAr ? `تمت الإضافة إلى السلة (${res.qty})` : `Added to cart (${res.qty})`,
+                      );
+                      setTimeout(() => setAdded(false), 1600);
+                    } catch (e) {
+                      const msg = e instanceof Error ? e.message : String(e);
+                      toast.error(isAr ? `تعذّرت الإضافة: ${msg}` : `Failed to add: ${msg}`);
+                    } finally {
+                      setAdding(false);
+                    }
+                  }}
+                  aria-live="polite"
+                  className="inline-flex items-center justify-center gap-2 h-12 px-6 bg-gradient-to-br from-gold-hi to-gold-lo text-dark font-semibold text-sm uppercase tracking-[0.18em] hover:-translate-y-0.5 hover:shadow-glow-gold transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-none"
+                >
+                  {adding ? (
+                    <Loader2 className="w-4 h-4 animate-spin" aria-hidden />
+                  ) : added ? (
+                    <Check className="w-4 h-4" aria-hidden />
+                  ) : (
+                    <ShoppingBag className="w-4 h-4" aria-hidden />
+                  )}
+                  {adding
+                    ? isAr ? 'جارِ الإضافة…' : 'Adding…'
+                    : added
+                      ? isAr ? 'تمت الإضافة' : 'Added'
+                      : variant && variant.stock <= 0
+                        ? isAr ? 'غير متوفر' : 'Out of stock'
+                        : isAr ? 'أضف إلى السلة' : 'Add to cart'}
+                </button>
                 <a
                   href={waLink(waMsg)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 h-12 px-6 bg-gradient-to-br from-gold-hi to-gold-lo text-dark font-semibold text-sm uppercase tracking-[0.18em] hover:-translate-y-0.5 hover:shadow-glow-gold transition-all"
+                  className="inline-flex items-center justify-center gap-2 h-12 px-6 border border-gold/60 text-gold-hi hover:bg-gold/10 text-sm uppercase tracking-[0.18em] transition-all"
                 >
                   <MessageCircle className="w-4 h-4" aria-hidden />
-                  {isAr ? 'اطلب عبر واتساب' : 'Order via WhatsApp'}
+                  {isAr ? 'واتساب' : 'WhatsApp'}
                 </a>
                 <Link
                   to={`/quote?product=${product.slug}${variant ? `&variant=${variant.sku}` : ''}`}
-                  className="inline-flex items-center justify-center gap-2 h-12 px-6 border border-gold/60 text-gold-hi hover:bg-gold/10 text-sm uppercase tracking-[0.18em] transition-all"
+                  className="inline-flex items-center justify-center gap-2 h-12 px-6 border border-border text-foreground hover:border-gold hover:text-gold-hi text-sm uppercase tracking-[0.18em] transition-all"
                 >
-                  {isAr ? 'طلب عرض سعر' : 'Request quote'}
+                  {isAr ? 'عرض سعر' : 'Quote'}
                   <Arrow className="w-4 h-4" aria-hidden />
                 </Link>
               </div>
+
 
               <p className="mt-4 text-[11px] text-muted-foreground">
                 {isAr ? 'أو تواصل هاتفياً:' : 'Or call directly:'}{' '}
