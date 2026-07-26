@@ -57,6 +57,7 @@ const OrderTracking = lazy(() => import('@/pages/OrderTracking'));
 const Catalog = lazy(() => import('@/pages/Catalog'));
 const CampaignLanding = lazy(() => import('@/pages/CampaignLanding'));
 const Checkout = lazy(() => import('@/pages/Checkout'));
+const Unsubscribe = lazy(() => import('@/pages/Unsubscribe'));
 
 const AdminLayout = lazy(() => import('@/admin/AdminLayout'));
 const AdminDashboard = lazy(() => import('@/admin/pages/Dashboard'));
