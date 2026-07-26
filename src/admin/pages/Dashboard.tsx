@@ -7,7 +7,7 @@ import {
 } from 'recharts';
 import {
   ShoppingBag, DollarSign, Clock, Building2, Globe2, Users, Package, Warehouse,
-  Plus, FileText, UserPlus, Download, ArrowUpRight, Activity,
+  Plus, FileText, UserPlus, Download, ArrowUpRight, Activity, Calendar, Award,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -26,18 +26,24 @@ export default function AdminDashboard() {
   const [orders, setOrders] = useState<any[]>([]);
   const [inv, setInv] = useState<any[]>([]);
   const [customers, setCustomers] = useState(0);
+  const [quotes, setQuotes] = useState<any[]>([]);
+  const [trademarks, setTrademarks] = useState<any[]>([]);
   const [period, setPeriod] = useState<Period>('day');
 
   useEffect(() => {
     (async () => {
-      const [o, i, c] = await Promise.all([
+      const [o, i, c, q, t] = await Promise.all([
         supabase.from('orders').select('*').order('created_at', { ascending: false }).limit(2000),
         supabase.from('inventory_items').select('*'),
         supabase.from('profiles').select('id', { count: 'exact', head: true }),
+        supabase.from('quote_requests').select('id,status,quoted_price_sar,created_at').order('created_at', { ascending: false }).limit(500),
+        supabase.from('trademarks').select('id,name_ar,registration_no,expires_hijri,is_active').eq('is_active', true),
       ]);
       setOrders(o.data || []);
       setInv(i.data || []);
       setCustomers(c.count || 0);
+      setQuotes(q.data || []);
+      setTrademarks(t.data || []);
     })();
   }, []);
 
@@ -201,6 +207,9 @@ export default function AdminDashboard() {
         })}
       </section>
 
+      {/* This-month band + Quotes + Trademark renewals */}
+      <MonthBand orders={orders} quotes={quotes} trademarks={trademarks} priceOf={priceOf} />
+
       {/* Summary cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {cards.map((c, i) => (
@@ -348,3 +357,129 @@ export default function AdminDashboard() {
     </div>
   );
 }
+
+function MonthBand({
+  orders, quotes, trademarks, priceOf,
+}: { orders: any[]; quotes: any[]; trademarks: any[]; priceOf: (o: any) => number }) {
+  const now = new Date();
+  const monthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+  const monthOrders = orders.filter((o) => (o.created_at || '').startsWith(monthKey));
+  const monthRevenue = monthOrders.reduce((s, o) => s + priceOf(o), 0);
+  const monthQuotes = quotes.filter((q) => (q.created_at || '').startsWith(monthKey));
+  const pendingQuotes = quotes.filter((q) => ['new', 'under_review'].includes(q.status));
+  const pricedQuotes = quotes.filter((q) => q.status === 'priced');
+  const convertedQuotes = quotes.filter((q) => q.status === 'converted_to_order').length;
+  const acceptanceRate = quotes.length
+    ? Math.round((convertedQuotes / quotes.length) * 100)
+    : 0;
+
+  // Trademark renewals: extract 4-digit year from expires_hijri, flag those expiring within next 12 hijri months
+  const currentHY = 1447; // approximate current hijri year (2026)
+  const renewals = trademarks
+    .map((t) => {
+      const m = String(t.expires_hijri || '').match(/(\d{4})/);
+      const y = m ? Number(m[1]) : null;
+      return { ...t, expiryYear: y, yearsLeft: y ? y - currentHY : null };
+    })
+    .filter((t) => t.yearsLeft !== null && t.yearsLeft <= 1)
+    .sort((a, b) => (a.yearsLeft ?? 99) - (b.yearsLeft ?? 99))
+    .slice(0, 6);
+
+  const monthLabel = now.toLocaleDateString('ar-SA', { month: 'long', year: 'numeric' });
+
+  return (
+    <section className="grid lg:grid-cols-3 gap-5">
+      {/* This month */}
+      <div className="a-card p-5">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="font-semibold flex items-center gap-2">
+            <Calendar className="w-4 h-4" style={{ color: 'var(--a-palm)' }} /> ملخص {monthLabel}
+          </h3>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="rounded-xl p-3" style={{ background: 'var(--a-surface-2)' }}>
+            <div className="text-[11px]" style={{ color: 'var(--a-text-muted)' }}>الطلبات</div>
+            <div className="a-display text-2xl mt-1">{monthOrders.length.toLocaleString('ar-SA')}</div>
+          </div>
+          <div className="rounded-xl p-3" style={{ background: 'var(--a-surface-2)' }}>
+            <div className="text-[11px]" style={{ color: 'var(--a-text-muted)' }}>الإيرادات</div>
+            <div className="a-display text-2xl mt-1">{Math.round(monthRevenue).toLocaleString('ar-SA')} <span className="text-xs">ر.س</span></div>
+          </div>
+          <div className="rounded-xl p-3" style={{ background: 'var(--a-surface-2)' }}>
+            <div className="text-[11px]" style={{ color: 'var(--a-text-muted)' }}>عروض السعر</div>
+            <div className="a-display text-2xl mt-1">{monthQuotes.length.toLocaleString('ar-SA')}</div>
+          </div>
+          <div className="rounded-xl p-3" style={{ background: 'var(--a-surface-2)' }}>
+            <div className="text-[11px]" style={{ color: 'var(--a-text-muted)' }}>معدل التحويل</div>
+            <div className="a-display text-2xl mt-1">{acceptanceRate}%</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Quotes pipeline */}
+      <div className="a-card p-5">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="font-semibold flex items-center gap-2">
+            <FileText className="w-4 h-4" style={{ color: 'var(--a-palm)' }} /> خط أنابيب العروض
+          </h3>
+          <Link to="/admin/quotes" className="text-xs" style={{ color: 'var(--a-palm)' }}>
+            عرض الكل ↗
+          </Link>
+        </div>
+        <div className="space-y-2">
+          <PipeRow label="بانتظار المراجعة" count={pendingQuotes.length} total={quotes.length || 1} tint="amber" to="/admin/quotes?status=new" />
+          <PipeRow label="مُسعّرة — بانتظار الموافقة" count={pricedQuotes.length} total={quotes.length || 1} tint="blue" to="/admin/quotes?status=priced" />
+          <PipeRow label="محوّلة إلى طلبات" count={convertedQuotes} total={quotes.length || 1} tint="green" to="/admin/quotes?status=converted_to_order" />
+        </div>
+        {!quotes.length && (
+          <p className="text-xs text-center pt-4" style={{ color: 'var(--a-text-muted)' }}>لا توجد عروض بعد.</p>
+        )}
+      </div>
+
+      {/* Trademark renewals */}
+      <div className="a-card p-5">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="font-semibold flex items-center gap-2">
+            <Award className="w-4 h-4" style={{ color: 'var(--a-palm)' }} /> تجديد العلامات التجارية
+          </h3>
+          <Link to="/admin/trademarks" className="text-xs" style={{ color: 'var(--a-palm)' }}>إدارة ↗</Link>
+        </div>
+        {renewals.length ? (
+          <ul className="space-y-2">
+            {renewals.map((t) => (
+              <li key={t.id} className="flex items-center justify-between gap-2 p-2 rounded-lg" style={{ background: 'var(--a-surface-2)' }}>
+                <div className="min-w-0">
+                  <div className="text-sm font-medium truncate">{t.name_ar}</div>
+                  <div className="text-[11px]" style={{ color: 'var(--a-text-muted)' }}>سجل #{t.registration_no}</div>
+                </div>
+                <span className={`a-pill ${(t.yearsLeft ?? 0) <= 0 ? 'a-pill-rose' : 'a-pill-amber'}`}>
+                  {(t.yearsLeft ?? 0) <= 0 ? 'منتهية' : `${t.expires_hijri}`}
+                </span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-xs text-center py-6" style={{ color: 'var(--a-text-muted)' }}>
+            لا توجد علامات تحتاج تجديد خلال السنة القادمة.
+          </p>
+        )}
+      </div>
+    </section>
+  );
+}
+
+function PipeRow({ label, count, total, tint, to }: { label: string; count: number; total: number; tint: string; to: string }) {
+  const pct = Math.round((count / total) * 100);
+  return (
+    <Link to={to} className="block">
+      <div className="flex justify-between text-xs mb-1">
+        <span style={{ color: 'var(--a-text-muted)' }}>{label}</span>
+        <span className="font-semibold">{count.toLocaleString('ar-SA')}</span>
+      </div>
+      <div className="h-1.5 rounded-full overflow-hidden" style={{ background: 'var(--a-surface-2)' }}>
+        <div className={`h-full a-pill-${tint}`} style={{ width: `${pct}%`, opacity: 0.9 }} />
+      </div>
+    </Link>
+  );
+}
+
