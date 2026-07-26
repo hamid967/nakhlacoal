@@ -366,6 +366,7 @@ export type Database = {
       }
       email_settings: {
         Row: {
+          auto_invoice_receipt: boolean
           auto_order_confirmation: boolean
           auto_shipment_notification: boolean
           id: boolean
@@ -373,6 +374,7 @@ export type Database = {
           updated_by: string | null
         }
         Insert: {
+          auto_invoice_receipt?: boolean
           auto_order_confirmation?: boolean
           auto_shipment_notification?: boolean
           id?: boolean
@@ -380,6 +382,7 @@ export type Database = {
           updated_by?: string | null
         }
         Update: {
+          auto_invoice_receipt?: boolean
           auto_order_confirmation?: boolean
           auto_shipment_notification?: boolean
           id?: boolean
