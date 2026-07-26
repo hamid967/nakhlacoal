@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 import { Loader2, CheckCircle2 } from 'lucide-react';
@@ -176,13 +177,32 @@ export default function Checkout() {
                   </select>
                 </label>
                 <Field label={isAr ? 'ملاحظات (اختياري)' : 'Notes (optional)'} value={form.notes} onChange={(v) => setForm({ ...form, notes: v })} textarea />
+
+                <label className="flex items-start gap-3 mt-4 p-3 rounded-lg border border-[hsl(var(--gold-hi)/0.25)] bg-[hsl(var(--muted)/0.3)] cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={legalAccepted}
+                    onChange={(e) => setLegalAccepted(e.target.checked)}
+                    className="mt-1 h-4 w-4 accent-[hsl(var(--gold-hi))]"
+                    required
+                  />
+                  <span className="text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">
+                    {isAr ? (
+                      <>أوافق على <Link to="/terms" target="_blank" className="text-[hsl(var(--gold-hi))] underline">الشروط والأحكام</Link>، و<Link to="/privacy" target="_blank" className="text-[hsl(var(--gold-hi))] underline">سياسة الخصوصية</Link>، و<Link to="/refund-policy" target="_blank" className="text-[hsl(var(--gold-hi))] underline">سياسة الاسترجاع</Link>، و<Link to="/shipping-policy" target="_blank" className="text-[hsl(var(--gold-hi))] underline">سياسة الشحن</Link>.</>
+                    ) : (
+                      <>I accept the <Link to="/terms" target="_blank" className="text-[hsl(var(--gold-hi))] underline">Terms</Link>, <Link to="/privacy" target="_blank" className="text-[hsl(var(--gold-hi))] underline">Privacy Policy</Link>, <Link to="/refund-policy" target="_blank" className="text-[hsl(var(--gold-hi))] underline">Refund Policy</Link>, and <Link to="/shipping-policy" target="_blank" className="text-[hsl(var(--gold-hi))] underline">Shipping Policy</Link>.</>
+                    )}
+                  </span>
+                </label>
+
                 <div className="flex gap-2 mt-4">
                   <button onClick={() => setStep(1)} className="flex-1 py-3 rounded-xl border border-[hsl(var(--border))]">{isAr ? 'السابق' : 'Back'}</button>
-                  <button onClick={submit} disabled={loading} className="flex-1 py-3 rounded-xl bg-[hsl(var(--gold-hi))] text-[hsl(var(--ink))] font-bold disabled:opacity-60 flex items-center justify-center gap-2">
+                  <button onClick={submit} disabled={loading || !legalAccepted} className="flex-1 py-3 rounded-xl bg-[hsl(var(--gold-hi))] text-[hsl(var(--ink))] font-bold disabled:opacity-60 flex items-center justify-center gap-2">
                     {loading && <Loader2 className="w-4 h-4 animate-spin" />}
                     {isAr ? 'تأكيد الطلب' : 'Place order'}
                   </button>
                 </div>
+
               </>
             )}
           </div>
