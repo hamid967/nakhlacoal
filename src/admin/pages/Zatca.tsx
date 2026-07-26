@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
-import { Loader2, ShieldCheck, KeyRound, Send, RefreshCw, FlaskConical, Rocket, AlertTriangle } from 'lucide-react';
+import { Loader2, ShieldCheck, KeyRound, Send, RefreshCw, FlaskConical, Rocket, AlertTriangle, Download, ChevronDown, ChevronLeft, FileCode, QrCode, Copy } from 'lucide-react';
 
 type EnvKey = 'sandbox' | 'simulation' | 'production';
 type EnvScope = 'nonprod' | 'production';
