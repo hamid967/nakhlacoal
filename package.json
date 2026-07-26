@@ -21,7 +21,8 @@
     "test:intro": "python tests/visual/intro_visual_test.py",
     "test:intro:update": "UPDATE_SNAPSHOTS=1 python tests/visual/intro_visual_test.py",
     "test:skeletons:live": "node scripts/skeleton-drift.mjs",
-    "audit:bot": "node scripts/audit-bot.mjs"
+    "audit:bot": "node scripts/audit-bot.mjs",
+    "build:analyze": "ANALYZE=1 vite build"
   },
   "dependencies": {
     "@fontsource/amiri": "^5.2.8",
