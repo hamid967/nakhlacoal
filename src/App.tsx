@@ -146,6 +146,7 @@ export default function App() {
                   <Route path="/contact" element={<Contact />} />
                   <Route path="/faq" element={<Faq />} />
                   <Route path="/quote" element={<Quote />} />
+                  <Route path="/quote/track" element={<QuoteTrack />} />
                   <Route path="/quotes" element={<Quotes />} />
                   <Route path="/location" element={<Location />} />
                   <Route path="/trademarks" element={<Trademarks />} />
