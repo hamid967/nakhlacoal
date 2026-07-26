@@ -65,7 +65,8 @@ export default function QuoteTrack() {
         _phone: trimmedPhone,
       } as never);
       if (error) throw error;
-      const row = Array.isArray(data) && data.length > 0 ? (data[0] as QuoteStatusRow) : null;
+      const rows = (data as QuoteStatusRow[] | null) ?? [];
+      const row = rows.length > 0 ? rows[0] : null;
       if (!row) {
         setNotFound(true);
       } else {
