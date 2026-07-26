@@ -87,9 +87,18 @@ export function SectionHeader({
 }
 
 /** بطاقة إحصائية — تُستعمل في Quality lab */
-export function StatCard({ value, label }: { value: string; label: string }) {
+export function StatCard({
+  value,
+  label,
+  icon,
+}: {
+  value: string;
+  label: string;
+  icon?: ReactNode;
+}) {
   return (
     <div className="border-t border-gold/40 pt-4">
+      {icon ? <div className="mb-3 text-gold">{icon}</div> : null}
       <div className="font-editorial-bold text-4xl lg:text-5xl text-foreground">{value}</div>
       <div className="mt-2 text-xs uppercase tracking-[0.22em] text-muted-foreground">{label}</div>
     </div>
@@ -101,14 +110,19 @@ export function ProcessStepCard({
   n,
   title,
   description,
+  icon,
 }: {
   n: string;
   title: string;
   description: string;
+  icon?: ReactNode;
 }) {
   return (
     <div className="relative border-t border-gold/30 pt-8 space-y-3">
-      <div className="font-editorial-bold text-gold text-5xl">{n}</div>
+      <div className="flex items-center justify-between">
+        <div className="font-editorial-bold text-gold text-5xl">{n}</div>
+        {icon ? <div className="text-gold/80">{icon}</div> : null}
+      </div>
       <h3 className="font-editorial-bold text-2xl text-dark-foreground">{title}</h3>
       <p className="text-dark-foreground/60 text-sm leading-relaxed">{description}</p>
     </div>
