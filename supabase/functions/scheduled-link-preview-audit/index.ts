@@ -7,6 +7,7 @@
 
 import { buildCors } from '../_shared/cors.ts';
 import { createClient } from 'npm:@supabase/supabase-js@2';
+import { probeMany, type ImageProbeResult } from '../_shared/image-dims.ts';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
@@ -57,7 +58,44 @@ function parseMeta(html: string) {
   };
 }
 
-function computeWarnings(meta: ReturnType<typeof parseMeta>) {
+const EXPECTED_W = 1200;
+const EXPECTED_H = 630;
+
+function warnForImage(
+  label: 'og:image' | 'twitter:image',
+  url: string | null | undefined,
+  declaredW: string | null | undefined,
+  declaredH: string | null | undefined,
+  probes: Record<string, ImageProbeResult>,
+): string[] {
+  const out: string[] = [];
+  if (!url) return out;
+  const probe = probes[url];
+  if (!probe) return out;
+  if (!probe.ok) {
+    out.push(`${label} تعذّر جلبه (${probe.error}${probe.httpStatus ? ` — HTTP ${probe.httpStatus}` : ''})`);
+    return out;
+  }
+  const { width, height, bytes, contentType } = probe.dims;
+  if (width !== EXPECTED_W || height !== EXPECTED_H) {
+    out.push(`${label} أبعاده الفعلية ${width}×${height} (المتوقع ${EXPECTED_W}×${EXPECTED_H})`);
+  }
+  if (declaredW && Number(declaredW) !== width) {
+    out.push(`${label}:width المُعلَن ${declaredW} لا يطابق الفعلي ${width}`);
+  }
+  if (declaredH && Number(declaredH) !== height) {
+    out.push(`${label}:height المُعلَن ${declaredH} لا يطابق الفعلي ${height}`);
+  }
+  if (bytes > 5 * 1024 * 1024) {
+    out.push(`${label} أكبر من 5MB (${Math.round(bytes / 1024)}KB) — قد ترفضه بعض المنصات`);
+  }
+  if (contentType && !contentType.toLowerCase().startsWith('image/')) {
+    out.push(`${label} Content-Type غير صحيح (${contentType})`);
+  }
+  return out;
+}
+
+function computeWarnings(meta: ReturnType<typeof parseMeta>, probes: Record<string, ImageProbeResult> = {}) {
   const w: string[] = [];
   if (!meta.ogTitle) w.push('og:title مفقود');
   if (!meta.ogDescription) w.push('og:description مفقود');
@@ -67,8 +105,10 @@ function computeWarnings(meta: ReturnType<typeof parseMeta>) {
   else if (meta.twitterCard !== 'summary_large_image') w.push(`twitter:card = ${meta.twitterCard} (المتوقع summary_large_image)`);
   if (!meta.twitterImage) w.push('twitter:image مفقود');
   if (meta.ogImage && meta.twitterImage && meta.ogImage !== meta.twitterImage) w.push('og:image لا يطابق twitter:image');
-  if (meta.ogImageWidth && meta.ogImageWidth !== '1200') w.push(`og:image:width = ${meta.ogImageWidth} (المتوقع 1200)`);
-  if (meta.ogImageHeight && meta.ogImageHeight !== '630') w.push(`og:image:height = ${meta.ogImageHeight} (المتوقع 630)`);
+  w.push(...warnForImage('og:image', meta.ogImage, meta.ogImageWidth, meta.ogImageHeight, probes));
+  if (meta.twitterImage && meta.twitterImage !== meta.ogImage) {
+    w.push(...warnForImage('twitter:image', meta.twitterImage, null, null, probes));
+  }
   if (!meta.canonical) w.push('canonical مفقود');
   return w;
 }
@@ -93,14 +133,18 @@ async function checkOne(url: string) {
     });
     const html = await resp.text();
     const meta = parseMeta(html);
-    const warnings = computeWarnings(meta);
+    const probes = await probeMany([meta.ogImage, meta.twitterImage], DEFAULT_UA);
+    const warnings = computeWarnings(meta, probes);
     const status = resp.status >= 400 ? 'error' : warnings.length ? 'warn' : 'ok';
-    return { url, httpStatus: resp.status, meta, warnings, status, durationMs: Date.now() - started, fetchError: null as string | null };
+    const imageProbes = Object.fromEntries(
+      Object.entries(probes).map(([u, p]) => [u, p.ok ? { width: p.dims.width, height: p.dims.height, format: p.dims.format, bytes: p.dims.bytes, contentType: p.dims.contentType } : { error: p.error, httpStatus: p.httpStatus ?? null }]),
+    );
+    return { url, httpStatus: resp.status, meta: { ...meta, imageProbes }, warnings, status, durationMs: Date.now() - started, fetchError: null as string | null };
   } catch (err) {
     return {
       url,
       httpStatus: 0,
-      meta: null as ReturnType<typeof parseMeta> | null,
+      meta: null as (ReturnType<typeof parseMeta> & { imageProbes?: Record<string, unknown> }) | null,
       warnings: ['فشل جلب الصفحة'],
       status: 'error' as const,
       durationMs: Date.now() - started,
