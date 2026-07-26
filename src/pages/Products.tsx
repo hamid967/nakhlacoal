@@ -125,6 +125,13 @@ export default function Products() {
                 (r.tagline_en ?? '').toLowerCase().includes(needle),
             );
           }
+          if (minPrice != null) rows = rows.filter((r) => r.base_price != null && Number(r.base_price) >= minPrice);
+          if (maxPrice != null) rows = rows.filter((r) => r.base_price != null && Number(r.base_price) <= maxPrice);
+          if (stockOnly) {
+            rows = rows.filter((r) =>
+              (r.product_variants ?? []).some((v) => v.is_active && (v.stock ?? 0) > 0),
+            );
+          }
           setItems(rows);
         }
         setLoading(false);
@@ -133,7 +140,8 @@ export default function Products() {
     return () => {
       cancelled = true;
     };
-  }, [cat, sort, q, isAr]);
+  }, [cat, sort, q, isAr, minPrice, maxPrice, stockOnly]);
+
 
   const activeCat = useMemo(
     () => (cat === 'all' ? null : cats.find((c) => c.slug === cat) ?? null),
