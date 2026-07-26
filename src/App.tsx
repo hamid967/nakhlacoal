@@ -48,6 +48,7 @@ const ResetPassword = lazy(() => import('@/pages/ResetPassword'));
 const Profile = lazy(() => import('@/pages/Profile'));
 const Assistant = lazy(() => import('@/pages/Assistant'));
 const Quote = lazy(() => import('@/pages/Quote'));
+const QuoteTrack = lazy(() => import('@/pages/QuoteTrack'));
 const Quotes = lazy(() => import('@/pages/Quotes'));
 const AdminOrders = lazy(() => import('@/pages/AdminOrders'));
 const AdminInventory = lazy(() => import('@/pages/AdminInventory'));
