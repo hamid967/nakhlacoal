@@ -352,7 +352,52 @@ export default function AdminEmails() {
         </label>
       </div>
 
-
+      {/* Live preview builder */}
+      <div className="a-card p-4 space-y-3">
+        <div className="flex items-center gap-2 font-semibold" style={{ color: 'var(--a-text)' }}>
+          <Eye className="w-4 h-4" style={{ color: 'var(--a-palm)' }} />
+          معاينة فورية لقوالب البريد
+        </div>
+        <p className="text-xs" style={{ color: 'var(--a-text-muted)' }}>
+          اعرض القالب بالضبط كما سيراه العميل قبل الإرسال. اترك حقل المعرّف فارغاً لاستخدام بيانات نموذجية، أو الصق معرّف طلب/فاتورة/عرض حقيقي لعرض بياناته الفعلية.
+        </p>
+        <div className="flex flex-wrap items-end gap-2">
+          <div className="flex flex-col">
+            <label className="text-[11px] mb-1" style={{ color: 'var(--a-text-muted)' }}>القالب</label>
+            <select
+              className="a-input"
+              style={{ minWidth: 240 }}
+              value={previewTemplate}
+              onChange={(e) => setPreviewTemplate(e.target.value)}
+            >
+              {PREVIEW_TEMPLATES.map((t) => (
+                <option key={t.key} value={t.key}>{t.label} — {t.key}</option>
+              ))}
+            </select>
+          </div>
+          <div className="flex flex-col flex-1" style={{ minWidth: 220 }}>
+            <label className="text-[11px] mb-1" style={{ color: 'var(--a-text-muted)' }}>
+              {PREVIEW_TEMPLATES.find((t) => t.key === previewTemplate)?.needsId ?? 'معرّف (اختياري)'}
+            </label>
+            <input
+              type="text"
+              className="a-input"
+              placeholder="اتركه فارغاً لاستخدام بيانات نموذجية"
+              value={previewEntityId}
+              onChange={(e) => setPreviewEntityId(e.target.value)}
+              dir="ltr"
+            />
+          </div>
+          <button
+            className="a-btn a-btn-palm"
+            onClick={() => runPreview(previewTemplate, previewEntityId)}
+            disabled={previewLoading}
+          >
+            {previewLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Eye className="w-4 h-4" />}
+            معاينة القالب
+          </button>
+        </div>
+      </div>
 
 
       {/* Filters */}
