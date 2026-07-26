@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Mail, RefreshCw, Send, Filter, CheckCircle2, XCircle, Clock, Loader2, BellRing } from 'lucide-react';
+import { Mail, RefreshCw, Send, Filter, CheckCircle2, XCircle, Clock, Loader2, BellRing, Eye, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { SEO } from '@/components/SEO';
@@ -43,6 +43,57 @@ export default function AdminEmails() {
   const [autoShip, setAutoShip] = useState<boolean>(true);
   const [autoInvoice, setAutoInvoice] = useState<boolean>(true);
   const [savingToggle, setSavingToggle] = useState(false);
+
+  // ---------- Preview state ----------
+  const PREVIEW_TEMPLATES: { key: string; label: string; needsId?: string }[] = [
+    { key: 'order-confirmation', label: 'تأكيد الطلب', needsId: 'معرّف الطلب (اختياري)' },
+    { key: 'shipment-notification', label: 'إشعار الشحن', needsId: 'معرّف الشحنة (اختياري)' },
+    { key: 'invoice-receipt', label: 'إيصال الفاتورة', needsId: 'معرّف الفاتورة (اختياري)' },
+    { key: 'order-new', label: 'حالة الطلب — استلام', needsId: 'معرّف الطلب (اختياري)' },
+    { key: 'order-confirmed', label: 'حالة الطلب — تأكيد', needsId: 'معرّف الطلب (اختياري)' },
+    { key: 'order-shipped', label: 'حالة الطلب — شحن', needsId: 'معرّف الطلب (اختياري)' },
+    { key: 'order-completed', label: 'حالة الطلب — تسليم', needsId: 'معرّف الطلب (اختياري)' },
+    { key: 'order-cancelled', label: 'حالة الطلب — إلغاء', needsId: 'معرّف الطلب (اختياري)' },
+    { key: 'quote-new', label: 'عرض السعر — استلام', needsId: 'معرّف العرض (اختياري)' },
+    { key: 'quote-priced', label: 'عرض السعر — تسعير', needsId: 'معرّف العرض (اختياري)' },
+    { key: 'quote-accepted', label: 'عرض السعر — قبول', needsId: 'معرّف العرض (اختياري)' },
+    { key: 'quote-rejected', label: 'عرض السعر — رفض', needsId: 'معرّف العرض (اختياري)' },
+    { key: 'quote-converted_to_order', label: 'عرض السعر — تحويل لطلب', needsId: 'معرّف العرض (اختياري)' },
+  ];
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewLoading, setPreviewLoading] = useState(false);
+  const [previewTemplate, setPreviewTemplate] = useState<string>('order-confirmation');
+  const [previewEntityId, setPreviewEntityId] = useState<string>('');
+  const [previewResult, setPreviewResult] = useState<{ subject: string; html: string; recipient: string | null; usedSample: boolean; note?: string | null } | null>(null);
+
+  const runPreview = async (template: string, entityId?: string) => {
+    setPreviewLoading(true);
+    setPreviewResult(null);
+    setPreviewTemplate(template);
+    setPreviewEntityId(entityId ?? '');
+    setPreviewOpen(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('preview-email-template', {
+        body: { template, entityId: entityId?.trim() || undefined },
+      });
+      if (error) throw error;
+      if ((data as any)?.ok) {
+        setPreviewResult({
+          subject: (data as any).subject,
+          html: (data as any).html,
+          recipient: (data as any).recipient ?? null,
+          usedSample: !!(data as any).usedSample,
+          note: (data as any).note ?? null,
+        });
+      } else {
+        toast.error((data as any)?.error || 'تعذّر توليد المعاينة');
+      }
+    } catch (e: any) {
+      toast.error(e?.message ?? 'خطأ في المعاينة');
+    } finally {
+      setPreviewLoading(false);
+    }
+  };
 
   const loadSettings = async () => {
     const { data } = await supabase.from('email_settings')
@@ -173,6 +224,7 @@ export default function AdminEmails() {
   };
 
   return (
+    <>
     <div className="space-y-6">
       <SEO title="سجل البريد — فحم النخلة" description="سجل شامل لجميع رسائل البريد الإلكتروني المُرسلة." path="/admin/emails" />
 
@@ -301,7 +353,52 @@ export default function AdminEmails() {
         </label>
       </div>
 
-
+      {/* Live preview builder */}
+      <div className="a-card p-4 space-y-3">
+        <div className="flex items-center gap-2 font-semibold" style={{ color: 'var(--a-text)' }}>
+          <Eye className="w-4 h-4" style={{ color: 'var(--a-palm)' }} />
+          معاينة فورية لقوالب البريد
+        </div>
+        <p className="text-xs" style={{ color: 'var(--a-text-muted)' }}>
+          اعرض القالب بالضبط كما سيراه العميل قبل الإرسال. اترك حقل المعرّف فارغاً لاستخدام بيانات نموذجية، أو الصق معرّف طلب/فاتورة/عرض حقيقي لعرض بياناته الفعلية.
+        </p>
+        <div className="flex flex-wrap items-end gap-2">
+          <div className="flex flex-col">
+            <label className="text-[11px] mb-1" style={{ color: 'var(--a-text-muted)' }}>القالب</label>
+            <select
+              className="a-input"
+              style={{ minWidth: 240 }}
+              value={previewTemplate}
+              onChange={(e) => setPreviewTemplate(e.target.value)}
+            >
+              {PREVIEW_TEMPLATES.map((t) => (
+                <option key={t.key} value={t.key}>{t.label} — {t.key}</option>
+              ))}
+            </select>
+          </div>
+          <div className="flex flex-col flex-1" style={{ minWidth: 220 }}>
+            <label className="text-[11px] mb-1" style={{ color: 'var(--a-text-muted)' }}>
+              {PREVIEW_TEMPLATES.find((t) => t.key === previewTemplate)?.needsId ?? 'معرّف (اختياري)'}
+            </label>
+            <input
+              type="text"
+              className="a-input"
+              placeholder="اتركه فارغاً لاستخدام بيانات نموذجية"
+              value={previewEntityId}
+              onChange={(e) => setPreviewEntityId(e.target.value)}
+              dir="ltr"
+            />
+          </div>
+          <button
+            className="a-btn a-btn-palm"
+            onClick={() => runPreview(previewTemplate, previewEntityId)}
+            disabled={previewLoading}
+          >
+            {previewLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Eye className="w-4 h-4" />}
+            معاينة القالب
+          </button>
+        </div>
+      </div>
 
 
       {/* Filters */}
@@ -375,15 +472,25 @@ export default function AdminEmails() {
                       )}
                     </Td>
                     <Td>
-                      <button
-                        className="a-btn"
-                        onClick={() => resend(r)}
-                        disabled={resendingId === r.id}
-                        style={{ padding: '4px 10px', fontSize: 12 }}
-                      >
-                        {resendingId === r.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <Send className="w-3 h-3" />}
-                        إعادة
-                      </button>
+                      <div className="flex items-center gap-1">
+                        <button
+                          className="a-btn"
+                          onClick={() => runPreview(r.template, r.entity_id ?? undefined)}
+                          style={{ padding: '4px 10px', fontSize: 12 }}
+                          title="معاينة القالب"
+                        >
+                          <Eye className="w-3 h-3" /> معاينة
+                        </button>
+                        <button
+                          className="a-btn"
+                          onClick={() => resend(r)}
+                          disabled={resendingId === r.id}
+                          style={{ padding: '4px 10px', fontSize: 12 }}
+                        >
+                          {resendingId === r.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <Send className="w-3 h-3" />}
+                          إعادة
+                        </button>
+                      </div>
                     </Td>
                   </tr>
                 );
@@ -393,6 +500,75 @@ export default function AdminEmails() {
         </div>
       </div>
     </div>
+
+      {/* Preview modal */}
+      {previewOpen && (
+        <div
+          className="fixed inset-0 z-[100] grid place-items-center p-4"
+          style={{ background: 'rgba(10,20,10,0.55)' }}
+          onClick={() => setPreviewOpen(false)}
+        >
+          <div
+            className="w-full max-w-4xl bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col"
+            style={{ maxHeight: '92vh' }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between px-5 py-3 border-b" style={{ borderColor: 'var(--a-border)' }}>
+              <div className="min-w-0">
+                <div className="flex items-center gap-2 text-sm font-semibold" style={{ color: 'var(--a-text)' }}>
+                  <Eye className="w-4 h-4" style={{ color: 'var(--a-palm)' }} />
+                  معاينة القالب —{' '}
+                  <code className="text-xs" style={{ color: 'var(--a-palm)' }}>{previewTemplate}</code>
+                  {previewResult?.usedSample && (
+                    <span className="a-pill a-pill-amber text-[10px]">بيانات نموذجية</span>
+                  )}
+                </div>
+                {previewResult && (
+                  <div className="mt-1 text-xs truncate" style={{ color: 'var(--a-text-muted)' }}>
+                    <b>الموضوع:</b> {previewResult.subject}
+                    {previewResult.recipient && (
+                      <> · <b>المستلم:</b> <span dir="ltr">{previewResult.recipient}</span></>
+                    )}
+                  </div>
+                )}
+              </div>
+              <button
+                className="a-btn"
+                style={{ padding: '4px 10px' }}
+                onClick={() => setPreviewOpen(false)}
+                aria-label="إغلاق"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            {previewResult?.note && (
+              <div className="px-5 py-2 text-xs" style={{ background: '#fff9e5', color: '#8a6a00' }}>
+                {previewResult.note}
+              </div>
+            )}
+            <div className="flex-1 overflow-hidden" style={{ background: '#f6f5ef' }}>
+              {previewLoading ? (
+                <div className="h-[60vh] grid place-items-center">
+                  <Loader2 className="w-6 h-6 animate-spin" style={{ color: 'var(--a-palm)' }} />
+                </div>
+              ) : previewResult ? (
+                <iframe
+                  title="email preview"
+                  srcDoc={previewResult.html}
+                  sandbox=""
+                  className="w-full"
+                  style={{ height: '70vh', border: 0, background: '#f6f5ef' }}
+                />
+              ) : (
+                <div className="h-[60vh] grid place-items-center text-sm" style={{ color: 'var(--a-text-muted)' }}>
+                  لا توجد معاينة.
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
