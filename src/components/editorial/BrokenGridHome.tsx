@@ -140,13 +140,14 @@ export function BrokenGridHome() {
             <div className="absolute -top-16 -left-4 lg:-left-8 z-0">
               <BigNumber n="01" />
             </div>
-            <img
-              src={palmOrigin}
+            <ResponsiveImage
+              base="palm-origin"
+              fallback={palmOrigin}
               alt={isAr ? 'مزارع النخيل السعودية' : 'Saudi palm groves'}
               className="relative z-10 w-full aspect-[16/10] object-cover shadow-luxe"
-              loading="lazy"
               width={1920}
               height={1088}
+              sizes="(max-width: 1024px) 100vw, 58vw"
             />
           </div>
           <div
