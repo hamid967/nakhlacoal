@@ -58,11 +58,28 @@ export default function Checkout() {
       toast.error(isAr ? 'تحقق من البيانات المدخلة' : 'Please check the form');
       return;
     }
+    if (!legalAccepted) {
+      toast.error(isAr ? 'يجب الموافقة على الشروط وسياسة الخصوصية' : 'Please accept the terms & privacy policy');
+      return;
+    }
     setLoading(true);
     try {
       const first = items[0];
       const totalQty = items.reduce((s, i) => s + i.qty, 0);
       const unitPrice = subtotal / Math.max(totalQty, 1);
+
+      // Server-side price snapshot (authoritative record for audit).
+      const pricingSnapshot = {
+        currency: 'SAR',
+        vat_rate: 0.15,
+        subtotal: Math.round(subtotal * 100) / 100,
+        vat: Math.round(vat * 100) / 100,
+        total: Math.round(total * 100) / 100,
+        items: items.map((i) => ({ slug: i.slug, qty: i.qty, unit: i.unit })),
+        computed_at: new Date().toISOString(),
+        source: 'client_cart_v1',
+      };
+
       const insertRes = await supabase.from('orders').insert({
         user_id: user?.id ?? null,
         status: 'new',
@@ -80,9 +97,11 @@ export default function Checkout() {
         payment_method: form.payment_method,
         country: 'SA',
         items: items.map((i) => ({ slug: i.slug, nameAr: i.nameAr, nameEn: i.nameEn, qty: i.qty, unit: i.unit })),
+        pricing_snapshot: pricingSnapshot,
+        legal_accepted_at: new Date().toISOString(),
       } as never);
       if (insertRes.error) throw insertRes.error;
-      // For authenticated users, fetch the new order id to deep-link; guests stay on confirmation.
+
       let newId: string | null = null;
       if (user?.id) {
         const { data: latest } = await supabase
@@ -95,16 +114,17 @@ export default function Checkout() {
         newId = (latest as { id: string } | null)?.id ?? null;
       }
       clear();
-      setStep(3);
       toast.success(isAr ? 'تم إنشاء الطلب بنجاح' : 'Order created');
-      if (newId) setTimeout(() => navigate(`/orders/${newId}`), 1500);
+      navigate(newId ? `/checkout/success?order=${newId}` : '/checkout/success');
     } catch (e) {
       const msg = e instanceof Error ? e.message : 'Failed';
       toast.error(msg);
+      navigate(`/checkout/failed?reason=${encodeURIComponent('server_error')}`);
     } finally {
       setLoading(false);
     }
   }
+
 
   return (
     <div className="container max-w-5xl py-10 px-4" dir={isAr ? 'rtl' : 'ltr'}>
