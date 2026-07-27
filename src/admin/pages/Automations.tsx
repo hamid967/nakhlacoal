@@ -58,7 +58,7 @@ export default function Automations() {
 
   const create = async () => {
     if (!form.name.trim()) return toast.error('الاسم مطلوب');
-    let actions: unknown; let conditions: unknown;
+    let actions: any; let conditions: any;
     try { actions = JSON.parse(form.actions); } catch { return toast.error('صيغة الإجراءات JSON غير صحيحة'); }
     try { conditions = JSON.parse(form.conditions); } catch { return toast.error('صيغة الشروط JSON غير صحيحة'); }
     setCreating(true);
