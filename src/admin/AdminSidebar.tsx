@@ -5,6 +5,7 @@ import {
   BarChart3, Megaphone, BookOpen, Image as ImageIcon, LayoutTemplate,
   Search, ShieldCheck, KeyRound, Settings as SettingsIcon, ScrollText,
   Sparkles, ChevronLeft, Gauge, MessageSquare, FileText, Mail, Link as LinkIcon,
+  Headphones, ScanBarcode,
 } from 'lucide-react';
 import { BrandLogo } from '@/components/BrandLogo';
 
@@ -26,12 +27,16 @@ const groups: Group[] = [
   { title: 'العمليات', items: [
     { to: '/admin/orders', label: 'الطلبات', icon: ShoppingBag },
     { to: '/admin/quotes', label: 'عروض الأسعار', icon: FileText },
+    { to: '/admin/returns', label: 'المرتجعات', icon: Package },
+    { to: '/admin/support', label: 'الدعم الفني', icon: Headphones },
+    { to: '/admin/whatsapp', label: 'WhatsApp', icon: MessageSquare },
     { to: '/admin/wholesale/leads', label: 'طلبات الجملة', icon: Building2 },
     { to: '/admin/wholesale/accounts', label: 'حسابات الجملة', icon: Building2 },
     { to: '/admin/wholesale/price-tiers', label: 'تسعير الجملة', icon: Tag },
+    { to: '/admin/warehouses', label: 'المستودعات', icon: Warehouse },
+    { to: '/pos', label: 'نقطة البيع (POS)', icon: ScanBarcode },
     { to: '/admin/export', label: 'التصدير', icon: Globe2, badge: 'قريباً' },
     { to: '/admin/suppliers', label: 'الموردون', icon: Truck, badge: 'قريباً' },
-    { to: '/admin/warehouse', label: 'المستودع', icon: Warehouse, badge: 'قريباً' },
   ]},
   { title: 'الجودة', items: [
     { to: '/admin/quality', label: 'مراقبة الجودة', icon: Beaker, badge: 'قريباً' },
