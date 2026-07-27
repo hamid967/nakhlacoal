@@ -4,13 +4,20 @@
   "description": "فحم النخلة — الفحم السعودي الفاخر للمعسل والشواء والتصدير.",
   "start_url": "/",
   "scope": "/",
+  "id": "/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#052E22",
-  "theme_color": "#052E22",
+  "background_color": "#0A0B09",
+  "theme_color": "#0A0B09",
   "lang": "ar",
   "dir": "rtl",
   "categories": ["business", "shopping", "food"],
+  "shortcuts": [
+    { "name": "طلب جديد", "short_name": "طلب", "url": "/portal/orders/new", "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }] },
+    { "name": "تتبع الشحنة", "short_name": "تتبع", "url": "/portal/tracking", "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }] },
+    { "name": "الدعم الفني", "short_name": "الدعم", "url": "/portal/support", "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }] },
+    { "name": "المنتجات", "short_name": "المنتجات", "url": "/products", "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }] }
+  ],
   "icons": [
     { "src": "/favicon-16.png",        "sizes": "16x16",   "type": "image/png" },
     { "src": "/favicon-32.png",        "sizes": "32x32",   "type": "image/png" },
