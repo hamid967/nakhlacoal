@@ -1,119 +1,72 @@
-# Phase 8 — Omnichannel Retail & Operations
+# Phase 10 — Intelligence, Automation & Growth
 
-بعد اكتمال المتجر الإلكتروني والفوترة (ZATCA Phase-2) والمدفوعات والنمو (Reviews/Loyalty/Referrals)، المرحلة 8 تُوسّع «فحم النخلة» من متجر رقمي إلى **شبكة تشغيل متعددة القنوات**: نقطة بيع للمعرض، إدارة مستودعات، تواصل عبر WhatsApp Business، تطبيق PWA قابل للتثبيت، ومركز دعم متكامل.
+After Phase 8 (Omnichannel Retail) and Phase 9 (Marketplace Sync), the platform has broad surface area but limited *automation intelligence*. Phase 10 adds a data & automation layer that turns the collected signals (orders, POS, reviews, WhatsApp, marketplace, loyalty) into actionable revenue.
 
-## نطاق العمل
+## Goals
 
-### 1) POS — نقطة بيع للمعرض (Retail Terminal)
-- جدول `pos_registers(id, name, location, active, cash_float_sar)` و`pos_shifts(id, register_id, cashier_id, opened_at, closed_at, opening_cash, closing_cash, sales_total_sar, status)`.
-- جدول `pos_sales(id, shift_id, order_id, payment_method cash|card|stcpay|mixed, amount_sar, vat_amount_sar, created_at)`.
-- شاشة `/pos` مخصّصة (خارج `AdminLayout`) بواجهة تعمل باللمس: بحث سريع بالباركود/SKU، سلة مباشرة، دفع نقدي/بطاقة، طباعة إيصال ZATCA فوري (نفس pipeline التوقيع).
-- ربط تلقائي بـ`orders` + `zatca_invoices` (simplified invoice) وخصم مباشر من `product_variants.stock`.
+1. **Merchandising Intelligence** — automated pricing, restock alerts, ABC classification.
+2. **Customer Intelligence** — RFM segmentation, churn risk, personalized recommendations.
+3. **Automation Workflows** — rule engine (WHEN → THEN) covering emails, WhatsApp, discounts, stock.
+4. **Growth Console** — unified KPI dashboard, cohort retention, marketing attribution.
+5. **AI Copilot for Admins** — natural-language query over the business data (read-only).
 
-### 2) إدارة مستودعات متعددة (Multi-Warehouse WMS)
-- جدول `warehouses(id, name, city, address, is_default, active)`.
-- جدول `stock_by_warehouse(warehouse_id, variant_id, qty, reserved_qty)` — يحلّ محل حقل `stock` المفرد (مع الحفاظ عليه كـview مجمّع).
-- جدول `stock_movements(id, warehouse_id, variant_id, type in|out|transfer|adjust, qty, reference_type, reference_id, note, created_by, created_at)` — سجل حركات كامل.
-- شاشات `/admin/warehouses` و`/admin/stock-movements` (استلام بضاعة، تحويل بين فروع، جرد يدوي).
-- Trigger على `order_items` يخصم من المستودع الأقرب حسب عنوان الشحن.
+## Scope by Track
 
-### 3) WhatsApp Business Cloud API
-- Edge Function `whatsapp-send`: إرسال رسائل قوالب معتمدة (تأكيد طلب، رقم تتبع، عرض سعر جاهز).
-- Edge Function `whatsapp-webhook`: استقبال ردود العملاء وحفظها في محادثة موحّدة.
-- جدول `whatsapp_conversations(id, customer_phone, user_id, last_message_at, status)` و`whatsapp_messages(id, conversation_id, direction, template_name, body, media_url, wa_message_id, status, created_at)`.
-- شاشة `/admin/whatsapp` (Inbox موحّد لخدمة العملاء، ردود سريعة، ربط بطلب/عرض سعر).
-- Triggers تلقائية: عند `orders.status='shipped'` → إرسال قالب تتبع. عند `quote_requests.status='quoted'` → إرسال قالب عرض السعر.
+### 1. Data & Analytics Layer
+- Migration: `daily_kpi_snapshots` (revenue, orders, AOV, conversion, refunds, cogs).
+- Migration: `customer_segments` (rfm_score, tier, last_order_at, ltv_sar, churn_risk).
+- Migration: `product_intelligence` (velocity_30d, days_of_cover, abc_class, reorder_point).
+- Cron: `analytics-nightly-rollup` (03:00 KSA) computes snapshots + segments + intelligence.
 
-### 4) PWA — تطبيق قابل للتثبيت
-- `manifest.webmanifest` كامل (أيقونات كل المقاسات، shortcuts للطلب السريع/تتبع الشحنة).
-- Service Worker (Workbox عبر `vite-plugin-pwa`): تخزين مؤقت للصور والصفحات الثابتة، صفحة Offline أنيقة، تحديث تلقائي مع toast.
-- Push Notifications (Web Push): جدول `push_subscriptions(user_id, endpoint, p256dh, auth, user_agent)` + Edge Function `push-send` للإشعارات (حالة الطلب، عروض).
-- iOS Add-to-Home banner ذكي.
+### 2. Automation Rule Engine
+- Migration: `automation_rules` (trigger_event, conditions jsonb, actions jsonb, active, throttle).
+- Migration: `automation_runs` (rule_id, entity_id, status, log).
+- Edge Function: `automation-dispatch` invoked from DB triggers on orders/reviews/stock.
+- Built-in action handlers: `send_email`, `send_whatsapp`, `apply_coupon`, `notify_admin`, `low_stock_reorder`.
+- Admin UI at `/admin/automations` — visual rule builder (trigger → conditions → actions).
 
-### 5) Support Center — مركز دعم متكامل
-- جدول `support_tickets(id, user_id, subject, category, priority, status open|pending|resolved|closed, assigned_to, order_id?, created_at, updated_at, closed_at)`.
-- جدول `support_messages(id, ticket_id, sender_id, body, attachments jsonb, is_internal, created_at)`.
-- شاشة `/portal/support` (فتح تذكرة، متابعة، تقييم بعد الحل).
-- شاشة `/admin/support` (قائمة أولوية، تعيين، SLA counter، ردود قوالب).
-- تكامل مع WhatsApp: تذكرة تُنشأ تلقائيًا من محادثة WhatsApp غير مرتبطة بطلب.
+### 3. Growth Console
+- New admin route `/admin/growth` with:
+  - KPI header (Today / 7d / 30d / MTD with sparklines).
+  - Retention cohort heatmap.
+  - Marketing attribution (from `analytics_events` UTM data).
+  - Top movers & laggards (products, categories, cities).
 
-### 6) Returns & Refunds — إدارة الإرجاع
-- جدول `return_requests(id, order_id, user_id, reason, status requested|approved|received|refunded|rejected, refund_amount_sar, notes, created_at, updated_at)`.
-- جدول `return_items(id, return_id, order_item_id, qty, condition new|damaged|used)`.
-- شاشة `/portal/returns` (طلب إرجاع خلال 14 يوم من التسليم مع رفع صور).
-- شاشة `/admin/returns` (موافقة/رفض، إصدار Credit Note ZATCA تلقائيًا، ربط بـ`payments-refund`).
-- Trigger: عند `status='refunded'` → إعادة المخزون وإصدار فاتورة دائنة (invoice_type='credit_note').
+### 4. Personalization
+- Edge Function `recommend-for-user` — merges product velocity + user history + loyalty tier.
+- Enhance `/portal/dashboard` and product pages with "moves fast in your city" & "based on your last order".
 
-### 7) Reporting & BI — تقارير تشغيلية
-- شاشة `/admin/reports-v2` بتقارير جاهزة قابلة للتصدير (CSV/PDF):
-  - مبيعات يومية/أسبوعية/شهرية حسب القناة (Online/POS/Marketplace).
-  - أعلى المنتجات مبيعًا + Slowest movers.
-  - تقرير ZATCA (فواتير مُصفَّاة/معلّقة/فاشلة لكل فترة).
-  - تقرير WMS (قيمة المخزون، أدنى حد، نفاد قريب).
-  - Aging Report للحسابات الآجلة (Wholesale).
-- تصدير مجدول تلقائي أسبوعي بالبريد للمدير.
+### 5. Admin AI Copilot
+- Edge Function `admin-copilot` — Lovable AI (gemini-2.5-flash) with strict schema-scoped SQL read-only tools.
+- Floating command palette in AdminLayout: "كم بلغت المبيعات هذا الأسبوع في جدة؟" etc.
+- Guardrails: read-only role, whitelisted tables, row limits, no PII leakage.
+
+### 6. Alerts & Health
+- Nightly digest email to managers: revenue vs. target, low-stock, negative reviews, failed ZATCA, aged unpaid invoices.
+- Anomaly detection: revenue day-over-day drop > 30% triggers Slack/email alert.
 
 ## Technical Details
 
-**جداول جديدة (12):**
-```text
-pos_registers, pos_shifts, pos_sales,
-warehouses, stock_by_warehouse, stock_movements,
-whatsapp_conversations, whatsapp_messages,
-push_subscriptions,
-support_tickets, support_messages,
-return_requests, return_items
-```
+- **DB**: 4 new tables, all with GRANTs + RLS (admin/manager/accountant read; service_role write). Nightly rollup uses a security-definer function invoked by `pg_cron`.
+- **Edge Functions**: 4 new (`analytics-nightly-rollup`, `automation-dispatch`, `recommend-for-user`, `admin-copilot`).
+- **Frontend**: 3 new admin pages (`Automations.tsx`, `Growth.tsx`, plus copilot palette component). Reuses existing Coal/Gold token system, `ui-lux` primitives, and `recharts`.
+- **Model**: All AI calls via Lovable AI Gateway with `google/gemini-2.5-flash` (no external key needed).
+- **Security**: Copilot uses a dedicated read-only Postgres role via RPC; no arbitrary SQL from client — LLM emits a schema-validated JSON query DSL server-side.
 
-**Edge Functions جديدة (5):**
-```text
-whatsapp-send            (on-demand + triggers)
-whatsapp-webhook         (Meta callback)
-push-send                (on-demand)
-returns-issue-credit-note (trigger)
-reports-scheduled-export  (cron weekly)
-```
+## Delivery Order
 
-**Secrets مطلوبة (لاحقًا حسب التفعيل):**
-- WhatsApp: `META_WABA_ID`, `META_WABA_TOKEN`, `META_WABA_PHONE_ID`, `META_WABA_VERIFY_TOKEN`.
-- Web Push: `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY` (نُولّدها تلقائيًا).
+1. Migrations (KPI + intelligence + automation tables).
+2. Nightly rollup Edge Function + cron.
+3. Growth console page (immediate visible value).
+4. Automation rule engine (schema → dispatcher → admin UI).
+5. Recommender + personalization surfaces.
+6. Admin AI Copilot.
+7. Alerts & digest emails.
 
-**صفحات جديدة (8):**
-```text
-/pos                       (Retail terminal, touch-optimized)
-/admin/warehouses          (multi-warehouse management)
-/admin/stock-movements     (WMS ledger)
-/admin/whatsapp            (unified inbox)
-/admin/support             (helpdesk)
-/admin/returns             (RMA management)
-/admin/reports-v2          (BI reports)
-/portal/returns            (customer RMA)
-```
+## Out of Scope (deferred)
 
-**قياس النجاح (KPIs):**
-- تفعيل POS بمعرض واحد قبل نهاية الشهر.
-- 60% من إشعارات الطلبات عبر WhatsApp خلال 30 يوم.
-- < 4 ساعات متوسط زمن الرد على تذاكر الدعم.
-- 15% من المستخدمين النشطين يثبّتون PWA.
-- < 2% معدل الإرجاع مع دورة استرداد < 3 أيام.
+- Paid ad platform integrations (Google/Meta Ads API).
+- Predictive ML models beyond simple velocity/RFM heuristics.
+- Multi-currency (SAR only remains).
 
-## خارج النطاق
-- ERP كامل (Odoo/SAP integration) — Phase 9.
-- Multi-currency (USD/AED) — Phase 9.
-- Franchise/Multi-tenant — بعيد المدى.
-- TikTok Shop / Instagram Shopping — يحتاج موافقات منفصلة.
-
-## المخرجات
-- 1 Migration (12 جداول + GRANT + RLS + Policies + Views).
-- 5 Edge Functions + 2 Cron schedules.
-- 8 شاشات جديدة + توسعة `/portal` بإرجاع/دعم.
-- PWA جاهز للتثبيت مع Offline mode.
-- WhatsApp Inbox عملي (Test mode قبل تفعيل Meta).
-
-## ترتيب التنفيذ المقترح
-1. **PWA + Support Center + Returns** (لا يحتاج مفاتيح خارجية) — قابل للإطلاق فورًا.
-2. **Multi-Warehouse + POS** (تشغيلي داخلي) — يحتاج تدريب فريق.
-3. **WhatsApp Business** (يحتاج اعتماد قوالب Meta 3-7 أيام).
-4. **Reporting v2 + Push Notifications** (تحسينات ختامية).
-
-أخبرني إن أردت البدء بترتيب مختلف، تقليص النطاق (مثلاً حذف POS إن لم يكن هناك معرض)، أو تأجيل WhatsApp حتى استلام اعتماد Meta.
+Approve to begin with the migrations and nightly rollup.
