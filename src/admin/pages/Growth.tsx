@@ -14,12 +14,17 @@ type Intel = { variant_id: string; velocity_30d: number; days_of_cover: number |
 
 const SAR = (n: number) => new Intl.NumberFormat('ar-SA', { style: 'currency', currency: 'SAR', maximumFractionDigits: 0 }).format(n || 0);
 
+type RunState = { status: 'idle' | 'running' | 'success' | 'error'; message?: string; at?: string; results?: any };
+
 export default function Growth() {
   const [kpis, setKpis] = useState<Kpi[]>([]);
   const [segments, setSegments] = useState<Segment[]>([]);
   const [intel, setIntel] = useState<Intel[]>([]);
   const [loading, setLoading] = useState(true);
-  const [computing, setComputing] = useState(false);
+  const [runAll, setRunAll] = useState<RunState>({ status: 'idle' });
+  const [runKpi, setRunKpi] = useState<RunState>({ status: 'idle' });
+  const [runSeg, setRunSeg] = useState<RunState>({ status: 'idle' });
+  const [runPi, setRunPi] = useState<RunState>({ status: 'idle' });
 
   const load = async () => {
     setLoading(true);
@@ -43,12 +48,42 @@ export default function Growth() {
   useEffect(() => { load(); }, []);
 
   const runNow = async () => {
-    setComputing(true);
-    const { error } = await supabase.functions.invoke('analytics-nightly-rollup', { body: {} });
-    setComputing(false);
-    if (error) return toast.error(error.message);
-    toast.success('تم إعادة حساب المؤشرات');
+    setRunAll({ status: 'running' });
+    const { data, error } = await supabase.functions.invoke('analytics-nightly-rollup', { body: {} });
+    if (error) {
+      setRunAll({ status: 'error', message: error.message, at: new Date().toISOString() });
+      return toast.error(error.message);
+    }
+    setRunAll({ status: 'success', at: new Date().toISOString(), results: (data as any)?.results });
+    toast.success('تم إعادة حساب جميع المؤشرات');
     load();
+  };
+
+  const runRpc = async (
+    fn: 'compute_daily_kpi' | 'compute_customer_segments' | 'compute_product_intelligence',
+    setState: (s: RunState) => void,
+    label: string,
+  ) => {
+    setState({ status: 'running' });
+    const { data, error } = await supabase.rpc(fn as any);
+    if (error) {
+      setState({ status: 'error', message: error.message, at: new Date().toISOString() });
+      return toast.error(`${label}: ${error.message}`);
+    }
+    setState({ status: 'success', at: new Date().toISOString(), results: data });
+    toast.success(`${label}: تم`);
+    load();
+  };
+
+  const StatusPill = ({ s }: { s: RunState }) => {
+    if (s.status === 'idle') return <span className="text-xs text-muted-foreground">لم يُشغَّل بعد</span>;
+    if (s.status === 'running') return <Badge variant="outline" className="animate-pulse">قيد التنفيذ…</Badge>;
+    const time = s.at ? new Date(s.at).toLocaleTimeString('ar-SA') : '';
+    if (s.status === 'success') {
+      const summary = s.results != null && typeof s.results !== 'object' ? ` · ${s.results}` : '';
+      return <Badge className="bg-emerald-600 hover:bg-emerald-600">نجح · {time}{summary}</Badge>;
+    }
+    return <Badge variant="destructive">فشل · {time} · {s.message}</Badge>;
   };
 
   const totals = kpis.reduce(
@@ -63,16 +98,63 @@ export default function Growth() {
 
   return (
     <div className="p-6 space-y-6" dir="rtl">
-      <div className="flex items-center justify-between">
+      <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
           <h1 className="text-3xl font-bold">لوحة النمو</h1>
           <p className="text-sm text-muted-foreground mt-1">مؤشرات آخر 30 يومًا، شرائح العملاء، وذكاء المنتجات.</p>
         </div>
-        <Button onClick={runNow} disabled={computing} variant="outline">
-          <RefreshCw className={`h-4 w-4 me-2 ${computing ? 'animate-spin' : ''}`} />
-          إعادة الحساب الآن
+        <Button onClick={runNow} disabled={runAll.status === 'running'} variant="outline">
+          <RefreshCw className={`h-4 w-4 me-2 ${runAll.status === 'running' ? 'animate-spin' : ''}`} />
+          إعادة الحساب الآن (الكل)
         </Button>
       </div>
+
+      <Card>
+        <CardHeader><CardTitle className="text-base">تشغيل يدوي للمهام</CardTitle></CardHeader>
+        <CardContent className="grid md:grid-cols-2 gap-3">
+          <div className="flex items-center justify-between border rounded-lg p-3 gap-2 flex-wrap">
+            <div>
+              <div className="font-medium text-sm">Rollup كامل (Edge Function)</div>
+              <div className="mt-1"><StatusPill s={runAll} /></div>
+            </div>
+            <Button size="sm" onClick={runNow} disabled={runAll.status === 'running'}>
+              <RefreshCw className={`h-3.5 w-3.5 me-2 ${runAll.status === 'running' ? 'animate-spin' : ''}`} />
+              تشغيل
+            </Button>
+          </div>
+          <div className="flex items-center justify-between border rounded-lg p-3 gap-2 flex-wrap">
+            <div>
+              <div className="font-medium text-sm">KPI يومي</div>
+              <div className="mt-1"><StatusPill s={runKpi} /></div>
+            </div>
+            <Button size="sm" variant="outline" onClick={() => runRpc('compute_daily_kpi', setRunKpi, 'KPI')} disabled={runKpi.status === 'running'}>
+              <RefreshCw className={`h-3.5 w-3.5 me-2 ${runKpi.status === 'running' ? 'animate-spin' : ''}`} />
+              تشغيل
+            </Button>
+          </div>
+          <div className="flex items-center justify-between border rounded-lg p-3 gap-2 flex-wrap">
+            <div>
+              <div className="font-medium text-sm">شرائح العملاء (RFM)</div>
+              <div className="mt-1"><StatusPill s={runSeg} /></div>
+            </div>
+            <Button size="sm" variant="outline" onClick={() => runRpc('compute_customer_segments', setRunSeg, 'الشرائح')} disabled={runSeg.status === 'running'}>
+              <RefreshCw className={`h-3.5 w-3.5 me-2 ${runSeg.status === 'running' ? 'animate-spin' : ''}`} />
+              تشغيل
+            </Button>
+          </div>
+          <div className="flex items-center justify-between border rounded-lg p-3 gap-2 flex-wrap">
+            <div>
+              <div className="font-medium text-sm">ذكاء المنتجات</div>
+              <div className="mt-1"><StatusPill s={runPi} /></div>
+            </div>
+            <Button size="sm" variant="outline" onClick={() => runRpc('compute_product_intelligence', setRunPi, 'ذكاء المنتجات')} disabled={runPi.status === 'running'}>
+              <RefreshCw className={`h-3.5 w-3.5 me-2 ${runPi.status === 'running' ? 'animate-spin' : ''}`} />
+              تشغيل
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Card><CardContent className="p-4">
