@@ -102,6 +102,12 @@ const AdminReviews = lazy(() => import('@/admin/pages/Reviews'));
 const AdminMarketplace = lazy(() => import('@/admin/pages/Marketplace'));
 const PortalLoyalty = lazy(() => import('@/portal/pages/Loyalty'));
 const PortalReferrals = lazy(() => import('@/portal/pages/Referrals'));
+const PortalReturns = lazy(() => import('@/portal/pages/Returns'));
+const AdminSupport = lazy(() => import('@/admin/pages/Support'));
+const AdminReturns = lazy(() => import('@/admin/pages/Returns'));
+const AdminWarehouses = lazy(() => import('@/admin/pages/Warehouses'));
+const AdminWhatsApp = lazy(() => import('@/admin/pages/WhatsApp'));
+const Pos = lazy(() => import('@/pages/Pos'));
 
 const PortalLayout = lazy(() => import('@/portal/PortalLayout'));
 const PortalDashboard = lazy(() => import('@/portal/pages/Dashboard'));
