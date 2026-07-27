@@ -14,12 +14,17 @@ type Intel = { variant_id: string; velocity_30d: number; days_of_cover: number |
 
 const SAR = (n: number) => new Intl.NumberFormat('ar-SA', { style: 'currency', currency: 'SAR', maximumFractionDigits: 0 }).format(n || 0);
 
+type RunState = { status: 'idle' | 'running' | 'success' | 'error'; message?: string; at?: string; results?: any };
+
 export default function Growth() {
   const [kpis, setKpis] = useState<Kpi[]>([]);
   const [segments, setSegments] = useState<Segment[]>([]);
   const [intel, setIntel] = useState<Intel[]>([]);
   const [loading, setLoading] = useState(true);
-  const [computing, setComputing] = useState(false);
+  const [runAll, setRunAll] = useState<RunState>({ status: 'idle' });
+  const [runKpi, setRunKpi] = useState<RunState>({ status: 'idle' });
+  const [runSeg, setRunSeg] = useState<RunState>({ status: 'idle' });
+  const [runPi, setRunPi] = useState<RunState>({ status: 'idle' });
 
   const load = async () => {
     setLoading(true);
@@ -43,12 +48,42 @@ export default function Growth() {
   useEffect(() => { load(); }, []);
 
   const runNow = async () => {
-    setComputing(true);
-    const { error } = await supabase.functions.invoke('analytics-nightly-rollup', { body: {} });
-    setComputing(false);
-    if (error) return toast.error(error.message);
-    toast.success('تم إعادة حساب المؤشرات');
+    setRunAll({ status: 'running' });
+    const { data, error } = await supabase.functions.invoke('analytics-nightly-rollup', { body: {} });
+    if (error) {
+      setRunAll({ status: 'error', message: error.message, at: new Date().toISOString() });
+      return toast.error(error.message);
+    }
+    setRunAll({ status: 'success', at: new Date().toISOString(), results: (data as any)?.results });
+    toast.success('تم إعادة حساب جميع المؤشرات');
     load();
+  };
+
+  const runRpc = async (
+    fn: 'compute_daily_kpi' | 'compute_customer_segments' | 'compute_product_intelligence',
+    setState: (s: RunState) => void,
+    label: string,
+  ) => {
+    setState({ status: 'running' });
+    const { data, error } = await supabase.rpc(fn as any);
+    if (error) {
+      setState({ status: 'error', message: error.message, at: new Date().toISOString() });
+      return toast.error(`${label}: ${error.message}`);
+    }
+    setState({ status: 'success', at: new Date().toISOString(), results: data });
+    toast.success(`${label}: تم`);
+    load();
+  };
+
+  const StatusPill = ({ s }: { s: RunState }) => {
+    if (s.status === 'idle') return <span className="text-xs text-muted-foreground">لم يُشغَّل بعد</span>;
+    if (s.status === 'running') return <Badge variant="outline" className="animate-pulse">قيد التنفيذ…</Badge>;
+    const time = s.at ? new Date(s.at).toLocaleTimeString('ar-SA') : '';
+    if (s.status === 'success') {
+      const summary = s.results != null && typeof s.results !== 'object' ? ` · ${s.results}` : '';
+      return <Badge className="bg-emerald-600 hover:bg-emerald-600">نجح · {time}{summary}</Badge>;
+    }
+    return <Badge variant="destructive">فشل · {time} · {s.message}</Badge>;
   };
 
   const totals = kpis.reduce(
