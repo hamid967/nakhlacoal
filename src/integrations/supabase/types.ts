@@ -110,6 +110,48 @@ export type Database = {
         }
         Relationships: []
       }
+      admin_notifications: {
+        Row: {
+          body: string | null
+          created_at: string
+          entity_id: string | null
+          entity_type: string | null
+          id: string
+          kind: string
+          link: string | null
+          read_at: string | null
+          read_by: string | null
+          severity: string
+          title: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          kind?: string
+          link?: string | null
+          read_at?: string | null
+          read_by?: string | null
+          severity?: string
+          title: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          kind?: string
+          link?: string | null
+          read_at?: string | null
+          read_by?: string | null
+          severity?: string
+          title?: string
+        }
+        Relationships: []
+      }
       analytics_events: {
         Row: {
           created_at: string
@@ -224,6 +266,39 @@ export type Database = {
           title_ar?: string
           title_en?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      automation_events: {
+        Row: {
+          attempts: number
+          created_at: string
+          dedupe_key: string | null
+          id: string
+          kind: string
+          payload: Json
+          processed_at: string | null
+          processed_result: Json | null
+        }
+        Insert: {
+          attempts?: number
+          created_at?: string
+          dedupe_key?: string | null
+          id?: string
+          kind: string
+          payload?: Json
+          processed_at?: string | null
+          processed_result?: Json | null
+        }
+        Update: {
+          attempts?: number
+          created_at?: string
+          dedupe_key?: string | null
+          id?: string
+          kind?: string
+          payload?: Json
+          processed_at?: string | null
+          processed_result?: Json | null
         }
         Relationships: []
       }
@@ -3871,6 +3946,7 @@ export type Database = {
         Args: { _order_id: string }
         Returns: number
       }
+      sweep_abandoned_carts: { Args: never; Returns: number }
       validate_referral_code: {
         Args: { _code: string }
         Returns: {
