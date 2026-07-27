@@ -222,8 +222,13 @@ export default function App() {
 
                   <Route path="reviews" element={<AdminReviews />} />
                   <Route path="marketplace" element={<AdminMarketplace />} />
+                  <Route path="support" element={<AdminSupport />} />
+                  <Route path="returns" element={<AdminReturns />} />
+                  <Route path="warehouses" element={<AdminWarehouses />} />
+                  <Route path="whatsapp" element={<AdminWhatsApp />} />
                   <Route path="*" element={<AdminPlaceholder />} />
                 </Route>
+                <Route path="/pos" element={<Pos />} />
                 <Route path="/portal/login" element={<PortalLogin />} />
                 <Route path="/unsubscribe" element={<Unsubscribe />} />
                 <Route path="/portal" element={<ProtectedRoute requireAnyRole={['customer','user','wholesale','distributor']}><PortalLayout /></ProtectedRoute>}>
