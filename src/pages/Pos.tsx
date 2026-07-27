@@ -213,7 +213,7 @@ function PosInner() {
 
 export default function Pos() {
   return (
-    <ProtectedRoute requireAnyRole={['admin', 'super_admin', 'manager', 'sales']}>
+    <ProtectedRoute requireAnyRole={['admin', 'super_admin', 'sales']}>
       <PosInner />
     </ProtectedRoute>
   );
