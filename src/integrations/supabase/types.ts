@@ -1698,6 +1698,147 @@ export type Database = {
         }
         Relationships: []
       }
+      pos_registers: {
+        Row: {
+          active: boolean
+          cash_float_sar: number
+          created_at: string
+          id: string
+          location: string | null
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          cash_float_sar?: number
+          created_at?: string
+          id?: string
+          location?: string | null
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          cash_float_sar?: number
+          created_at?: string
+          id?: string
+          location?: string | null
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      pos_sales: {
+        Row: {
+          amount_sar: number
+          cash_received_sar: number | null
+          change_sar: number | null
+          created_at: string
+          id: string
+          invoice_id: string | null
+          order_id: string | null
+          payment_method: string
+          shift_id: string
+          vat_amount_sar: number
+        }
+        Insert: {
+          amount_sar: number
+          cash_received_sar?: number | null
+          change_sar?: number | null
+          created_at?: string
+          id?: string
+          invoice_id?: string | null
+          order_id?: string | null
+          payment_method: string
+          shift_id: string
+          vat_amount_sar?: number
+        }
+        Update: {
+          amount_sar?: number
+          cash_received_sar?: number | null
+          change_sar?: number | null
+          created_at?: string
+          id?: string
+          invoice_id?: string | null
+          order_id?: string | null
+          payment_method?: string
+          shift_id?: string
+          vat_amount_sar?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pos_sales_invoice_id_fkey"
+            columns: ["invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pos_sales_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pos_sales_shift_id_fkey"
+            columns: ["shift_id"]
+            isOneToOne: false
+            referencedRelation: "pos_shifts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pos_shifts: {
+        Row: {
+          cashier_id: string | null
+          closed_at: string | null
+          closing_cash_sar: number | null
+          created_at: string
+          id: string
+          notes: string | null
+          opened_at: string
+          opening_cash_sar: number
+          register_id: string
+          sales_total_sar: number
+          status: string
+        }
+        Insert: {
+          cashier_id?: string | null
+          closed_at?: string | null
+          closing_cash_sar?: number | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          opened_at?: string
+          opening_cash_sar?: number
+          register_id: string
+          sales_total_sar?: number
+          status?: string
+        }
+        Update: {
+          cashier_id?: string | null
+          closed_at?: string | null
+          closing_cash_sar?: number | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          opened_at?: string
+          opening_cash_sar?: number
+          register_id?: string
+          sales_total_sar?: number
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pos_shifts_register_id_fkey"
+            columns: ["register_id"]
+            isOneToOne: false
+            referencedRelation: "pos_registers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       product_images: {
         Row: {
           alt_ar: string | null
@@ -2009,6 +2150,42 @@ export type Database = {
         }
         Relationships: []
       }
+      push_subscriptions: {
+        Row: {
+          active: boolean
+          auth: string
+          created_at: string
+          endpoint: string
+          id: string
+          p256dh: string
+          updated_at: string
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          active?: boolean
+          auth: string
+          created_at?: string
+          endpoint: string
+          id?: string
+          p256dh: string
+          updated_at?: string
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          active?: boolean
+          auth?: string
+          created_at?: string
+          endpoint?: string
+          id?: string
+          p256dh?: string
+          updated_at?: string
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       quote_requests: {
         Row: {
           admin_notes: string | null
@@ -2189,6 +2366,124 @@ export type Database = {
           },
         ]
       }
+      return_items: {
+        Row: {
+          condition: string
+          created_at: string
+          id: string
+          order_item_id: string | null
+          qty: number
+          return_id: string
+          unit_price_sar: number
+          variant_id: string | null
+        }
+        Insert: {
+          condition?: string
+          created_at?: string
+          id?: string
+          order_item_id?: string | null
+          qty: number
+          return_id: string
+          unit_price_sar?: number
+          variant_id?: string | null
+        }
+        Update: {
+          condition?: string
+          created_at?: string
+          id?: string
+          order_item_id?: string | null
+          qty?: number
+          return_id?: string
+          unit_price_sar?: number
+          variant_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "return_items_order_item_id_fkey"
+            columns: ["order_item_id"]
+            isOneToOne: false
+            referencedRelation: "order_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "return_items_return_id_fkey"
+            columns: ["return_id"]
+            isOneToOne: false
+            referencedRelation: "return_requests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "return_items_variant_id_fkey"
+            columns: ["variant_id"]
+            isOneToOne: false
+            referencedRelation: "product_variants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      return_requests: {
+        Row: {
+          admin_notes: string | null
+          attachments: Json
+          created_at: string
+          credit_note_invoice_id: string | null
+          id: string
+          notes: string | null
+          order_id: string
+          reason: string
+          refund_amount_sar: number | null
+          refund_method: string | null
+          status: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          admin_notes?: string | null
+          attachments?: Json
+          created_at?: string
+          credit_note_invoice_id?: string | null
+          id?: string
+          notes?: string | null
+          order_id: string
+          reason: string
+          refund_amount_sar?: number | null
+          refund_method?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          admin_notes?: string | null
+          attachments?: Json
+          created_at?: string
+          credit_note_invoice_id?: string | null
+          id?: string
+          notes?: string | null
+          order_id?: string
+          reason?: string
+          refund_amount_sar?: number | null
+          refund_method?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "return_requests_credit_note_invoice_id_fkey"
+            columns: ["credit_note_invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "return_requests_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       shipments: {
         Row: {
           carrier: string
@@ -2314,6 +2609,102 @@ export type Database = {
         }
         Relationships: []
       }
+      stock_by_warehouse: {
+        Row: {
+          qty: number
+          reorder_point: number
+          reserved_qty: number
+          updated_at: string
+          variant_id: string
+          warehouse_id: string
+        }
+        Insert: {
+          qty?: number
+          reorder_point?: number
+          reserved_qty?: number
+          updated_at?: string
+          variant_id: string
+          warehouse_id: string
+        }
+        Update: {
+          qty?: number
+          reorder_point?: number
+          reserved_qty?: number
+          updated_at?: string
+          variant_id?: string
+          warehouse_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stock_by_warehouse_variant_id_fkey"
+            columns: ["variant_id"]
+            isOneToOne: false
+            referencedRelation: "product_variants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stock_by_warehouse_warehouse_id_fkey"
+            columns: ["warehouse_id"]
+            isOneToOne: false
+            referencedRelation: "warehouses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      stock_movements: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          note: string | null
+          qty: number
+          reference_id: string | null
+          reference_type: string | null
+          type: string
+          variant_id: string
+          warehouse_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          note?: string | null
+          qty: number
+          reference_id?: string | null
+          reference_type?: string | null
+          type: string
+          variant_id: string
+          warehouse_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          note?: string | null
+          qty?: number
+          reference_id?: string | null
+          reference_type?: string | null
+          type?: string
+          variant_id?: string
+          warehouse_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stock_movements_variant_id_fkey"
+            columns: ["variant_id"]
+            isOneToOne: false
+            referencedRelation: "product_variants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stock_movements_warehouse_id_fkey"
+            columns: ["warehouse_id"]
+            isOneToOne: false
+            referencedRelation: "warehouses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       stock_reservations: {
         Row: {
           created_at: string
@@ -2358,6 +2749,103 @@ export type Database = {
             columns: ["variant_id"]
             isOneToOne: false
             referencedRelation: "product_variants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      support_messages: {
+        Row: {
+          attachments: Json
+          body: string
+          created_at: string
+          id: string
+          is_internal: boolean
+          sender_id: string | null
+          ticket_id: string
+        }
+        Insert: {
+          attachments?: Json
+          body: string
+          created_at?: string
+          id?: string
+          is_internal?: boolean
+          sender_id?: string | null
+          ticket_id: string
+        }
+        Update: {
+          attachments?: Json
+          body?: string
+          created_at?: string
+          id?: string
+          is_internal?: boolean
+          sender_id?: string | null
+          ticket_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "support_messages_ticket_id_fkey"
+            columns: ["ticket_id"]
+            isOneToOne: false
+            referencedRelation: "support_tickets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      support_tickets: {
+        Row: {
+          assigned_to: string | null
+          category: string
+          closed_at: string | null
+          contact_email: string | null
+          contact_phone: string | null
+          created_at: string
+          id: string
+          order_id: string | null
+          priority: string
+          satisfaction_rating: number | null
+          status: string
+          subject: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          assigned_to?: string | null
+          category?: string
+          closed_at?: string | null
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          id?: string
+          order_id?: string | null
+          priority?: string
+          satisfaction_rating?: number | null
+          status?: string
+          subject: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          assigned_to?: string | null
+          category?: string
+          closed_at?: string | null
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          id?: string
+          order_id?: string | null
+          priority?: string
+          satisfaction_rating?: number | null
+          status?: string
+          subject?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "support_tickets_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
             referencedColumns: ["id"]
           },
         ]
@@ -2491,6 +2979,39 @@ export type Database = {
         }
         Relationships: []
       }
+      warehouses: {
+        Row: {
+          active: boolean
+          address: string | null
+          city: string | null
+          created_at: string
+          id: string
+          is_default: boolean
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          address?: string | null
+          city?: string | null
+          created_at?: string
+          id?: string
+          is_default?: boolean
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          address?: string | null
+          city?: string | null
+          created_at?: string
+          id?: string
+          is_default?: boolean
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       web_vitals: {
         Row: {
           created_at: string
@@ -2532,6 +3053,116 @@ export type Database = {
           webgl_reason?: string | null
         }
         Relationships: []
+      }
+      whatsapp_conversations: {
+        Row: {
+          assigned_to: string | null
+          created_at: string
+          customer_phone: string
+          id: string
+          last_message_at: string | null
+          last_message_preview: string | null
+          order_id: string | null
+          quote_id: string | null
+          status: string
+          unread_count: number
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          assigned_to?: string | null
+          created_at?: string
+          customer_phone: string
+          id?: string
+          last_message_at?: string | null
+          last_message_preview?: string | null
+          order_id?: string | null
+          quote_id?: string | null
+          status?: string
+          unread_count?: number
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          assigned_to?: string | null
+          created_at?: string
+          customer_phone?: string
+          id?: string
+          last_message_at?: string | null
+          last_message_preview?: string | null
+          order_id?: string | null
+          quote_id?: string | null
+          status?: string
+          unread_count?: number
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "whatsapp_conversations_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "whatsapp_conversations_quote_id_fkey"
+            columns: ["quote_id"]
+            isOneToOne: false
+            referencedRelation: "quote_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      whatsapp_messages: {
+        Row: {
+          body: string | null
+          conversation_id: string
+          created_at: string
+          direction: string
+          error: string | null
+          id: string
+          media_url: string | null
+          sender_id: string | null
+          status: string
+          template_name: string | null
+          wa_message_id: string | null
+        }
+        Insert: {
+          body?: string | null
+          conversation_id: string
+          created_at?: string
+          direction: string
+          error?: string | null
+          id?: string
+          media_url?: string | null
+          sender_id?: string | null
+          status?: string
+          template_name?: string | null
+          wa_message_id?: string | null
+        }
+        Update: {
+          body?: string | null
+          conversation_id?: string
+          created_at?: string
+          direction?: string
+          error?: string | null
+          id?: string
+          media_url?: string | null
+          sender_id?: string | null
+          status?: string
+          template_name?: string | null
+          wa_message_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "whatsapp_messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "whatsapp_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       wholesale_accounts: {
         Row: {

@@ -102,6 +102,12 @@ const AdminReviews = lazy(() => import('@/admin/pages/Reviews'));
 const AdminMarketplace = lazy(() => import('@/admin/pages/Marketplace'));
 const PortalLoyalty = lazy(() => import('@/portal/pages/Loyalty'));
 const PortalReferrals = lazy(() => import('@/portal/pages/Referrals'));
+const PortalReturns = lazy(() => import('@/portal/pages/Returns'));
+const AdminSupport = lazy(() => import('@/admin/pages/Support'));
+const AdminReturns = lazy(() => import('@/admin/pages/Returns'));
+const AdminWarehouses = lazy(() => import('@/admin/pages/Warehouses'));
+const AdminWhatsApp = lazy(() => import('@/admin/pages/WhatsApp'));
+const Pos = lazy(() => import('@/pages/Pos'));
 
 const PortalLayout = lazy(() => import('@/portal/PortalLayout'));
 const PortalDashboard = lazy(() => import('@/portal/pages/Dashboard'));
@@ -216,8 +222,13 @@ export default function App() {
 
                   <Route path="reviews" element={<AdminReviews />} />
                   <Route path="marketplace" element={<AdminMarketplace />} />
+                  <Route path="support" element={<AdminSupport />} />
+                  <Route path="returns" element={<AdminReturns />} />
+                  <Route path="warehouses" element={<AdminWarehouses />} />
+                  <Route path="whatsapp" element={<AdminWhatsApp />} />
                   <Route path="*" element={<AdminPlaceholder />} />
                 </Route>
+                <Route path="/pos" element={<Pos />} />
                 <Route path="/portal/login" element={<PortalLogin />} />
                 <Route path="/unsubscribe" element={<Unsubscribe />} />
                 <Route path="/portal" element={<ProtectedRoute requireAnyRole={['customer','user','wholesale','distributor']}><PortalLayout /></ProtectedRoute>}>
@@ -248,6 +259,7 @@ export default function App() {
                   <Route path="wholesale/statement" element={<WholesaleStatement />} />
                   <Route path="loyalty" element={<PortalLoyalty />} />
                   <Route path="referrals" element={<PortalReferrals />} />
+                  <Route path="returns" element={<PortalReturns />} />
                   <Route path="*" element={<PortalPlaceholder />} />
                 </Route>
 
