@@ -1,6 +1,8 @@
-import { Bell, Search, Sun, Moon, Globe } from 'lucide-react';
+import { Search, Sun, Moon, Globe } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Link } from 'react-router-dom';
+import { NotificationBell } from '@/admin/components/NotificationBell';
+
 
 export function AdminTopbar({ theme, onThemeToggle }: { theme: 'light' | 'dark'; onThemeToggle: () => void }) {
   const { user } = useAuth();
@@ -20,10 +22,8 @@ export function AdminTopbar({ theme, onThemeToggle }: { theme: 'light' | 'dark';
       <button onClick={onThemeToggle} className="a-btn a-btn-ghost" title="تبديل الثيم">
         {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
       </button>
-      <button className="a-btn a-btn-ghost relative" title="الإشعارات">
-        <Bell className="w-4 h-4" />
-        <span className="absolute -top-0.5 -end-0.5 w-2 h-2 rounded-full" style={{ background: 'var(--a-gold)' }} />
-      </button>
+      <NotificationBell />
+
       <Link to="/profile" className="flex items-center gap-2 ps-3 border-s" style={{ borderColor: 'var(--a-border)' }}>
         <div className="w-9 h-9 rounded-full grid place-items-center text-sm font-semibold"
              style={{ background: 'linear-gradient(135deg, var(--a-palm), var(--a-palm-2))', color: '#fff' }}>
