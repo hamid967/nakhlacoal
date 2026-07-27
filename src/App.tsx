@@ -107,6 +107,9 @@ const AdminSupport = lazy(() => import('@/admin/pages/Support'));
 const AdminReturns = lazy(() => import('@/admin/pages/Returns'));
 const AdminWarehouses = lazy(() => import('@/admin/pages/Warehouses'));
 const AdminWhatsApp = lazy(() => import('@/admin/pages/WhatsApp'));
+const AdminGrowth = lazy(() => import('@/admin/pages/Growth'));
+const AdminAutomations = lazy(() => import('@/admin/pages/Automations'));
+const AdminCopilot = lazy(() => import('@/admin/pages/Copilot'));
 const Pos = lazy(() => import('@/pages/Pos'));
 
 const PortalLayout = lazy(() => import('@/portal/PortalLayout'));
@@ -226,6 +229,9 @@ export default function App() {
                   <Route path="returns" element={<AdminReturns />} />
                   <Route path="warehouses" element={<AdminWarehouses />} />
                   <Route path="whatsapp" element={<AdminWhatsApp />} />
+                  <Route path="growth" element={<AdminGrowth />} />
+                  <Route path="automations" element={<AdminAutomations />} />
+                  <Route path="copilot" element={<AdminCopilot />} />
                   <Route path="*" element={<AdminPlaceholder />} />
                 </Route>
                 <Route path="/pos" element={<Pos />} />

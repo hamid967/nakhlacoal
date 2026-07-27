@@ -227,6 +227,92 @@ export type Database = {
         }
         Relationships: []
       }
+      automation_rules: {
+        Row: {
+          actions: Json
+          active: boolean
+          conditions: Json
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          last_run_at: string | null
+          name: string
+          run_count: number
+          throttle_seconds: number
+          trigger_event: string
+          updated_at: string
+        }
+        Insert: {
+          actions?: Json
+          active?: boolean
+          conditions?: Json
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          last_run_at?: string | null
+          name: string
+          run_count?: number
+          throttle_seconds?: number
+          trigger_event: string
+          updated_at?: string
+        }
+        Update: {
+          actions?: Json
+          active?: boolean
+          conditions?: Json
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          last_run_at?: string | null
+          name?: string
+          run_count?: number
+          throttle_seconds?: number
+          trigger_event?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      automation_runs: {
+        Row: {
+          created_at: string
+          entity_id: string | null
+          entity_type: string
+          id: string
+          log: Json
+          rule_id: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          entity_id?: string | null
+          entity_type: string
+          id?: string
+          log?: Json
+          rule_id: string
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string
+          id?: string
+          log?: Json
+          rule_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automation_runs_rule_id_fkey"
+            columns: ["rule_id"]
+            isOneToOne: false
+            referencedRelation: "automation_rules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cart_items: {
         Row: {
           cart_id: string
@@ -526,6 +612,45 @@ export type Database = {
         }
         Relationships: []
       }
+      customer_segments: {
+        Row: {
+          churn_risk: number
+          created_at: string
+          id: string
+          last_order_at: string | null
+          ltv_sar: number
+          orders_count: number
+          rfm_score: number
+          tier: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          churn_risk?: number
+          created_at?: string
+          id?: string
+          last_order_at?: string | null
+          ltv_sar?: number
+          orders_count?: number
+          rfm_score?: number
+          tier?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          churn_risk?: number
+          created_at?: string
+          id?: string
+          last_order_at?: string | null
+          ltv_sar?: number
+          orders_count?: number
+          rfm_score?: number
+          tier?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       customers: {
         Row: {
           address: string | null
@@ -580,6 +705,48 @@ export type Database = {
           phone?: string | null
           updated_at?: string
           vat_number?: string | null
+        }
+        Relationships: []
+      }
+      daily_kpi_snapshots: {
+        Row: {
+          aov_sar: number
+          conversion_pct: number
+          created_at: string
+          day: string
+          extra: Json
+          id: string
+          new_customers: number
+          orders_count: number
+          refunds_sar: number
+          revenue_sar: number
+          updated_at: string
+        }
+        Insert: {
+          aov_sar?: number
+          conversion_pct?: number
+          created_at?: string
+          day: string
+          extra?: Json
+          id?: string
+          new_customers?: number
+          orders_count?: number
+          refunds_sar?: number
+          revenue_sar?: number
+          updated_at?: string
+        }
+        Update: {
+          aov_sar?: number
+          conversion_pct?: number
+          created_at?: string
+          day?: string
+          extra?: Json
+          id?: string
+          new_customers?: number
+          orders_count?: number
+          refunds_sar?: number
+          revenue_sar?: number
+          updated_at?: string
         }
         Relationships: []
       }
@@ -1873,6 +2040,47 @@ export type Database = {
             columns: ["product_id"]
             isOneToOne: false
             referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_intelligence: {
+        Row: {
+          abc_class: string
+          computed_at: string
+          days_of_cover: number | null
+          id: string
+          reorder_point: number
+          updated_at: string
+          variant_id: string
+          velocity_30d: number
+        }
+        Insert: {
+          abc_class?: string
+          computed_at?: string
+          days_of_cover?: number | null
+          id?: string
+          reorder_point?: number
+          updated_at?: string
+          variant_id: string
+          velocity_30d?: number
+        }
+        Update: {
+          abc_class?: string
+          computed_at?: string
+          days_of_cover?: number | null
+          id?: string
+          reorder_point?: number
+          updated_at?: string
+          variant_id?: string
+          velocity_30d?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_intelligence_variant_id_fkey"
+            columns: ["variant_id"]
+            isOneToOne: true
+            referencedRelation: "product_variants"
             referencedColumns: ["id"]
           },
         ]
@@ -3615,6 +3823,9 @@ export type Database = {
         Args: { _key: string; _max: number; _window_seconds: number }
         Returns: boolean
       }
+      compute_customer_segments: { Args: never; Returns: number }
+      compute_daily_kpi: { Args: { _day?: string }; Returns: undefined }
+      compute_product_intelligence: { Args: never; Returns: number }
       email_opted_in: {
         Args: { _category: string; _email: string }
         Returns: boolean
