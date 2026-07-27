@@ -19,6 +19,7 @@ const groups: Group[] = [
     { to: '/portal/orders', label: 'طلباتي', icon: ShoppingBag },
     { to: '/portal/orders/new', label: 'إنشاء طلب', icon: PlusCircle },
     { to: '/portal/tracking', label: 'تتبع الطلبات', icon: MapPin },
+    { to: '/portal/returns', label: 'طلبات الإرجاع', icon: Package },
     { to: '/portal/quotes', label: 'العروض السعرية', icon: FileText, badge: 'قريباً' },
   ]},
   { title: 'المالية', items: [
