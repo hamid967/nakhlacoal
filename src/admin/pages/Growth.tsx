@@ -98,16 +98,63 @@ export default function Growth() {
 
   return (
     <div className="p-6 space-y-6" dir="rtl">
-      <div className="flex items-center justify-between">
+      <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
           <h1 className="text-3xl font-bold">لوحة النمو</h1>
           <p className="text-sm text-muted-foreground mt-1">مؤشرات آخر 30 يومًا، شرائح العملاء، وذكاء المنتجات.</p>
         </div>
-        <Button onClick={runNow} disabled={computing} variant="outline">
-          <RefreshCw className={`h-4 w-4 me-2 ${computing ? 'animate-spin' : ''}`} />
-          إعادة الحساب الآن
+        <Button onClick={runNow} disabled={runAll.status === 'running'} variant="outline">
+          <RefreshCw className={`h-4 w-4 me-2 ${runAll.status === 'running' ? 'animate-spin' : ''}`} />
+          إعادة الحساب الآن (الكل)
         </Button>
       </div>
+
+      <Card>
+        <CardHeader><CardTitle className="text-base">تشغيل يدوي للمهام</CardTitle></CardHeader>
+        <CardContent className="grid md:grid-cols-2 gap-3">
+          <div className="flex items-center justify-between border rounded-lg p-3 gap-2 flex-wrap">
+            <div>
+              <div className="font-medium text-sm">Rollup كامل (Edge Function)</div>
+              <div className="mt-1"><StatusPill s={runAll} /></div>
+            </div>
+            <Button size="sm" onClick={runNow} disabled={runAll.status === 'running'}>
+              <RefreshCw className={`h-3.5 w-3.5 me-2 ${runAll.status === 'running' ? 'animate-spin' : ''}`} />
+              تشغيل
+            </Button>
+          </div>
+          <div className="flex items-center justify-between border rounded-lg p-3 gap-2 flex-wrap">
+            <div>
+              <div className="font-medium text-sm">KPI يومي</div>
+              <div className="mt-1"><StatusPill s={runKpi} /></div>
+            </div>
+            <Button size="sm" variant="outline" onClick={() => runRpc('compute_daily_kpi', setRunKpi, 'KPI')} disabled={runKpi.status === 'running'}>
+              <RefreshCw className={`h-3.5 w-3.5 me-2 ${runKpi.status === 'running' ? 'animate-spin' : ''}`} />
+              تشغيل
+            </Button>
+          </div>
+          <div className="flex items-center justify-between border rounded-lg p-3 gap-2 flex-wrap">
+            <div>
+              <div className="font-medium text-sm">شرائح العملاء (RFM)</div>
+              <div className="mt-1"><StatusPill s={runSeg} /></div>
+            </div>
+            <Button size="sm" variant="outline" onClick={() => runRpc('compute_customer_segments', setRunSeg, 'الشرائح')} disabled={runSeg.status === 'running'}>
+              <RefreshCw className={`h-3.5 w-3.5 me-2 ${runSeg.status === 'running' ? 'animate-spin' : ''}`} />
+              تشغيل
+            </Button>
+          </div>
+          <div className="flex items-center justify-between border rounded-lg p-3 gap-2 flex-wrap">
+            <div>
+              <div className="font-medium text-sm">ذكاء المنتجات</div>
+              <div className="mt-1"><StatusPill s={runPi} /></div>
+            </div>
+            <Button size="sm" variant="outline" onClick={() => runRpc('compute_product_intelligence', setRunPi, 'ذكاء المنتجات')} disabled={runPi.status === 'running'}>
+              <RefreshCw className={`h-3.5 w-3.5 me-2 ${runPi.status === 'running' ? 'animate-spin' : ''}`} />
+              تشغيل
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Card><CardContent className="p-4">
