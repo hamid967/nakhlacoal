@@ -5,7 +5,7 @@ import {
   BarChart3, Megaphone, BookOpen, Image as ImageIcon, LayoutTemplate,
   Search, ShieldCheck, KeyRound, Settings as SettingsIcon, ScrollText,
   Sparkles, ChevronLeft, Gauge, MessageSquare, FileText, Mail, Link as LinkIcon,
-  Headphones, ScanBarcode,
+  Headphones, ScanBarcode, TrendingUp, Zap,
 } from 'lucide-react';
 import { BrandLogo } from '@/components/BrandLogo';
 
@@ -15,6 +15,9 @@ type Group = { title: string; items: Item[] };
 const groups: Group[] = [
   { title: 'نظرة عامة', items: [
     { to: '/admin', label: 'لوحة القيادة', icon: LayoutDashboard },
+    { to: '/admin/growth', label: 'لوحة النمو', icon: TrendingUp },
+    { to: '/admin/copilot', label: 'المساعد الذكي', icon: Sparkles },
+    { to: '/admin/automations', label: 'الأتمتة', icon: Zap },
     { to: '/admin/reports', label: 'التقارير', icon: BarChart3 },
     { to: '/admin/web-vitals', label: 'أداء الويب', icon: Gauge },
     { to: '/admin/chats', label: 'محادثات المساعد', icon: MessageSquare },
